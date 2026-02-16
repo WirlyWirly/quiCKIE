@@ -9,14 +9,14 @@
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
 
-// @icon        https://gist.github.com/user-attachments/assets/b3d2b863-6aaf-48ab-a4d5-28d0c5df3bae
+// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
 // @namespace   https://github.com/WirlyWirly
 // @run-at      document-end
 
-// @resource    settingsPanelCSS https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88/raw/quiCKIE.css
-// @resource    contextMenuCSS https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88/raw/contextMenu.css
+// @resource    contextMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
+// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
 
-// @require     https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88/raw/contextMenu.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Permissions --------------------------------------
@@ -31,7 +31,7 @@
 
 // ----------------------------------- Matches --------------------------------------
 
-// How to add new trackers: https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88?permalink_comment_id=5974494#gistcomment-5974494
+// How to add new trackers: https://github.com/WirlyWirly/quiCKIE/wiki/The-3-Steps-to-Adding-a-New-Tracker-to-quiCKIE
 
 // @match   https://alpharatio.cc/top10.php*
 // @match   https://alpharatio.cc/torrents.php*
@@ -132,9 +132,9 @@
 
 // ----------------------------------- Script Links --------------------------------------
 //
-// @homepage    https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88
-// @updateURL   https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88/raw/qui%2520-%2520quiCKIE.user.js
-// @downloadURL https://gist.github.com/WirlyWirly/1ffd87e5a3d3f7ce206860d8c100df88/raw/qui%2520-%2520quiCKIE.user.js
+// @homepage    https://github.com/WirlyWirly/quiCKIE
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
 // ==/UserScript==
 
 // =================================== SETTINGS PANEL ENTRIES ======================================
@@ -1231,7 +1231,7 @@ function createGMConfigSettingsPanel() {
 
                 let versionElement = document.createElement('a')
                 versionElement.classList = 'version_label reset'
-                versionElement.title = 'Source Code on GistHub'
+                versionElement.title = 'Source Code on GitHub'
                 versionElement.target = '_blank'
                 versionElement.href = `${GM_info.script.homepage}`
                 versionElement.innerHTML = `${githubSVG} Version ${GM_info.script.version}`
