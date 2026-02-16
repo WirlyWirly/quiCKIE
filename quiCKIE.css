@@ -1,0 +1,387 @@
+#quiCKIE_config * {
+font-family: "Roboto Condensed", Tahoma, Arial;
+}
+
+#quiCKIE_config .field_label {
+}
+
+/* ----------------------------------- HEADER ----------------------------------- */
+#quiCKIE_config_header {
+    color: #ffffff;
+    padding-bottom: 10px;
+    font-weight: 100;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom: none;
+    background: transparent;
+    margin: 0px 0x 10px 0px;
+}
+
+/* ----------------------------------- TABLE ----------------------------------- */
+#quiCKIE_config_tracker_table,
+#quiCKIE_config_preset_table {
+    background: none;
+    border-collapse: collapse;
+    border-radius: 5px;
+    border: none;
+    box-shadow: none !important;
+    margin: 20px auto 20px auto;
+    max-width: 90%;
+    text-align: center;
+}
+
+/* ----------------------------------- TABLE - Columns ----------------------------------- */
+
+/* Tracker \ Preset */
+#quiCKIE_config_tracker_table_colg_col_tracker,
+#quiCKIE_config_preset_table_colg_col_preset {
+    width: 135px;
+    max-width: 135px;
+}
+
+/* PresetTrackers */
+#quiCKIE_config_preset_table_colg_col_presettrackers {
+    width: 220px;
+}
+
+/* Category */
+#quiCKIE_config_tracker_table_colg_col_category,
+#quiCKIE_config_preset_table_colg_col_category {
+    width: 150px;
+    max-width: 150px;
+}
+
+/* SavePath */
+#quiCKIE_config_tracker_table_colg_col_savepath,
+#quiCKIE_config_preset_table_colg_col_savepath {
+    width: 220px;
+}
+
+/* Tags */
+#quiCKIE_config_tracker_table_colg_col_tags,
+#quiCKIE_config_preset_table_colg_col_tags {
+    width: 150px;
+    max-width: 150px;
+}
+
+/* Ratio */
+#quiCKIE_config_tracker_table_colg_col_ratio,
+#quiCKIE_config_preset_table_colg_col_ratio {
+    width: 55px;
+    max-width: 55px;
+}
+
+/* Instance */
+#quiCKIE_config_tracker_table_colg_col_instance,
+#quiCKIE_config_preset_table_colg_col_instance {
+    width: 55px;
+    max-width: 55px;
+}
+
+/* LeftClick */
+#quiCKIE_config_tracker_table_colg_col_leftclick, {
+    width: 95px;
+    max-width: 95px;
+}
+
+/* Paused */
+#quiCKIE_config_tracker_table_colg_col_paused,
+#quiCKIE_config_preset_table_colg_col_paused {
+    width: 50px;
+    max-width: 50px;
+}
+
+/* SeqPieces */
+#quiCKIE_config_tracker_table_colg_col_seqpieces,
+#quiCKIE_config_preset_table_colg_col_seqpieces {
+    width: 50px;
+    max-width: 50px;
+}
+
+col.quiCKIE_config_table_colg_col {
+    text-align: center;
+    background: none;
+    box-shadow: none;
+    border: none;
+
+}
+
+/* ----------------------------------- TABLE - Headers ----------------------------------- */
+#quiCKIE_config_tracker_table_thead tr th,
+#quiCKIE_config_preset_table_thead tr th {
+/* Table Headers */
+background: #2c3e5091;
+border-color: #191d2a;
+border-style: none solid none none;
+border-width: 3px;
+color: #E9EAEC;
+cursor: pointer;
+font-family: "Roboto Condensed", Tahoma, Arial;
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+padding: 5px 15px;
+text-align: center;
+}
+
+/* ----------------------------------- TABLE - Body ----------------------------------- */
+tr.quiCKIE_config_table_tbody_tr {
+    /* All the <tr> elements of a table */
+
+    /* background: none !important; */
+    background-color: transparent;
+    border: none !important;
+
+}
+
+tr.quiCKIE_config_table_tbody_tr td {
+    /* All the TD elements of a table */
+    text-align: center;
+}
+
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) {
+    /* Zebra stripes */
+    background-color: #2c3e5091 !important;
+}
+
+
+thead.quiCKIE_config_table_thead th:nth-last-child(1) {
+    /* Remove right-border from last <th> */
+    border-right: none !important;
+}
+
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td:nth-last-child(2) {
+    /* Paused Column Border */
+    border-color: #191d2a;
+    border-style: none solid none none !important;
+    border-width: 3px;
+}
+
+#quiCKIE_config_tracker_table label.quiCKIE_config_field_tracker_label {
+    /* Tracker Labels */
+    font-family: "Roboto Condensed", Tahoma, Arial;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+    user-select: none;
+    color: #bfbfbf;
+}
+`)
+
+#quiCKIE_config .config_var {
+    border-bottom: none;
+    margin: 0px auto 5px auto;
+    padding: 5px 0px 5px 0px;
+    text-align: center;
+}
+
+
+#quiCKIE_config_field_quiURL,
+#quiCKIE_config_field_quiApiKey,
+#quiCKIE_config_field_presetCount,
+td.quiCKIE_config_table_tbody_td_field select[data-fieldtype="leftClick"],
+td.quiCKIE_config_table_tbody_td_field input[type="text"] {
+    /* Text Fields */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #191d2a;
+    font-size: 13px;
+    font-weight: 500;
+    height: 50%;
+    margin: 0 2px 0 2px;
+    padding: 2px 2px 2px 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 95%;
+}
+
+#quiCKIE_config_field_quiURL:focus,
+#quiCKIE_config_field_quiApiKey:focus,
+#quiCKIE_config_field_presetCount:focus,
+td.quiCKIE_config_table_tbody_td_field input[type="text"]:focus {
+    border-color: #2C3E50;
+    box-shadow: 0 0 5px rgba(0, 124, 255, 0.60);
+    outline: none;
+}
+
+td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
+    box-shadow: none;
+    cursor: pointer;
+    margin: 5px 0px 5px 0px;
+}
+
+#quiCKIE_config_quiURL_var.config_var {
+    /* Align quiURL row to center */
+    text-align: center;
+    margin: 5px 0px 0px 0px;
+}
+
+#quiCKIE_config_quiURL_field_label {
+    width: 45px;
+}
+
+#quiCKIE_config_quiURL_var label.field_label {
+    /* qui row labels */
+    margin: 0px 6px 0px 10px;
+}
+
+#quiCKIE_config_field_quiApiKey,
+#quiCKIE_config_field_quiURL {
+    /* text input field */
+    width: 150px;
+}
+#quiCKIE_config_field_globalLeftClickAction,
+#quiCKIE_config_field_globalMiddleClickAction {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #191d2a;
+    font-size: 13px;
+    font-weight: 500;
+    height: 50%;
+    margin: 0 2px 0 2px;
+    padding: 2px 2px 2px 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 75px;
+}
+
+#quiCKIE_config_field_presetCount {
+    width: 30px;
+}
+
+#quiCKIE_config .reset {
+    color: #95a5a6;
+    text-decoration: none;
+    user-select: none;
+}
+
+#quiCKIE_config_buttons_holder {
+    align-items: center;
+    column-gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 95px;
+    margin: -10px auto 10px auto;
+    padding: 10px 0px 10px 0px;
+    row-gap: 10px;
+    text-align: center;
+    max-width: 35%;
+}
+
+#quiCKIE_config .reset_holder {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#quiCKIE_config .version_label {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: center;
+    color: #b7b7b7;
+}
+
+#quiCKIE_config_resetLink {
+    text-transform: lowercase;
+    background: transparent;
+    color: #b7b7b7;
+}
+
+#quiCKIE_config .version_label:hover,
+#quiCKIE_config_resetLink:hover {
+    text-decoration: underline;
+}
+
+#quiCKIE_config .saveclose_buttons {
+    margin: 0px 10px 0px 10px;
+    width: 100%;
+}
+
+#quiCKIE_config_saveBtn {
+    background: none;
+    background-color: #2C3E50;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    grid-column: 1;
+    grid-row: 1;
+    padding-bottom: 6px !important;
+    padding-top: 6px !important;
+    padding: 15px 20px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    will-change: background-color, transform;
+}
+
+#quiCKIE_config_saveBtn:hover {
+    background-color: #34495E;
+    transform: translateY(-2px);
+}
+
+#quiCKIE_config_saveBtn:active {
+    background-color: rgba(0, 124, 255);
+    transform: translateY(1px);
+}
+
+#quiCKIE_config_saveBtn.success {
+    box-shadow: 0 0 6px 3px rgba(0, 124, 255, 0.60);
+}
+
+#quiCKIE_config_closeBtn {
+    background: none;
+    background-color: #2C3E50;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    grid-column: 2;
+    grid-row: 1;
+    padding-bottom: 6px !important;
+    padding-top: 6px !important;
+    padding: 15px 20px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    will-change: background-color, transform;
+}
+
+#quiCKIE_config_closeBtn:hover {
+    background-color: #34495E;
+    transform: translateY(-2px);
+}
+
+#quiCKIE_config_closeBtn:active {
+    background-color: #2C3E50;
+    transform: translateY(1px);
+}
+
+/* Tooltip styling */
+/* #quiCKIE_config .field_label[title]:hover::after { */
+/*     content: attr(title); */
+/*     position: absolute; */
+/*     background: #2C3E50; */
+/*     color: white; */
+/*     padding: 5px 10px; */
+/*     border-radius: 3px; */
+/*     font-size: 0.8em; */
+/*     max-width: 300px; */
+/*     z-index: 100; */
+/*     margin-top: 25px; */
+/*     left: 20px; */
+/*     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+/* } */
