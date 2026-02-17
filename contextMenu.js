@@ -93,7 +93,7 @@ class ContextMenu {
     document.addEventListener("contextmenu", (e) => {
       this.targetNode.forEach((target) => {
         if (!e.target.contains(target)) {
-          contextMenu.remove();
+          // contextMenu.remove();
         }
       });
     });

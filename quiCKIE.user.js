@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.86
+// @version     0.87
 // @description A quiCKIE way to send torrents from various trackers to qui!
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -491,14 +491,15 @@ if ( trackerDomain == 'animebytes' ) {
 
                 }
 
-            // Now that the bunnyButtons are in-place, generate the right-click context menu (Presets)
-            generatePresetsContextMenu()
+                // Now that the bunnyButtons are in-place, generate the right-click context menu (Presets)
+                generatePresetsContextMenu()
 
             } catch(error) {
                 // console.log(error)
                 return
 
             }
+
         })
 
         let target = document.getElementById('ssr')
