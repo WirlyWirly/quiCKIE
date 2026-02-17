@@ -1,5 +1,7 @@
 # **🐰 quiCKIE 🐰**
 
+![](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/preview.webp?raw=true)
+
 This UserScript will generate **BunnyButtons 🐰** alongside the sites regular download buttons. When clicked, the corresponding torrent will be sent to [qui](https://getqui.com/) using your custom settings.
 
 There is currently support for **20+** different trackers. I will **NOT** be adding anymore private trackers, as I have already included all that I can. If a tracker you use isn't on the list, I have written a small guide on how you may easily contribute so that it can be added: [The 3 Steps to Adding a New Tracker to quiCKIE](https://github.com/WirlyWirly/quiCKIE/wiki/The-3-Steps-to-Adding-a-New-Tracker-to-quiCKIE)
