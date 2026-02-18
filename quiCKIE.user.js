@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.91
+// @version     0.92
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -1286,12 +1286,12 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
     bunnyButton.addEventListener('mouseup', function(event) {
         // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
 
-        if ( event.shiftKey ) {
+        if ( event.shiftKey && event.button == 0 ) {
             // Shift-Click: Open the quiCKIE settings panel
 
             GM_config.open()
 
-        } else if ( event.ctrlKey || event.altKey ) {
+        } else if ( event.ctrlKey && event.button == 0 || event.altKey && event.button == 0) {
             // Ctrl-Click \ Cmd-Click: Open the quiURL in a new tab
 
             window.open(SETTINGS.quiURL).focus()
@@ -1325,10 +1325,11 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
 function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
     // Depending on what mouse button was clicked, perform the saved action
 
+    let buttonAction = ''
     if ( isGlobal == true) {
-        var buttonAction = SETTINGS[`${settingsProperty}`]
+        buttonAction = SETTINGS[`${settingsProperty}`]
     } else {
-        var buttonAction = settingsProperty
+        buttonAction = settingsProperty
     }
 
     if ( buttonAction == 'Tracker' ) {
@@ -1398,6 +1399,14 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         return
     }
 
+    if ( ratioLimit == 0 ) {
+        // A ratio limit of 0 will stop the torrent after downloading, so take preventative action
+        ratioLimit = ''
+    } else if ( ratioLimit <= -1 ) {
+        // SETTINGS.ratioLimit: If specified, stop the download upon completion
+        ratioLimit = 0
+    }
+
     if ( instance != '' ) {
         // Update the URL to point to the specified instance id
         quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
@@ -1411,11 +1420,6 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
     form.append('tags', tags)
     form.append('ratioLimit', ratioLimit)
     form.append('paused', startPaused)
-
-    if ( ratioLimit <= -1 ) {
-        // SETTINGS.ratioLimit: Stop download upon completion
-        form.ratioLimit = 0
-    }
 
     if ( subFolder == true ) {
         // SETTINGS.subFolder: Save single-file downloads into their own sub-folder
@@ -1630,15 +1634,18 @@ function generatePresetsContextMenu() {
                         let torrentURL = bunnyButton.dataset.torrenturl
 
                         let presetSettings = {
-                            instance: GM_config.get(`preset-${i}-instance`),
                             category: GM_config.get(`preset-${i}-category`),
                             savePath: GM_config.get(`preset-${i}-savePath`),
                             tags: GM_config.get(`preset-${i}-tags`),
                             ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
+                            instance: GM_config.get(`preset-${i}-instance`),
                             startPaused: GM_config.get(`preset-${i}-startPaused`),
                             subFolder: GM_config.get(`preset-${i}-subFolder`),
                             seqPieces: GM_config.get(`preset-${i}-seqPieces`),
                         }
+
+                        if ( presetSettings.ratioLimit == 0 ) { presetSettings.ratioLimit = '' }
+                        if ( presetSettings.instance == 0 ) { presetSettings.instance = '' }
 
                         quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, torrentURL, presetSettings.instance, presetSettings.category, presetSettings.savePath, presetSettings.tags, presetSettings.ratioLimit, presetSettings.startPaused, presetSettings.subFolder, presetSettings.seqPieces)
 
