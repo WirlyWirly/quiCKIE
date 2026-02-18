@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.90
+// @version     0.91
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -842,31 +842,35 @@ function createGMConfigSettingsPanel() {
 
                 let tableValues = {
                     'titles': {
-                        'presetTrackers': 'Preset Trackers\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nExample:  HDBits, PassThePopcorn, Nyaa\n\nUse the * wildcard to display this preset on ALL trackers',
-                        'category': 'Category\n\nSpecify the category to apply to these these torrents',
-                        'savepath': 'Save Path\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
-                        'tags': 'Tags\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
-                        'ratio': 'Ratio Limit\n\nStop the torrents when they have seeded to the specified ratio limit.\n\nUse -1 to stop the torrents immediately after downloading is complete',
-                        'instance': 'Target qui Instance\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
-                        'leftclick': "Left-Click \\ Tap\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
-                        'paused': 'Start Paused\n\nPause torrents when they are added so as to not automatically begin downloading',
-                        'subfolder': 'SubFolder\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-                        'seqpieces': 'Sequential Piece Download\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
+                        'tracker': '─── ⭐ Tracker ⭐ ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings',
+                        'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
+                        'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+                        'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
+                        'ratio': '─── ➗ Ratio Limit ➗ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
+                        'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
+                        'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
+                        'paused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
+                        'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+                        'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
+
+                        'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
+                        'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
                     },
 
                     'columnText': {
                         'tracker': '⭐ Tracker',
-                        'preset': '🚀 Preset',
-                        'presetTrackers': '👀 Trackers',
                         'category': '🗃️ Category',
                         'savepath': '💾 SavePath',
                         'tags': '🏷️ Tags',
-                        'ratio': `➗`,
+                        'ratio': '➗',
                         'instance': '🎯',
-                        'leftclick': '🖱️ Click',
+                        'leftclick': '🖱️',
                         'paused': '⏸️',
                         'subfolder': '📁',
                         'seqpieces': '🧩',
+
+                        'preset': '🚀 Preset',
+                        'presettrackers': '👀 Trackers',
                     }
 
                 }
@@ -912,37 +916,14 @@ function createGMConfigSettingsPanel() {
                     let headerElement = document.createElement('th')
                     headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader}`
                     headerElement.classList.add('quiCKIE_config_table_thead_th')
+                    headerElement.textContent = tableValues.columnText[`${columnHeader}`]
+                    headerElement.setAttribute('title', tableValues.titles[`${columnHeader}`])
+
                     headersRow.appendChild(headerElement)
                 }
 
                 // Append the headers to the <thead> (tableHeader) element
                 thead.appendChild(headersRow)
-
-                // Add the mouse-over text for each column header
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_tracker').setAttribute('title', 'Tracker\n\nThe tracker (site) for which these fields will be applied to')
-
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_category').setAttribute('title', tableValues.titles.category)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_savepath').setAttribute('title', tableValues.titles.savepath)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_tags').setAttribute('title', tableValues.titles.tags)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_ratio').setAttribute('title', tableValues.titles.ratio)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_instance').setAttribute('title', tableValues.titles.instance)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_leftclick').setAttribute('title', tableValues.titles.leftclick)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_paused').setAttribute('title', tableValues.titles.paused)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_subfolder').setAttribute('title', tableValues.titles.subfolder)
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_seqpieces').setAttribute('title', tableValues.titles.seqpieces)
-
-                // Replace The column header text with what will be displayed
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_tracker').textContent = tableValues.columnText.tracker
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_category').textContent = tableValues.columnText.category
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_savepath').textContent = tableValues.columnText.savepath
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_tags').textContent = tableValues.columnText.tags
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_ratio').textContent = tableValues.columnText.ratio
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_instance').textContent = tableValues.columnText.instance
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_leftclick').textContent = tableValues.columnText.leftclick
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_paused').textContent = tableValues.columnText.paused
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_subfolder').textContent = tableValues.columnText.subfolder
-                document.getElementById('quiCKIE_config_tracker_table_thead_th_seqpieces').textContent = tableValues.columnText.seqpieces
-
 
                 let uniqueDomains = Object.keys(settingsPanelEntries)
                 for (let uniqueDomainKey of uniqueDomains) {
@@ -1049,36 +1030,14 @@ function createGMConfigSettingsPanel() {
                         let headerElement = document.createElement('th')
                         headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader}`
                         headerElement.classList.add('quiCKIE_config_preset_table_thead_th')
+                        headerElement.textContent = tableValues.columnText[`${columnHeader}`]
+                        headerElement.setAttribute('title', tableValues.titles[`${columnHeader}`])
+
                         headersRow.appendChild(headerElement)
                     }
                     
                     // Append the headers to the <thead> (tableHeader) element
                     thead.appendChild(headersRow)
-
-                    // Add the mouse-over text for each column header
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_preset').setAttribute('title', 'Preset\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\To display a divider in your list, pick one of these characters and use it as the name.\n\n- = . [space]')
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_category').setAttribute('title', tableValues.titles.category)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_savepath').setAttribute('title', tableValues.titles.savepath)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_tags').setAttribute('title', tableValues.titles.tags)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_ratio').setAttribute('title', tableValues.titles.ratio)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_instance').setAttribute('title', tableValues.titles.instance)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').setAttribute('title', tableValues.titles.presetTrackers)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_paused').setAttribute('title', tableValues.titles.paused)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_subfolder').setAttribute('title', tableValues.titles.subfolder)
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_seqpieces').setAttribute('title', tableValues.titles.seqpieces)
-
-
-                    // Replace The column header text with what will be displayed
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_preset').textContent = tableValues.columnText.preset
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_category').textContent = tableValues.columnText.category
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_savepath').textContent = tableValues.columnText.savepath
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_tags').textContent = tableValues.columnText.tags
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_ratio').textContent = tableValues.columnText.ratio
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_instance').textContent = tableValues.columnText.instance
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').textContent = tableValues.columnText.presetTrackers
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_paused').textContent = tableValues.columnText.paused
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_subfolder').textContent = tableValues.columnText.subfolder
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_seqpieces').textContent = tableValues.columnText.seqpieces
 
                     for ( let i = 1; i <= presetCount ; i++) {
                         // For each preset, create 1 <tr> (tablerow). For each field of that preset, create 1 <td> (tabledata). Populate each <td> with 1 field from that preset.
