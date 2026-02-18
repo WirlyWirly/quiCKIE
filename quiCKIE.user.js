@@ -841,22 +841,6 @@ function createGMConfigSettingsPanel() {
                 // ----------------------------------- TABLE CONSTANTS -----------------------------------
 
                 let tableValues = {
-                    'titles': {
-                        'tracker': '─── ⭐ Tracker ⭐ ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings',
-                        'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-                        'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
-                        'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
-                        'ratio': '─── ➗ Ratio Limit ➗ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
-                        'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
-                        'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
-                        'paused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
-                        'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-                        'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
-
-                        'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
-                        'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
-                    },
-
                     'columnText': {
                         'tracker': '⭐ Tracker',
                         'category': '🗃️ Category',
@@ -871,6 +855,22 @@ function createGMConfigSettingsPanel() {
 
                         'preset': '🚀 Preset',
                         'presettrackers': '👀 Trackers',
+                    },
+
+                    'titles': {
+                        'tracker': '─── ⭐ Tracker ⭐ ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings',
+                        'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
+                        'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+                        'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
+                        'ratio': '─── ➗ Ratio Limit ➗ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
+                        'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
+                        'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
+                        'paused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
+                        'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+                        'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
+
+                        'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
+                        'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
                     }
 
                 }

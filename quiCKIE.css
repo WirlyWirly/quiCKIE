@@ -380,16 +380,16 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
 
 /* Tooltip styling */
 /* #quiCKIE_config .field_label[title]:hover::after { */
-a.quiCKIE_bunnyButton .field_label[title]:hover::after {
+a.quiCKIE_bunnyButton .field_label[title]:hover::after,
+th.quiCKIE_config_table_thead_th .field_label[title]:hover::after {
     font-family: "Roboto Condensed", Tahoma, Arial;
     font-size: 12px;
     background: #2C3E50;
     color: #FFFFFF;
     padding: 2px 2px 2px 2px;
-    /* content: attr(title); */
+    content: attr(title);
     /* position: absolute; */
-    /* border-radius: 3px; */
-    /* font-size: 0.8em; */
+    border-radius: 3px;
     /* max-width: 300px; */
     /* z-index: 100; */
     /* margin-top: 25px; */
