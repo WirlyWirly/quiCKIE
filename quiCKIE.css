@@ -92,6 +92,13 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 50px;
 }
 
+/* SubFolder */
+#quiCKIE_config_tracker_table_colg_col_subfolder,
+#quiCKIE_config_tracker_table_colg_col_subfolder {
+    width: 50px;
+    max-width: 50px;
+}
+
 /* SeqPieces */
 #quiCKIE_config_tracker_table_colg_col_seqpieces,
 #quiCKIE_config_preset_table_colg_col_seqpieces {
@@ -151,8 +158,9 @@ thead.quiCKIE_config_table_thead th:nth-last-child(1) {
     border-right: none !important;
 }
 
-tr.quiCKIE_config_table_tbody_tr:nth-child(even) td:nth-last-child(2) {
-    /* Paused Column Border */
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_startPaused,
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subFolder {
+    /* Right-border for the checkbox columns */
     border-color: #191d2a;
     border-style: none solid none none !important;
     border-width: 3px;

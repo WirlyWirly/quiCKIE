@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.87
+// @version     0.90
 // @description A quiCKIE way to send torrents from various trackers to qui!
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -220,11 +220,12 @@ let SETTINGS = {
     instance: GM_config.get(`${trackerDomain}-instance`),
     leftClick: GM_config.get(`${trackerDomain}-leftClick`),
     startPaused: GM_config.get(`${trackerDomain}-startPaused`),
+    subFolder: GM_config.get(`${trackerDomain}-subFolder`),
     seqPieces: GM_config.get(`${trackerDomain}-seqPieces`),
     
 }
 
-// GM_config() sets what should be blank int/float fields to 0, so change them to blank strings
+// GM_config() saves what should be blank int/float fields to 0, which is a problem for qui, so change them to blank strings
 if ( SETTINGS.ratioLimit == 0 ) { SETTINGS.ratioLimit = '' }
 if ( SETTINGS.instance == 0 ) { SETTINGS.instance = '' }
 
@@ -647,7 +648,7 @@ function createGMConfigSettingsPanel() {
     // Generate and initialize the GM_config settings panel. It has been done in a function for code cleanliness.
     
     // @trackerFieldGeneration
-    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'instance', 'leftClick', 'startPaused', 'seqPieces']
+    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'instance', 'leftClick', 'startPaused', 'subFolder', 'seqPieces']
     let gmConfigTrackerFields = {}
     let trackerDomains = Object.keys(settingsPanelEntries)
     for ( let trackerDomain of trackerDomains ) {
@@ -688,6 +689,10 @@ function createGMConfigSettingsPanel() {
             [`${trackerDomain}-${trackerFieldSuffixes[7]}`]: {
                 'type': 'checkbox',
                 'default': false
+            },
+            [`${trackerDomain}-${trackerFieldSuffixes[8]}`]: {
+                'type': 'checkbox',
+                'default': false
             }
         }
 
@@ -696,7 +701,7 @@ function createGMConfigSettingsPanel() {
     }
 
     // @presetFieldGeneration
-    const presetFieldSuffixes = ['preset', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'instance', 'startPaused', 'seqPieces']
+    const presetFieldSuffixes = ['preset', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'instance', 'startPaused', 'subFolder', 'seqPieces']
     let gmConfigPresetsFields = {}
     for (let i = 1; i <= presetCount; i++) {
         // --- GM_config() Fields ---
@@ -731,6 +736,10 @@ function createGMConfigSettingsPanel() {
                 'default': false
             },
             [`preset-${i}-${presetFieldSuffixes[8]}`]: {
+                'type': 'checkbox',
+                'default': false
+            },
+            [`preset-${i}-${presetFieldSuffixes[9]}`]: {
                 'type': 'checkbox',
                 'default': false
             }
@@ -771,8 +780,7 @@ function createGMConfigSettingsPanel() {
                     <a href="${GM_info.script.homepage}" target="_blank" style="font-family: 'Sirin Stencil', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; color: #FFFFFF; text-decoration: none; background: none; line-height: 30px">quiCKIE</a>
                 </span>
                 🐰
-                <div style="color: #b7b7b7; font-size: 12px; font-weight: 300; display: block; margin: 16px 0px 0px;">by WirlyWirly ( + Contributors 🫶 )</div>
-                <div style=""><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">* Hover over column headers for details *</span></div>
+                <div style="margin: 15px 0px 0px 0px;"><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">* Hover over column headers for details *</span></div>
             </div>
         `,
 
@@ -832,29 +840,17 @@ function createGMConfigSettingsPanel() {
                 // ----------------------------------- TABLE CONSTANTS -----------------------------------
 
                 let tableValues = {
-                    'icons': {
-                        'tracker': '⭐',
-                        'presettracker': '👀',
-                        'category': '🗃️',
-                        'savepath': '💾',
-                        'tags': '🏷️',
-                        'ratio': '➗',
-                        'instance': '🎯',
-                        'paused': '⏸️',
-                        'seqpieces': '🧩',
-                        'preset': '🚀',
-                    },
-
                     'titles': {
                         'presetTrackers': 'Preset Trackers\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nExample:  HDBits, PassThePopcorn, Nyaa\n\nUse the * wildcard to display this preset on ALL trackers',
                         'category': 'Category\n\nSpecify the category to apply to these these torrents',
-                        'savepath': 'Save Path\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default',
+                        'savepath': 'Save Path\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
                         'tags': 'Tags\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
                         'ratio': 'Ratio Limit\n\nStop the torrents when they have seeded to the specified ratio limit.\n\nUse -1 to stop the torrents immediately after downloading is complete',
-                        'instance': 'Target qui Instance\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the saved quiURL\n\n* This does NOT support a full url, only an instance ID',
+                        'instance': 'Target qui Instance\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
                         'leftclick': "Left-Click \\ Tap\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
-                        'paused': 'Start Paused\n\nPause torrents when they are added so as not to automatically begin downloading',
-                        'seqpieces': 'Sequential Piece Download\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed'
+                        'paused': 'Start Paused\n\nPause torrents when they are added so as to not automatically begin downloading',
+                        'subfolder': 'SubFolder\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+                        'seqpieces': 'Sequential Piece Download\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
                     },
 
                     'columnText': {
@@ -868,7 +864,8 @@ function createGMConfigSettingsPanel() {
                         'instance': '🎯',
                         'leftclick': '🖱️ Click',
                         'paused': '⏸️',
-                        'seqpieces': '🧩'
+                        'subfolder': '📁',
+                        'seqpieces': '🧩',
                     }
 
                 }
@@ -904,16 +901,15 @@ function createGMConfigSettingsPanel() {
                 let headersRow = document.createElement('tr')
                 headersRow.classList.add('quiCKIE_config_table_thead_tr')
 
-                for (let columnHeader of ['Tracker', 'Category', 'SavePath', 'Tags', 'Ratio', 'Instance', 'LeftClick', 'Paused', 'SeqPieces']) {
+                for (let columnHeader of ['tracker', 'category', 'savepath', 'tags', 'ratio', 'instance', 'leftclick', 'paused', 'subfolder', 'seqpieces']) {
                     let columnGroupElement = document.createElement('col')
-                    columnGroupElement.id = `quiCKIE_config_tracker_table_colg_col_${columnHeader.toLowerCase()}`
+                    columnGroupElement.id = `quiCKIE_config_tracker_table_colg_col_${columnHeader}`
                     columnGroupElement.classList.add(`quiCKIE_config_table_colg_col`)
                     columnGroupElement.span = 1
                     tcolg.appendChild(columnGroupElement)
 
                     let headerElement = document.createElement('th')
-                    headerElement.innerHTML = columnHeader
-                    headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader.toLowerCase()}`
+                    headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader}`
                     headerElement.classList.add('quiCKIE_config_table_thead_th')
                     headersRow.appendChild(headerElement)
                 }
@@ -931,6 +927,7 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_instance').setAttribute('title', tableValues.titles.instance)
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_leftclick').setAttribute('title', tableValues.titles.leftclick)
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_paused').setAttribute('title', tableValues.titles.paused)
+                document.getElementById('quiCKIE_config_tracker_table_thead_th_subfolder').setAttribute('title', tableValues.titles.subfolder)
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_seqpieces').setAttribute('title', tableValues.titles.seqpieces)
 
                 // Replace The column header text with what will be displayed
@@ -942,6 +939,7 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_instance').textContent = tableValues.columnText.instance
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_leftclick').textContent = tableValues.columnText.leftclick
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_paused').textContent = tableValues.columnText.paused
+                document.getElementById('quiCKIE_config_tracker_table_thead_th_subfolder').textContent = tableValues.columnText.subfolder
                 document.getElementById('quiCKIE_config_tracker_table_thead_th_seqpieces').textContent = tableValues.columnText.seqpieces
 
 
@@ -978,6 +976,7 @@ function createGMConfigSettingsPanel() {
 
                         let dataElement = document.createElement('td')
                         dataElement.classList.add('quiCKIE_config_table_tbody_td_field')
+                        dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`)
 
                         let fieldElement = document.getElementById(`quiCKIE_config_field_${uniqueDomainKey}-${fieldSuffix}`)
                         fieldElement.setAttribute('data-fieldType', fieldSuffix)
@@ -1039,16 +1038,15 @@ function createGMConfigSettingsPanel() {
                     headersRow = document.createElement('tr')
                     headersRow.classList.add('quiCKIE_config_table_thead_tr')
 
-                    for (let columnHeader of ['Preset', 'presetTrackers', 'Category', 'SavePath', 'Tags', 'Ratio', 'Instance', 'Paused', 'SeqPieces']) {
+                    for (let columnHeader of ['preset', 'presettrackers', 'category', 'savepath', 'tags', 'ratio', 'instance', 'paused', 'subfolder', 'seqpieces']) {
                         let columnGroupElement = document.createElement('col')
-                        columnGroupElement.id = `quiCKIE_config_preset_table_colg_col_${columnHeader.toLowerCase()}`
+                        columnGroupElement.id = `quiCKIE_config_preset_table_colg_col_${columnHeader}`
                         columnGroupElement.classList.add(`quiCKIE_config_preset_table_colg_col`)
                         columnGroupElement.span = 1
                         tcolg.appendChild(columnGroupElement)
 
                         let headerElement = document.createElement('th')
-                        headerElement.innerHTML = columnHeader
-                        headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader.toLowerCase()}`
+                        headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader}`
                         headerElement.classList.add('quiCKIE_config_preset_table_thead_th')
                         headersRow.appendChild(headerElement)
                     }
@@ -1065,6 +1063,7 @@ function createGMConfigSettingsPanel() {
                     document.getElementById('quiCKIE_config_preset_table_thead_th_instance').setAttribute('title', tableValues.titles.instance)
                     document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').setAttribute('title', tableValues.titles.presetTrackers)
                     document.getElementById('quiCKIE_config_preset_table_thead_th_paused').setAttribute('title', tableValues.titles.paused)
+                    document.getElementById('quiCKIE_config_preset_table_thead_th_subfolder').setAttribute('title', tableValues.titles.subfolder)
                     document.getElementById('quiCKIE_config_preset_table_thead_th_seqpieces').setAttribute('title', tableValues.titles.seqpieces)
 
 
@@ -1077,6 +1076,7 @@ function createGMConfigSettingsPanel() {
                     document.getElementById('quiCKIE_config_preset_table_thead_th_instance').textContent = tableValues.columnText.instance
                     document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').textContent = tableValues.columnText.presetTrackers
                     document.getElementById('quiCKIE_config_preset_table_thead_th_paused').textContent = tableValues.columnText.paused
+                    document.getElementById('quiCKIE_config_preset_table_thead_th_subfolder').textContent = tableValues.columnText.subfolder
                     document.getElementById('quiCKIE_config_preset_table_thead_th_seqpieces').textContent = tableValues.columnText.seqpieces
 
                     for ( let i = 1; i <= presetCount ; i++) {
@@ -1094,6 +1094,7 @@ function createGMConfigSettingsPanel() {
 
                             let dataElement = document.createElement('td')
                             dataElement.classList.add('quiCKIE_config_table_tbody_td_field')
+                            dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`)
 
                             let fieldElement = document.getElementById(`quiCKIE_config_field_preset-${i}-${fieldSuffix}`)
                             fieldElement.setAttribute('data-fieldType', fieldSuffix)
@@ -1295,7 +1296,17 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
     bunnyButton.classList.add('quiCKIE_bunnyButton')
     bunnyButton.href = 'javascript:void(0)'
     bunnyButton.textContent = buttonText
-    bunnyButton.title = `quiCKIE\n-----------------\nCategory: ${SETTINGS.category}\nSavePath: ${SETTINGS.savePath}\nTags: ${SETTINGS.tags}\nRatioLimit: ${SETTINGS.ratioLimit}\nInstance: ${SETTINGS.instance}\nStartPaused: ${SETTINGS.startPaused}\nSeqPiece: ${SETTINGS.seqPieces}`
+    bunnyButton.title = ` ─── ⭐ ${settingsPanelEntries[`${trackerDomain}`]} ⭐ ───
+ 🗃️ = ${SETTINGS.category}
+ 💾 = ${SETTINGS.savePath}
+ 🏷️ = ${SETTINGS.tags}
+ ➗ = ${SETTINGS.ratioLimit}
+ 🎯 = ${SETTINGS.instance}
+ 🖱️ = ${SETTINGS.leftClick}
+ ⏸️ = ${SETTINGS.startPaused}
+ 📁 = ${SETTINGS.subFolder}
+ 🧩 = ${SETTINGS.seqPieces}`
+
     bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none`)
     bunnyButton.setAttribute('data-torrenturl', torrentURL)
 
@@ -1373,7 +1384,7 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
             bunnyButton.id = '__CLICKED__'
             bunnyButton.textContent = ' 🕓 '
 
-            quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, bunnyButton.dataset.torrenturl, SETTINGS.instance, SETTINGS.category, SETTINGS.savePath, SETTINGS.tags, SETTINGS.ratioLimit, SETTINGS.startPaused, SETTINGS.seqPieces)
+            quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, bunnyButton.dataset.torrenturl, SETTINGS.instance, SETTINGS.category, SETTINGS.savePath, SETTINGS.tags, SETTINGS.ratioLimit, SETTINGS.startPaused, SETTINGS.subFolder, SETTINGS.seqPieces)
 
         }
 
@@ -1405,7 +1416,7 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
 }
 
 
-function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', startPaused = false, seqPieces = false) {
+function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', startPaused = false, subFolder = false, seqPieces = false) {
 
     try {
         // Using the saved quiURL, generate the API endpoint to send the POST
@@ -1426,17 +1437,9 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         return
     }
 
-    if (instance != '') {
+    if ( instance != '' ) {
         // Update the URL to point to the specified instance id
         quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
-    }
-
-    if (ratioLimit == 0 ) {
-        // A ratioLimit of 0 will stop the torrent after download and prevent it from seeding
-        ratioLimit = ''
-    } else if ( ratioLimit <= -1 ) {
-        // Stop download upon completion
-        ratioLimit = 0
     }
 
     // The form data that will be passed to qui
@@ -1448,8 +1451,18 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
     form.append('ratioLimit', ratioLimit)
     form.append('paused', startPaused)
 
+    if ( ratioLimit <= -1 ) {
+        // Stop download upon completion
+        form.ratioLimit = 0
+    }
+
+    if ( subFolder == true ) {
+        // SETTINGS.subFolder: Save single-file downloads into their own sub-folder
+        form.append('contentLayout', 'Subfolder')
+    }
+
     if ( seqPieces == true ) {
-        // Allow for playback while downloading by enabling "Sequential Piece Downloading" AND "First\Last Piece Priority" 
+        // SETTINGS.seqPieces: Allow for playback while downloading by enabling "Sequential Piece Downloading" & "First\Last Piece Priority" 
         form.append('sequentialDownload', true)
         form.append('firstLastPiecePrio', true)
     }
@@ -1662,10 +1675,11 @@ function generatePresetsContextMenu() {
                             tags: GM_config.get(`preset-${i}-tags`),
                             ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
                             startPaused: GM_config.get(`preset-${i}-startPaused`),
+                            subFolder: GM_config.get(`preset-${i}-subFolder`),
                             seqPieces: GM_config.get(`preset-${i}-seqPieces`),
                         }
 
-                        quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, torrentURL, presetSettings.instance, presetSettings.category, presetSettings.savePath, presetSettings.tags, presetSettings.ratioLimit, presetSettings.startPaused, presetSettings.seqPieces)
+                        quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, torrentURL, presetSettings.instance, presetSettings.category, presetSettings.savePath, presetSettings.tags, presetSettings.ratioLimit, presetSettings.startPaused, presetSettings.subFolder, presetSettings.seqPieces)
 
                     }
                 }
