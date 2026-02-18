@@ -80,7 +80,7 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 }
 
 /* LeftClick */
-#quiCKIE_config_tracker_table_colg_col_leftclick, {
+#quiCKIE_config_tracker_table_colg_col_leftclick {
     width: 95px;
     max-width: 95px;
 }

@@ -176,11 +176,12 @@ const settingsPanelEntries = {
 // =================================== GENERATE SETTINGS PANEL ======================================
 
 // Determine the saved number of preset fields that should be generated in the settings panel and context menu
+let presetCount = ''
 if ( GM_getValue('quiCKIE_config') !== undefined ) {
-    // Use the presetCount specified with GM_config()
+    // Use the saved presetCount specified with GM_config()
     let quiCKIESettingsObject = JSON.parse(GM_getValue('quiCKIE_config'))
 
-    var presetCount = quiCKIESettingsObject['presetCount']
+    presetCount = quiCKIESettingsObject['presetCount']
 
     // v0.6: Updaters may not have a preset count, delete this block in a few versions...
     if ( presetCount == undefined ) {
@@ -189,7 +190,7 @@ if ( GM_getValue('quiCKIE_config') !== undefined ) {
 
 } else {
     // No previously saved preset count
-    var presetCount = 3
+    presetCount = 3
 }
 
 // For the sake of code-cleanliness, everything related to GM_config.ini() has been done in this function and moved further down the script
@@ -645,7 +646,7 @@ if ( !skipTrackerDomains.includes(trackerDomain) ) {
 // =================================== SCRIPT FUNCTIONS ======================================
 
 function createGMConfigSettingsPanel() {
-    // Generate and initialize the GM_config settings panel. It has been done in a function for code cleanliness.
+    // Generate and initialize the GM_config settings panel. It has been done in this function for code cleanliness.
     
     // @trackerFieldGeneration
     const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'instance', 'leftClick', 'startPaused', 'subFolder', 'seqPieces']
