@@ -5,7 +5,7 @@
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
 // @version     0.90
-// @description A quiCKIE way to send torrents from various trackers to qui!
+// @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
 
@@ -1417,6 +1417,7 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
 
 
 function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', startPaused = false, subFolder = false, seqPieces = false) {
+    // Using the provided parameters, create the object containing all the info needed to POST a new torrent to qui
 
     try {
         // Using the saved quiURL, generate the API endpoint to send the POST
@@ -1452,7 +1453,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
     form.append('paused', startPaused)
 
     if ( ratioLimit <= -1 ) {
-        // Stop download upon completion
+        // SETTINGS.ratioLimit: Stop download upon completion
         form.ratioLimit = 0
     }
 
@@ -1467,7 +1468,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         form.append('firstLastPiecePrio', true)
     }
     
-    // The finalized data needed to POST a torrent to qui
+    // The object containing the finalized data needed to POST a torrent to qui
     let quiPostData = {
         'apiURL': quiApiAddTorrentURL,
         'apiKey': quiApiKey,
@@ -1480,7 +1481,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         quiPOST(quiPostData)
 
     } else {
-        // Download the file through the browser before sending it to qui
+        // Download the .torrent file through the browser before sending it to qui
         document.getElementById('__CLICKED__').textContent = ' 💾 '
         getFileBlob(quiPostData)
 
@@ -1501,8 +1502,8 @@ function getFileBlob(quiPostData) {
         onload: function(response) {
             // ----- File Downloaded ----- 
             let blobData = response.response
-            quiPostData.form.append('torrent', blobData)
 
+            quiPostData.form.append('torrent', blobData)
             document.getElementById('__CLICKED__').textContent = ' 🕓 '
 
             quiPOST(quiPostData)
@@ -1531,7 +1532,7 @@ function getFileBlob(quiPostData) {
 
 
 function quiPOST(quiPostData) {
-// Send a POST to qui with the provided data
+// Send a POST to qui with provided object
 
     GM_xmlhttpRequest({
         // Use the internal GM function to prevent source-origin errors
