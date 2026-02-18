@@ -16,7 +16,7 @@ class ContextMenu {
     if (nodes && nodes.length !== 0) {
       return nodes;
     } else {
-      console.error(`getTargetNode :: "${this.target}" target not found`);
+    // console.error(`quiCKIE: contextMenu.js | getTargetNode :: "${this.target}" target not found`);
       return [];
     }
   }
