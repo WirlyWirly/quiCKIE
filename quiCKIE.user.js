@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.94
+// @version     0.945
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -1469,14 +1469,14 @@ function bunnyButtonClickedActions(bunnyButton, settingsProperty, isGlobal) {
 
 
 function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', seedTime = '', startPaused = false, subFolder = false, seqPieces = false) {
-    // Using the provided parameters, create the object containing all the info needed to POST a new torrent to qui
+    // Using the provided parameters, create the object containing all the info needed to POST a new torrent to qui, then pass that object to the appropriate POST function.
 
     try {
-        // Using the saved quiURL, generate the API endpoint to send the POST
+        // Using the saved quiURL, parse and generate the API endpoint to send the POST request
 
-        let quiHost = quiURL.match(/^(.*)\/(instances\/\d+)/)[1]
-        let quiInstance = quiURL.match(/^(.*)\/(instances\/\d+)/)[2]
-        var quiApiAddTorrentURL = `${quiHost}/api/${quiInstance}/torrents`
+        // quiURL Example: http://localhost:7476/qui/instances/1
+        let quiURLCaptures = quiURL.match(/^(.*)\/(instances\/\d+)/) // [1] == domain, [2] == instance
+        var quiApiAddTorrentURL = `${quiURLCaptures[1]}/api/${quiURLCaptures[2]}/torrents`
 
     } catch(error) {
         // Failed to parse quiURL
@@ -1485,11 +1485,12 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         document.getElementById('__CLICKED__').textContent == ' ❌ '
         document.getElementById('__CLICKED__').removeAttribute('id')
 
-        window.alert(`❌ quiCKIE ❌\n\nFailed to generate the qui API endpoint from the saved quiURL.\n\nCheck your quiURL for typos.\n\n${quiURL}`)
+        window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL to generate the appropriate apiURL\n\nCheck your quiURL for typos\n\nquiURL: ${quiURL}`)
 
         return
     }
 
+    // Remove 0 literals, which lead to unexpected behaviour from qBitTorrent
     if ( ratioLimit == 0 ) {
         // A ratio limit of 0 will stop the torrent after downloading, so take preventative action
         ratioLimit = ''
@@ -1504,11 +1505,6 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
     } else if ( seedTime <= -1 ) {
         // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
         seedTime = 0
-    }
-
-    if ( instance != '' && instance <= 0 ) {
-        // Update the URL to point to the specified instance id
-        quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
     }
 
     // The form data that will be passed to qui
@@ -1532,6 +1528,11 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         form.append('firstLastPiecePrio', true)
     }
     
+    if ( instance != '' && instance > 0 ) {
+        // SETTINGS.instance: Update the apiURL to point to the specified instance id
+        quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
+    }
+
     let quiPostData = {
         // The object containing the finalized data needed to POST a torrent to qui
         'apiURL': quiApiAddTorrentURL,
@@ -1545,7 +1546,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         quiPOST(quiPostData)
 
     } else {
-        // Download the .torrent file through the browser before sending it to qui
+        // This url has not authentication, so download the .torrent file through the browser before sending it to qui
         document.getElementById('__CLICKED__').textContent = ' 💾 '
         getFileBlob(quiPostData)
 
