@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.92
+// @version     0.93
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -218,6 +218,7 @@ let SETTINGS = {
     savePath: GM_config.get(`${trackerDomain}-savePath`),
     tags: GM_config.get(`${trackerDomain}-tags`),
     ratioLimit: GM_config.get(`${trackerDomain}-ratioLimit`),
+    seedTime: GM_config.get(`${trackerDomain}-seedTime`),
     instance: GM_config.get(`${trackerDomain}-instance`),
     leftClick: GM_config.get(`${trackerDomain}-leftClick`),
     startPaused: GM_config.get(`${trackerDomain}-startPaused`),
@@ -228,6 +229,7 @@ let SETTINGS = {
 
 // GM_config() saves what should be blank int/float fields to 0, which is a problem for qui, so change them to blank strings
 if ( SETTINGS.ratioLimit == 0 ) { SETTINGS.ratioLimit = '' }
+if ( SETTINGS.seedTime == 0 ) { SETTINGS.seedTime = '' }
 if ( SETTINGS.instance == 0 ) { SETTINGS.instance = '' }
 
 
@@ -649,7 +651,8 @@ function createGMConfigSettingsPanel() {
     // Generate and initialize the GM_config settings panel. It has been done in this function for code cleanliness.
     
     // @trackerFieldGeneration
-    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'instance', 'leftClick', 'startPaused', 'subFolder', 'seqPieces']
+    // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in 
+    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'instance', 'leftClick', 'startPaused', 'subFolder', 'seqPieces']
     let gmConfigTrackerFields = {}
     let trackerDomains = Object.keys(settingsPanelEntries)
     for ( let trackerDomain of trackerDomains ) {
@@ -674,24 +677,29 @@ function createGMConfigSettingsPanel() {
                 'default': ''
             },
             [`${trackerDomain}-${trackerFieldSuffixes[4]}`]: {
-                'label': 'Instance',
+                'label': 'Seed Time',
                 'type': 'int',
                 'default': ''
             },
             [`${trackerDomain}-${trackerFieldSuffixes[5]}`]: {
+                'label': 'Instance',
+                'type': 'int',
+                'default': ''
+            },
+            [`${trackerDomain}-${trackerFieldSuffixes[6]}`]: {
                 'type': 'select',
                 'options': ['Global', 'Tracker', 'Settings', 'quiTab', 'Nothing'],
                 'default': 'Global',
-            },
-            [`${trackerDomain}-${trackerFieldSuffixes[6]}`]: {
-                'type': 'checkbox',
-                'default': false
             },
             [`${trackerDomain}-${trackerFieldSuffixes[7]}`]: {
                 'type': 'checkbox',
                 'default': false
             },
             [`${trackerDomain}-${trackerFieldSuffixes[8]}`]: {
+                'type': 'checkbox',
+                'default': false
+            },
+            [`${trackerDomain}-${trackerFieldSuffixes[9]}`]: {
                 'type': 'checkbox',
                 'default': false
             }
@@ -702,7 +710,7 @@ function createGMConfigSettingsPanel() {
     }
 
     // @presetFieldGeneration
-    const presetFieldSuffixes = ['preset', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'instance', 'startPaused', 'subFolder', 'seqPieces']
+    const presetFieldSuffixes = ['preset', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'instance', 'startPaused', 'subFolder', 'seqPieces']
     let gmConfigPresetsFields = {}
     for (let i = 1; i <= presetCount; i++) {
         // --- GM_config() Fields ---
@@ -728,13 +736,14 @@ function createGMConfigSettingsPanel() {
                 'default': ''
             },
             [`preset-${i}-${presetFieldSuffixes[6]}`]: {
-                'label': 'Instance',
+                'label': 'Seed Time',
                 'type': 'int',
                 'default': ''
             },
             [`preset-${i}-${presetFieldSuffixes[7]}`]: {
-                'type': 'checkbox',
-                'default': false
+                'label': 'Instance',
+                'type': 'int',
+                'default': ''
             },
             [`preset-${i}-${presetFieldSuffixes[8]}`]: {
                 'type': 'checkbox',
@@ -743,10 +752,56 @@ function createGMConfigSettingsPanel() {
             [`preset-${i}-${presetFieldSuffixes[9]}`]: {
                 'type': 'checkbox',
                 'default': false
+            },
+            [`preset-${i}-${presetFieldSuffixes[10]}`]: {
+                'type': 'checkbox',
+                'default': false
             }
         }
 
             gmConfigPresetsFields = {...gmConfigPresetsFields, ...genereatedPresetFields}
+    }
+
+    // The data that will be used as the '.textContent' and '.title' in the settings panel's <th> elements. The property names are the '.toLowerCase()' of trackerFieldSuffixes and presetFieldSuffixes.
+    const tableHeaderData = {
+        'columnText': {
+            'tracker': '🌎 Tracker',
+
+            'preset': '🚀 Preset',
+            'presettrackers': '👀 Trackers',
+
+            'category': '🗃️ Category',
+            'savepath': '💾 SavePath',
+            'tags': '🏷️ Tags',
+            'ratiolimit': '⚖️',
+            'seedtime': '🌱',
+            'instance': '🎯',
+            'leftclick': '🖱️',
+            'startpaused': '⏸️',
+            'subfolder': '📁',
+            'seqpieces': '🧩',
+
+        },
+
+        'titles': {
+            'tracker': '─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings\n\nClicking a name below will re-direct you to the trackers website',
+
+            'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
+            'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
+
+            'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
+            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+            'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
+            'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
+            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nUse -1 to stop the torrents immediately after downloading is complete\n\n* The clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
+            'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
+            'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
+            'startpaused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
+            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
+
+        }
+
     }
 
     // For all @match entries, generate an object with all the uniqueDomains as keys and the site's homepage as the value
@@ -832,50 +887,12 @@ function createGMConfigSettingsPanel() {
                 panelStyle.inset = '50% auto auto 50%'
                 panelStyle.lineHeight = '22px'
                 panelStyle.margin = '0'
-                panelStyle.maxHeight = '90%'
+                panelStyle.maxHeight = '95%'
                 panelStyle.padding = '0px 0px'
                 panelStyle.position = 'fixed'
                 panelStyle.transform = 'translate(-50%,-50%)'
-                panelStyle.width = '1150px'
+                panelStyle.width = '1200px'
                 
-                // ----------------------------------- TABLE CONSTANTS -----------------------------------
-
-                let tableValues = {
-                    'columnText': {
-                        'tracker': '⭐ Tracker',
-                        'category': '🗃️ Category',
-                        'savepath': '💾 SavePath',
-                        'tags': '🏷️ Tags',
-                        'ratio': '➗',
-                        'instance': '🎯',
-                        'leftclick': '🖱️',
-                        'paused': '⏸️',
-                        'subfolder': '📁',
-                        'seqpieces': '🧩',
-
-                        'preset': '🚀 Preset',
-                        'presettrackers': '👀 Trackers',
-                    },
-
-                    'titles': {
-                        'tracker': '─── ⭐ Tracker ⭐ ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings',
-                        'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-                        'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
-                        'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
-                        'ratio': '─── ➗ Ratio Limit ➗ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
-                        'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
-                        'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
-                        'paused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
-                        'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-                        'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
-
-                        'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
-                        'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
-                    }
-
-                }
-
-
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various trackerDomain <div> elements created by GM_config() into a <table> with columns/rows
 
@@ -906,7 +923,11 @@ function createGMConfigSettingsPanel() {
                 let headersRow = document.createElement('tr')
                 headersRow.classList.add('quiCKIE_config_table_thead_tr')
 
-                for (let columnHeader of ['tracker', 'category', 'savepath', 'tags', 'ratio', 'instance', 'leftclick', 'paused', 'subfolder', 'seqpieces']) {
+
+                let tableHeaders = [...['tracker'], ...trackerFieldSuffixes]
+                for ( let columnHeader of tableHeaders ) {
+                    columnHeader = columnHeader.toLowerCase()
+
                     let columnGroupElement = document.createElement('col')
                     columnGroupElement.id = `quiCKIE_config_tracker_table_colg_col_${columnHeader}`
                     columnGroupElement.classList.add(`quiCKIE_config_table_colg_col`)
@@ -916,8 +937,8 @@ function createGMConfigSettingsPanel() {
                     let headerElement = document.createElement('th')
                     headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader}`
                     headerElement.classList.add('quiCKIE_config_table_thead_th')
-                    headerElement.textContent = tableValues.columnText[`${columnHeader}`]
-                    headerElement.setAttribute('title', tableValues.titles[`${columnHeader}`])
+                    headerElement.textContent = tableHeaderData.columnText[`${columnHeader}`]
+                    headerElement.setAttribute('title', tableHeaderData.titles[`${columnHeader}`])
 
                     headersRow.appendChild(headerElement)
                 }
@@ -1020,7 +1041,10 @@ function createGMConfigSettingsPanel() {
                     headersRow = document.createElement('tr')
                     headersRow.classList.add('quiCKIE_config_table_thead_tr')
 
-                    for (let columnHeader of ['preset', 'presettrackers', 'category', 'savepath', 'tags', 'ratio', 'instance', 'paused', 'subfolder', 'seqpieces']) {
+                    tableHeaders = [...presetFieldSuffixes]
+                    for ( let columnHeader of tableHeaders ) {
+                        columnHeader = columnHeader.toLowerCase()
+
                         let columnGroupElement = document.createElement('col')
                         columnGroupElement.id = `quiCKIE_config_preset_table_colg_col_${columnHeader}`
                         columnGroupElement.classList.add(`quiCKIE_config_preset_table_colg_col`)
@@ -1030,8 +1054,8 @@ function createGMConfigSettingsPanel() {
                         let headerElement = document.createElement('th')
                         headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader}`
                         headerElement.classList.add('quiCKIE_config_preset_table_thead_th')
-                        headerElement.textContent = tableValues.columnText[`${columnHeader}`]
-                        headerElement.setAttribute('title', tableValues.titles[`${columnHeader}`])
+                        headerElement.textContent = tableHeaderData.columnText[`${columnHeader}`]
+                        headerElement.setAttribute('title', tableHeaderData.titles[`${columnHeader}`])
 
                         headersRow.appendChild(headerElement)
                     }
@@ -1109,6 +1133,12 @@ function createGMConfigSettingsPanel() {
                     }
                 }
 
+                for ( let field of document.getElementById('quiCKIE_config').querySelectorAll('input[data-fieldtype="seedTime"]') ) {
+                    if ( field.value == 0 ) {
+                        field.value = ''
+                    }
+                }
+
                 for ( let field of document.getElementById('quiCKIE_config').querySelectorAll('input[data-fieldtype="instance"]') ) {
                     if ( field.value == 0 ) {
                         field.value = ''
@@ -1123,25 +1153,38 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
                 document.getElementById('quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
                 document.getElementById('quiCKIE_config_field_broadcasthe-ratioLimit').placeholder = '8.50'
+                document.getElementById('quiCKIE_config_field_broadcasthe-seedTime').placeholder = '1440'
                 document.getElementById('quiCKIE_config_field_broadcasthe-instance').placeholder = '2'
 
                 document.getElementById('quiCKIE_config_field_gazellegames-savePath').placeholder = '/downloads/GazelleGames'
                 document.getElementById('quiCKIE_config_field_gazellegames-category').placeholder = 'GazelleGames'
                 document.getElementById('quiCKIE_config_field_gazellegames-tags').placeholder = 'games'
                 document.getElementById('quiCKIE_config_field_gazellegames-ratioLimit').placeholder = '5.75'
+                document.getElementById('quiCKIE_config_field_gazellegames-seedTime').placeholder = '10080'
                 document.getElementById('quiCKIE_config_field_gazellegames-instance').placeholder = '3'
 
                 document.getElementById('quiCKIE_config_field_nyaa-savePath').placeholder = '/downloads/Nyaa'
                 document.getElementById('quiCKIE_config_field_nyaa-category').placeholder = 'Nyaa'
                 document.getElementById('quiCKIE_config_field_nyaa-tags').placeholder = 'anime, media, public'
                 document.getElementById('quiCKIE_config_field_nyaa-ratioLimit').placeholder = '1.25'
+                document.getElementById('quiCKIE_config_field_nyaa-seedTime').placeholder = '40320'
                 document.getElementById('quiCKIE_config_field_nyaa-instance').placeholder = '2'
                 
+                document.getElementById('quiCKIE_config_field_secret-cinema-savePath').placeholder = '/downloads/Secret-Cinema'
+                document.getElementById('quiCKIE_config_field_secret-cinema-category').placeholder = 'Secret-Cinema'
+                document.getElementById('quiCKIE_config_field_secret-cinema-tags').placeholder = 'films, media, private'
+                document.getElementById('quiCKIE_config_field_secret-cinema-ratioLimit').placeholder = '3.25'
+                document.getElementById('quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
+                document.getElementById('quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
+
                 // Move quiURL\apiKey\Presets\Click elements into the same row
                 let quiURLDiv = document.getElementById('quiCKIE_config_quiURL_var')
+                quiURLDiv.title = ''
                 document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', quiURLDiv)
 
-                document.getElementById('quiCKIE_config_quiURL_field_label').title = `The full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nSeedbox users might try: https://username:password@seedboxDomain.com/qui/instances/1`
+                let quiURLTooltip = 'The full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:7476/qui/instances/1\n\nSeedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1'
+                document.getElementById('quiCKIE_config_quiURL_field_label').title = quiURLTooltip
+                document.getElementById('quiCKIE_config_field_quiURL').title = quiURLTooltip
 
                 let quiApiKeyLabel = document.getElementById('quiCKIE_config_quiApiKey_field_label')
                 let quiApiKeyField = document.getElementById('quiCKIE_config_field_quiApiKey')
@@ -1169,7 +1212,6 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.appendChild(middleClickLabel)
                 quiURLDiv.appendChild(middleClickField)
 
-                quiURLDiv.title = ''
 
                 document.getElementById('quiCKIE_config_quiApiKey_var').remove()
                 document.getElementById('quiCKIE_config_presetCount_var').remove()
@@ -1180,13 +1222,12 @@ function createGMConfigSettingsPanel() {
                 let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
                 
                 quiURLField.type = 'password'
+                quiURLField.addEventListener('focus', () => { quiURLField.type = 'text' })
+                quiURLField.addEventListener('blur', () => { quiURLField.type = 'password' })
+
                 quiApiKeyField.type = 'password'
-
-                quiURLField.addEventListener('mouseover', () => { quiURLField.type = 'text' })
-                quiURLField.addEventListener('mouseout', () => { quiURLField.type = 'password' })
-
-                quiApiKeyField.addEventListener('mouseover', (event) => { quiApiKeyField.type = 'text' })
-                quiApiKeyField.addEventListener('mouseout', (event) => { quiApiKeyField.type = 'password' })
+                quiApiKeyField.addEventListener('focus', (event) => { quiApiKeyField.type = 'text' })
+                quiApiKeyField.addEventListener('blur', (event) => { quiApiKeyField.type = 'password' })
 
                 // Create GitHub version element
                 let githubSVG = '<svg width="16" height="16" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_730_27136)"><path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="white"/></g><defs><clipPath id="clip0_730_27136"><rect width="98" height="96" fill="white"/></clipPath></defs></svg>'
@@ -1256,11 +1297,12 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
     bunnyButton.classList.add('quiCKIE_bunnyButton')
     bunnyButton.href = 'javascript:void(0)'
     bunnyButton.textContent = buttonText
-    bunnyButton.title = ` ─── ⭐ ${settingsPanelEntries[`${trackerDomain}`]} ⭐ ───
+    bunnyButton.title = ` ─── 🌎 ${settingsPanelEntries[`${trackerDomain}`]} 🌎 ─── 
  🗃️ = ${SETTINGS.category}
  💾 = ${SETTINGS.savePath}
  🏷️ = ${SETTINGS.tags}
- ➗ = ${SETTINGS.ratioLimit}
+ ⚖️ = ${SETTINGS.ratioLimit}
+ 🌱 = ${SETTINGS.seedTime}
  🎯 = ${SETTINGS.instance}
  🖱️ = ${SETTINGS.leftClick}
  ⏸️ = ${SETTINGS.startPaused}
@@ -1345,7 +1387,7 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
             bunnyButton.id = '__CLICKED__'
             bunnyButton.textContent = ' 🕓 '
 
-            quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, bunnyButton.dataset.torrenturl, SETTINGS.instance, SETTINGS.category, SETTINGS.savePath, SETTINGS.tags, SETTINGS.ratioLimit, SETTINGS.startPaused, SETTINGS.subFolder, SETTINGS.seqPieces)
+            quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, bunnyButton.dataset.torrenturl, SETTINGS.instance, SETTINGS.category, SETTINGS.savePath, SETTINGS.tags, SETTINGS.ratioLimit, SETTINGS.seedTime, SETTINGS.startPaused, SETTINGS.subFolder, SETTINGS.seqPieces)
 
         }
 
@@ -1377,7 +1419,7 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
 }
 
 
-function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', startPaused = false, subFolder = false, seqPieces = false) {
+function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = '', savePath = '', tags = '', ratioLimit = '', seedTime = '', startPaused = false, subFolder = false, seqPieces = false) {
     // Using the provided parameters, create the object containing all the info needed to POST a new torrent to qui
 
     try {
@@ -1407,6 +1449,14 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         ratioLimit = 0
     }
 
+    if ( seedTime == 0 ) {
+        // A seed time of 0 will stop the torrent after downloading, so take preventative action
+        seedTime = ''
+    } else if ( seedTime <= -1 ) {
+        // SETTINGS.seedTime: If specified, stop the download upon completion
+        seedTime = 0
+    }
+
     if ( instance != '' ) {
         // Update the URL to point to the specified instance id
         quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
@@ -1419,6 +1469,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
     form.append('savepath', savePath)
     form.append('tags', tags)
     form.append('ratioLimit', ratioLimit)
+    form.append('seedingTimeLimit', seedTime)
     form.append('paused', startPaused)
 
     if ( subFolder == true ) {
@@ -1638,6 +1689,7 @@ function generatePresetsContextMenu() {
                             savePath: GM_config.get(`preset-${i}-savePath`),
                             tags: GM_config.get(`preset-${i}-tags`),
                             ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
+                            seedTime: GM_config.get(`preset-${i}-seedTime`),
                             instance: GM_config.get(`preset-${i}-instance`),
                             startPaused: GM_config.get(`preset-${i}-startPaused`),
                             subFolder: GM_config.get(`preset-${i}-subFolder`),
@@ -1645,9 +1697,10 @@ function generatePresetsContextMenu() {
                         }
 
                         if ( presetSettings.ratioLimit == 0 ) { presetSettings.ratioLimit = '' }
+                        if ( presetSettings.seedTime == 0 ) { presetSettings.seedTime = '' }
                         if ( presetSettings.instance == 0 ) { presetSettings.instance = '' }
 
-                        quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, torrentURL, presetSettings.instance, presetSettings.category, presetSettings.savePath, presetSettings.tags, presetSettings.ratioLimit, presetSettings.startPaused, presetSettings.subFolder, presetSettings.seqPieces)
+                        quiAddTorrent(SETTINGS.quiURL, SETTINGS.quiApiKey, torrentURL, presetSettings.instance, presetSettings.category, presetSettings.savePath, presetSettings.tags, presetSettings.ratioLimit, presetSettings.seedTime, presetSettings.startPaused, presetSettings.subFolder, presetSettings.seqPieces)
 
                     }
                 }
@@ -1669,3 +1722,4 @@ function generatePresetsContextMenu() {
     presetsMenu.init()
 
 }
+

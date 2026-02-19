@@ -66,8 +66,15 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 }
 
 /* Ratio */
-#quiCKIE_config_tracker_table_colg_col_ratio,
-#quiCKIE_config_preset_table_colg_col_ratio {
+#quiCKIE_config_tracker_table_colg_col_ratiolimit,
+#quiCKIE_config_preset_table_colg_col_ratiolimit {
+    width: 55px;
+    max-width: 55px;
+}
+
+/* SeedTime */
+#quiCKIE_config_tracker_table_colg_col_seedtime,
+#quiCKIE_config_preset_table_colg_col_seedtime {
     width: 55px;
     max-width: 55px;
 }
@@ -86,8 +93,8 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 }
 
 /* Paused */
-#quiCKIE_config_tracker_table_colg_col_paused,
-#quiCKIE_config_preset_table_colg_col_paused {
+#quiCKIE_config_tracker_table_colg_col_startpaused,
+#quiCKIE_config_preset_table_colg_col_startpaused {
     width: 50px;
     max-width: 50px;
 }
@@ -241,11 +248,16 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     margin: 0px 6px 0px 10px;
 }
 
-#quiCKIE_config_field_quiApiKey,
 #quiCKIE_config_field_quiURL {
-    /* text input field */
-    width: 150px;
+    /* quiURL input */
+    width: 210px;
 }
+
+#quiCKIE_config_field_quiApiKey {
+    /* ApiKey input */
+    width: 55px;
+}
+
 #quiCKIE_config_field_globalLeftClickAction,
 #quiCKIE_config_field_globalMiddleClickAction {
     background: rgba(255, 255, 255, 0.9);
@@ -379,20 +391,27 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
 }
 
 /* Tooltip styling */
-/* #quiCKIE_config .field_label[title]:hover::after { */
-a.quiCKIE_bunnyButton .field_label[title]:hover::after,
-th.quiCKIE_config_table_thead_th .field_label[title]:hover::after {
-    font-family: "Roboto Condensed", Tahoma, Arial;
-    font-size: 12px;
-    background: #2C3E50;
-    color: #FFFFFF;
-    padding: 2px 2px 2px 2px;
-    content: attr(title);
-    /* position: absolute; */
-    border-radius: 3px;
-    /* max-width: 300px; */
-    /* z-index: 100; */
-    /* margin-top: 25px; */
-    /* left: 20px; */
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
-}
+/* th.quiCKIE_config_table_thead_th[title]:hover:after, */
+/* a.quiCKIE_bunnyButton[title]:hover:after { */
+/*     opacity: 100%; */
+/*     transition: all 0.1s ease 1.0s; */
+/*     visibility: visible; */
+/* } */
+
+/* th.quiCKIE_config_table_thead_th[title]:after, */
+/* a.quiCKIE_bunnyButton[title]:after { */
+/*     background-color: #2C3E50; */
+/*     border-radius: 5px; */
+/*     box-shadow: 0 2px 5px #2C3E50; */    
+/*     color: #FFFFFF; */
+/*     content: attr(title); */
+/*     font-family: "Roboto Condensed", Tahoma, Arial; */
+/*     font-size: 18px; */
+/*     margin: 20px 0px 0px 5px; */
+/*     max-width: 95%; */
+/*     padding: 2px 2px 2px 2px; */
+/*     position: absolute; */ 
+/*     visibility: hidden; */
+/*     width: 500px; */
+/*     z-index: 999; */
+/* } */
