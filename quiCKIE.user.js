@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.93
+// @version     0.94
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -41,6 +41,8 @@
 // @match   https://animebytes.tv/company.php?id=*
 // @match   https://animebytes.tv/series.php?id=*
 // @match   https://animebytes.tv/torrents*
+
+// @match   https://anthelion.me/torrents.php*
 
 // @match   https://bakabt.me/torrent/*
 
@@ -95,6 +97,10 @@
 // @match   https://www.myanonamouse.net/t/*
 // @match   https://www.myanonamouse.net/tor/browse.php*
 
+// @match   https://nebulance.io/bookmarks.php*
+// @match   https://nebulance.io/top10.php*
+// @match   https://nebulance.io/torrents.php*
+
 // @match   https://nyaa.si/*
 // @match   https://nyaa.si/view/*
 // @match   https://sukebei.nyaa.si/*
@@ -148,6 +154,7 @@ const settingsPanelEntries = {
 
     'alpharatio': 'AlphaRatio',
     'animebytes': 'AnimeBytes',
+    'anthelion': 'Anthelion', // @malefis
     'bakabt': 'BakaBT', 
     'bibliotik': 'Bibliotik',
     'bitporn': 'BitPorn',
@@ -161,6 +168,7 @@ const settingsPanelEntries = {
     'jpopsuki': 'JPopsuki', // @tartuffe
     'materialize': 'Materialize',
     'myanonamouse': 'MyAnonaMouse',
+    'nebulance': 'Nebulance', // @malefis
     'nyaa': 'Nyaa',
     'orpheus': 'Orpheus',
     'passthepopcorn': 'PassThePopcorn',
@@ -270,6 +278,21 @@ if ( trackerDomain == 'animebytes' ) {
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
         downloadElement.insertAdjacentText('afterend', '  ')
+
+    }
+
+} else if ( trackerDomain == 'anthelion' ) {
+    // ----------------------------------- Anthelion -----------------------------------
+    // Browse | Collages | Film
+
+    let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
+
+    for (let downloadElement of allDownloadElements) {
+
+        let bunnyButton = createBunnyButton(downloadElement.href)
+
+        downloadElement.insertAdjacentElement('afterend', bunnyButton)
+        downloadElement.insertAdjacentText('afterend', ' |')
 
     }
 
@@ -510,6 +533,21 @@ if ( trackerDomain == 'animebytes' ) {
         let config = { childList: true }
 
         observer.observe(target, config)
+    }
+
+} else if ( trackerDomain == 'nebulance' ) {
+    // ----------------------------------- Nebulance -----------------------------------
+    // Browse | Bookmarks | Top 10
+
+    let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
+
+    for (let downloadElement of allDownloadElements) {
+
+        let bunnyButton = createBunnyButton(downloadElement.href, '115%')
+
+        downloadElement.insertAdjacentElement('afterend', bunnyButton)
+        downloadElement.insertAdjacentText('afterend', ' ')
+
     }
 
 } else if ( trackerDomain == 'nyaa' ) {
@@ -784,21 +822,22 @@ function createGMConfigSettingsPanel() {
         },
 
         'titles': {
-            'tracker': '─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings\n\nClicking a name below will re-direct you to the trackers website',
+            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nHovering over the BunnyButton will provide a tooltip of the current tracker settings\n\nClicking a name below will re-direct you to the tracker's website",
 
             'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context menu\n\nPresets without a name will NOT be displayed\n\nTo display a divider in your list, pick one of these characters and use it as the name...\n\n- = . [space]',
             'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nUse the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n* The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
             'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
             'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nUse -1 to stop the torrents immediately after downloading is complete',
-            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nUse -1 to stop the torrents immediately after downloading is complete\n\n* The clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
-            'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\n* This does NOT support a full url, only a qui instance ID number',
+            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nUse -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
+            'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nThe 'Global' option will use the setting specified above",
-            'startpaused': '─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading',
-            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n* This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n* This may impact download speed',
+            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading",
+            // 'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading\n\nℹ️ Performing a 'Space-Click' on a BunnyButton will force the torrent to Start Paused",
+            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n⚠️ This may impact download speed',
 
         }
 
@@ -1182,7 +1221,7 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.title = ''
                 document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', quiURLDiv)
 
-                let quiURLTooltip = 'The full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:7476/qui/instances/1\n\nSeedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1'
+                let quiURLTooltip = '─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:7476/qui/instances/1\n\nSeedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1'
                 document.getElementById('quiCKIE_config_quiURL_field_label').title = quiURLTooltip
                 document.getElementById('quiCKIE_config_field_quiURL').title = quiURLTooltip
 
@@ -1195,20 +1234,21 @@ function createGMConfigSettingsPanel() {
                 let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
                 let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
                 presetCountLabel.classList.add('quiRowLabel')
+                presetCountLabel.title = '─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated and available for use from the right-click context menu of a BunnyButton\n\nHover over the preset column headers for details on how each field can be filled in\n\n⚠️ Lowering this number will REMOVE that many rows which will DELETE the settings of those rows'
                 quiURLDiv.appendChild(presetCountLabel)
                 quiURLDiv.appendChild(presetCountField)
 
                 let leftClickLabel = document.getElementById('quiCKIE_config_globalLeftClickAction_field_label')
                 let leftClickField = document.getElementById('quiCKIE_config_field_globalLeftClickAction')
                 leftClickLabel.classList.add('quiRowLabel')
-                leftClickLabel.title = 'The action to take when left-clicking on a Bunny button.\n\nApplies to both a PC left-click and tap on a mobile'
+                leftClickLabel.title = '─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when left-clicking on a Bunny button or tapping on a mobile'
                 quiURLDiv.appendChild(leftClickLabel)
                 quiURLDiv.appendChild(leftClickField)
 
                 let middleClickLabel = document.getElementById('quiCKIE_config_globalMiddleClickAction_field_label')
                 let middleClickField = document.getElementById('quiCKIE_config_field_globalMiddleClickAction')
                 middleClickLabel.classList.add('quiRowLabel')
-                middleClickLabel.title = 'The action to take when middle-clicking on a BunnyButton'
+                middleClickLabel.title = '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when middle-clicking on a BunnyButton'
                 quiURLDiv.appendChild(middleClickLabel)
                 quiURLDiv.appendChild(middleClickField)
 
@@ -1328,6 +1368,12 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
     bunnyButton.addEventListener('mouseup', function(event) {
         // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
 
+        // if ( event.key == ' ' || event.code == 'Space' || event.keyCode == 32 ) {
+        //     // Space-Click: Perform the click action with a StartPaused override
+        //     console.log('startedpaused')
+        //     SETTINGS.startPaused = true
+        // }
+
         if ( event.shiftKey && event.button == 0 ) {
             // Shift-Click: Open the quiCKIE settings panel
 
@@ -1338,21 +1384,22 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
 
             window.open(SETTINGS.quiURL).focus()
             
+            
         } else if ( event.button == 0 ) {
-            // Left-Click: Do what is saved by SETTINGS.globalLeftClickAction
 
             if ( SETTINGS.leftClick == 'Global' ) {
-                bunnyButtonClickedActions(this, isGlobal=true, 'globalLeftClickAction')
+                // Left-Click: Do what is saved by SETTINGS.globalLeftClickAction
+                bunnyButtonClickedActions(this, 'globalLeftClickAction', isGlobal=true)
             } else {
-                // This tracker us using a different leftClick action
-                bunnyButtonClickedActions(this, isGlobal=false, SETTINGS.leftClick)
+                // This tracker is using a specified leftClick action
+                bunnyButtonClickedActions(this, SETTINGS.leftClick, isGlobal=false)
             }
 
 
         } else if ( event.button == 1 ) {
             // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
 
-            bunnyButtonClickedActions(this, isGlobal=true, 'globalMiddleClickAction')
+            bunnyButtonClickedActions(this, 'globalMiddleClickAction', isGlobal=true)
 
         }
 
@@ -1364,14 +1411,13 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
 }
 
 
-function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
+function bunnyButtonClickedActions(bunnyButton, settingsProperty, isGlobal) {
     // Depending on what mouse button was clicked, perform the saved action
 
-    let buttonAction = ''
+    let buttonAction = settingsProperty
+
     if ( isGlobal == true) {
         buttonAction = SETTINGS[`${settingsProperty}`]
-    } else {
-        buttonAction = settingsProperty
     }
 
     if ( buttonAction == 'Tracker' ) {
@@ -1393,11 +1439,14 @@ function bunnyButtonClickedActions(bunnyButton, isGlobal, settingsProperty) {
 
     } else if ( buttonAction == 'Presets' ) {
         // Simultate a right-click to open the context menu
+        
+        // *** NOT WORKING ***
 
         let rightClickEvent = new MouseEvent('contextmenu', {
             button: 2, // The right mouse button
             bubbles: true,
             cancelable: true,
+            // view: window,
 
         })
 
@@ -1445,7 +1494,7 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         // A ratio limit of 0 will stop the torrent after downloading, so take preventative action
         ratioLimit = ''
     } else if ( ratioLimit <= -1 ) {
-        // SETTINGS.ratioLimit: If specified, stop the download upon completion
+        // SETTINGS.ratioLimit: If specified -1, stop the torrent upon download completion
         ratioLimit = 0
     }
 
@@ -1453,11 +1502,11 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         // A seed time of 0 will stop the torrent after downloading, so take preventative action
         seedTime = ''
     } else if ( seedTime <= -1 ) {
-        // SETTINGS.seedTime: If specified, stop the download upon completion
+        // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
         seedTime = 0
     }
 
-    if ( instance != '' ) {
+    if ( instance != '' && instance <= 0 ) {
         // Update the URL to point to the specified instance id
         quiApiAddTorrentURL = quiApiAddTorrentURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
     }
@@ -1483,8 +1532,8 @@ function quiAddTorrent(quiURL, quiApiKey, torrentURL, instance = '', category = 
         form.append('firstLastPiecePrio', true)
     }
     
-    // The object containing the finalized data needed to POST a torrent to qui
     let quiPostData = {
+        // The object containing the finalized data needed to POST a torrent to qui
         'apiURL': quiApiAddTorrentURL,
         'apiKey': quiApiKey,
         'form': form,
