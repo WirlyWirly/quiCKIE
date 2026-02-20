@@ -692,7 +692,7 @@ setTimeout(() => {
             bunnyButton.style = existingBB.style
 
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.cloneNode().textContent)
+            downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.textContent)
 
         }
 
