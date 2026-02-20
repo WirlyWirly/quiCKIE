@@ -672,18 +672,18 @@ if ( trackerDomain == 'animebytes' ) {
 }
 
 
-// =================================== Integrated Download Elements ===================================
+// =================================== Third-Party Download Elements ===================================
 
 // @thirdPartyIntegration
 setTimeout(() => {
     // Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
-    let thirdPartyLinks = document.querySelectorAll('[data-quiCKIETorrentURL]')
+    let allThirdPartyElements = document.querySelectorAll('[data-quiCKIETorrentURL]')
 
-    if ( thirdPartyLinks.length > 0 ) {
+    if ( allThirdPartyElements.length > 0 ) {
 
         let existingBB = document.querySelector('a.quiCKIE_bunnyButton')
 
-        for (let downloadElement of thirdPartyLinks) {
+        for (let downloadElement of allThirdPartyElements) {
 
             // Create a bunnyButton using the unique 'quiCKIETorrentURL' attribute as the torrentURL
             let bunnyButton = createBunnyButton(downloadElement.dataset.quiCKIETorrentURL)
