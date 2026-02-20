@@ -680,16 +680,13 @@ setTimeout(() => {
     if ( thirdPartyLinks.length > 0 ) {
 
         let existingBB = document.querySelector('a.quiCKIE_bunnyButton')
-        let existingSeparator = existingBB.previousSibling
-
 
         for (let downloadElement of thirdPartyLinks) {
 
             let bunnyButton = createBunnyButton(downloadElement.dataset.quiCKIETorrentURL)
 
-            bunnyButton.title = existingBB.title
-            bunnyButton.textContent = existingBB.textContent
             bunnyButton.style = existingBB.style
+            bunnyButton.textContent = existingBB.textContent
 
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
             downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.textContent)
