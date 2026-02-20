@@ -498,7 +498,7 @@ if ( trackerDomain == 'animebytes' ) {
 
         downloadButton.insertAdjacentElement('afterend', bunnyButton)
 
-        generatePresetsContextMenu()
+        generatePresetsContextMenu('a.quiCKIE_bunnyButton')
 
     } else {
         // The Browse or Homepage, both of which require a MutationObserver
@@ -519,7 +519,7 @@ if ( trackerDomain == 'animebytes' ) {
                 }
 
                 // Now that the bunnyButtons are in-place, generate the right-click context menu (Presets)
-                generatePresetsContextMenu()
+                generatePresetsContextMenu('a.quiCKIE_bunnyButton')
 
             } catch(error) {
                 // console.log(error)
@@ -674,7 +674,7 @@ if ( trackerDomain == 'animebytes' ) {
 
 // =================================== Third-Party Download Elements ===================================
 
-// @thirdPartyIntegration
+// @thirdPartyIntegrations
 setTimeout(() => {
     // Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
     let allThirdPartyElements = document.querySelectorAll('[data-quiCKIETorrentURL]')
@@ -690,15 +690,16 @@ setTimeout(() => {
 
             bunnyButton.style = existingBB.style
             bunnyButton.textContent = existingBB.textContent
+            bunnyButton.classList.add('quiCKIE_thirdParty')
 
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
             downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.textContent)
 
         }
 
+        generatePresetsContextMenu('a.quiCKIE_thirdParty')
     }
 }, 4000)
-
 
 // =================================== CONTEXT MENU ======================================
 
@@ -707,7 +708,7 @@ let skipTrackerDomains = ['myanonamouse',]
 
 if ( !skipTrackerDomains.includes(trackerDomain) ) {
     // After the bunnyButtons exist, generate and attach to them the right-click context menu (Presets)
-    generatePresetsContextMenu()
+    generatePresetsContextMenu('a.quiCKIE_bunnyButton')
 }
 
 
@@ -1686,7 +1687,7 @@ function quiPOST(quiPostData) {
     
 
 GM_addStyle(GM_getResourceText('contextMenuCSS'))
-function generatePresetsContextMenu() {
+function generatePresetsContextMenu(targetElements) {
     // Generate and initilize the right-click context menu that will display all the presets
 
     // Reverse the settingsPanelEntries object so that the values become the keys and the keys become the values
@@ -1789,7 +1790,7 @@ function generatePresetsContextMenu() {
 
     const presetsMenu = new ContextMenu({
         // .querySelectorAll('selector')
-        target: 'a.quiCKIE_bunnyButton',
+        target: targetElements,
         // An array of objects to display in the context-menu
         menuItems
     })
