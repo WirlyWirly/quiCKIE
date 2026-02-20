@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.945
+// @version     0.95
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -670,6 +670,34 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
 }
+
+
+// ----------------------------------- Integrated Download Elements -----------------------------------
+// Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
+setTimeout(() => {
+    let thirdPartyLinks = document.querySelectorAll('[data-quiCKIETorrentURL]')
+
+    if ( thirdPartyLinks.length > 0 ) {
+
+        let existingBB = document.querySelector('a.quiCKIE_bunnyButton')
+        let existingSeparator = existingBB.previousSibling
+
+
+        for (let downloadElement of thirdPartyLinks) {
+
+            let bunnyButton = createBunnyButton(downloadElement.dataset.quiCKIETorrentURL)
+
+            bunnyButton.title = existingBB.title
+            bunnyButton.textContent = existingBB.textContent
+            bunnyButton.style = existingBB.style
+
+            downloadElement.insertAdjacentElement('afterend', bunnyButton)
+            downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.cloneNode().textContent)
+
+        }
+
+    }
+}, 4000)
 
 
 // =================================== CONTEXT MENU ======================================
@@ -1625,11 +1653,9 @@ function quiPOST(quiPostData) {
 
                 if (response.status == 401) {
                     // Unauthorized
-                    console.log(response)
 
                     window.alert(`❌ quiCKIE ❌\n\nStatus Code: ${response.status}\n\n${response.responseText}\nVerify that your ApiKey is correct\n\nApiKey: ${quiApiKey}`)
                 } else {
-                    console.log(response)
                     window.alert(`❌ quiCKIE ❌\n\nFailed to Add the Torrent to qui\n\nStatus Code: ${response.status}\n\n${response.responseText}`)
                 }
 
