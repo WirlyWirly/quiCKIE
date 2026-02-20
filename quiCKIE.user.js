@@ -672,9 +672,11 @@ if ( trackerDomain == 'animebytes' ) {
 }
 
 
-// ----------------------------------- Integrated Download Elements -----------------------------------
-// Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
+// =================================== Integrated Download Elements ===================================
+
+// @thirdPartyIntegration
 setTimeout(() => {
+    // Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
     let thirdPartyLinks = document.querySelectorAll('[data-quiCKIETorrentURL]')
 
     if ( thirdPartyLinks.length > 0 ) {
@@ -683,6 +685,7 @@ setTimeout(() => {
 
         for (let downloadElement of thirdPartyLinks) {
 
+            // Create a bunnyButton using the unique 'quiCKIETorrentURL' attribute as the torrentURL
             let bunnyButton = createBunnyButton(downloadElement.dataset.quiCKIETorrentURL)
 
             bunnyButton.style = existingBB.style
