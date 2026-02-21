@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.95
+// @version     0.955
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -672,12 +672,12 @@ if ( trackerDomain == 'animebytes' ) {
 }
 
 
-// =================================== Third-Party Download Elements ===================================
+// =================================== Third-Party Integration ===================================
 
 // @thirdPartyIntegrations
 setTimeout(() => {
-    // Elements that have a unique attribute specifically so that they will be integrated into quiCKIE. Wait 4 seconds before querying page.
-    let allThirdPartyElements = document.querySelectorAll('[data-quiCKIETorrentURL]')
+    // Check for elements that have the unique 'data-quickie_torrent' attribute specifically so that they will be integrated into quiCKIE. 
+    let allThirdPartyElements = document.querySelectorAll('[data-quickie_torrenturl]')
 
     if ( allThirdPartyElements.length > 0 ) {
 
@@ -685,21 +685,41 @@ setTimeout(() => {
 
         for (let downloadElement of allThirdPartyElements) {
 
-            // Create a bunnyButton using the unique 'quiCKIETorrentURL' attribute as the torrentURL
-            let bunnyButton = createBunnyButton(downloadElement.dataset.quiCKIETorrentURL)
+            // Check if a BunnyButton has already been created for this thirdParty element, and if so skip and remove the class that would re-append the context menu
+            if ( downloadElement.dataset.quickie_processed == 'true' ) {
+                downloadElement.classList.remove('quiCKIE_thirdParty')
+                continue
+            }
+            
+            // Check if the thirdParty element has asked that the .torrent link be downloaded through the browser instead of being determined by quiCKIE
+            if ( downloadElement.dataset.quickie_forcetorrentfile == 'true' ) {
+                SETTINGS.forceTorrentFile = true
+            }
+
+            // Check if the thirdParty element would like to use a specific text separator between their element and the bunnyButton
+            let separatorText = existingBB.previousSibling.textContent
+            if ( downloadElement.dataset.quickie_separator ) {
+                separatorText = downloadElement.dataset.quickie_separator
+            }
+
+            // Create a bunnyButton using the unique 'quickie_torrenturl' attribute as the torrentURL
+            let bunnyButton = createBunnyButton(downloadElement.dataset.quickie_torrenturl)
 
             bunnyButton.style = existingBB.style
             bunnyButton.textContent = existingBB.textContent
             bunnyButton.classList.add('quiCKIE_thirdParty')
 
+
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', existingBB.previousSibling.textContent)
+            downloadElement.insertAdjacentText('afterend', separatorText)
+
+            downloadElement.dataset.quickie_processed = 'true'
 
         }
 
         generatePresetsContextMenu('a.quiCKIE_thirdParty')
     }
-}, 4000)
+}, 3000)
 
 // =================================== CONTEXT MENU ======================================
 
@@ -1687,7 +1707,7 @@ function quiPOST(quiPostData) {
     
 
 GM_addStyle(GM_getResourceText('contextMenuCSS'))
-function generatePresetsContextMenu(targetElements) {
+function generatePresetsContextMenu(targetSelector) {
     // Generate and initilize the right-click context menu that will display all the presets
 
     // Reverse the settingsPanelEntries object so that the values become the keys and the keys become the values
@@ -1727,7 +1747,7 @@ function generatePresetsContextMenu(targetElements) {
             continue
 
         } else if ( presetName.match(/^[-=\.\s]+$/) ) {
-            // A menu seperator, so create a menuItem that does nothing when clicked
+            // A menu separator, so create a menuItem that does nothing when clicked
 
             // Replace - = . with their respective symbols
             if ( presetName.includes('-') ) {
@@ -1790,7 +1810,7 @@ function generatePresetsContextMenu(targetElements) {
 
     const presetsMenu = new ContextMenu({
         // .querySelectorAll('selector')
-        target: targetElements,
+        target: targetSelector,
         // An array of objects to display in the context-menu
         menuItems
     })
