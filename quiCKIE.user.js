@@ -616,7 +616,7 @@ if ( trackerDomain == 'animebytes' ) {
     // Album | Artist | Browse | COllages | Top10
 
     if ( !document.URL.match(/collages\.php\?id=\d+/) ) {
-        // Not the collage page, so it doesn't require MutationObservers
+        // This is NOT the collage page, so it doesn't require a MutationObserver
         
         let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
@@ -632,7 +632,7 @@ if ( trackerDomain == 'animebytes' ) {
         generatePresetsContextMenu('a.quickie_bunnyButton')
 
     } else {
-        // The collage page, which loads DL buttons only after the '+' button of the album is clicked
+        // This is the collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
         
         let pageObserver = new MutationObserver(function(pageMutations) {
             // The actions to take when new PAGES are loaded
@@ -659,7 +659,6 @@ if ( trackerDomain == 'animebytes' ) {
 
                                 downloadElement.setAttribute('data-quickie_download_link_processed', 'true')
                             }
-
 
                         }
 
