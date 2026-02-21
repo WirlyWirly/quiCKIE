@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.96
+// @version     0.96.5
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -143,7 +143,7 @@
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
 // ==/UserScript==
 
-// Helps prevent various JS oddities when working with variables
+// This string helps prevent various JS oddities when working with variables
 'use strict'
 
 // =================================== SETTINGS PANEL ENTRIES ======================================
@@ -613,16 +613,76 @@ if ( trackerDomain == 'animebytes' ) {
 
 } else if ( trackerDomain == 'redacted' ) {
     // ----------------------------------- Redacted -----------------------------------
-    // Album | Artist | Browse | Top10
+    // Album | Artist | Browse | COllages | Top10
 
-    let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
+    if ( !document.URL.match(/collages\.php\?id=\d+/) ) {
+        // Not the collage page, so it doesn't require MutationObservers
+        
+        let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
-    for (let downloadElement of allDownloadElements) {
+        for (let downloadElement of allDownloadElements) {
 
-        let bunnyButton = createBunnyButton(downloadElement.href)
+            let bunnyButton = createBunnyButton(downloadElement.href)
 
-        downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '|')
+            downloadElement.insertAdjacentElement('afterend', bunnyButton)
+            downloadElement.insertAdjacentText('afterend', '|')
+
+        }
+
+        generatePresetsContextMenu('a.quickie_bunnyButton')
+
+    } else {
+        // The collage page, which loads DL buttons only after the '+' button of the album is clicked
+        
+        let pageObserver = new MutationObserver(function(pageMutations) {
+            // The actions to take when new PAGES are loaded
+
+            waitForElement('#discog_table tbody').then((tbodyElement) => {
+                // After a new page is loaded, wait until the <tbody> containing the <tr> torrent rows is loaded
+
+                try {
+
+                    let tbodyObserver = new MutationObserver(function(tbodyMutations) {
+                        // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
+                        
+                        let allDownloadElements = tbodyMutations[0].target.querySelectorAll('a[href^="torrents.php?action=download&id="]')
+
+                        for (let downloadElement of allDownloadElements) {
+
+                            if ( downloadElement.dataset.quickie_download_link_processed != 'true' ) {
+                                // This is a new DL element that has not yet been processed by quiCKIE
+
+                                let bunnyButton = createBunnyButton(downloadElement.href)
+
+                                downloadElement.insertAdjacentElement('afterend', bunnyButton)
+                                downloadElement.insertAdjacentText('afterend', '|')
+
+                                downloadElement.setAttribute('data-quickie_download_link_processed', 'true')
+                            }
+
+
+                        }
+
+                        // Now that the bunnyButtons are in-place, generate the right-click context-menu (Presets)
+                        generatePresetsContextMenu('a.quickie_bunnyButton')
+
+                    })
+
+                    tbodyObserver.observe(tbodyElement, { childList: true })
+
+                } catch(error) {
+                    // console.log(error)
+                    return
+
+                }
+            })
+
+        })
+
+        let target = document.querySelector('[data-component="TorrentCollageView"]')
+        let config = { childList: true }
+
+        pageObserver.observe(target, config)
 
     }
 
@@ -676,13 +736,14 @@ if ( trackerDomain == 'animebytes' ) {
 
 // =================================== THIRD-PARTY INTEGRATIONS ======================================
 
-// After a bried delay, query the document for any thirdParty '[data-quickie_torrenturl]' elements for which a bunnyButton should be created
+// After a brief delay, query the document for any thirdParty '[data-quickie_torrenturl]' elements for which a bunnyButton should be created
+if ( SETTINGS.thirdPartyDelay <= 0 ) { SETTINGS.thirdPartyDelay = 1000 }
 scanForThirdPartyTorrentURLS(SETTINGS.thirdPartyDelay)
 
 // =================================== CONTEXT-MENU ======================================
 
 // A list of trackerDomains on which to NOT generate the contextMenu, because it will be done elsewhere in the script
-let skipTrackerDomains = ['myanonamouse',]
+let skipTrackerDomains = ['redacted', 'myanonamouse',]
 
 if ( !skipTrackerDomains.includes(trackerDomain) ) {
     // After the bunnyButtons exist, generate and attach to them the right-click context-menu (Presets)
@@ -838,10 +899,10 @@ function createGMConfigSettingsPanel() {
         },
 
         'titles': {
-            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nℹ️ Hovering over the BunnyButton will provide a tooltip of the current tracker settings\n\nClicking a name below will re-direct you to the tracker's website",
+            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nClicking a name below will re-direct you to the tracker's website\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
-            'preset': '─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context-menu\n\nBoth text and emojis are supported\n\nℹ️ Presets without a name will NOT be displayed\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]',
-            'presettrackers': '─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nℹ️ Use the full tracker name as shown in the "Tracker" column (case-insensitive)\n\nℹ️ Presets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa',
+            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context-menu\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\n Hovering over a preset in the right-click menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nℹ️ Use the full tracker name as shown in the 'Tracker' column (case-insensitive)\n\nℹ️ Presets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
             'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
@@ -1238,7 +1299,7 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
                 document.getElementById('quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
 
-                // Move quiURL\apiKey\Presets\Click elements into the same row
+                // Move global settings below the header
                 let quiURLDiv = document.getElementById('quiCKIE_config_quiURL_var')
                 quiURLDiv.title = ''
                 document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', quiURLDiv)
@@ -1247,12 +1308,14 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_quiURL_field_label').title = quiURLTooltip
                 document.getElementById('quiCKIE_config_field_quiURL').title = quiURLTooltip
 
+                // --- apiKey ---
                 let quiApiKeyLabel = document.getElementById('quiCKIE_config_quiApiKey_field_label')
                 let quiApiKeyField = document.getElementById('quiCKIE_config_field_quiApiKey')
                 quiApiKeyLabel.classList.add('quiRowLabel')
                 quiURLDiv.appendChild(quiApiKeyLabel)
                 quiURLDiv.appendChild(quiApiKeyField)
 
+                // --- Presets ---
                 let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
                 let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
                 presetCountLabel.classList.add('quiRowLabel')
@@ -1260,6 +1323,7 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.appendChild(presetCountLabel)
                 quiURLDiv.appendChild(presetCountField)
 
+                // --- Left-Click ---
                 let leftClickLabel = document.getElementById('quiCKIE_config_globalLeftClickAction_field_label')
                 let leftClickField = document.getElementById('quiCKIE_config_field_globalLeftClickAction')
                 leftClickLabel.classList.add('quiRowLabel')
@@ -1267,6 +1331,7 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.appendChild(leftClickLabel)
                 quiURLDiv.appendChild(leftClickField)
 
+                // --- Middle-Click ---
                 let middleClickLabel = document.getElementById('quiCKIE_config_globalMiddleClickAction_field_label')
                 let middleClickField = document.getElementById('quiCKIE_config_field_globalMiddleClickAction')
                 middleClickLabel.classList.add('quiRowLabel')
@@ -1274,7 +1339,7 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.appendChild(middleClickLabel)
                 quiURLDiv.appendChild(middleClickField)
 
-
+                // --- 3rd Party Delay ---
                 let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
                 let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
                 thirdPartyDelayLabel.classList.add('quiRowLabel')
@@ -1282,10 +1347,12 @@ function createGMConfigSettingsPanel() {
                 quiURLDiv.appendChild(thirdPartyDelayLabel)
                 quiURLDiv.appendChild(thirdPartyDelayField)
 
+                // Remove now empty <div>
                 document.getElementById('quiCKIE_config_quiApiKey_var').remove()
                 document.getElementById('quiCKIE_config_presetCount_var').remove()
                 document.getElementById('quiCKIE_config_globalLeftClickAction_var').remove()
                 document.getElementById('quiCKIE_config_globalMiddleClickAction_var').remove()
+                document.getElementById('quiCKIE_config_thirdPartyDelay_var').remove()
                 
                 // Obfuscate the quiURL and ApiKey on mouseout
                 let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
@@ -1739,7 +1806,6 @@ function scanForThirdPartyTorrentURLS(delay) {
                 if ( downloadElement.dataset.quickie_processed == 'true' ) {
                     // This thirdParty element has previously been processed, so perform clean-up on it and the generated bunnyButton
                     let bunnyButton = document.querySelector(`a.quiCKIE_thirdParty[data-torrenturl="${downloadElement.dataset.quickie_torrenturl}"]`)
-                    bunnyButton.classList.remove('quiCKIE_thirdPartyNew')
 
                     downloadElement.removeAttribute('data-quickie_torrenturl')
                     downloadElement.removeAttribute('data-quickie_processed')
@@ -1764,7 +1830,6 @@ function scanForThirdPartyTorrentURLS(delay) {
                 bunnyButton.style = existingBB.style.cssText
                 bunnyButton.textContent = existingBB.textContent
                 bunnyButton.classList.add('quiCKIE_thirdParty')
-                bunnyButton.classList.add('quiCKIE_thirdPartyNew')
 
 
                 // Append the bunnyButton after the thirdParty element
@@ -1781,7 +1846,7 @@ function scanForThirdPartyTorrentURLS(delay) {
 
             if ( newThirdParties == true ) {
                 // There were new thirdParty elements, so append to them the context-menu (presets)
-                generatePresetsContextMenu('a.quiCKIE_thirdPartyNew')
+                generatePresetsContextMenu('a.quickie_bunnyButton')
             }
         }
 
@@ -1922,3 +1987,27 @@ function generatePresetsContextMenu(targetSelector) {
 
 }
 
+
+// =================================== THIRD-PARTY FUNCTIONS ======================================
+
+function waitForElement(selector) {
+    // Source: https://stackoverflow.com/a/61511955
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                observer.disconnect();
+                resolve(document.querySelector(selector));
+            }
+        });
+
+        // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
