@@ -18,6 +18,63 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     margin: 0px 0x 10px 0px;
 }
 
+/* ----------------------------------- qui Row ---------------------------------- */
+
+#quiCKIE_config_quiURL_var.config_var {
+    /* Align quiURL row to center */
+    text-align: center;
+    margin: 5px 0px 0px 0px;
+}
+
+#quiCKIE_config_quiURL_var label.field_label {
+    /* qui row labels */
+    margin: 0px 6px 0px 10px;
+}
+
+#quiCKIE_config_field_quiURL {
+    /* quiURL input */
+    width: 210px;
+    max-width: 210px;
+}
+
+#quiCKIE_config_field_quiApiKey {
+    /* ApiKey input */
+    width: 55px;
+    max-width: 55px;
+}
+
+#quiCKIE_config_field_presetCount {
+    /* Preset input */
+    width: 30px;
+    max-width: 30px;
+}
+
+#quiCKIE_config_field_globalLeftClickAction,
+#quiCKIE_config_field_globalMiddleClickAction {
+    /* Click inputs */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #191d2a;
+    font-size: 13px;
+    font-weight: 500;
+    height: 50%;
+    margin: 0 2px 0 2px;
+    padding: 2px 2px 2px 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 75px;
+}
+
+
+#quiCKIE_config_field_thirdPartyDelay {
+    /* 3rd Party Delay input */
+    width: 40px;
+    max-width: 40px;
+}
+
 /* ----------------------------------- TABLE ----------------------------------- */
 #quiCKIE_config_tracker_table,
 #quiCKIE_config_preset_table {
@@ -113,6 +170,13 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 50px;
 }
 
+/* SkipHash */
+#quiCKIE_config_tracker_table_colg_col_skiphash,
+#quiCKIE_config_preset_table_colg_col_skiphash {
+    width: 50px;
+    max-width: 50px;
+}
+
 col.quiCKIE_config_table_colg_col {
     text-align: center;
     background: none;
@@ -166,7 +230,8 @@ thead.quiCKIE_config_table_thead th:nth-last-child(1) {
 }
 
 tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_startPaused,
-tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subFolder {
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subFolder,
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_seqPieces {
     /* Right-border for the checkbox columns */
     border-color: #191d2a;
     border-style: none solid none none !important;
@@ -186,7 +251,6 @@ tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subF
     user-select: none;
     color: #bfbfbf;
 }
-`)
 
 #quiCKIE_config .config_var {
     border-bottom: none;
@@ -199,6 +263,7 @@ tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subF
 #quiCKIE_config_field_quiURL,
 #quiCKIE_config_field_quiApiKey,
 #quiCKIE_config_field_presetCount,
+#quiCKIE_config_field_thirdPartyDelay,
 td.quiCKIE_config_table_tbody_td_field select[data-fieldtype="leftClick"],
 td.quiCKIE_config_table_tbody_td_field input[type="text"] {
     /* Text Fields */
@@ -233,52 +298,6 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     margin: 5px 0px 5px 0px;
 }
 
-#quiCKIE_config_quiURL_var.config_var {
-    /* Align quiURL row to center */
-    text-align: center;
-    margin: 5px 0px 0px 0px;
-}
-
-#quiCKIE_config_quiURL_field_label {
-    width: 45px;
-}
-
-#quiCKIE_config_quiURL_var label.field_label {
-    /* qui row labels */
-    margin: 0px 6px 0px 10px;
-}
-
-#quiCKIE_config_field_quiURL {
-    /* quiURL input */
-    width: 210px;
-}
-
-#quiCKIE_config_field_quiApiKey {
-    /* ApiKey input */
-    width: 55px;
-}
-
-#quiCKIE_config_field_globalLeftClickAction,
-#quiCKIE_config_field_globalMiddleClickAction {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 3px;
-    border: 1px solid #ddd;
-    box-shadow: none;
-    box-sizing: border-box;
-    color: #191d2a;
-    font-size: 13px;
-    font-weight: 500;
-    height: 50%;
-    margin: 0 2px 0 2px;
-    padding: 2px 2px 2px 2px;
-    text-align: center;
-    transition: all 0.3s ease;
-    width: 75px;
-}
-
-#quiCKIE_config_field_presetCount {
-    width: 30px;
-}
 
 #quiCKIE_config .reset {
     color: #95a5a6;
