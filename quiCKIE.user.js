@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.96.5
+// @version     0.96.6
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -107,6 +107,7 @@
 // @match   https://sukebei.nyaa.si/view/*
 
 // @match   https://orpheus.network/artist.php?id=*
+// @match   https://orpheus.network/bookmarks.php*
 // @match   https://orpheus.network/collages.php?id=*
 // @match   https://orpheus.network/top10.php*
 // @match   https://orpheus.network/torrents.php*
@@ -116,9 +117,11 @@
 // @match   https://portugas.org/torrents*
 
 // @match   https://redacted.sh/artist.php?id=*
-// @match   https://redacted.sh/collages.php?id=*
+// @match   https://redacted.sh/bookmarks.php*
+// @match   https://redacted.sh/collage*.php?id=*
 // @match   https://redacted.sh/top10.php*
 // @match   https://redacted.sh/torrents.php*
+// @match   https://redacted.sh/userhistory.php?action=subscribed_collages
 
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
@@ -255,9 +258,10 @@ if ( trackerDomain == 'animebytes' ) {
     // Get a list of all the downloadElements (download buttons) on the page
     let allDownloadElements = document.querySelectorAll('a[href^="/torrent/"][title="Download torrent"]')
 
+    // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
     for (let downloadElement of allDownloadElements) {
-        // For each downloadElement on the list, generate a bunnyButton and insert it after the downloadElement
 
+        // Use the value (torrentURL) of the downloadElement's 'href' attribute to create a bunnyButton for this downloadElement
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         // Insert the bunnyButton after the page's downloadElement
@@ -578,7 +582,7 @@ if ( trackerDomain == 'animebytes' ) {
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '|')
+        downloadElement.insertAdjacentText('afterend', ' |')
 
     }
 
@@ -613,10 +617,10 @@ if ( trackerDomain == 'animebytes' ) {
 
 } else if ( trackerDomain == 'redacted' ) {
     // ----------------------------------- Redacted -----------------------------------
-    // Album | Artist | Browse | COllages | Top10
+    // Album | Artist | Bookmarks | Browse | Collages | Top10
 
-    if ( !document.URL.match(/collages\.php\?id=\d+/) ) {
-        // This is NOT the collage page, so it doesn't require a MutationObserver
+    if ( !document.URL.match(/collages?\.php\?id=\d+/) ) {
+        // This is NOT a collage page, so it doesn't require a MutationObserver
         
         let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
@@ -632,7 +636,7 @@ if ( trackerDomain == 'animebytes' ) {
         generatePresetsContextMenu('a.quickie_bunnyButton')
 
     } else {
-        // This is the collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
+        // This is a collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
         
         let pageObserver = new MutationObserver(function(pageMutations) {
             // The actions to take when new PAGES are loaded
@@ -649,7 +653,7 @@ if ( trackerDomain == 'animebytes' ) {
 
                         for (let downloadElement of allDownloadElements) {
 
-                            if ( downloadElement.dataset.quickie_download_link_processed != 'true' ) {
+                            if ( downloadElement.dataset.quickie_elementprocessed != 'true' ) {
                                 // This is a new DL element that has not yet been processed by quiCKIE
 
                                 let bunnyButton = createBunnyButton(downloadElement.href)
@@ -657,7 +661,7 @@ if ( trackerDomain == 'animebytes' ) {
                                 downloadElement.insertAdjacentElement('afterend', bunnyButton)
                                 downloadElement.insertAdjacentText('afterend', '|')
 
-                                downloadElement.setAttribute('data-quickie_download_link_processed', 'true')
+                                downloadElement.setAttribute('data-quickie_elementprocessed', 'true')
                             }
 
                         }
@@ -900,8 +904,8 @@ function createGMConfigSettingsPanel() {
         'titles': {
             'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nClicking a name below will re-direct you to the tracker's website\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
-            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the right-click context-menu\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\n Hovering over a preset in the right-click menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
-            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nℹ️ Use the full tracker name as shown in the 'Tracker' column (case-insensitive)\n\nℹ️ Presets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa",
+            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nHovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the 'Tracker' column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
             'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
@@ -1804,7 +1808,7 @@ function scanForThirdPartyTorrentURLS(delay) {
                 // Check if a BunnyButton has already been created for this thirdParty element
                 if ( downloadElement.dataset.quickie_processed == 'true' ) {
                     // This thirdParty element has previously been processed, so perform clean-up on it and the generated bunnyButton
-                    let bunnyButton = document.querySelector(`a.quiCKIE_thirdParty[data-torrenturl="${downloadElement.dataset.quickie_torrenturl}"]`)
+                    let bunnyButton = document.querySelector(`a.quickie_thirdParty[data-torrenturl="${downloadElement.dataset.quickie_torrenturl}"]`)
 
                     downloadElement.removeAttribute('data-quickie_torrenturl')
                     downloadElement.removeAttribute('data-quickie_processed')
@@ -1828,7 +1832,7 @@ function scanForThirdPartyTorrentURLS(delay) {
 
                 bunnyButton.style = existingBB.style.cssText
                 bunnyButton.textContent = existingBB.textContent
-                bunnyButton.classList.add('quiCKIE_thirdParty')
+                bunnyButton.classList.add('quickie_thirdParty')
 
 
                 // Append the bunnyButton after the thirdParty element
@@ -1845,7 +1849,7 @@ function scanForThirdPartyTorrentURLS(delay) {
 
             if ( newThirdParties == true ) {
                 // There were new thirdParty elements, so append to them the context-menu (presets)
-                generatePresetsContextMenu('a.quickie_bunnyButton')
+                generatePresetsContextMenu('a.quickie_thirdParty')
             }
         }
 
@@ -1987,7 +1991,7 @@ function generatePresetsContextMenu(targetSelector) {
 }
 
 
-// =================================== THIRD-PARTY FUNCTIONS ======================================
+// =================================== EXTERNAL FUNCTIONS ======================================
 
 function waitForElement(selector) {
     // Source: https://stackoverflow.com/a/61511955
