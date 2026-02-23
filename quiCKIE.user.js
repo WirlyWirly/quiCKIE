@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.96.6
+// @version     0.97
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -13,8 +13,8 @@
 // @namespace   https://github.com/WirlyWirly
 // @run-at      document-end
 
-// @resource    contextMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 // @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// @resource    contextMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
@@ -187,30 +187,42 @@ const settingsPanelEntries = {
 }
 
 
-// =================================== GENERATE SETTINGS PANEL ======================================
+// =================================== GENERATE SETTINGS ======================================
 
 // Determine the saved number of preset fields that should be generated in the settings panel and context-menu
+
 let presetCount
 if ( GM_getValue('quiCKIE_config') !== undefined ) {
-    // Use the saved presetCount specified with GM_config()
+    // Parse the existing GM_config() settings object
     let quiCKIESettingsObject = JSON.parse(GM_getValue('quiCKIE_config'))
 
+    // Get the previously specified presetCount to determine how many preset rows should be generated
     presetCount = quiCKIESettingsObject['presetCount']
 
 } 
 
-// v0.6: Updaters may not have a preset count, delete this block in a few versions...
+// New installs will not have a presetCount, so default to 3
 if ( presetCount == undefined ) {
     presetCount = 3
 }
 
-// For the sake of code-cleanliness, everything related to GM_config.ini() has been done in this function and moved further down the script
+// Reverse the settingsPanelEntries object so that the values (labels) become the new keys and the keys (trackerDomains) become the new values
+// This will later allow us to get the trackerDomain when we know the settings label
+let swappedSettingsPanelEntries = Object.entries(settingsPanelEntries).map (
+    ([key, value]) => [value.toLowerCase(), key]
+
+)
+swappedSettingsPanelEntries = Object.fromEntries(swappedSettingsPanelEntries)    
+    
+// For the sake of code-cleanliness, everything related to GM_config.init() has been done in this function and moved further down the script
 createGMConfigSettingsPanel()
 
-// =================================== CURRENT SITE SETTINGS ======================================
 
-// To save resources while allowing cross-site compatibility, the domain of the site is used when saving settings and creating GM_config fields
+// =================================== CURRENT SETTINGS ======================================
+
+// To save resources while allowing for cross-site compatibility, the unique domain of the site is used when saving\getting settings and for determing how to handle the current tracker
 // Example: https://broadcasthe.net/ --> broadcasthe
+
 let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.*?)(\.\w+)$/)[2].toLowerCase()
 
 // @trackerSettings
@@ -240,17 +252,17 @@ let SETTINGS = {
     
 }
 
-// GM_config() saves what should be blank int/float fields to 0, which is a problem for qui, so change them to blank strings
-if ( SETTINGS.ratioLimit == 0 ) { SETTINGS.ratioLimit = '' }
-if ( SETTINGS.seedTime == 0 ) { SETTINGS.seedTime = '' }
-if ( SETTINGS.instance == 0 ) { SETTINGS.instance = '' }
-
+// GM_config() saves what should be blank int/float fields as 0, which is qbitTorrent interprets problematically, so set 0 to ''
+SETTINGS.ratioLimit == 0 ? SETTINGS.ratioLimit = '' : null
+SETTINGS.seedTime == 0 ? SETTINGS.seedTime = '' : null
+SETTINGS.instance == 0 ? SETTINGS.instance = '' : null
 
 // =================================== TRACKER HANDLING ======================================
 
 // @trackerIfBlocks
-// Because the site's domain is unique, we can use it to determine what tracker this is and how bunnyButtons should be generated
-//  ! This is the same domain used when entering the tracker as a line in the @trackerSettingsPanelEntries
+// Because the site's domain is unique, we can use it to determine what tracker this is and how to proceed from there
+
+// ! This is the same domain used when entering the tracker as a line in the @trackerSettingsPanelEntries
 if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- AnimeBytes -----------------------------------
     // Browse | Collages | Company | Series 
@@ -905,14 +917,14 @@ function createGMConfigSettingsPanel() {
             'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nClicking a name below will re-direct you to the tracker's website\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
             'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nHovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
-            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the full tracker name as shown in the 'Tracker' column (case-insensitive)\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, PassThePopcorn, Nyaa",
+            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
             'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
             'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
             'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete',
             'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
-            'instance': '─── 🎯 Target qui Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
+            'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nℹ️ Useful for when you want to give yourself a chance to pick which files of the torrent should be downloaded",
             // 'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading\n\nℹ️ Performing a 'Space-Click' on a BunnyButton will force the torrent to Start Paused",
@@ -956,7 +968,7 @@ function createGMConfigSettingsPanel() {
                     <a href="${GM_info.script.homepage}" target="_blank" style="font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; color: #FFFFFF; text-decoration: none; background: none; line-height: 30px">quiCKIE</a>
                 </span>
                 🐰
-                <div style="margin: 15px 0px 0px 0px;"><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">* Hover over column headers for details *</span></div>
+                <div style="margin: 15px 0px 0px 0px;"><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">* Hover over labels\\headers for details *</span></div>
             </div>
         `,
 
@@ -989,9 +1001,14 @@ function createGMConfigSettingsPanel() {
                 'default': 'quiTab',
             },
             'thirdPartyDelay': {
-                'label': '🤝 3rd Party Delay',
+                'label': '🤝 3rd Party Delay:',
                 'type': 'int',
                 'default': 2000,
+            },
+            'hiddenTrackers': {
+                'label': '🙈 Hidden Trackers:',
+                'type': 'text',
+                'default': '',
             },
 
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
@@ -1028,23 +1045,22 @@ function createGMConfigSettingsPanel() {
                 let tcolg = document.createElement('colgroup')
                 tcolg.id = 'quiCKIE_config_tracker_table_colg'
                 tcolg.classList.add('quiCKIE_config_table_tcolg')
+                table.appendChild(tcolg)
 
                 let thead = document.createElement('thead')
                 thead.id = 'quiCKIE_config_tracker_table_thead'
                 thead.classList.add('quiCKIE_config_table_thead')
+                table.appendChild(thead)
 
                 let tbody = document.createElement('tbody')
                 tbody.id = 'quiCKIE_config_tracker_table_tbody'
                 tbody.classList.add('quiCKIE_config_table_tbody')
-
-                table.appendChild(tcolg)
-                table.appendChild(thead)
                 table.appendChild(tbody)
 
                 // Insert the <table> after the GM_config header
                 document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', table)
 
-                // Generate <th> (table header) for each column
+                // Generate the <col> (column) and <th> (table header) for each settings column
                 let headersRow = document.createElement('tr')
                 headersRow.classList.add('quiCKIE_config_table_thead_tr')
 
@@ -1064,7 +1080,6 @@ function createGMConfigSettingsPanel() {
                     headerElement.classList.add('quiCKIE_config_table_thead_th')
                     headerElement.textContent = tableHeaderData.columnText[`${columnHeader}`]
                     headerElement.setAttribute('title', tableHeaderData.titles[`${columnHeader}`])
-
                     headersRow.appendChild(headerElement)
                 }
 
@@ -1073,7 +1088,7 @@ function createGMConfigSettingsPanel() {
 
                 let uniqueDomains = Object.keys(settingsPanelEntries)
                 for (let uniqueDomainKey of uniqueDomains) {
-                    // For each tracker, create 1 <tr> (tablerow). For each field of that tracker, create 1 <td> (tabledata). Populate each <td> with 1 <a> + label field from that tracker.
+                    // For each tracker, create 1 <tr> (tablerow). For each <tr>, create 1 <td> (tabledata) to contain the tracker's hyperlink. Create the <a> hyperlink then move the tracker's label into that <a> element.
 
                     // 1 <tr> for this tracker, appended to the <tbody> (tableBody)
                     let tableRow = document.createElement('tr')
@@ -1100,20 +1115,20 @@ function createGMConfigSettingsPanel() {
 
                     // The field suffixes as specified in @trackerFieldGeneration
                     for (let fieldSuffix of trackerFieldSuffixes) {
-                        // Create a <td> for each input field and move the GM_config field into it
+                        // Create a <td> for each input field and append it to the torrents <tr>. Move the GM_config field into that <td>
 
+                        // Create the <td> and append it to the torrents <tr>
                         let dataElement = document.createElement('td')
                         dataElement.classList.add('quiCKIE_config_table_tbody_td_field')
                         dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`)
-
-                        let fieldElement = document.getElementById(`quiCKIE_config_field_${uniqueDomainKey}-${fieldSuffix}`)
-                        fieldElement.setAttribute('data-fieldtype', fieldSuffix)
-
-                        // Move the GM_Config field into the <td> and then the <td> into the <tr>
-                        dataElement.appendChild(fieldElement)
                         tableRow.appendChild(dataElement)
 
-                        // Clean-up: Remove the now empty GM_config element
+                        // Move the GM_Config field into the <td> 
+                        let fieldElement = document.getElementById(`quiCKIE_config_field_${uniqueDomainKey}-${fieldSuffix}`)
+                        fieldElement.setAttribute('data-fieldtype', fieldSuffix)
+                        dataElement.appendChild(fieldElement)
+
+                        // Clean-up: Remove the now empty GM_config <div> element
                         document.getElementById(`quiCKIE_config_${uniqueDomainKey}-${fieldSuffix}_var`).remove()
 
                     }
@@ -1149,7 +1164,7 @@ function createGMConfigSettingsPanel() {
 
                     // Create the "Presets" header element
                     let presetsHeader = document.createElement('div')
-                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center')
+                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center; padding: 0px 0px 10px 0px;')
                     presetsHeader.innerHTML = `
                 🚀
                 <span style="user-select: none; background: none; background-color: #FFFFFF; -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-filter: brightness(110%); filter: brightness(110%); text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); transition: all 0.3s; font-weight: bold; padding: 10px 0px 10px 0px">
@@ -1250,27 +1265,30 @@ function createGMConfigSettingsPanel() {
 
 
                 // ----------------------------------- TIDY UP THE WINDOW -----------------------------------
-                
+
+                // Remove the tracker rows that should be hidden
+                for ( let trackerLabel of GM_config.get('hiddenTrackers').split(',') ) {
+                    trackerLabel = trackerLabel.toLowerCase().trim()
+                    let trackerDomain = swappedSettingsPanelEntries[trackerLabel]
+                    let tableRow = document.getElementById(`quiCKIE_config_tracker_table_tr_${trackerDomain}`)
+                    tableRow ? tableRow.remove() : null
+                }
+
                 // Remove 0 from 'int' and 'float' fields
                 for ( let field of document.getElementById('quiCKIE_config').querySelectorAll('input[data-fieldtype="ratioLimit"]') ) {
-                    if ( field.value == 0 ) {
-                        field.value = ''
-                    }
+                    field.value == 0 ? field.value = '' : null
                 }
 
                 for ( let field of document.getElementById('quiCKIE_config').querySelectorAll('input[data-fieldtype="seedTime"]') ) {
-                    if ( field.value == 0 ) {
-                        field.value = ''
-                    }
+                    field.value == 0 ? field.value = '' : null
                 }
 
                 for ( let field of document.getElementById('quiCKIE_config').querySelectorAll('input[data-fieldtype="instance"]') ) {
-                    if ( field.value == 0 ) {
-                        field.value = ''
-                    }
+                    field.value == 0 ? field.value = '' : null
                 }
                 
                 // Set the placeholder examples for the various input fields
+                try {
                 document.getElementById('quiCKIE_config_field_quiURL').placeholder = 'http://localhost:7476/qui/instances/1'
                 document.getElementById('quiCKIE_config_field_quiApiKey').placeholder = 'abc123'
 
@@ -1301,64 +1319,90 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_field_secret-cinema-ratioLimit').placeholder = '3.25'
                 document.getElementById('quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
                 document.getElementById('quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
+                } catch (error) {
+                }
 
                 // Move global settings below the header
-                let quiURLDiv = document.getElementById('quiCKIE_config_quiURL_var')
-                quiURLDiv.title = ''
-                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', quiURLDiv)
-
+                let settingsDivFirst = document.createElement('div')
+                settingsDivFirst.id = 'quiCKIE_settingsDivFirst'
+                settingsDivFirst.classList.add('quiCKIE_settingsDiv')
+                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', settingsDivFirst)
+                
+                // --- quiURL ---
+                let quiURLLabel = document.getElementById('quiCKIE_config_quiURL_field_label')
+                let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
+                quiURLLabel.classList.add('settingsDivLabel')
                 let quiURLTooltip = '─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:7476/qui/instances/1\n\nSeedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1'
-                document.getElementById('quiCKIE_config_quiURL_field_label').title = quiURLTooltip
-                document.getElementById('quiCKIE_config_field_quiURL').title = quiURLTooltip
+                quiURLLabel.title = quiURLTooltip
+                quiURLField.title = quiURLTooltip
+                settingsDivFirst.appendChild(quiURLLabel)
+                settingsDivFirst.appendChild(quiURLField)
 
                 // --- apiKey ---
                 let quiApiKeyLabel = document.getElementById('quiCKIE_config_quiApiKey_field_label')
                 let quiApiKeyField = document.getElementById('quiCKIE_config_field_quiApiKey')
-                quiApiKeyLabel.classList.add('quiRowLabel')
-                quiURLDiv.appendChild(quiApiKeyLabel)
-                quiURLDiv.appendChild(quiApiKeyField)
+                quiApiKeyLabel.classList.add('settingsDivLabel')
+                settingsDivFirst.appendChild(quiApiKeyLabel)
+                settingsDivFirst.appendChild(quiApiKeyField)
 
                 // --- Presets ---
                 let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
                 let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
-                presetCountLabel.classList.add('quiRowLabel')
+                presetCountLabel.classList.add('settingsDivLabel')
                 presetCountLabel.title = '─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated and available for use from the right-click context-menu of a BunnyButton\n\nHover over the preset column headers for details on how each field can be filled in\n\n⚠️ Lowering this number will REMOVE that many rows which will DELETE the settings of those rows'
-                quiURLDiv.appendChild(presetCountLabel)
-                quiURLDiv.appendChild(presetCountField)
+                settingsDivFirst.appendChild(presetCountLabel)
+                settingsDivFirst.appendChild(presetCountField)
 
                 // --- Left-Click ---
                 let leftClickLabel = document.getElementById('quiCKIE_config_globalLeftClickAction_field_label')
                 let leftClickField = document.getElementById('quiCKIE_config_field_globalLeftClickAction')
-                leftClickLabel.classList.add('quiRowLabel')
+                leftClickLabel.classList.add('settingsDivLabel')
                 leftClickLabel.title = '─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when left-clicking on a Bunny button or tapping on a mobile'
-                quiURLDiv.appendChild(leftClickLabel)
-                quiURLDiv.appendChild(leftClickField)
+                settingsDivFirst.appendChild(leftClickLabel)
+                settingsDivFirst.appendChild(leftClickField)
 
                 // --- Middle-Click ---
                 let middleClickLabel = document.getElementById('quiCKIE_config_globalMiddleClickAction_field_label')
                 let middleClickField = document.getElementById('quiCKIE_config_field_globalMiddleClickAction')
-                middleClickLabel.classList.add('quiRowLabel')
+                middleClickLabel.classList.add('settingsDivLabel')
                 middleClickLabel.title = '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when middle-clicking on a BunnyButton'
-                quiURLDiv.appendChild(middleClickLabel)
-                quiURLDiv.appendChild(middleClickField)
+                settingsDivFirst.appendChild(middleClickLabel)
+                settingsDivFirst.appendChild(middleClickField)
 
+                // ------ SECOND ROW ------
+                
+                let settingsDivSecond = document.createElement('div')
+                settingsDivSecond.classList.add('quiCKIE_settingsDiv')
+                settingsDivSecond.id = 'quiCKIE_settingsDivSecond'
+                settingsDivFirst.insertAdjacentElement('afterend', settingsDivSecond)
+                
                 // --- 3rd Party Delay ---
                 let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
                 let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
-                thirdPartyDelayLabel.classList.add('quiRowLabel')
-                thirdPartyDelayLabel.title = '─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds for which to wait until checking for 3rd Party torrent links that have been integrated into quiCKIE\n\nℹ️ This delay only affects the FIRST scan of 3rd Party torrent links, not every scan thereafter'
-                quiURLDiv.appendChild(thirdPartyDelayLabel)
-                quiURLDiv.appendChild(thirdPartyDelayField)
+                thirdPartyDelayLabel.classList.add('settingsDivLabel')
+                thirdPartyDelayLabel.title = '─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds for which to wait until scanning for 3rd Party quiCKIE links\n\nℹ️ This delay only affects the FIRST scan of 3rd Party quiCKIE links, not every scan thereafter'
+                settingsDivSecond.appendChild(thirdPartyDelayLabel)
+                settingsDivSecond.appendChild(thirdPartyDelayField)
 
-                // Remove now empty <div>
+                // --- Hidden Trackers ---
+                let hiddenTrackersLabel = document.getElementById('quiCKIE_config_hiddenTrackers_field_label')
+                let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
+                hiddenTrackersLabel.classList.add('settingsDivLabel')
+                hiddenTrackersLabel.title = "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nℹ️ This does not disable the BunnyButtons from being generated on those trackers, it only hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
+                settingsDivSecond.appendChild(hiddenTrackersLabel)
+                settingsDivSecond.appendChild(hiddenTrackersField)
+                
+                // Remove now empty <div> elements
+                document.getElementById('quiCKIE_config_quiURL_var').remove()
                 document.getElementById('quiCKIE_config_quiApiKey_var').remove()
                 document.getElementById('quiCKIE_config_presetCount_var').remove()
                 document.getElementById('quiCKIE_config_globalLeftClickAction_var').remove()
                 document.getElementById('quiCKIE_config_globalMiddleClickAction_var').remove()
                 document.getElementById('quiCKIE_config_thirdPartyDelay_var').remove()
+                document.getElementById('quiCKIE_config_hiddenTrackers_var').remove()
                 
-                // Obfuscate the quiURL and ApiKey on mouseout
-                let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
+                // Obfuscate the quiURL and ApiKey on blur
+                quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
                 
                 quiURLField.type = 'password'
                 quiURLField.addEventListener('focus', () => { quiURLField.type = 'text' })
@@ -1791,9 +1835,10 @@ function clientPOST(torrentPostData) {
 // @thirdPartyIntegrations
 function scanForThirdPartyTorrentURLS(delay) {
     // Check for elements that have the unique 'data-quickie_torrenturl' attribute designating them as thirdParty torrentURLs for which to generate a BunnyButton
-    // This function will first run after 2000ms and then again every 5000ms thereafter
+    // This function will first run after 2000ms (default) and then loop every 5000ms thereafter
     
     setTimeout(() => {
+
         let allThirdPartyElements = document.querySelectorAll('[data-quickie_torrenturl]')
 
         if ( allThirdPartyElements.length > 0 ) {
@@ -1805,17 +1850,6 @@ function scanForThirdPartyTorrentURLS(delay) {
             for (let downloadElement of allThirdPartyElements) {
                 // For each thirdPartyElement, create a BunnyButton using the elements 'data-quickie_torrenturl' attribute
 
-                // Check if a BunnyButton has already been created for this thirdParty element
-                if ( downloadElement.dataset.quickie_processed == 'true' ) {
-                    // This thirdParty element has previously been processed, so perform clean-up on it and the generated bunnyButton
-                    let bunnyButton = document.querySelector(`a.quickie_thirdParty[data-torrenturl="${downloadElement.dataset.quickie_torrenturl}"]`)
-
-                    downloadElement.removeAttribute('data-quickie_torrenturl')
-                    downloadElement.removeAttribute('data-quickie_processed')
-
-                    continue
-                }
-                
                 // Check if the thirdParty element has specified that the torrentURL be downloaded through the browser instead of being determined by quiCKIE
                 if ( downloadElement.dataset.quickie_forcetorrentfile == 'true' ) {
                     SETTINGS.forceTorrentFile = true
@@ -1839,8 +1873,8 @@ function scanForThirdPartyTorrentURLS(delay) {
                 downloadElement.insertAdjacentElement('afterend', bunnyButton)
                 downloadElement.insertAdjacentText('afterend', separatorText)
 
-                // Mark this thirdParty element as having already been acted on
-                downloadElement.dataset.quickie_processed = 'true'
+                // Remove the attribute that would match it as a thirdParty element in future loops
+                downloadElement.removeAttribute('data-quickie_torrenturl')
 
                 // Signify that there were new thirdParty elements, so the context-menu function should run
                 newThirdParties = true
@@ -1865,13 +1899,6 @@ GM_addStyle(GM_getResourceText('contextMenuCSS'))
 function generatePresetsContextMenu(targetSelector) {
     // Generate and initilize the right-click context-menu that will display all the presets
 
-    // Reverse the settingsPanelEntries object so that the values become the keys and the keys become the values
-    let swappedTrackerEntries = Object.entries(settingsPanelEntries).map (
-        ([key, value]) => [value.toLowerCase(), key]
-
-    )
-    swappedTrackerEntries = Object.fromEntries(swappedTrackerEntries)    
-    
 
     let menuItems = []
     for ( let i=1; i <= presetCount; i++ ) {
@@ -1889,7 +1916,7 @@ function generatePresetsContextMenu(targetSelector) {
         let domainMatch = false
 
         for (let presetListItem of presetTrackers) {
-            if ( presetListItem == '*' || swappedTrackerEntries[`${presetListItem}`] == trackerDomain ) {
+            if ( presetListItem == '*' || swappedSettingsPanelEntries[`${presetListItem}`] == trackerDomain ) {
                 domainMatch = true
                 break
             }
@@ -1978,8 +2005,37 @@ function generatePresetsContextMenu(targetSelector) {
 
     }
 
+    if ( menuItems.length == 0 ) {
+        // No presets were detected for this tracker, so let the user know and provide some default options
+
+        menuItems = [{
+            content: '🚀 No Presets for this Tracker 🚀',
+            events: {
+                mouseover: function(event) {
+                    // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
+                    this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
+                },
+            }
+        },
+        {   content: 'quiCKIE Settings',
+            events: {
+                click: function(event) {
+                    GM_config.open()
+                }
+            }
+        },
+        {   content: 'qui Tab',
+            events: {
+                click: function(event) {
+                    window.open(SETTINGS.quiURL, '_blank').focus()
+                }
+            }
+        }]
+
+    }
+
     const presetsMenu = new ContextMenu({
-        // .querySelectorAll('selector')
+        // targetSelector == CSS Selector
         target: targetSelector,
         // An array of objects to display in the context-menu
         menuItems
@@ -1991,7 +2047,7 @@ function generatePresetsContextMenu(targetSelector) {
 }
 
 
-// =================================== EXTERNAL FUNCTIONS ======================================
+// =================================== SOURCED FUNCTIONS ======================================
 
 function waitForElement(selector) {
     // Source: https://stackoverflow.com/a/61511955

@@ -18,15 +18,16 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     margin: 0px 0x 10px 0px;
 }
 
-/* ----------------------------------- qui Row ---------------------------------- */
+/* ----------------------------------- Settings Row ---------------------------------- */
 
-#quiCKIE_config_quiURL_var.config_var {
-    /* Align quiURL row to center */
+#quiCKIE_config_wrapper div.quiCKIE_settingsDiv {
+    /* Align settings row to center */
     text-align: center;
     margin: 5px 0px 0px 0px;
+    padding-bottom: 10px;
 }
 
-#quiCKIE_config_quiURL_var label.field_label {
+#quiCKIE_config_wrapper div.quiCKIE_settingsDiv .settingsDivLabel{
     /* qui row labels */
     margin: 0px 6px 0px 10px;
 }
@@ -75,6 +76,12 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 40px;
 }
 
+#quiCKIE_config_field_hiddenTrackers {
+    /* ApiKey input */
+    width: 175px;
+    max-width: 175px;
+}
+
 /* ----------------------------------- TABLE ----------------------------------- */
 #quiCKIE_config_tracker_table,
 #quiCKIE_config_preset_table {
@@ -83,7 +90,7 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     border-radius: 5px;
     border: none;
     box-shadow: none !important;
-    margin: 20px auto 20px auto;
+    margin: 10px auto 20px auto;
     max-width: 90%;
     text-align: center;
 }
@@ -259,11 +266,30 @@ tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_seqP
     text-align: center;
 }
 
+td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    box-sizing: border-box;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0 2px 0 2px;
+    padding: 2px 2px 2px 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+td.quiCKIE_config_table_tbody_td_field input[type="checkbox"]:checked {
+    background-color: #0060DF;
+    border: 1px solid #0060DF;
+}
 
 #quiCKIE_config_field_quiURL,
 #quiCKIE_config_field_quiApiKey,
 #quiCKIE_config_field_presetCount,
 #quiCKIE_config_field_thirdPartyDelay,
+#quiCKIE_config_field_hiddenTrackers,
 td.quiCKIE_config_table_tbody_td_field select[data-fieldtype="leftClick"],
 td.quiCKIE_config_table_tbody_td_field input[type="text"] {
     /* Text Fields */
@@ -286,6 +312,8 @@ td.quiCKIE_config_table_tbody_td_field input[type="text"] {
 #quiCKIE_config_field_quiURL:focus,
 #quiCKIE_config_field_quiApiKey:focus,
 #quiCKIE_config_field_presetCount:focus,
+#quiCKIE_config_field_thirdPartyDelay:focus,
+#quiCKIE_config_field_hiddenTrackers:focus,
 td.quiCKIE_config_table_tbody_td_field input[type="text"]:focus {
     border-color: #2C3E50;
     box-shadow: 0 0 5px rgba(0, 124, 255, 0.60);
