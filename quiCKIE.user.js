@@ -2095,7 +2095,7 @@ function createPresetsMenu(targetSelector) {
 function unit3dTrackerHandling(torrentURLSelector) {
     // A site using the UNIT3D Framework, setup MutationObservers for the various pages
 
-    if ( document.URL.match(/\/bookmarks/) || document.URL.match(/\/torrents\/\d+/) || document.URL.match(/\/playlists\/\d+/) || document.URL.match(/\/torrents\/similar\//) ) {
+    if ( document.URL.match(/\/(bookmarks|torrents\/\d+|playlists\/\d+|torrents\/similar)/)  ) {
         // The Bookmarks, Details, Playslist, or Similar pages, none of which requires a MutationObserver
 
         let allDownloadElements = document.querySelectorAll(torrentURLSelector)
@@ -2104,20 +2104,12 @@ function unit3dTrackerHandling(torrentURLSelector) {
 
             let bunnyButton = createBunnyButton(downloadElement.href)
 
-            if ( document.URL.match(/\/bookmarks/) ) {
-                // The Bookmarks Page, place the BunnyButton next to the parentElement so that it ends up in the same row
+            if ( document.URL.match(/\/(bookmarks|torrents\/\d+)/) ) {
+                // The Bookmarks or Details page, place the BunnyButton next to the parentElement so that it ends up in the same row
                 downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
-
-            } else if ( document.URL.match(/\/torrents\/\d+/) ) {
-                // The Details Page, place the BunnyButton next to the parentElement so that it ends up in the same row
-                downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
-
-            } else if ( document.URL.match(/\/torrents\/similar\//) ) {
-                // The Similar Torrents Page, the bunnyButton can go next to the downloadElement
-                downloadElement.insertAdjacentElement('afterend', bunnyButton)
 
             } else {
-                // A Playlists page, the bunnyButton can go next to the downloadElement
+                // A Playlists or Similar page, the bunnyButton can go next to the downloadElement
                 downloadElement.insertAdjacentElement('afterend', bunnyButton)
             }
 
