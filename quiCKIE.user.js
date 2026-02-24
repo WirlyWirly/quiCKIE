@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.98.6
+// @version     0.98.7
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -47,17 +47,19 @@
 
 // @match   https://beyond-hd.me/
 // @match   https://beyond-hd.me/torrents*
-// @match   https://beyond-hd.me/bookmarks
-// @match   https://beyond-hd.me/watchlist
+// @match   https://beyond-hd.me/bookmarks*
+// @match   https://beyond-hd.me/watchlist*
 // @match   https://beyond-hd.me/library*
 // @match   https://beyond-hd.me/download/*
-// @match   https://beyond-hd.me/torrents/seed
+// @match   https://beyond-hd.me/torrents/seed*
 
 // @match   https://bibliotik.me/collections/*
 // @match   https://bibliotik.me/torrents/*
 
+// @match   https://bitporn.eu/
 // @match   https://bitporn.eu/playlists/*
 // @match   https://bitporn.eu/torrents*
+// @match   https://bitporn.eu/*/bookmarks*
 
 // @match   https://broadcasthe.net/collages.php?id=*
 // @match   https://broadcasthe.net/series.php?id=*
@@ -241,6 +243,9 @@ if ( trackerDomain == 'animebytes' ) {
     // Get a list of all the downloadElements (download buttons) on the page using the provided CSS Selector
     let allDownloadElements = document.querySelectorAll('a[href^="/torrent/"][title="Download torrent"]')
 
+    // Determine what style separator is to the right of the downloadElements
+    let separator = getPageSeparator(allDownloadElements[0])
+
     // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
     for (let downloadElement of allDownloadElements) {
 
@@ -250,8 +255,8 @@ if ( trackerDomain == 'animebytes' ) {
         // Insert the bunnyButton after the page's downloadElement
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
         
-        // Insert a spacer between the downloadElement and the bunnyButton, in this case a '<space>|'
-        downloadElement.insertAdjacentText('afterend', ' |')
+        // Insert a separator between the downloadElement and the bunnyButton
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -261,12 +266,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -276,12 +283,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -291,12 +300,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a.download_link[href^="/download/"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -312,12 +323,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="/torrents/"][title="Download"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -325,16 +338,7 @@ if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- BitPorn -----------------------------------
     // Browse | Details
 
-    let allDownloadElements = document.querySelectorAll('a[href^="https://bitporn.eu/torrents/download/"]')
-
-    for (let downloadElement of allDownloadElements) {
-
-        let bunnyButton = createBunnyButton(downloadElement.href)
-
-        downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
-
-    }
+    unit3dTrackerHandling('a[href^="https://bitporn.eu/torrents/download/"]')
 
 } else if ( trackerDomain == 'broadcasthe' ) {
     // ----------------------------------- BroadcasTheNet -----------------------------------
@@ -342,12 +346,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -357,12 +363,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '|')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -371,6 +379,8 @@ if ( trackerDomain == 'animebytes' ) {
     // Browse | Collages | Details | Top10 
     
     let allDownloadElements = document.querySelectorAll('a[href^="/torrents.php?action=download&id="]')
+
+    let separator = getPageSeparator(allDownloadElements[0])
 
     for (let downloadElement of allDownloadElements) {
 
@@ -383,7 +393,7 @@ if ( trackerDomain == 'animebytes' ) {
 
         } else {
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', '  ')
+            downloadElement.insertAdjacentText('afterend', separator)
         }
 
     }
@@ -394,12 +404,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '|')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -409,12 +421,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="/torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href, '125%', '🐰')
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -424,12 +438,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a.js-download[href^="/download.php/"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href, '140%', '🐰')
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -439,12 +455,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href*="download.php"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href, '160%', '🐰')
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', '  ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -454,12 +472,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -471,12 +491,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href*="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -536,12 +558,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href, '115%')
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -551,12 +575,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="magnet:?xt\=urn:btih:"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -572,12 +598,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -587,12 +615,14 @@ if ( trackerDomain == 'animebytes' ) {
     
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -611,12 +641,14 @@ if ( trackerDomain == 'animebytes' ) {
         
         let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+        let separator = getPageSeparator(allDownloadElements[0])
+
         for (let downloadElement of allDownloadElements) {
 
             let bunnyButton = createBunnyButton(downloadElement.href)
 
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', '|')
+            downloadElement.insertAdjacentText('afterend', separator)
 
         }
 
@@ -638,6 +670,8 @@ if ( trackerDomain == 'animebytes' ) {
                         
                         let allDownloadElements = tbodyMutations[0].target.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+                        let separator = getPageSeparator(allDownloadElements[0])
+
                         for (let downloadElement of allDownloadElements) {
 
                             if ( downloadElement.dataset.quickie_elementprocessed != 'true' ) {
@@ -646,7 +680,7 @@ if ( trackerDomain == 'animebytes' ) {
                                 let bunnyButton = createBunnyButton(downloadElement.href)
 
                                 downloadElement.insertAdjacentElement('afterend', bunnyButton)
-                                downloadElement.insertAdjacentText('afterend', '|')
+                                downloadElement.insertAdjacentText('afterend', separator)
 
                                 downloadElement.setAttribute('data-quickie_elementprocessed', 'true')
                             }
@@ -682,12 +716,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -697,12 +733,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="download.php/"]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' ')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -712,12 +750,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     let allDownloadElements = document.querySelectorAll('a[href^="torrents.php?action=download&id="]')
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-        downloadElement.insertAdjacentText('afterend', ' |')
+        downloadElement.insertAdjacentText('afterend', separator)
 
     }
 
@@ -1537,6 +1577,9 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
     bunnyButton.classList.add('quickie_newBunnyButton')
     bunnyButton.href = 'javascript:undefined'
     bunnyButton.textContent = buttonText
+    bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none`)
+    bunnyButton.setAttribute('data-torrenturl', torrentURL)
+
     bunnyButton.title = ` ─── 🌎 ${settingsPanelEntries[`${trackerDomain}`]} 🌎 ─── 
  🗃️ = ${SETTINGS.category}
  💾 = ${SETTINGS.savePath}
@@ -1549,11 +1592,9 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
  📁 = ${SETTINGS.subFolder}
  🧩 = ${SETTINGS.seqPieces}
  🤖 = ${SETTINGS.autoTMM}
- 🛡️ = ${SETTINGS.skipHash}`
+ 🛡️ = ${SETTINGS.skipHash}
 
-    bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none`)
-    bunnyButton.setAttribute('data-torrenturl', torrentURL)
-
+🔗 ${bunnyButton.dataset.torrenturl}`
 
     bunnyButton.addEventListener('mouseover', function(event) {
         // When this bunnyButton is hovered over...
@@ -1614,6 +1655,40 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
 
 }
 
+function getPageSeparator(downloadElement, manualSeparator=false) {
+    // Determine if the nextSibling element is a separator, and if so return the value
+
+
+    let separatorText = ' '
+
+    if ( manualSeparator ) {
+        // A particular separator has been provided
+        separatorText = manualSeparator 
+
+    } else {
+
+        let siblingElement = downloadElement.nextSibling
+
+        // A sibling element doesn't exist, so try using the parentElement.nextSibling
+        siblingElement == null ? siblingElement = downloadElement.parentElement.nextSibling : null
+
+        try {
+            if ( siblingElement.nodeType == 3 && siblingElement.nodeName == '#text' && siblingElement.textContent.match(/[\]\)]/) ){
+                // Separator is a bracket type, so insert a | between elements
+               separatorText = ' | ' 
+
+            } else if ( siblingElement.nodeType == 3 && siblingElement.nodeName == '#text' && !siblingElement.textContent.match(/[\[\]\(\)]/) ){
+               separatorText = siblingElement.textContent
+            }
+
+        } catch(error) {
+        }
+
+    }
+
+    return separatorText
+
+}
 
 function bunnyButtonClickedActions(bunnyButton, settingsValue) {
     // Determine what action to take depending on the mouse button settings
@@ -2121,6 +2196,8 @@ function unit3dTrackerHandling(torrentURLSelector) {
 
     let allDownloadElements = document.querySelectorAll(torrentURLSelector)
 
+    let separator = getPageSeparator(allDownloadElements[0])
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
@@ -2130,7 +2207,7 @@ function unit3dTrackerHandling(torrentURLSelector) {
             downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
         } else {
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', ' ')
+            downloadElement.insertAdjacentText('afterend', separator)
         }
 
     }
@@ -2161,6 +2238,8 @@ function unit3dTrackerHandling(torrentURLSelector) {
 
                 let allDownloadElements = document.querySelectorAll(torrentURLSelector)
 
+                let separator = getPageSeparator(allDownloadElements[0])
+
                 for (let downloadElement of allDownloadElements) {
 
                     let bunnyButton = createBunnyButton(downloadElement.href)
@@ -2170,7 +2249,7 @@ function unit3dTrackerHandling(torrentURLSelector) {
                         downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
                     } else {
                         downloadElement.insertAdjacentElement('afterend', bunnyButton)
-                        downloadElement.insertAdjacentText('afterend', ' ')
+                        downloadElement.insertAdjacentText('afterend', separator)
                     }
 
                 }
