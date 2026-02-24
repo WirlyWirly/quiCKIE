@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.98
+// @version     0.98.5
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -105,6 +105,11 @@
 // @match   https://sukebei.nyaa.si/*
 // @match   https://sukebei.nyaa.si/view/*
 
+// @match   https://oldtoons.world/
+// @match   https://oldtoons.world/*/bookmarks
+// @match   https://oldtoons.world/playlists/*
+// @match   https://oldtoons.world/torrents*
+
 // @match   https://orpheus.network/artist.php?id=*
 // @match   https://orpheus.network/bookmarks.php*
 // @match   https://orpheus.network/collages.php?id=*
@@ -179,6 +184,7 @@ const settingsPanelEntries = {
     'myanonamouse': 'MyAnonaMouse',
     'nebulance': 'Nebulance', // @malefis
     'nyaa': 'Nyaa',
+    'oldtoons': 'Oldtoons',
     'orpheus': 'Orpheus',
     'passthepopcorn': 'PassThePopcorn',
     'portugas': 'Portugas', // @Phreaker
@@ -532,6 +538,12 @@ if ( trackerDomain == 'animebytes' ) {
         downloadElement.insertAdjacentText('afterend', ' ')
 
     }
+
+} else if ( trackerDomain == 'oldtoons' ) {
+    // ----------------------------------- OldToons -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandling('a[href^="https://oldtoons.world/torrents/download/"]')
 
 } else if ( trackerDomain == 'orpheus' ) {
     // ----------------------------------- Orpheus -----------------------------------
@@ -2080,6 +2092,97 @@ function createPresetsMenu(targetSelector) {
 
 }
 
+function unit3dTrackerHandling(torrentURLSelector) {
+    // A site using the UNIT3D Framework, setup MutationObservers for the various pages
+
+    if ( document.URL.match(/\/bookmarks/) || document.URL.match(/\/torrents\/\d+/) || document.URL.match(/\/playlists\/\d+/) || document.URL.match(/\/torrents\/similar\//) ) {
+        // The Bookmarks, Details, Playslist, or Similar pages, none of which requires a MutationObserver
+
+        let allDownloadElements = document.querySelectorAll(torrentURLSelector)
+
+        for (let downloadElement of allDownloadElements) {
+
+            let bunnyButton = createBunnyButton(downloadElement.href)
+
+            if ( document.URL.match(/\/bookmarks/) ) {
+                // The Bookmarks Page, place the BunnyButton next to the parentElement so that it ends up in the same row
+                downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+
+            } else if ( document.URL.match(/\/torrents\/\d+/) ) {
+                // The Details Page, place the BunnyButton next to the parentElement so that it ends up in the same row
+                downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+
+            } else if ( document.URL.match(/\/torrents\/similar\//) ) {
+                // The Similar Torrents Page, the bunnyButton can go next to the downloadElement
+                downloadElement.insertAdjacentElement('afterend', bunnyButton)
+
+            } else {
+                // A Playlists page, the bunnyButton can go next to the downloadElement
+                downloadElement.insertAdjacentElement('afterend', bunnyButton)
+            }
+
+        }
+
+        createPresetsMenu('a.quickie_bunnyButton')
+
+    } else {
+        // The Browse and Homepage, both of which require a MutationObserver
+       
+        // The inital load does not require a MutationObserver
+        let allDownloadElements = document.querySelectorAll(torrentURLSelector)
+
+        for (let downloadElement of allDownloadElements) {
+
+            let bunnyButton = createBunnyButton(downloadElement.href)
+
+            downloadElement.insertAdjacentElement('afterend', bunnyButton)
+
+        }
+
+        createPresetsMenu('a.quickie_bunnyButton')
+
+        let observer = new MutationObserver(function(mutations) {
+            // Functionality to run when changes are detected to the target element
+
+            try {
+
+                let allDownloadElements = document.querySelectorAll(torrentURLSelector)
+
+                for (let downloadElement of allDownloadElements) {
+
+                    let bunnyButton = createBunnyButton(downloadElement.href)
+
+                    downloadElement.insertAdjacentElement('afterend', bunnyButton)
+
+                }
+
+                createPresetsMenu('a.quickie_bunnyButton')
+
+            } catch(error) {
+                // console.log(error)
+                return
+
+            }
+
+        })
+
+        let target, config
+
+        if ( document.URL.match(/\/torrents\??/) ) {
+            // The Browse\Search page
+            target = document.querySelector('section.torrent-search__results') 
+            config = { subtree: true, attributeFilter: ['href']}
+
+        } else {
+            // The Homepage
+            target = document.querySelector('table.data-table tbody')
+            config = { childList: true, attributeFilter: ['href']}
+        }
+
+        observer.observe(target, config)
+    }
+
+}
 
 // =================================== SOURCED FUNCTIONS ======================================
 
