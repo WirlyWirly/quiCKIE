@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.98.5
+// @version     0.98.6
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -44,6 +44,14 @@
 // @match   https://anthelion.me/torrents.php*
 
 // @match   https://bakabt.me/torrent/*
+
+// @match   https://beyond-hd.me/
+// @match   https://beyond-hd.me/torrents*
+// @match   https://beyond-hd.me/bookmarks
+// @match   https://beyond-hd.me/watchlist
+// @match   https://beyond-hd.me/library*
+// @match   https://beyond-hd.me/download/*
+// @match   https://beyond-hd.me/torrents/seed
 
 // @match   https://bibliotik.me/collections/*
 // @match   https://bibliotik.me/torrents/*
@@ -118,6 +126,9 @@
 
 // @match   https://passthepopcorn.me/torrents.php?id=*
 
+// @match   https://portugas.org/
+// @match   https://portugas.org/*/bookmarks
+// @match   https://portugas.org/playlists/*
 // @match   https://portugas.org/torrents*
 
 // @match   https://redacted.sh/artist.php?id=*
@@ -170,13 +181,14 @@ const settingsPanelEntries = {
     'animebytes': 'AnimeBytes',
     'anthelion': 'Anthelion', // @malefis
     'bakabt': 'BakaBT', 
+    'beyond-hd': 'BeyondHD', // @empDM
     'bibliotik': 'Bibliotik',
     'bitporn': 'BitPorn',
     'broadcasthe': 'BroadcasTheNet',
     'deepbassnine': 'DeepBassNine', // @tartuffe
     'empornium': 'Empornium',
     'gazellegames': 'GazelleGames',
-    'happyfappy': 'HappyFappy', // @Tamlar
+    'happyfappy': 'HappyFappy', // @empDM
     'hdbits': 'HDBits',
     'iptorrents': 'IP-Torrents',
     'jpopsuki': 'JPopsuki', // @tartuffe
@@ -213,6 +225,9 @@ let SETTINGS = getTrackerSettings(trackerDomain)
 
 // If qui fails to download an authenticated torrentURL, change this property to 'true' at the start of the tracker's if block to force downloading the .torrent file through the browser
 SETTINGS.forceTorrentFile = false
+
+// The entries that will be displayed in the presetsMenu
+let presetMenuItems = generatePresetsMenuItems()
 
 
 // =================================== TRACKER SPECIFIC HANDLING ======================================
@@ -284,6 +299,12 @@ if ( trackerDomain == 'animebytes' ) {
         downloadElement.insertAdjacentText('afterend', '  ')
 
     }
+
+} else if ( trackerDomain == 'beyond-hd' ) {
+    // ----------------------------------- Beyond-HD -----------------------------------
+    // Browse | Details | Homepage | Library
+
+    unit3dTrackerHandling('a[href^="https://beyond-hd.me/download/"]')
 
 } else if ( trackerDomain == 'bibliotik' ) {
     // ----------------------------------- Bibliotik -----------------------------------
@@ -472,7 +493,7 @@ if ( trackerDomain == 'animebytes' ) {
 
         downloadButton.insertAdjacentElement('afterend', bunnyButton)
 
-        createPresetsMenu('a.quickie_bunnyButton')
+        attachPresetsMenu('a.quickie_newBunnyButton')
 
     } else {
         // The Browse or Homepage, both of which require a MutationObserver
@@ -493,7 +514,7 @@ if ( trackerDomain == 'animebytes' ) {
                 }
 
                 // Now that the bunnyButtons are in-place, generate the right-click presets-menu
-                createPresetsMenu('a.quickie_bunnyButton')
+                attachPresetsMenu('a.quickie_newBunnyButton')
 
             } catch(error) {
                 // console.log(error)
@@ -579,15 +600,7 @@ if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- Portugas -----------------------------------
     // Browse | Album | Artist
     
-    let allDownloadElements = document.querySelectorAll('a[href^="https://portugas.org/torrents/download/"]')
-
-    for (let downloadElement of allDownloadElements) {
-
-        let bunnyButton = createBunnyButton(downloadElement.href)
-
-        downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
-
-    }
+    unit3dTrackerHandling('a[href^="https://portugas.org/torrents/download/"]')
 
 } else if ( trackerDomain == 'redacted' ) {
     // ----------------------------------- Redacted -----------------------------------
@@ -607,7 +620,7 @@ if ( trackerDomain == 'animebytes' ) {
 
         }
 
-        createPresetsMenu('a.quickie_bunnyButton')
+        attachPresetsMenu('a.quickie_newBunnyButton')
 
     } else {
         // This is a collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
@@ -641,7 +654,7 @@ if ( trackerDomain == 'animebytes' ) {
                         }
 
                         // Now that the bunnyButtons are in-place, generate the right-click presets-menu
-                        createPresetsMenu('a.quickie_bunnyButton')
+                        attachPresetsMenu('a.quickie_newBunnyButton')
 
                     })
 
@@ -718,7 +731,7 @@ let skipTrackerDomains = ['myanonamouse', 'redacted']
 
 if ( !skipTrackerDomains.includes(trackerDomain) ) {
     // After the bunnyButtons have been created, generate and attach to them the right-click presets-menu
-    createPresetsMenu('a.quickie_bunnyButton')
+    attachPresetsMenu('a.quickie_newBunnyButton')
 }
 
 
@@ -1521,6 +1534,7 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
 
     let bunnyButton = document.createElement('a')
     bunnyButton.classList.add('quickie_bunnyButton')
+    bunnyButton.classList.add('quickie_newBunnyButton')
     bunnyButton.href = 'javascript:undefined'
     bunnyButton.textContent = buttonText
     bunnyButton.title = ` ─── 🌎 ${settingsPanelEntries[`${trackerDomain}`]} 🌎 ─── 
@@ -1928,7 +1942,7 @@ function scanForThirdPartyTorrentURLS(delay) {
             }
 
             // Append the presets-menu to the newly created bunnyButtons
-            createPresetsMenu('a.quickie_thirdParty')
+            attachPresetsMenu('a.quickie_newBunnyButton')
 
         }
 
@@ -1941,7 +1955,7 @@ function scanForThirdPartyTorrentURLS(delay) {
 
 
 GM_addStyle(GM_getResourceText('presetsMenuCSS'))
-function createPresetsMenu(targetSelector) {
+function generatePresetsMenuItems() {
     // Generate and initilize the right-click presets-menu that will display all the presets
 
 
@@ -2080,11 +2094,19 @@ function createPresetsMenu(targetSelector) {
 
     }
 
+    return menuItems
+
+}
+
+
+function attachPresetsMenu(targetSelector) {
+    // append the menuItems to the target elements
+
     const presetsMenu = new ContextMenu({
         // targetSelector == CSS Selector
         target: targetSelector,
         // An array of objects to display in the presets-menu
-        menuItems
+        menuItems: presetMenuItems
     })
     
     // init() will stack a 'contextmenu' eventlistener on elements, so don't call it more than once per bunnyButton
@@ -2092,46 +2114,45 @@ function createPresetsMenu(targetSelector) {
 
 }
 
+
 function unit3dTrackerHandling(torrentURLSelector) {
-    // A site using the UNIT3D Framework, setup MutationObservers for the various pages
+    // A site using the UNIT3D Framework, first generate bunnyButtons and then see if this page has a mutable object that can be observed
+    // ! This function used 'Oldtoons' as the model and is not WirlyWirly tested for other sites
 
-    if ( document.URL.match(/\/(bookmarks|torrents\/\d+|playlists\/\d+|torrents\/similar)/)  ) {
-        // The Bookmarks, Details, Playslist, or Similar pages, none of which requires a MutationObserver
+    let allDownloadElements = document.querySelectorAll(torrentURLSelector)
 
-        let allDownloadElements = document.querySelectorAll(torrentURLSelector)
+    for (let downloadElement of allDownloadElements) {
 
-        for (let downloadElement of allDownloadElements) {
+        let bunnyButton = createBunnyButton(downloadElement.href)
 
-            let bunnyButton = createBunnyButton(downloadElement.href)
-
-            if ( document.URL.match(/\/(bookmarks|torrents\/\d+)/) ) {
-                // The Bookmarks or Details page, place the BunnyButton next to the parentElement so that it ends up in the same row
-                downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
-
-            } else {
-                // A Playlists or Similar page, the bunnyButton can go next to the downloadElement
-                downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            }
-
-        }
-
-        createPresetsMenu('a.quickie_bunnyButton')
-
-    } else {
-        // The Browse and Homepage, both of which require a MutationObserver
-       
-        // The inital load does not require a MutationObserver
-        let allDownloadElements = document.querySelectorAll(torrentURLSelector)
-
-        for (let downloadElement of allDownloadElements) {
-
-            let bunnyButton = createBunnyButton(downloadElement.href)
-
+        if ( downloadElement.parentElement.nodeName == 'LI' ) {
+            // If the parent element is a list-item, this is likely a horizontal row, so place the bunnyButton after the parent element so that it shows up on the same row
+            downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+        } else {
             downloadElement.insertAdjacentElement('afterend', bunnyButton)
-
+            downloadElement.insertAdjacentText('afterend', ' ')
         }
 
-        createPresetsMenu('a.quickie_bunnyButton')
+    }
+
+    attachPresetsMenu('a.quickie_newBunnyButton')
+
+    let target, config
+
+    if ( document.querySelector('section.torrent-search__results') ) {
+        // The Browse\Search page
+        target = document.querySelector('section.torrent-search__results') 
+        config = { subtree: true, attributeFilter: ['href']}
+    } else if ( document.querySelector('table.data-table tbody') ) {
+        // The Homepage
+        target = document.querySelector('table.data-table tbody')
+        config = { childList: true, attributeFilter: ['href']}
+    }
+
+    if ( target && config ) {
+        console.log(target)
+        console.log(config)
+        // One of the mutable objects has been found, so setup observation for it
 
         let observer = new MutationObserver(function(mutations) {
             // Functionality to run when changes are detected to the target element
@@ -2144,11 +2165,17 @@ function unit3dTrackerHandling(torrentURLSelector) {
 
                     let bunnyButton = createBunnyButton(downloadElement.href)
 
-                    downloadElement.insertAdjacentElement('afterend', bunnyButton)
+                    if ( downloadElement.parentElement.nodeName == 'LI' ) {
+                        // If the parent element is a list-item, this is likely a horizontal row, so place the bunnyButton after the parent element so that it shows up on the same row
+                        downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+                    } else {
+                        downloadElement.insertAdjacentElement('afterend', bunnyButton)
+                        downloadElement.insertAdjacentText('afterend', ' ')
+                    }
 
                 }
 
-                createPresetsMenu('a.quickie_bunnyButton')
+                attachPresetsMenu('a.quickie_newBunnyButton')
 
             } catch(error) {
                 // console.log(error)
@@ -2158,23 +2185,12 @@ function unit3dTrackerHandling(torrentURLSelector) {
 
         })
 
-        let target, config
-
-        if ( document.URL.match(/\/torrents\??/) ) {
-            // The Browse\Search page
-            target = document.querySelector('section.torrent-search__results') 
-            config = { subtree: true, attributeFilter: ['href']}
-
-        } else {
-            // The Homepage
-            target = document.querySelector('table.data-table tbody')
-            config = { childList: true, attributeFilter: ['href']}
-        }
-
         observer.observe(target, config)
+
     }
 
 }
+
 
 // =================================== SOURCED FUNCTIONS ======================================
 
