@@ -222,8 +222,8 @@ let [presetCount, swappedSettingsPanelEntries] = createGMConfigSettingsPanel()
 // Example: https://broadcasthe.net/ --> broadcasthe
 let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.*?)(\.\w+)$/)[2].toLowerCase()
 
-// The tail-end of the URL after the trackerDomain, useful for figuring out what page you are on when doing more complex tasks
-let urlPath = document.location.pathname
+// The current URL, useful for figuring out what page you are on when doing more complex tasks
+let trackerURL = document.URL
 
 // Get the global and all trackerDomain specific settings
 let SETTINGS = getTrackerSettings(trackerDomain)
@@ -363,7 +363,7 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     // This is a collage page, so place the bunnyButton on the parentElement 
-    urlPath.match(/\/collage\/\d+/) ? trackerHandlingOptions.bunnyButtonParentPlacement = true : null
+    trackerURL.match(/\/collage\/\d+/) ? trackerHandlingOptions.bunnyButtonParentPlacement = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -438,7 +438,7 @@ if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- MyAnonaMouse -----------------------------------
     // Browse | Details | Homepage
 
-    if ( urlPath.match(/\/t\/\d+/) ) {
+    if ( trackerURL.match(/\/t\/\d+/) ) {
         // The book details page, which doesn't require a MutationObserver
 
         let trackerHandlingOptions = {
@@ -536,7 +536,7 @@ if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- Redacted -----------------------------------
     // Album | Artist | Bookmarks | Browse | Collages | Top10
 
-    // if ( !urlPath.match(/collages?\.php\?id=\d+/) ) {
+    if ( !trackerURL.match(/collages?\.php\?id=\d+/) ) {
         // This is NOT a collage page, so it doesn't require a MutationObserver
         
         let trackerHandlingOptions = {
@@ -545,46 +545,46 @@ if ( trackerDomain == 'animebytes' ) {
 
         quickieTrackerHandler(trackerHandlingOptions)
 
-    // } else {
-    //     // This is a collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
+    } else {
+        // This is a collage page, which loads DL buttons only after the '+' button of the album is clicked. Setup nested observation.
         
-    //     let pageObserver = new MutationObserver(function(pageMutations) {
-    //         // The actions to take when new PAGES are loaded
+        let pageObserver = new MutationObserver(function(pageMutations) {
+            // The actions to take when new PAGES are loaded
 
-    //         waitForElement('#discog_table tbody').then((tbodyElement) => {
-    //             // After a new page is loaded, wait until the <tbody> containing the <tr> torrent rows is loaded
+            waitForElement('#discog_table tbody').then((tbodyElement) => {
+                // After a new page is loaded, wait until the <tbody> containing the <tr> torrent rows is loaded
 
-    //             try {
+                try {
 
-    //                 let tbodyObserver = new MutationObserver(function(tbodyMutations) {
-    //                     // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
+                    let tbodyObserver = new MutationObserver(function(tbodyMutations) {
+                        // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
                         
-    //                     let trackerHandlingOptions = {
-    //                         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    //                         trackProcessedDownloadElements: true,
-    //                     }
+                        let trackerHandlingOptions = {
+                            downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+                            trackProcessedDownloadElements: true,
+                        }
 
-    //                     quickieTrackerHandler(trackerHandlingOptions)
+                        quickieTrackerHandler(trackerHandlingOptions)
 
-    //                 })
+                    })
 
-    //                 tbodyObserver.observe(tbodyElement, { childList: true })
+                    tbodyObserver.observe(tbodyElement, { childList: true } )
 
-    //             } catch(error) {
-    //                 // console.log(error)
-    //                 return
+                } catch(error) {
+                    // console.log(error)
+                    return
 
-    //             }
-    //         })
+                }
+            })
 
-    //     })
+        })
 
-    //     let target = document.querySelector('[data-component="TorrentCollageView"]')
-    //     let config = { childList: true }
+        let target = document.querySelector('[data-component="TorrentCollageView"]')
+        let config = { childList: true }
 
-    //     pageObserver.observe(target, config)
+        pageObserver.observe(target, config)
 
-    // }
+    }
 
 } else if ( trackerDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
