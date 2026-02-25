@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.99
+// @version     0.99.1
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -668,7 +668,7 @@ function createGMConfigSettingsPanel() {
 
     // @trackerFieldGeneration
     // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in 
-    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'instance', 'leftClick', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
+    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'instance', 'leftClick', 'hideDL', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
     let gmConfigTrackerFields = {}
     let trackerDomains = Object.keys(settingsPanelEntries)
     for ( let trackerDomain of trackerDomains ) {
@@ -726,7 +726,12 @@ function createGMConfigSettingsPanel() {
             [`${trackerDomain}-${trackerFieldSuffixes[11]}`]: {
                 'type': 'checkbox',
                 'default': false
+            },
+            [`${trackerDomain}-${trackerFieldSuffixes[12]}`]: {
+                'type': 'checkbox',
+                'default': false
             }
+
         }
 
         gmConfigTrackerFields = {...gmConfigTrackerFields, ...generatedTrackerFields}
@@ -809,6 +814,7 @@ function createGMConfigSettingsPanel() {
             'seedtime': '🌱',
             'instance': '🎯',
             'leftclick': '🖱️',
+            'hidedl': '🙈',
             'startpaused': '⏸️',
             'subfolder': '📁',
             'seqpieces': '🧩',
@@ -830,6 +836,7 @@ function createGMConfigSettingsPanel() {
             'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
             'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
+            'hidedl': "─── 🙈 Hide DL Button 🙈 ───\n\nHide the trackers DL (download) button from view\n\nThis will NOT apply to any 3rd Party quiCKIE links\n\nℹ️ Hiding is not the same as removing, the button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird behaviour\\gaps on some pages",
             'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nℹ️ Useful for when you want to give yourself a chance to pick which files of the torrent should be downloaded",
             // 'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so as to not automatically begin downloading\n\nℹ️ Performing a 'Space-Click' on a BunnyButton will force the torrent to Start Paused",
             'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
@@ -873,7 +880,7 @@ function createGMConfigSettingsPanel() {
                     <a href="${GM_info.script.homepage}" target="_blank" style="font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; color: #FFFFFF; text-decoration: none; background: none; line-height: 30px">quiCKIE</a>
                 </span>
                 🐰
-                <div style="margin: 15px 0px 0px 0px;"><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">★ Hover over emoticons for details ★</span></div>
+                <div style="margin: 15px 0px 0px 0px;"><span style="color: #b7b7b7; display: block; font-size: 14px; font-weight: 300">★ Hover over emojis for details ★</span></div>
             </div>
         `,
 
@@ -904,6 +911,12 @@ function createGMConfigSettingsPanel() {
                 'type': 'select',
                 'options': ['Tracker', 'Settings', 'quiTab', 'Nothing'],
                 'default': 'quiTab',
+            },
+            'bunnyButtonPosition': {
+                'label': '↔️ Position',
+                'type': 'select',
+                'options': ['Before', 'After'],
+                'default': 'After',
             },
             'thirdPartyDelay': {
                 'label': '🤝 3rd Party Delay:',
@@ -1280,6 +1293,14 @@ function createGMConfigSettingsPanel() {
                 settingsDivSecond.appendChild(thirdPartyDelayLabel)
                 settingsDivSecond.appendChild(thirdPartyDelayField)
 
+                // --- Position ---
+                let bunnyButtonPositionLabel = document.getElementById('quiCKIE_config_bunnyButtonPosition_field_label')
+                let bunnyButtonPositionField = document.getElementById('quiCKIE_config_field_bunnyButtonPosition')
+                bunnyButtonPositionLabel.classList.add('settingsDivLabel')
+                bunnyButtonPositionLabel.title = '─── ↔️ Position  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons'
+                settingsDivSecond.appendChild(bunnyButtonPositionLabel)
+                settingsDivSecond.appendChild(bunnyButtonPositionField)
+
                 // --- Hidden Trackers ---
                 let hiddenTrackersLabel = document.getElementById('quiCKIE_config_hiddenTrackers_field_label')
                 let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
@@ -1396,6 +1417,7 @@ function getTrackerSettings(trackerDomain) {
         globalLeftClickAction: GM_config.get('globalLeftClickAction'),
         globalMiddleClickAction: GM_config.get('globalMiddleClickAction'),
         thirdPartyDelay: GM_config.get('thirdPartyDelay'),
+        bunnyButtonPosition: GM_config.get('bunnyButtonPosition'),
         
         // The saved settings of the current tracker
         category: GM_config.get(`${trackerDomain}-category`),
@@ -1405,6 +1427,7 @@ function getTrackerSettings(trackerDomain) {
         seedTime: GM_config.get(`${trackerDomain}-seedTime`),
         instance: GM_config.get(`${trackerDomain}-instance`),
         leftClick: GM_config.get(`${trackerDomain}-leftClick`),
+        hideDL: GM_config.get(`${trackerDomain}-hideDL`),
         startPaused: GM_config.get(`${trackerDomain}-startPaused`),
         subFolder: GM_config.get(`${trackerDomain}-subFolder`),
         seqPieces: GM_config.get(`${trackerDomain}-seqPieces`),
@@ -1442,6 +1465,7 @@ function createBunnyButton(torrentURL, fontSize = 'inherit', buttonText = ' 🐰
  🌱 = ${SETTINGS.seedTime}
  🎯 = ${SETTINGS.instance}
  🖱️ = ${SETTINGS.leftClick}
+ 🙈 = ${SETTINGS.hideDL}
  ⏸️ = ${SETTINGS.startPaused}
  📁 = ${SETTINGS.subFolder}
  🧩 = ${SETTINGS.seqPieces}
@@ -1844,9 +1868,15 @@ function scanForThirdPartyTorrentURLS(delay) {
                 downloadElement.dataset.quickie_forcetorrentfile == 'true' ? SETTINGS.forceTorrentFile = true : null
 
                 // [quickie_separator] : Check if the thirdParty element would like to use a specific text separator between the element and the bunnyButton
+                let separatorNode
+                SETTINGS.bunnyButtonPosition == 'After' ? separatorNode = existingBB.previousSibling : separatorNode = existingBB.nextSibling
+
                 let separatorText
-                let separatorNode = existingBB.previousSibling
-                separatorNode.nodeType != 3 ? separatorText = ' ' : separatorText = separatorNode.textContent
+                if ( separatorNode == null ) {
+                    separatorText == ' '
+                } else {
+                    separatorNode.nodeType != 3 ? separatorText = ' ' : separatorText = separatorNode.textContent
+                }
 
                 downloadElement.dataset.quickie_separator ? separatorText = downloadElement.dataset.quickie_separator : null
 
@@ -1859,8 +1889,10 @@ function scanForThirdPartyTorrentURLS(delay) {
 
 
                 // Append the bunnyButton after the thirdParty element
-                downloadElement.insertAdjacentElement('afterend', bunnyButton)
-                downloadElement.insertAdjacentText('afterend', separatorText)
+                let bunnyButonPosition
+                SETTINGS.bunnyButtonPosition == 'After' ? bunnyButtonPosition = 'afterend' : bunnyButtonPosition = 'beforebegin'
+                downloadElement.insertAdjacentElement(bunnyButtonPosition, bunnyButton)
+                downloadElement.insertAdjacentText(bunnyButtonPosition, separatorText)
 
                 // Remove the attribute that would match it as a thirdParty element in future loops
                 downloadElement.removeAttribute('data-quickie_torrenturl')
@@ -2044,6 +2076,7 @@ function attachPresetsMenu(targetSelector) {
 }
 
 
+// @quickieTrackerHandler
 function quickieTrackerHandler({
     downloadElementsSelector,
     torrentURLAttribute = 'href',
@@ -2058,12 +2091,16 @@ function quickieTrackerHandler({
 
     let allDownloadElements = document.querySelectorAll(downloadElementsSelector)
 
+
     // If the .torrent file should be forced to download through the browser
     forceTorrentFile == true ? SETTINGS.forceTorrentFile = true : null
     
     // The separator used between the DL button and the BunnyButton
     separator == true ? separator = 'automatic' : null
     separator == 'automatic' ? separator = getPageSeparator(allDownloadElements[0]) : null
+
+    let bunnyButtonPosition
+    SETTINGS.bunnyButtonPosition == 'After' ? bunnyButtonPosition = 'afterend' : bunnyButtonPosition = 'beforebegin'
 
     // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
     for (let downloadElement of allDownloadElements) {
@@ -2080,10 +2117,15 @@ function quickieTrackerHandler({
         bunnyButtonParentPlacement == true ? placementElement = downloadElement.parentElement : placementElement = downloadElement
         
         // Insert the bunnyButton after the placementElement
-        placementElement.insertAdjacentElement('afterend', bunnyButton)
+        placementElement.insertAdjacentElement(bunnyButtonPosition, bunnyButton)
         
-        // Insert the separator between the placementElement and the bunnyButton
-        separator == false ? null : placementElement.insertAdjacentText('afterend', separator)
+        if ( SETTINGS.hideDL == false ) {
+            // Insert the separator between the placementElement and the bunnyButton
+            separator == false ? null : placementElement.insertAdjacentText(bunnyButtonPosition, separator)
+        } else {
+            // Hide the DL button and don't insert a separator
+            downloadElement.style.display = 'none'
+        }
 
         if ( trackProcessedDownloadElements ) {
             // Keep track of this downloadElement as having been processed my marking it with a unique attribute
@@ -2105,16 +2147,29 @@ function unit3dTrackerHandler(torrentURLSelector) {
 
     let separator = getPageSeparator(allDownloadElements[0])
 
+    SETTINGS.bunnyButtonPosition == 'After' ? bunnyButtonPosition = 'afterend' : bunnyButtonPosition = 'beforebegin'
+
     for (let downloadElement of allDownloadElements) {
 
         let bunnyButton = createBunnyButton(downloadElement.href)
 
         if ( downloadElement.parentElement.nodeName == 'LI' ) {
             // If the parent element is a list-item, this is likely a horizontal row, so place the bunnyButton after the parent element so that it shows up on the same row
-            downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+            downloadElement.parentElement.insertAdjacentElement(bunnyButtonPosition, bunnyButton)
+
+            // Hide the DL button if enabled
+            SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
+
         } else {
-            downloadElement.insertAdjacentElement('afterend', bunnyButton)
-            downloadElement.insertAdjacentText('afterend', separator)
+            downloadElement.insertAdjacentElement(bunnyButtonPosition, bunnyButton)
+
+            if ( SETTINGS.hideDL == false ) {
+                // Insert the separator between the placementElement and the bunnyButton
+                downloadElement.insertAdjacentText(bunnyButtonPosition, separator)
+            } else {
+                // Hide the DL button and don't insert a separator
+                downloadElement.style.display = 'none'
+            }
         }
 
     }
@@ -2154,9 +2209,19 @@ function unit3dTrackerHandler(torrentURLSelector) {
                     if ( downloadElement.parentElement.nodeName == 'LI' ) {
                         // If the parent element is a list-item, this is likely a horizontal row, so place the bunnyButton after the parent element so that it shows up on the same row
                         downloadElement.parentElement.insertAdjacentElement('afterend', bunnyButton)
+                        
+                        // Hide the DL button if enabled
+                        SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
                     } else {
-                        downloadElement.insertAdjacentElement('afterend', bunnyButton)
-                        downloadElement.insertAdjacentText('afterend', separator)
+                        downloadElement.insertAdjacentElement(bunnyButtonPosition, bunnyButton)
+
+                        if ( SETTINGS.hideDL == false ) {
+                            // Insert the separator between the placementElement and the bunnyButton
+                            downloadElement.insertAdjacentText(bunnyButtonPosition, separator)
+                        } else {
+                            // Hide the DL button and don't insert a separator
+                            downloadElement.style.display = 'none'
+                        }
                     }
 
                 }

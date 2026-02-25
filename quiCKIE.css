@@ -50,8 +50,9 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 30px;
 }
 
+#quiCKIE_config_field_globalMiddleClickAction,
 #quiCKIE_config_field_globalLeftClickAction,
-#quiCKIE_config_field_globalMiddleClickAction {
+#quiCKIE_config_field_bunnyButtonPosition {
     /* Click inputs */
     background: rgba(255, 255, 255, 0.9);
     border-radius: 3px;
@@ -77,9 +78,9 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 }
 
 #quiCKIE_config_field_hiddenTrackers {
-    /* ApiKey input */
+    /* HiddenTrackers input */
     width: 175px;
-    max-width: 175px;
+    max-width: 215px;
 }
 
 /* ----------------------------------- TABLE ----------------------------------- */
