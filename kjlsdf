@@ -1,0 +1,691 @@
+// ==UserScript==
+// @name            Takeout
+// @description     Embed cross-seedable OPS torrents in RED torrent tables.
+// @author          enhancer
+// @version         1.1.10
+// @grant           GM.xmlHttpRequest
+// @connect         orpheus.network
+// @match           https://redacted.sh/artist.php?id=*
+// @match           https://redacted.sh/torrents.php?*id=*
+// @run-at          document-end
+// ==/UserScript==
+
+(async function () {
+    "use strict";
+    let opsApiKey, artistCache, artistAlias, redData, opsData, searchAlias;
+    const defaults = { "mode_automatic": true, "mode_manual": false, "show_bar": true, "cache_interval": 24, "last_pruned": 0, "accent_color": "#20c098", "error_color": "#FA7373", "label_text": "OPS", "label_style": "font-variant: all-small-caps", "highlight_color": "#20c09822", "marked_style": "text-decoration-line: line-through", "bar_outlink": true, "insert_downloadable_link": false };
+    const settings = JSON.parse(localStorage.getItem("takeout_settings")) || defaults;
+    Object.keys(defaults).forEach(x => {
+        settings[x] ??= defaults[x];
+    });
+    localStorage.setItem("takeout_settings", JSON.stringify(settings));
+    localStorage.removeItem("takeout_queue");
+    const page = globalThis.location.href;
+    const linkbox = document.querySelector(".header .linkbox");
+    if (page.includes("revisionid=") || !linkbox) return;
+    const cache = Math.max(3600000 * settings.cache_interval, 3600000);
+    const style = document.createElement("style");
+    document.head.append(style);
+    appendStyles();
+    const redApiUrl = "https://redacted.sh/ajax.php?action=artist&artistname=";
+    const opsApiUrl = "https://orpheus.network/ajax.php?action=artist&artistname=";
+    const opsTorrentUrl = "https://orpheus.network/torrents.php?torrentid=";
+    const artistPage = page.includes("artist.php?id=");
+    const header = document.querySelector(".header h2");
+    const menuToggle = document.createElement("a");
+    const menu = document.createElement("div");
+    linkbox.append(menuToggle);
+    document.querySelector(".sidebar").insertAdjacentElement("afterbegin", menu);
+    menuToggle.textContent = "Takeout";
+    menuToggle.id = "takeout_toggle";
+    menuToggle.classList.add("brackets");
+    menu.id = "takeout_menu";
+    menu.classList.add("box");
+    menu.style.display = "none";
+    const databaseName = "takeout";
+    function initDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(databaseName, 1);
+            request.onupgradeneeded = event => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains("matches")) {
+                    db.createObjectStore("matches", {
+                        keyPath: "artist"
+                    });
+                }
+                if (!db.objectStoreNames.contains("aliases")) {
+                    db.createObjectStore("aliases", {
+                        keyPath: "artist"
+                    });
+                }
+                if (!db.objectStoreNames.contains("api-key")) {
+                    db.createObjectStore("api-key");
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    async function getData(storeName, key) {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            const request = store.get(key);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    async function addData(storeName, record, key) {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            const request = key ? store.put(record, key) : store.put(record);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    async function clearData(storeName, key) {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+            const request = store.delete(key);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    async function getKeys(storeName) {
+        const db = await initDB();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(storeName, "readonly");
+            const store = transaction.objectStore(storeName);
+            const request = store.getAllKeys();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+    function queueRequest() {
+        return new Promise(resolve => {
+            const now = Date.now();
+            const queue = JSON.parse(localStorage.getItem("api_request_queue"))?.filter(x => now < x) || [];
+            const delay = queue.at(-1) - now || 0;
+            queue.push(now + delay + 3000);
+            localStorage.setItem("api_request_queue", JSON.stringify(queue));
+            if (delay !== 0) {
+                console.log(`Takeout: Rate limit queue, API call in ${Math.round(delay / 1000)}s.`);
+            }
+            setTimeout(resolve, delay);
+        });
+    }
+    async function redApi(name) {
+        try {
+            const response = await fetch(redApiUrl + encodeURIComponent(name));
+            if (!response.ok) {
+                throw new Error(`status ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error(`Takeout: RED API call failed (${error.message})`);
+        }
+    }
+    function opsApi(endpoint, name) {
+        return new Promise((resolve, reject) => {
+            GM.xmlHttpRequest({
+                method: "GET",
+                url: endpoint + encodeURIComponent(name),
+                headers: { "Authorization": opsApiKey },
+                onload: async res => {
+                    if (res.status !== 200) {
+                        menuToggle.style.color = settings.error_color;
+                        console.error(`Takeout: OPS API call failed (status ${res.status})`);
+                        return;
+                    }
+                    if (JSON.parse(res.responseText).error === "invalid token") {
+                        menuToggle.style.color = settings.error_color;
+                        await clearKey();
+                        alert("Takeout: Request rejected (invalid token). Please enter a working Orpheus API key.");
+                        console.log("Takeout: Request rejected (invalid token). Please enter a working Orpheus API key.");
+                    } else {
+                        resolve(JSON.parse(res.responseText));
+                    }
+                },
+                onerror: res => reject(res)
+            });
+        });
+    }
+    function escape(string) {
+        const str = string.toString();
+        const len = str.length;
+        const unescaped = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@*+-./";
+        let result = "";
+        for (let k = 0; k < len; k++) {
+            const char = str[k];
+            const code = char.charCodeAt(0);
+            if (unescaped.includes(char)) {
+                result += char;
+            } else if (code < 256) {
+                result += "%" + code.toString(16);
+            } else {
+                result += "%u" + ("0000").substring(0, 4 - result.length) + result;
+            }
+        }
+        return result;
+    }
+    function decode(filename) {
+        try {
+            try {
+                return decodeURIComponent(escape(decodeURIComponent(escape(filename))));
+            } catch {
+                return decodeURIComponent(escape(filename));
+            }
+        } catch {
+            return filename;
+        }
+    }
+    function addRows() {
+        if (!artistCache.artist) return;
+        for (const tr of document.querySelectorAll("tr[id^='matched_']")) {
+            tr.remove();
+        }
+        for (const tr of document.querySelectorAll("tr.group_torrent")) {
+            const a = tr.querySelector("a[href*='torrentid']");
+            if (!a) continue;
+            const i = /\d+/.exec(a.onclick) || new URLSearchParams(a.search).get("torrentid");
+            const match = artistCache.matches.find(x => x.red_id == i);
+            if (!match) continue;
+            const info = tr.querySelector("a[onclick*='#torrent'], a[href*='torrents.php?id=']").innerHTML;
+            const excluded = ["Seeding", "Uploaded", "Leeching", "Snatched", "Downloaded", "Seeded", "Reported", "Freeleech", "Freeload", "Neutral"];
+            const trumpable = Array.from(tr.querySelectorAll("strong.tl_notice"))?.find(x => x.textContent.includes("Trumpable"));
+            const copy = info.split(" / ").filter(x => !excluded.some(e => x.includes(e))).join(" / ");
+            const size = tr.querySelector("td.nobr.number_column").outerHTML;
+            const files = tr.querySelector("td.gmfc_files");
+            const matchTr = document.createElement("tr");
+            matchTr.className = tr.className.split(" ").filter(x => !x.endsWith("_torrent") || x === "group_torrent").join(" ");
+            matchTr.id = `matched_${i}`;
+            matchTr.innerHTML = `
+                <td${artistPage ? ` colspan="2"` : ""}>
+                    <span class="torrent_action_buttons ${tr.querySelector("span.torrent_action_buttons.multiple") ? "multiple" : ""}"> <a href="#" class="ops_dl" data-takeout-id="${match.ops_id}" data-quickie_tracker="Orpheus" data-quickie_torrenturl="https://orpheus.network/torrents.php?action=download&id=${match.ops_id}" title="Download">DL</a> | <a href="#" class="ops_dl ops_fl" data-takeout-id="${match.ops_id}" data-quickie_torrenturl="https://orpheus.network/torrents.php?action=download&id=${match.ops_id}&usetoken=1" title="Use a FL Token">FL</a></span>
+                    ${artistPage ? "&nbsp;&nbsp;»&nbsp;" : " » "}
+                    <a href="${opsTorrentUrl + match.ops_id}" target="_blank">${copy}</a>${artistPage && trumpable ? ` / <strong class="torrent_label tooltip tl_notice tl_trumpable" style="white-space: nowrap;">Trumpable</strong>` : ""}
+                    <strong class="torrent_label"><a class="tl_ops">${settings.label_text}</a></strong>
+                </td>
+                ${!artistPage && files ? `<td class="${files.className} matched_files">${files.innerHTML}</td>` : ""}
+                ${size}
+                <td class="number_column">${match.snatched}</td>
+                <td class="number_column">${match.seeders}</td>
+                <td class="number_column">${match.leechers}</td>
+            `;
+            artistPage ? tr.after(matchTr) : tr.nextElementSibling.after(matchTr);
+        }
+    }
+    function appendStyles() {
+        style.textContent = `a.tl_ops { color: ${settings.accent_color} !important; font-weight: bolder !important; ${settings.label_style} } a.tl_ops { margin: 0; padding: 0 0 0 4px; } tr[id^='matched_'] { background: ${settings.highlight_color} !important; } :is(tr:is(.seeding_torrent, .uploaded_torrent, .snatched_torrent) + tr[id^='matched'], tr:is(.seeding_torrent, .uploaded_torrent, .snatched_torrent) + tr[id^='torrent'] + tr[id^='matched']) a[href*='orpheus'] { ${defaults.marked_style} } #takeout_toggle, :is(#takeout_info_bar, #takeout_menu) a { cursor: pointer } div[id^='takeout_info'] { display: flex; align-content: center } div[id^='takeout_info'] > :not(:first-child, .takeout_menu_match) { margin-left: 2px } div[id^='takeout_info'] a:first-of-type { flex: auto } #takeout_info_bar { padding: 10px 15px !important } #takeout_info_bar * { align-content: center } #takeout_menu .head:not(:first-of-type) { margin-top: 10px } .takeout_container:has(#takeout_info_main) { margin: 8px 0; padding: 0 5px 0 4px } #takeout_cache_age, .remove-alias { font-size: .9em } #takeout_refresh_artist, #takeout_search_toggle, #takeout_settings_toggle, .takeout-default { font-size: .9em; float: right } #takeout_search_container { padding: 5px 5px 5px 4px } #takeout_search_container input { margin: 3px 0 } #takeout_search_group { width: 100% } .takeout_menu_match { font-weight: bold } #takeout_menu ul li { margin-right: 5px } #takeout_settings_container { padding: 5px } #takeout_settings_container div { margin: 5px 0 } #takeout_settings_container input { line-height: 1 } #takeout_settings_container .label { margin: 0 0 5px; border-bottom: 1px solid #303134; } #takeout_save_button { margin: 10px 0 20px }`;
+    }
+    function timeAgo(time) {
+        const date = time instanceof Date ? time : new Date(time);
+        const formatter = new Intl.RelativeTimeFormat("en");
+        const ranges = { "years": 3600 * 24 * 365, "months": 3600 * 24 * 30, "weeks": 3600 * 24 * 7, "days": 3600 * 24, "hours": 3600, "minutes": 60, "seconds": 1 };
+        const elapsed = (date.getTime() - Date.now()) / 1000;
+        for (const key in ranges) {
+            if (ranges[key] < Math.abs(elapsed)) {
+                let delta = elapsed / ranges[key];
+                let remainder = -Math.abs(delta - Math.ceil(delta)) * ranges[key];
+                delta = formatter.format(Math.ceil(delta), key);
+                for (const key in ranges) {
+                    if (ranges[key] < Math.abs(remainder)) {
+                        remainder = formatter.format(Math.ceil(remainder / ranges[key]), key);
+                        return delta.replace(" ago", `, ${remainder}`);
+                    }
+                }
+                return delta;
+            }
+        }
+        return "just now";
+    }
+    opsApiKey = await getData("api-key", "ops") || "";
+    const various = document.getElementById("torrent_details") && (header.innerText.startsWith("Various") || header.innerText.includes("under") && header.querySelectorAll("a[href*='artist.php?id=']").length > 1);
+    const artistId = artistPage
+        ? parseInt(new URLSearchParams(globalThis.location.search).get("id"))
+        : various
+            ? parseInt(new URLSearchParams(document.getElementById("artist_list").querySelector("a[href*='artist.php?id=']").search).get("id"))
+            : parseInt(new URLSearchParams(document.querySelector("a[href*='artist.php?id=']").search).get("id"));
+    const artist = artistPage
+        ? header.textContent
+        : header.innerText.startsWith("Various") || header.querySelectorAll("a[href*='artist.php?id=']").length > 1
+            ? document.getElementById("artist_list").querySelector("a[href*='artist.php?id=']").textContent
+            : header.querySelector("a[href*='artist.php?id=']").textContent;
+    const groupTrim = /^[^\(]+/.exec(document.querySelector("table.torrent_table a[href*='torrents.php?id=']")?.textContent);
+    const groupName = artistPage && groupTrim
+        ? groupTrim[0].trim()
+        : artistPage
+            ? ""
+            : header.querySelector("span").textContent;
+    artistCache = await getData("matches", artistId) || new Object;
+    artistAlias = await getData("aliases", artistId) || new Object;
+    const pendingUpdate = settings.mode_manual && (!artistCache.artist || Date.now() > artistCache.time + cache);
+    const matchCount = `<span title="Matched torrents" class="takeout_menu_match r20">${new Intl.NumberFormat("en-US").format(artistCache.matches?.length || 0)}</span>`;
+    const outlink = `<a title="Open artist at OPS" target="_blank" href="${`https://orpheus.network/artist.php?artistname=` + artist}"><svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="currentColor"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h560v-280h80v280q0 33-23.5 56.5T760-120H200Zm188-212-56-56 372-372H560v-80h280v280h-80v-144L388-332Z"/></svg></a>`;
+    const refreshIcon = `<a id="takeout_call_manual" title="Refresh artist cache"><svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px" fill="currentColor"><path d="M197-197q-54-55-85.5-127.5T80-480q0-84 31.5-156.5T197-763l57 57q-44 44-69 102t-25 124q0 67 25 125t69 101l-57 57Zm113-113q-32-33-51-76.5T240-480q0-51 19-94.5t51-75.5l57 57q-22 22-34.5 51T320-480q0 33 12.5 62t34.5 51l-57 57Zm170-90q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm170 90-57-57q22-22 34.5-51t12.5-62q0-33-12.5-62T593-593l57-57q32 32 51 75.5t19 94.5q0 50-19 93.5T650-310Zm113 113-57-57q44-44 69-102t25-124q0-67-25-125t-69-101l57-57q54 54 85.5 126.5T880-480q0 83-31.5 155.5T763-197Z"/></svg></a>`;
+    if (settings.show_bar) {
+        const minimalBar = document.createElement("div");
+        menu.before(minimalBar);
+        minimalBar.outerHTML = `<div id="takeout_info_bar" class="box"><a href="artist.php?id=${artistId}">${artistCache.name || artist}</a> ${matchCount} ${settings.bar_outlink ? outlink : ""} ${pendingUpdate ? refreshIcon : ""}</div>`;
+    }
+    menu.innerHTML = `<div class="head"><strong>Takeout Menu</strong></div><div class="takeout_container"><div id="takeout_info_main"><a href="artist.php?id=${artistId}">${artistCache.name || artist}</a> ${matchCount} ${outlink}</div>${artistAlias.alias ? `<div id="takeout_alias_info"><a title="Open alias at OPS" href="${`https://orpheus.network/artist.php?artistname=` + artistAlias.alias}">${artistAlias.alias}</a> (alias) <a class="remove-alias takeout-small" title="Remove alias">(delete)</a></div>` : ""}<br><div><span id="takeout_cache_age">Updated: ${artistCache.time ? `${timeAgo(artistCache.time)}` : "never"}</span>${opsApiKey ? `<a id="takeout_refresh_artist" title="Refresh artist cache">(refresh)</a>` : ""}</div></div><div class="head"><strong>Search</strong><a id="takeout_search_toggle">Expand</a></div><div id="takeout_search_container" style="display: none"><div><input id="takeout_search_artist" name="takeout_search_artist" type="text" placeholder="Artist"/> <input id="takeout_search_button" type="button" value="Search"/></div><div><input id="takeout_search_group" name="takeout_search_group" type="text" placeholder="Group name"/></div><div id="takeout_search_results" style="display: none"></div></div><div class="head"><strong>Settings</strong><a id="takeout_settings_toggle">Expand</a></div><div id="takeout_settings_container" style="display: none"><div><div class="label">Cache update interval</div><input id="takeout_cache_interval" name="takeout_cache_interval" type="text" size="2" value="${settings.cache_interval}"/> hours</div><div><div class="label" title="Color used on matched torrent labels and the Takeout menu toggle during API calls.">Accent color</div><input id="takeout_accent_color" name="takeout_accent_color" type="text" size="8" value="${settings.accent_color}"/> <span style="padding-left: 4px; color: ${settings.accent_color}">■</span></div><div><div class="label">Matched torrent label</div><input id="takeout_label_text" name="takeout_label_text" type="text" size="8" value="${settings.label_text}"/> <a class="tl_ops">${settings.label_text}</a></div><div><div class="label">Matched torrent label style</div><input id="takeout_label_style" name="takeout_label_style" type="text" size="20" value="${settings.label_style}"/></div><div><div class="label">Matched row highlight color</div><input id="takeout_highlight_color" name="takeout_highlight_color" type="text" size="8" value="${settings.highlight_color}"/></div><div><div class="label" title="Color used on the Takeout menu toggle in the event of an API error.">Error color</div><input id="takeout_error_color" name="takeout_error_color" type="text" size="8" value="${settings.error_color}"/> <span style="padding-left: 4px; color: ${settings.error_color}">■</span></div><div><div class="label">Default artist search mode</div><ul class="options_list nobullet"><li><input type="radio" name="takeout_mode" id="takeout_mode_automatic" value="automatic"> <label for="takeout_mode_automatic">Automatic</label></li> <li><input type="radio" name="takeout_mode" id="takeout_mode_manual" value="manual"> <label for="takeout_mode_manual">Manual</label></li></ul></div><div><div class="label">Info bar</div><ul class="options_list nobullet"><li title="Add a minimal Takeout bar to the top of the page sidebar."><input type="checkbox" name="takeout_show_bar" id="takeout_show_bar"> <label for="takeout_show_bar">Enable minimal info bar</label></li> <li><input type="checkbox" name="takeout_bar_outlink" id="takeout_bar_outlink"> <label for="takeout_bar_outlink">Enable artist OPS link</label></li></ul><div class="label">Compatibility mode</div><ul class="options_list nobullet"><li title="Convert button to savable file link on right click."><input type="checkbox" name="takeout_insert_downloadable_link" id="takeout_insert_downloadable_link"> <label for="takeout_insert_downloadable_link">Enable savable links on right click</label></li></ul></div><input id="takeout_save_button" type="button" value="Save settings"/><div class="head"><strong>Key</strong></div><input id="takeout_api_key" name="takeout_api_key" type="button" value="${opsApiKey ? "Clear OPS API key" : "Enter OPS API key"}"/></div>`;
+    document.getElementById("takeout_search_artist").setAttribute("value", various ? "" : artist);
+    document.getElementById("takeout_search_group").setAttribute("value", groupName);
+    menuToggle.addEventListener("click", () => {
+        if (menu.style.display === "none") {
+            menu.style.display = "grid";
+        } else {
+            menu.style.display = "none";
+        }
+    });
+    const inputs = menu.querySelectorAll("#takeout_settings_container input:is([type='text'], [type='radio'], [type='checkbox'])");
+    for (const x of inputs) {
+        if (x.type === "radio") continue;
+        const reset = document.createElement("a");
+        reset.classList.add("takeout-default");
+        reset.textContent = "Reset";
+        x.parentElement.firstElementChild.append(reset);
+        reset.addEventListener("click", () => {
+            x.value = defaults[x.id.replace("takeout_", "")];
+            if (x.nextElementSibling.classList.contains("tl_ops")) {
+                x.nextElementSibling.outerHTML = `<a class="tl_ops">${defaults.label_text}</a>`;
+            } else if (x.id === "takeout_accent_color") {
+                x.nextElementSibling.style.color = defaults.accent_color;
+            } else if (x.id === "takeout_error_color") {
+                x.nextElementSibling.style.color = defaults.error_color;
+            } else if (x.id === "takeout_label_text") {
+                x.nextElementSibling.textContent = defaults.label_text;
+            }
+        });
+    }
+    document.getElementById("takeout_save_button").addEventListener("click", () => {
+        inputs.forEach(x => {
+            settings[x.id.replace("takeout_", "")] = x.type === "text" && validate(x) ? x.value : x.checked;
+        });
+        localStorage.setItem("takeout_settings", JSON.stringify(settings));
+        appendStyles();
+        addRows();
+    });
+    function validate(target) {
+        if (target.id === "takeout_cache_interval") {
+            return target.value >= 1;
+        } else if (target.id.endsWith("color")) {
+            return CSS.supports(`color: ${target.value}`);
+        } else if (target.id.endsWith("style")) {
+            return CSS.supports(`${target.value}`);
+        } else {
+            return true;
+        }
+    }
+    const searchContainer = document.getElementById("takeout_search_container");
+    const settingsContainer = document.getElementById("takeout_settings_container");
+    const apiButton = document.getElementById("takeout_api_key");
+    settingsContainer.addEventListener("input", (event) => {
+        if (["takeout_accent_color", "takeout_error_color"].includes(event.target.id) && validate(event.target)) {
+            event.target.nextElementSibling.style.color = event.target.value;
+        } else if (event.target.id === "takeout_label_text") {
+            event.target.nextElementSibling.textContent = event.target.value;
+        }
+    });
+    menu.addEventListener("click", async (event) => {
+        if (event.target.id === "takeout_settings_toggle") {
+            if (settingsContainer.style.display === "none") {
+                inputs.forEach(x => {
+                    x.type === "text" ? x.value = settings[x.id.replace("takeout_", "")] : x.checked = settings[x.id.replace("takeout_", "")];
+                });
+                event.target.textContent = "Collapse";
+                settingsContainer.removeAttribute("style");
+            } else {
+                event.target.textContent = "Expand";
+                settingsContainer.style.display = "none";
+            }
+        } else if (event.target.id === "takeout_search_toggle") {
+            if (searchContainer.style.display === "none") {
+                event.target.textContent = "Collapse";
+                searchContainer.removeAttribute("style");
+            } else {
+                event.target.textContent = "Expand";
+                searchContainer.style.display = "none";
+            }
+        } else if (event.target.id === "takeout_refresh_artist") {
+            event.target.remove();
+            await clearData("matches", artistId);
+            artistCache = new Object;
+            await refresh();
+            printStatus();
+        } else if (event.target.classList.contains("remove-alias")) {
+            event.target.parentElement.remove();
+            await clearData("aliases", artistId);
+            artistAlias = new Object;
+            console.log(`Takeout: Deleted alias for artist`, artistId, artist);
+        } else if (event.target.id === "takeout_save_alias" && event.target.value === "Save") {
+            if (various && !confirm(`This is a Various Artists release. Are you sure you want to add ${searchAlias} as an alias of ${artist}?`)) {
+                return;
+            }
+            await addData("aliases", artistAlias);
+            event.target.value = "Saved!";
+            console.log(`Takeout: Saved ${searchAlias} as an alias of`, artistId, artist);
+        } else if (event.target.id === "takeout_api_key") {
+            if (opsApiKey && confirm("Takeout: Clear saved OPS API key?")) {
+                await clearKey();
+                console.log("Takeout: OPS API key cleared.");
+            } else if (!opsApiKey) {
+                opsApiKey = prompt("Takeout: Enter your Orpheus API key.");
+                if (!opsApiKey) return;
+                await addData("api-key", opsApiKey, "ops");
+                apiButton.value = "Clear OPS API key";
+                console.log("Takeout: OPS API key saved.");
+            }
+        }
+    });
+    async function clearKey() {
+        opsApiKey = "";
+        await addData("api-key", opsApiKey, "ops");
+        apiButton.value = "Enter OPS API key";
+        for (const tr of document.querySelectorAll("tr[id^='matched_']")) {
+            tr.remove();
+        }
+    }
+    if (!opsApiKey) {
+        console.log("Takeout: Please enter an Orpheus API key.");
+        return;
+    }
+    document.getElementById("takeout_call_manual")?.addEventListener("click", async () => {
+        document.getElementById("takeout_call_manual").remove();
+        await refresh();
+        printStatus();
+    });
+    document.addEventListener("click", event => {
+        if (event.target.classList.contains("ops_dl")) {
+            fetchTorrentFile(event);
+        }
+    });
+    document.addEventListener("contextmenu", event => {
+        if (!settings.insert_downloadable_link) {
+            return;
+        }
+        if (event.target.classList.contains("ops_dl")) {
+            fetchTorrentFile(event);
+        }
+    });
+    function fetchTorrentFile(event) {
+        if (event.target.href.startsWith("blob")) {
+            return;
+        }
+        event.preventDefault();
+        const opsId = event.target.getAttribute("data-takeout-id");
+        const opsUrl = event.target.classList.contains("ops_fl")
+            ? `https://orpheus.network/ajax.php?action=download&id=${opsId}&usetoken=1`
+            : `https://orpheus.network/ajax.php?action=download&id=${opsId}`;
+        event.target.style.setProperty("color", settings.accent_color, "important");
+        menuToggle.style.color = settings.accent_color;
+        const start = Date.now();
+        GM.xmlHttpRequest({
+            method: "GET",
+            url: opsUrl,
+            headers: { "Authorization": opsApiKey },
+            responseType: "blob",
+            onload: async res => {
+                if (res.status === 200 && res.response.type.startsWith("application/x-bittorrent")) {
+                    event.target.removeAttribute("style");
+                    menuToggle.removeAttribute("style");
+                    const filename = decode(res.responseHeaders.split("\r\n").find(x => x.includes("filename")).match(/"([^"]*)"$/)[1]);
+                    const file = new Blob([res.response], { type: "application/x-bittorrent" });
+                    if (event.type === "click") {
+                        const a = document.createElement("a");
+                        a.href = URL.createObjectURL(file);
+                        a.download = filename;
+                        a.click();
+                        URL.revokeObjectURL(a.href);
+                    } else if (event.type === "contextmenu") {
+                        event.target.href = URL.createObjectURL(file);
+                        event.target.download = filename;
+                    }
+                } else if (res.status === 200 && res.response.type.startsWith("application/json")) {
+                    event.target.style.setProperty("color", settings.error_color, "important");
+                    menuToggle.style.color = settings.error_color;
+                    const response = await new Response(res.response).json();
+                    const errorText = response.error.includes("already freeleech")
+                        ? "Takeout: Cannot use tokens here (torrent is already freeleech)."
+                        : response.error.includes("could not find torrent")
+                            ? "Takeout: Unregistered torrent. It may have been deleted since the last cache update."
+                            : response.error.includes("invalid token")
+                                ? "Takeout: Request rejected (invalid token). Please enter a working Orpheus API key."
+                                : `Takeout: ${response.error}`;
+                    if (response.error.includes("invalid token")) {
+                        await clearKey();
+                    }
+                    alert(errorText);
+                    console.error(errorText);
+                } else {
+                    event.target.style.setProperty("color", settings.error_color, "important");
+                    menuToggle.style.color = settings.error_color;
+                    console.error(`Takeout: Torrent download failed (request sent ${timeAgo(start)}):`, res);
+                }
+            },
+            onerror: error => {
+                event.target.style.setProperty("color", settings.error_color, "important");
+                menuToggle.style.color = settings.error_color;
+                console.error(`Takeout: Download request failed (request sent ${timeAgo(start)}):`, error);
+            }
+        });
+    }
+    const searchButton = document.getElementById("takeout_search_button");
+    const searchResults = document.getElementById("takeout_search_results");
+    async function manualSearch(searchArtist, searchGroup) {
+        const opsSearchUrl = `https://orpheus.network/ajax.php?action=browse&groupname=${searchGroup}&artistname=`;
+        console.log("Takeout: Performing manual alias search.");
+        menuToggle.style.color = settings.accent_color;
+        await queueRequest();
+        const res = await Promise.allSettled([redApi(artist), opsApi(opsSearchUrl, searchArtist)]);
+        if (!res.every(x => x.value?.status === "success")) {
+            menuToggle.style.color = settings.error_color;
+            console.log("Takeout: API call failed. Please refresh and try again.");
+            return;
+        }
+        redData = res[0].value.response.torrentgroup.map(x => x.torrent).flat();
+        opsData = Object.values(res[1].value.response.results).map(x => x.torrents).flat();
+        menuToggle.removeAttribute("style");
+        const cacheMatches = artistCache.matches;
+        const searchMatches = [];
+        for (const ops of opsData) {
+            const match = redData.find(red => red.size === ops.size && !searchMatches.map(x => x.red_id).includes(red.id) && !cacheMatches.map(x => x.red_id).includes(red.id));
+            if (!match) continue;
+            searchAlias = ops.artists[0].name;
+            searchMatches.push({ "red_id": match.id, "red_groupid": match.groupId, "ops_id": ops.torrentId, "size": ops.size, "snatched": ops.snatches, "seeders": ops.seeders, "leechers": ops.leechers });
+            break;
+        }
+        if (searchMatches.length == 0) {
+            searchResults.innerHTML = `<ul><li><span class="r20">0</span> new results.</li></ul>`;
+            searchResults.removeAttribute("style");
+            return;
+        }
+        menuToggle.style.color = settings.accent_color;
+        await queueRequest();
+        const aliasRes = await opsApi(opsApiUrl, searchAlias);
+        if (aliasRes.status !== "success") {
+            console.log("Takeout: OPS API call failed. Please refresh and try again.");
+            menuToggle.style.color = settings.error_color;
+            return;
+        }
+        menuToggle.removeAttribute("style");
+        const aliasData = aliasRes.response.torrentgroup.map(x => x.torrent).flat();
+        const aliasMatches = [];
+        for (const ops of aliasData) {
+            const match = redData.find(red => red.size === ops.size && !aliasMatches.map(x => x.red_id).includes(red.id) && !cacheMatches.map(x => x.red_id).includes(red.id));
+            if (!match) continue;
+            aliasMatches.push({ "red_id": match.id, "red_groupid": match.groupId, "ops_id": ops.id, "size": ops.size, "snatched": ops.snatched, "seeders": ops.seeders, "leechers": ops.leechers });
+        }
+        return aliasMatches;
+    }
+    searchButton.addEventListener("click", async () => {
+        const searchArtist = document.getElementById("takeout_search_artist").value;
+        const searchGroup = document.getElementById("takeout_search_group").value;
+        const aliasMatches = await manualSearch(searchArtist, searchGroup);
+        if (!aliasMatches) return;
+        searchResults.innerHTML = `<ul><li><span class="r20">${aliasMatches.length}</span> new ${aliasMatches.length == 1 ? "result" : "results"} for <a title="Open alias at OPS" target="_blank" href="https://orpheus.network/artist.php?artistname=${searchAlias}">${searchAlias}</a>.</li><li>Save ${searchAlias} as an alias of ${artist}?</li></ul><input id="takeout_save_alias" title="This artist alias will be automatically queried for matching torrents on future cache updates." type="button" value="Save"/>`;
+        searchResults.removeAttribute("style");
+        artistAlias.artist = artistId;
+        artistAlias.alias = searchAlias;
+        artistCache.time = Date.now();
+        artistCache.matches = artistCache.matches.concat(aliasMatches);
+        await addData("matches", artistCache);
+        document.querySelectorAll(".takeout_menu_match").forEach(x => {
+            x.textContent = artistCache.matches.length;
+        });
+        document.getElementById("takeout_cache_age").textContent = `Updated: ${timeAgo(artistCache.time)}`;
+        printStatus();
+        addRows();
+    });
+    addRows();
+    async function refresh() {
+        if (artistPage && !document.querySelector("table.torrent_table a[href*='torrents.php?id=']")) {
+            console.log("Takeout: Artist", artistId, `(${artist}) has no torrents to match.`);
+            return;
+        }
+        if (!artistCache.artist || Date.now() > artistCache.time + cache) {
+            console.log("Takeout: Refreshing cache.");
+            menuToggle.style.color = settings.accent_color;
+            await queueRequest();
+            const res = await Promise.allSettled([redApi(artist), opsApi(opsApiUrl, artist)]);
+            if (res[0].status !== "fulfilled" || res[0].value.status !== "success") {
+                console.log("Takeout: RED API call failed. Please refresh and try again.");
+                menuToggle.style.color = settings.error_color;
+                return;
+            }
+            if (res[1].status !== "fulfilled" || res[1].value.status === "failure" && res[1].value.error !== "bad artistname") {
+                console.log("Takeout: OPS API call failed. Please refresh and try again.");
+                menuToggle.style.color = settings.error_color;
+                return;
+            }
+            menuToggle.removeAttribute("style");
+            redData = res[0].value.response.torrentgroup.map(x => x.torrent).flat();
+            artistCache.name = res[0].value.response.name;
+            if (res[1].value.status === "success") {
+                opsData = res[1].value.response.torrentgroup.map(x => x.torrent).flat();
+            }
+            if (artistAlias.alias) {
+                console.log("Takeout: OPS artist alias found. Searching alias.");
+                menuToggle.style.color = settings.accent_color;
+                await queueRequest();
+                const retry = await opsApi(opsApiUrl, artistAlias.alias);
+                if (retry.status !== "success") {
+                    menuToggle.style.color = settings.error_color;
+                    if (retry.error === "bad artistname") {
+                        await clearAlias(artistId);
+                        console.log(`Takeout: Deleted alias for artist`, artistId, artist, `(OPS returned bad artistname)`);
+                        return;
+                    }
+                    console.log("Takeout: OPS API call failed. Please refresh and try again.");
+                    return;
+                }
+                menuToggle.removeAttribute("style");
+                const flat = retry.response.torrentgroup.map(x => x.torrent).flat();
+                const filtered = flat.filter(ops => redData.some(red => red.size === ops.size));
+                if (filtered.length == 0) {
+                    await clearAlias(artistId);
+                    console.log(`Takeout: Deleted alias for artist`, artistId, artist, `(returned zero matches)`);
+                } else {
+                    opsData = opsData?.concat(flat) ?? flat;
+                }
+            } else if (artist.includes(" (") && artist.endsWith(")")) {
+                const trim = /^[^\(]+/.exec(artist);
+                if (trim) {
+                    console.log("Takeout: Artist name may contain a romanization or translation. Searching root name.");
+                    const alias = trim[0].trim();
+                    menuToggle.style.color = settings.accent_color;
+                    await queueRequest();
+                    const retry = await opsApi(opsApiUrl, alias);
+                    if (retry.status !== "success" && retry.error !== "bad artistname") {
+                        console.log("Takeout: OPS API call failed. Please refresh and try again.");
+                        menuToggle.style.color = settings.error_color;
+                        return;
+                    }
+                    menuToggle.removeAttribute("style");
+                    if (retry.status === "success") {
+                        const flat = retry.response.torrentgroup.map(x => x.torrent).flat();
+                        const filtered = flat.filter(x => !opsData?.map(x => x.id).includes(x.id));
+                        if (filtered.length > 0) {
+                            artistAlias.artist = artistId;
+                            artistAlias.alias = alias;
+                            opsData = opsData?.concat(flat) ?? flat;
+                            await addData("aliases", artistAlias);
+                        }
+                    }
+                } else {
+                    console.log("Takeout: Failed to isolate root name (may be a false positive).");
+                }
+            }
+            if (artist !== res[0].value.response.name) {
+                console.log(`Takeout: ${artist} is a non-redirecting alias of ${res[0].value.response.name}. Placing an additional call to OPS for the primary artist.`);
+                menuToggle.style.color = settings.accent_color;
+                await queueRequest();
+                const retry = await opsApi(opsApiUrl, res[0].value.response.name);
+                if (retry.status !== "success" && retry.error !== "bad artistname") {
+                    console.log("Takeout: OPS API call failed. Please refresh and try again.");
+                    menuToggle.style.color = settings.error_color;
+                    return;
+                }
+                menuToggle.removeAttribute("style");
+                if (retry.status === "success") {
+                    const flat = retry.response.torrentgroup.map(x => x.torrent).flat();
+                    const filtered = flat.filter(x => !opsData?.map(x => x.id).includes(x.id));
+                    if (filtered.length > 0) {
+                        opsData = opsData?.concat(flat) ?? flat;
+                    }
+                }
+            }
+            if (!opsData) {
+                console.log(`Takeout: Artist ${artistCache.name} not found at OPS (may not exist).`);
+                artistCache = { "artist": artistId, "name": artistCache.name, "time": Date.now(), "matches": [] };
+                await addData("matches", artistCache);
+                return;
+            }
+            const matches = [];
+            for (const ops of opsData) {
+                const match = redData.find(red => red.size === ops.size && !matches.map(x => x.red_id).includes(red.id));
+                if (!match) continue;
+                matches.push({ "red_id": match.id, "red_groupid": match.groupId, "ops_id": ops.id, "size": ops.size, "snatched": ops.snatched, "seeders": ops.seeders, "leechers": ops.leechers });
+            }
+            artistCache.artist = artistId;
+            artistCache.time = Date.now();
+            artistCache.matches = matches;
+            await addData("matches", artistCache);
+            document.querySelectorAll(".takeout_menu_match").forEach(x => {
+                x.textContent = new Intl.NumberFormat("en-US").format(matches.length);
+            });
+            document.getElementById("takeout_cache_age").textContent = `Updated: ${timeAgo(artistCache.time)}`;
+            addRows();
+        }
+    }
+    async function clearAlias(artistId) {
+        await clearData("aliases", artistId);
+        artistAlias = new Object;
+        document.getElementById("takeout_alias_info").remove();
+    }
+    function printStatus() {
+        console.log(`Takeout:`, artistCache.matches.length, `matches for artist`, artistCache.artist, artistCache.name, `(cached ${timeAgo(artistCache.time)})`);
+    }
+    if (settings.mode_automatic) {
+        await refresh();
+    }
+    if (artistCache.artist) {
+        printStatus();
+    }
+    if (Date.now() > settings.last_pruned + cache) {
+        const cacheKeys = await getKeys("matches");
+        for await (const entry of cacheKeys.map(async artist => await getData("matches", artist))) {
+            if (Date.now() > entry.time + cache) {
+                await clearData("matches", entry.artist);
+            }
+        }
+        settings.last_pruned = Date.now();
+        localStorage.setItem("takeout_settings", JSON.stringify(settings));
+        console.log("Takeout: Pruned expired match data from cache.")
+    }
+})();

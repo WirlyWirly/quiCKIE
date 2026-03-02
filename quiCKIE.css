@@ -133,62 +133,40 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 150px;
 }
 
-/* Ratio */
+/* Integer Columns */
 #quiCKIE_config_tracker_table_colg_col_ratiolimit,
-#quiCKIE_config_preset_table_colg_col_ratiolimit {
-    width: 55px;
-    max-width: 55px;
-}
-
-/* SeedTime */
+#quiCKIE_config_preset_table_colg_col_ratiolimit,
 #quiCKIE_config_tracker_table_colg_col_seedtime,
-#quiCKIE_config_preset_table_colg_col_seedtime {
-    width: 55px;
-    max-width: 55px;
-}
-
-/* Instance */
+#quiCKIE_config_preset_table_colg_col_seedtime,
 #quiCKIE_config_tracker_table_colg_col_instance,
-#quiCKIE_config_preset_table_colg_col_instance {
+#quiCKIE_config_preset_table_colg_col_instance,
+#quiCKIE_config_tracker_table_colg_col_paginationloop {
     width: 55px;
     max-width: 55px;
 }
 
 /* LeftClick */
 #quiCKIE_config_tracker_table_colg_col_leftclick {
-    width: 75px;
-    max-width: 75px;
+    width: 80px;
+    max-width: 80px;
 }
 
-/* Paused */
+/* ThirdPartyScan */
+#quiCKIE_config_tracker_table_colg_col_thirdpartyscan {
+    width: 80px;
+    max-width: 80px;
+}
+
+/* Checkbox Columns */
+#quiCKIE_config_tracker_table_colg_col_hidedl,
 #quiCKIE_config_tracker_table_colg_col_startpaused,
-#quiCKIE_config_preset_table_colg_col_startpaused {
-    width: 50px;
-    max-width: 50px;
-}
-
-/* SubFolder */
+#quiCKIE_config_preset_table_colg_col_startpaused,
 #quiCKIE_config_tracker_table_colg_col_subfolder,
-#quiCKIE_config_tracker_table_colg_col_subfolder {
-    width: 50px;
-    max-width: 50px;
-}
-
-/* SeqPieces */
+#quiCKIE_config_preset_table_colg_col_subfolder,
 #quiCKIE_config_tracker_table_colg_col_seqpieces,
-#quiCKIE_config_preset_table_colg_col_seqpieces {
-    width: 50px;
-    max-width: 50px;
-}
-
-/* AutoTMM */
+#quiCKIE_config_preset_table_colg_col_seqpieces,
 #quiCKIE_config_tracker_table_colg_col_autotmm,
-#quiCKIE_config_preset_table_colg_col_autotmm {
-    width: 50px;
-    max-width: 50px;
-}
-
-/* SkipHash */
+#quiCKIE_config_preset_table_colg_col_autotmm,
 #quiCKIE_config_tracker_table_colg_col_skiphash,
 #quiCKIE_config_preset_table_colg_col_skiphash {
     width: 50px;
@@ -304,6 +282,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"]:checked {
 #quiCKIE_config_field_thirdPartyDelay,
 #quiCKIE_config_field_hiddenTrackers,
 td.quiCKIE_config_table_tbody_td_field select[data-fieldtype="leftClick"],
+td.quiCKIE_config_table_tbody_td_field select[data-fieldtype="thirdPartyScan"],
 td.quiCKIE_config_table_tbody_td_field input[type="text"] {
     /* Text Fields */
     background: rgba(255, 255, 255, 0.9);
