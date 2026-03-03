@@ -116,14 +116,14 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 /* Category */
 #quiCKIE_config_tracker_table_colg_col_category,
 #quiCKIE_config_preset_table_colg_col_category {
-    width: 150px;
-    max-width: 150px;
+    width: 130px;
+    max-width: 130px;
 }
 
 /* SavePath */
 #quiCKIE_config_tracker_table_colg_col_savepath,
 #quiCKIE_config_preset_table_colg_col_savepath {
-    width: 220px;
+    width: 200px;
 }
 
 /* Tags */
@@ -138,6 +138,10 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 #quiCKIE_config_preset_table_colg_col_ratiolimit,
 #quiCKIE_config_tracker_table_colg_col_seedtime,
 #quiCKIE_config_preset_table_colg_col_seedtime,
+#quiCKIE_config_tracker_table_colg_col_dllimit,
+#quiCKIE_config_preset_table_colg_col_dllimit,
+#quiCKIE_config_tracker_table_colg_col_uplimit,
+#quiCKIE_config_preset_table_colg_col_uplimit,
 #quiCKIE_config_tracker_table_colg_col_instance,
 #quiCKIE_config_preset_table_colg_col_instance,
 #quiCKIE_config_tracker_table_colg_col_paginationloop {
@@ -212,6 +216,7 @@ tr.quiCKIE_config_table_tbody_tr {
 tr.quiCKIE_config_table_tbody_tr td {
     /* All the TD elements of a table */
     text-align: center;
+    padding: 3px 2px 3px 2px;
 }
 
 #quiCKIE_config_wrapper tr.quiCKIE_config_table_tbody_tr:nth-child(even) {
@@ -224,6 +229,9 @@ thead.quiCKIE_config_table_thead th:nth-last-child(1) {
     border-right: none !important;
 }
 
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_thirdPartyScan,
+#quiCKIE_config_preset_table_tbody tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_instance,
+tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_hideDL,
 tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_startPaused,
 tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subFolder,
 tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_seqPieces,

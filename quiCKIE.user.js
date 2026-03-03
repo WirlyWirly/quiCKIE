@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     0.99.3
+// @version     1.0
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -13,7 +13,7 @@
 // @namespace   https://github.com/WirlyWirly
 // @run-at      document-end
 
-// resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
@@ -24,7 +24,7 @@
 // I will then remove the '@' from the gitHub urls above and put it on these instead while I'm working.
 // MiniServe: https://github.com/svenstaro/miniserve
 
-// @resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
+// resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
 // require     http://localhost:12345/ContextMenu.js
 
@@ -898,8 +898,8 @@ function createGMConfigSettingsPanel() {
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party integrated quiCKIE links\n\nOnly affects trackers that have the '🤝' column set to 'On'\n\nℹ️ This delay only affects the FIRST scan of third-party quiCKIE links, not every scan thereafter",
-            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column. Hover over the tracker name for a '🙈' button to quickly add the tracker to the hidden list\n\nℹ️ This does not disable the BunnyButtons from being generated on those trackers, it only hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
-            'globalForcedTorrentFile': '─── 💾 Torrent File  💾 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the file should be sent directly or first downloaded',
+            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nHover over the tracker name for a '🙈' button that will quickly add the tracker to the hidden list\n\nℹ️ This does not disable the BunnyButtons from being generated on those trackers, it only hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
+            'globalForcedTorrentFile': '─── 💾 Torrent File  💾 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL should be sent directly to qui or first downloaded through the browser',
 
         },
 
@@ -932,7 +932,7 @@ function createGMConfigSettingsPanel() {
         'columnTitles': {
             'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings fields will be applied to\n\nClicking a name below will re-direct you to the tracker's website\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
-            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nHovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nℹ️ Hovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
@@ -944,7 +944,7 @@ function createGMConfigSettingsPanel() {
             'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
             'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
             'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches\\etc. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons between pages\n\n⚠️ You should NOT enable this unless you are on a site that actually has pagination\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
-            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nThe developer of a third-party UserScript may setup quiCKIE integration for their UserScript, that way the DL buttons their UserScript generates will also receive a BunnyButton\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If this is not specified by the third-party UserScript, the settings for the current tracker will be used. This will NOT carry over the presets of the specified tracker.\n\n⚠️ You should NOT enable third-party integrations unless you have installed a trusted third-party UserScript that actually has quiCKIE integration",
+            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nThe developer of a third-party UserScript may setup quiCKIE integration for their UserScript, that way the DL buttons their UserScript generates will also receive a BunnyButton\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If this is not specified by the third-party UserScript, the settings for the current tracker will be used. This will NOT carry over the presets of the specified tracker.\n\n⚠️ You should NOT enable this unless you have installed a trusted UserScript that actually has quiCKIE integration",
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
             'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nℹ️ Useful for when you want to give yourself a chance to pick which files of the torrent should be downloaded",
@@ -1022,7 +1022,7 @@ function createGMConfigSettingsPanel() {
                 'default': 'quiTab',
             },
             'bunnyButtonPlacement': {
-                'label': '↔️ Placement',
+                'label': '↔️ Placement:',
                 'type': 'select',
                 'options': ['Before', 'After'],
                 'default': 'After',
@@ -1071,7 +1071,7 @@ function createGMConfigSettingsPanel() {
                 panelStyle.padding = '0px 0px'
                 panelStyle.position = 'fixed'
                 panelStyle.transform = 'translate(-50%,-50%)'
-                panelStyle.width = '1600px'
+                panelStyle.width = '1650px'
                 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various trackerDomain <div> elements created by GM_config() into a <table> with columns/rows
@@ -1663,7 +1663,7 @@ function createBunnyButton({
  ⚖️ = ${torrentSettings.ratioLimit > 0 ? torrentSettings.ratioLimit : ''}
  🌱 = ${torrentSettings.seedTime > 0 ? torrentSettings.seedTime : ''}
  ⬇️ = ${torrentSettings.dlLimit > 0 ? torrentSettings.dlLimit : ''}
- ⬆️ = ${torrentSettings.upLimit > 0 ? torrentSettings.upLimit : ''}
+ ⬆️ = ${torrentSettings.upLimit}
  🎯 = ${torrentSettings.instance > 0 ? torrentSettings.instance : ''}
  ⏸️ = ${torrentSettings.startPaused}
  📁 = ${torrentSettings.subFolder}
@@ -1920,14 +1920,14 @@ function addTorrent({
     }
 
     if ( dlLimit > 0 ) {
-        // A downloadLimit of 0 will prevent any downloading, so take preventative action
+        // SETTINGS.dlLimit 
         form.append('dlLimit', dlLimit)
-    }     
+    } 
 
     if ( upLimit > 0 ) {
-        // A upLimit of 0 will prevent any uploading, so take preventative action
+        // SETTINGS.upLimit 
         form.append('upLimit', upLimit)
-    }     
+    }    
 
     if ( startPaused == true ) {
         // SETTINGS.startPaused: Add torrents in a paused state, so they do not automatically begin downloading
@@ -1970,6 +1970,8 @@ function addTorrent({
         'form': form,
         'torrentURL': torrentURL
     }
+
+    console.debug(torrentPostData)
 
     // ----- torrentURL Authentication ----- 
     if ( torrentPostData.torrentURL.match(/(auth=|authkey=|magnet:\?xt=urn:btih:)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
@@ -2402,7 +2404,7 @@ function quickieTrackerHandler({
 
         setTimeout(() => {
             // Using the provided CSS selector, get an array of all the downloadElements
-            let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_elementprocessed="true"])`)
+            let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
             console.log('scanning')
             if ( allDownloadElements.length >= 1 ) {
@@ -2438,7 +2440,7 @@ function quickieTrackerHandler({
 
                     if ( trackProcessedDownloadElements ) {
                         // Keep track of this downloadElement as having been processed my marking it with a unique attribute
-                        downloadElement.setAttribute('data-quickie_elementprocessed', 'true')
+                        downloadElement.setAttribute('data-quickie_processed', 'true')
                     }
                 }
 
@@ -2459,7 +2461,7 @@ function quickieTrackerHandler({
 
 }
 
-function unit3dTrackerHandler(torrentURLSelector) {
+function unit3dTrackerHandler(downloadElementsSelector) {
     // A tracker handler focused on the layout of the UNIT3D Framework. Generate a bunnyButton for each queried DownloadElement
     // ! This function used 'Oldtoons' as the model and is not WirlyWirly tested for other sites
 
@@ -2473,7 +2475,7 @@ function unit3dTrackerHandler(torrentURLSelector) {
         // query and create a BunnyButton for all downloadElements
 
         setTimeout(() => {
-            let allDownloadElements = document.querySelectorAll(torrentURLSelector)
+            let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
             if ( allDownloadElements.length >= 1 ) {
                 let separator = getPageSeparator(allDownloadElements[0])
@@ -2481,11 +2483,6 @@ function unit3dTrackerHandler(torrentURLSelector) {
                 SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButtonPlacement = 'afterend' : bunnyButtonPlacement = 'beforebegin'
 
                 for (let downloadElement of allDownloadElements) {
-
-                    if ( trackProcessedDownloadElements ) {
-                        // Check if this downloadElement has already been processed
-                        if ( downloadElement.dataset.quickie_elementprocessed == 'true' ) { continue }
-                    }
 
                     let bunnyButton = createBunnyButton({torrentURL: downloadElement.href})
 
@@ -2510,7 +2507,7 @@ function unit3dTrackerHandler(torrentURLSelector) {
 
                     if ( trackProcessedDownloadElements ) {
                         // Keep track of this downloadElement as having been processed my marking it with a unique attribute
-                        downloadElement.setAttribute('data-quickie_elementprocessed', 'true')
+                        downloadElement.setAttribute('data-quickie_processed', 'true')
                     }
 
                 }
