@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.0
+// @version     1.01
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
@@ -1818,12 +1818,12 @@ function createBunnyButton({
     bunnyButton.href = 'javascript:undefined'
     bunnyButton.textContent = buttonText
 
-    styles = `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none`
+    let buttonStyles = `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none`
 
     if ( unit3dBarStyle == false ) {
-        bunnyButton.setAttribute('style', styles)
+        bunnyButton.setAttribute('style', buttonStyles)
     } else {
-        bunnyButton.setAttribute('style', `${styles}; background: rgba(0, 0, 0, 0.70); backdrop-filter: blur(9px); color: rgb(203, 233, 255); font-weight: bold; border-radius: 999px; width: inherit; padding: 2%`)
+        bunnyButton.setAttribute('style', `${buttonStyles}; background: rgba(0, 0, 0, 0.70); backdrop-filter: blur(9px); color: rgb(203, 233, 255); font-weight: bold; border-radius: 999px; width: inherit; padding: 2%`)
         bunnyButton.textContent = ' 🐰 quiCKIE '
     }
 
@@ -2473,11 +2473,18 @@ function unit3dTrackerHandler(downloadElementsSelector) {
     // A tracker handler focused on the layout of the UNIT3D Framework. Generate a bunnyButton for each queried DownloadElement
     // ! This function used 'Oldtoons' as the model and is not WirlyWirly tested for other sites
 
+
     // No reason to mark download elements by default
     let trackProcessedDownloadElements = false
 
-    // If there is a paginationLoop timer, mark the processed elements so that bunnyButtons are not repeatedly generated
+    // If there is a specified paginationLoop, mark the processed elements so that bunnyButtons are not repeatedly generated
     SETTINGS.paginationLoop >= 500 ? trackProcessedDownloadElements = true : null
+
+    if ( document.location.pathname.match(/(\/|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
+        // This is the homepage or search page, so enable paginationLooping
+        SETTINGS.paginationLoop = 750
+        trackProcessedDownloadElements = true
+    }
 
     function processDownloadElements(delay) {
         // query and create a BunnyButton for all downloadElements
@@ -2490,16 +2497,16 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                 SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButtonPlacement = 'afterend' : bunnyButtonPlacement = 'beforebegin'
 
-                let enableBarStyle = false
-                trackerURL.match(/\/torrents\/\d+/) ? enableBarStyle = true : null
+                let unit3dBarStyle = false
+                trackerURL.match(/\/torrents\/\d+/) ? unit3dBarStyle = true : null
 
                 for (let downloadElement of allDownloadElements) {
 
-                    if ( enableBarStyle ) {
+                    if ( unit3dBarStyle ) {
 
                         let bunnyButton = createBunnyButton({torrentURL: downloadElement.href, unit3dBarStyle: true})
                         
-                        // If the parent element is a list-item, this is likely a horizontal row, so place the bunnyButton after the parent element so that it shows up on the same row
+                        // This is likely a horizontal row with large bars, so place the bunnyButton after the parent element so that it shows up on the same row
                         downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
 
                         // Hide the DL button if enabled
