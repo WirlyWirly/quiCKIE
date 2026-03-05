@@ -5,6 +5,7 @@
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
 // @version     1.0
+// @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
 //              Written on LibreWolf via Violentmonkey
@@ -20,9 +21,7 @@
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
-// When working on this UserScript, I like to use MiniServe to serve the resource files over http, that way they become accessible with these urls.
-// I will then remove the '@' from the gitHub urls above and put it on these instead while I'm working.
-// MiniServe: https://github.com/svenstaro/miniserve
+// Local resource urls used during development. Files served over http via MiniServe: https://github.com/svenstaro/miniserve
 
 // resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
@@ -171,7 +170,6 @@
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @homepage    https://github.com/WirlyWirly/quiCKIE
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
 // ==/UserScript==
@@ -239,11 +237,7 @@ let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.*?)(\.\w+)$/)[2
 let trackerURL = document.URL
 
 // Get the global and all trackerDomain specific settings
-let SETTINGS = getTrackerSettings(trackerDomain)
-
-// The entries that will be displayed in the presetsMenu
-let presetMenuItems = generatePresetsMenuItems()
-
+let [SETTINGS, allTrackerPresetItems] = getTrackerSettings(trackerDomain)
 
 // =================================== TRACKER SPECIFIC HANDLING ======================================
 
@@ -677,7 +671,7 @@ if ( trackerDomain == 'animebytes' ) {
 
 if ( SETTINGS.thirdPartyScan != 'Off' ) {
     // After a brief delay, query the document for any thirdParty '[data-quickie_torrenturl]' elements for which a bunnyButton should be created
-    SETTINGS.thirdPartyDelay <= 100 ? SETTINGS.thirdPartyDelay = 500 : null
+    SETTINGS.thirdPartyDelay < 50 ? SETTINGS.thirdPartyDelay = 200 : null
     scanForThirdPartyTorrentURLS(SETTINGS.thirdPartyDelay)
 }
 
@@ -899,7 +893,7 @@ function createGMConfigSettingsPanel() {
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party integrated quiCKIE links\n\nOnly affects trackers that have the '🤝' column set to 'On'\n\nℹ️ This delay only affects the FIRST scan of third-party quiCKIE links, not every scan thereafter",
             'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nHover over the tracker name for a '🙈' button that will quickly add the tracker to the hidden list\n\nℹ️ This does not disable the BunnyButtons from being generated on those trackers, it only hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
-            'globalForcedTorrentFile': '─── 💾 Torrent File  💾 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL should be sent directly to qui or first downloaded through the browser',
+            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL should be sent directly to qui or first downloaded through the browser',
 
         },
 
@@ -943,7 +937,7 @@ function createGMConfigSettingsPanel() {
             'dllimit': '─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents',
             'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
             'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
-            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches\\etc. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons between pages\n\n⚠️ You should NOT enable this unless you are on a site that actually has pagination\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
+            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\n⚠️ You should NOT enable this unless you are on a site that actually has pagination\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
             'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nThe developer of a third-party UserScript may setup quiCKIE integration for their UserScript, that way the DL buttons their UserScript generates will also receive a BunnyButton\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If this is not specified by the third-party UserScript, the settings for the current tracker will be used. This will NOT carry over the presets of the specified tracker.\n\n⚠️ You should NOT enable this unless you have installed a trusted UserScript that actually has quiCKIE integration",
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
@@ -1038,7 +1032,7 @@ function createGMConfigSettingsPanel() {
                 'default': '',
             },
             'globalForcedTorrentFile': {
-                'label': '💾 Torrent File:',
+                'label': '🧲 Torrent File:',
                 'type': 'checkbox',
                 'default': false
             },
@@ -1046,7 +1040,7 @@ function createGMConfigSettingsPanel() {
 
             'welcomeMessage': {
                 'type': 'hidden',
-                'default': 'true',
+                'default': 'show',
             },
 
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
@@ -1542,23 +1536,25 @@ function createGMConfigSettingsPanel() {
                     setTimeout(() => saveButton.classList.remove('success'), 500)
                 })
 
-                // if ( this.get('welcomeMessage') == 'true' ) {
-                //     confirm("🐰 Welcome to quiCKIE! 🐰\n\nFirst off, this little UserScript has been something of a love letter to the people and services that have made quiCKIE worth the time invested 😘\n\nMany of the trackers included with quiCKIE were provided by a user belonging to that tracker and not something I, the original author, was able to personally test. I might be biased, but knowing what I know about the code, I'm confident in their execution of it!\n\nquiCKIE may be packed with options, but it was all done with the intention of being flexible, independent, and easy to maintain\n\nIf during your use you run into either a missing url, a broken tracker, or even a dead one, open an issue on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and if there's a tracker that you'd like to see included, check the quiCKIE Wiki for a 3-step guide on how to get it added, no programming experience required!*\n\n* Probably, that was the goal anyways, but you know how it be sometimes 🙃\n\nP.S\nIf you're confident with CSS, this script needs a surgeon... It looks good on the surface, but the CSS is a dumpsterfire that I did my best to put out 😓")
+                if ( this.get('welcomeMessage') == 'show' ) {
+                    confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE WiKi for a 3-step guide on how to get it added, no programming experience required!\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
 
-                //     this.set('welcomeMessage', 'false')
+                    this.set('welcomeMessage', 'hide')
 
-                // }
+                }
 
             },
             'save': function () {
                 // Actions to take when the 'Save' button is clicked
                 reloadWindow = true
+                
                 // Clear cached data when settings are saved
                 GM_listValues().forEach(key => {
                     if (key !== 'quiCKIE_config') {
                         GM_setValue(key, null)
                     }
                 })
+
             },
             'close': function () {
                 // Actions to take when the 'Close' button is clicked
@@ -1598,6 +1594,8 @@ function getTrackerSettings(trackerDomain) {
     
     // @trackerSettings
     let SETTINGS = {
+        trackerDomain: trackerDomain,
+
         // The global qui saved settings
         quiURL: GM_config.get('quiURL'),
         quiApiKey: GM_config.get('quiApiKey'),
@@ -1635,7 +1633,172 @@ function getTrackerSettings(trackerDomain) {
     SETTINGS.upLimit == 0 ? SETTINGS.upLimit = '' : null
     SETTINGS.instance == 0 ? SETTINGS.instance = '' : null
 
-    return SETTINGS
+    // The entries that will be displayed in the presetsMenu
+    let allTrackerPresetItems = {}
+    let trackerDomains = Object.keys(settingsPanelEntries)
+    for ( let trackerDomain of trackerDomains ) {
+        let menuItems = []
+        for ( let i=1; i <= presetCount; i++ ) {
+            // for each preset, create a menuItem object to put in the right-click presets-menu
+
+            let presetName = GM_config.get(`preset-${i}-preset`)
+
+            if ( presetName == '' ) {
+                // A empty preset name, so don't add it to the presets-menu
+                continue
+            }
+
+            // Check if one of the items in the presetTrackers field contains a match against the domain of the current site
+            let presetTrackersArray = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase().replace(' ', '').split(',')
+            let domainMatch = false
+
+            for (let presetTrackersItem of presetTrackersArray) {
+                if ( presetTrackersItem == '*' || swappedSettingsPanelEntries[`${presetTrackersItem}`] == trackerDomain ) {
+                    domainMatch = true
+                    break
+                }
+
+            }
+
+            if ( domainMatch == false || presetTrackersArray == '' /* empty field */ ) {
+                // This preset is not to be displayed on this tracker
+                continue
+
+            } else if ( presetName.match(/^[-=\.\s]+$/) ) {
+                // A menu separator, so create a menuItem that does nothing when clicked
+
+                // Replace - = . with their respective symbols
+                if ( presetName.includes('-') ) {
+                    presetName = presetName.replaceAll(/./g, '─')
+                } else if ( presetName.includes('=') ) {
+                    presetName = presetName.replaceAll(/./g, '═')
+                } else if ( presetName.includes('.') ) {
+                    presetName = presetName.replaceAll(/./g, '·')
+                }
+                
+                var presetItem = {
+                    content: presetName,
+                    events: {
+                        mouseover: function(event) {
+                            // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
+                            this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
+                        }
+                    }
+                }
+
+            } else {
+                // For this preset, create a menuItem entry to be clickable in the presets-menu
+                let presetSettings = {
+                    category: GM_config.get(`preset-${i}-category`),
+                    savePath: GM_config.get(`preset-${i}-savePath`),
+                    tags: GM_config.get(`preset-${i}-tags`),
+                    ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
+                    seedTime: GM_config.get(`preset-${i}-seedTime`),
+                    dlLimit: GM_config.get(`preset-${i}-dlLimit`),
+                    upLimit: GM_config.get(`preset-${i}-upLimit`),
+                    instance: GM_config.get(`preset-${i}-instance`),
+                    startPaused: GM_config.get(`preset-${i}-startPaused`),
+                    subFolder: GM_config.get(`preset-${i}-subFolder`),
+                    seqPieces: GM_config.get(`preset-${i}-seqPieces`),
+                    autoTMM: GM_config.get(`preset-${i}-autoTMM`),
+                    skipHash: GM_config.get(`preset-${i}-skipHash`),
+                }
+
+                if ( presetSettings.ratioLimit == 0 ) { presetSettings.ratioLimit = '' }
+                if ( presetSettings.seedTime == 0 ) { presetSettings.seedTime = '' }
+                if ( presetSettings.dlLimit == 0 ) { presetSettings.dlLimit = '' }
+                if ( presetSettings.upLimit == 0 ) { presetSettings.upLimit = '' }
+                if ( presetSettings.instance == 0 ) { presetSettings.instance = '' }
+
+                var presetItem = {
+                    content: presetName,
+                    events: {
+                        click: function(event) {
+                            // This menuItem was clicked, so use the selected preset
+                            let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
+                            bunnyButton.id = '__CLICKED__'
+                            bunnyButton.textContent = ' 🕓 '
+
+                            let torrentURL = bunnyButton.dataset.torrenturl
+
+                            addTorrent({
+                                quiURL: SETTINGS.quiURL, 
+                                quiApiKey: SETTINGS.quiApiKey, 
+                                torrentURL: torrentURL,
+                                instance: presetSettings.instance, 
+                                category: presetSettings.category, 
+                                savePath: presetSettings.savePath, 
+                                tags: presetSettings.tags, 
+                                ratioLimit: presetSettings.ratioLimit, 
+                                seedTime: presetSettings.seedTime, 
+                                dlLimit: presetSettings.dlLimit, 
+                                upLimit: presetSettings.upLimit, 
+                                startPaused: presetSettings.startPaused, 
+                                subFolder: presetSettings.subFolder, 
+                                seqPieces: presetSettings.seqPieces, 
+                                autoTMM: presetSettings.autoTMM, 
+                                skipHash: presetSettings.skipHash})
+
+                        },
+                        mouseover: function(event) {
+                            this.title = ` ─── 🚀 ${presetName} 🚀 ─── 
+🗃️ = ${presetSettings.category}
+💾 = ${presetSettings.savePath}
+🏷️ = ${presetSettings.tags}
+⚖️ = ${presetSettings.ratioLimit}
+🌱 = ${presetSettings.seedTime}
+⬇️ = ${presetSettings.dlLimit}
+⬆️ = ${presetSettings.upLimit}
+🎯 = ${presetSettings.instance}
+⏸️ = ${presetSettings.startPaused}
+📁 = ${presetSettings.subFolder}
+🧩 = ${presetSettings.seqPieces}
+🤖 = ${presetSettings.autoTMM}
+🛡️ = ${presetSettings.skipHash}`
+
+                        }
+                    }
+                }
+            }
+
+            menuItems.push(presetItem)
+
+        }
+
+        if ( menuItems.length == 0 ) {
+            // No presets were detected for this tracker, so let the user know and provide some default options
+
+            menuItems = [{
+                content: '🚀 No Presets for this Tracker 🚀',
+                events: {
+                    'mouseover': function(event) {
+                        // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
+                        this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
+                    },
+                }
+            },
+            {   content: 'quiCKIE Settings',
+                events: {
+                    'click': function(event) {
+                        GM_config.open()
+                    }
+                }
+            },
+            {   content: 'qui Tab',
+                events: {
+                    'click': function(event) {
+                        window.open(SETTINGS.quiURL, '_blank').focus()
+                    }
+                }
+            }]
+
+        }
+
+        allTrackerPresetItems[trackerDomain] = menuItems
+
+    }
+
+    return [SETTINGS, allTrackerPresetItems]
 
 }
 
@@ -1656,7 +1819,7 @@ function createBunnyButton({
     bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none`)
     bunnyButton.setAttribute('data-torrenturl', torrentURL)
 
-    bunnyButton.title = ` ─── 🌎 ${settingsPanelEntries[`${trackerDomain}`]} 🌎 ─── 
+    bunnyButton.title = ` ─── 🌎 ${settingsPanelEntries[`${torrentSettings.trackerDomain}`]} 🌎 ─── 
  🗃️ = ${torrentSettings.category}
  💾 = ${torrentSettings.savePath}
  🏷️ = ${torrentSettings.tags}
@@ -1980,7 +2143,7 @@ function addTorrent({
 
     } else {
         // No, this url has no authentication or is being forced to download the .torrentt file through the browser before sending it to the client
-        document.getElementById('__CLICKED__').textContent = ' 💾 '
+        document.getElementById('__CLICKED__').textContent = ' 🧲 '
         getFileBlob(torrentPostData)
 
     }
@@ -2073,7 +2236,7 @@ function quiPOST(torrentPostData) {
             document.getElementById('__CLICKED__').textContent = ' ❌ '
             document.getElementById('__CLICKED__').removeAttribute('id')
 
-            window.alert(`❌ quiCKIE ❌\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThere was a problem connecting to qui. This is usually caused by a bad quiURL. Check it for typos, usually it's the same url you can copy-paste from your browser...\n\nquiURL: ${SETTINGS.quiURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThere was a problem connecting to qui. This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser...\n\nquiURL: ${SETTINGS.quiURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -2108,6 +2271,7 @@ function scanForThirdPartyTorrentURLS(delay) {
                 // For each thirdPartyElement, create a BunnyButton using the elements 'data-quickie_torrenturl' attribute
 
                 let torrentSettings = {
+                    trackerDomain: trackerDomain,
                     category: SETTINGS.category,
                     savePath: SETTINGS.savePath,
                     tags: SETTINGS.tags,
@@ -2129,6 +2293,7 @@ function scanForThirdPartyTorrentURLS(delay) {
                     if ( downloadElement.dataset.quickie_tracker != undefined ) {
                         let thirdPartyDomain = swappedSettingsPanelEntries[`${downloadElement.dataset.quickie_tracker.toLowerCase()}`]
 
+                        torrentSettings.trackerDomain = thirdPartyDomain
                         torrentSettings.category = GM_config.get(`${thirdPartyDomain}-category`)
                         torrentSettings.savePath = GM_config.get(`${thirdPartyDomain}-savePath`)
                         torrentSettings.tags = GM_config.get(`${thirdPartyDomain}-tags`)
@@ -2164,10 +2329,9 @@ function scanForThirdPartyTorrentURLS(delay) {
                 downloadElement.dataset.quickie_separator ? separatorText = downloadElement.dataset.quickie_separator : null
 
                 // Create a bunnyButton using the unique 'quickie_torrenturl' attribute of the thirdParty element
-                let bunnyButton = createBunnyButton({torrentURL: downloadElement.dataset.quickie_torrenturl, torrentSettings: torrentSettings})
+                let bunnyButton = createBunnyButton({torrentURL: downloadElement.dataset.quickie_torrenturl, buttonText: ' 🤝 ', torrentSettings: torrentSettings})
 
                 bunnyButton.style = existingBB.style.cssText
-                bunnyButton.textContent = existingBB.textContent
                 bunnyButton.classList.add('quickie_thirdParty')
 
 
@@ -2183,10 +2347,11 @@ function scanForThirdPartyTorrentURLS(delay) {
                 // Signify that there were new thirdParty elements, so the presets-menu function should run
                 newThirdParties = true
 
+                // Append the presets-menu to the newly created bunnyButtons
+                attachPresetsMenu('a.quickie_newBunnyButton', torrentSettings.trackerDomain)
+
             }
 
-            // Append the presets-menu to the newly created bunnyButtons
-            attachPresetsMenu('a.quickie_newBunnyButton')
 
         }
 
@@ -2199,180 +2364,16 @@ function scanForThirdPartyTorrentURLS(delay) {
 
 
 GM_addStyle(GM_getResourceText('presetsMenuCSS'))
-function generatePresetsMenuItems() {
-    // Generate and initilize the right-click presets-menu that will display all the presets
 
 
-    let menuItems = []
-    for ( let i=1; i <= presetCount; i++ ) {
-        // for each preset, create a menuItem object to put in the right-click presets-menu
-
-        let presetName = GM_config.get(`preset-${i}-preset`)
-
-        if ( presetName == '' ) {
-            // A empty preset name, so don't add it to the presets-menu
-            continue
-        }
-
-        // Check if one of the items in the presetTrackers field contains a match against the domain of the current site
-        let presetTrackersArray = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase().replace(' ', '').split(',')
-        let domainMatch = false
-
-        for (let presetTrackersItem of presetTrackersArray) {
-            if ( presetTrackersItem == '*' || swappedSettingsPanelEntries[`${presetTrackersItem}`] == trackerDomain ) {
-                domainMatch = true
-                break
-            }
-
-        }
-
-        if ( domainMatch == false || presetTrackersArray == '' /* empty field */ ) {
-            // This preset is not to be displayed on this tracker
-            continue
-
-        } else if ( presetName.match(/^[-=\.\s]+$/) ) {
-            // A menu separator, so create a menuItem that does nothing when clicked
-
-            // Replace - = . with their respective symbols
-            if ( presetName.includes('-') ) {
-                presetName = presetName.replaceAll(/./g, '─')
-            } else if ( presetName.includes('=') ) {
-                presetName = presetName.replaceAll(/./g, '═')
-            } else if ( presetName.includes('.') ) {
-                presetName = presetName.replaceAll(/./g, '·')
-            }
-            
-            var presetItem = {
-                content: presetName,
-                events: {
-                    mouseover: function(event) {
-                        // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
-                        this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
-                    }
-                }
-            }
-
-        } else {
-            // For this preset, create a menuItem entry to be clickable in the presets-menu
-            let presetSettings = {
-                category: GM_config.get(`preset-${i}-category`),
-                savePath: GM_config.get(`preset-${i}-savePath`),
-                tags: GM_config.get(`preset-${i}-tags`),
-                ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
-                seedTime: GM_config.get(`preset-${i}-seedTime`),
-                dlLimit: GM_config.get(`preset-${i}-dlLimit`),
-                upLimit: GM_config.get(`preset-${i}-upLimit`),
-                instance: GM_config.get(`preset-${i}-instance`),
-                startPaused: GM_config.get(`preset-${i}-startPaused`),
-                subFolder: GM_config.get(`preset-${i}-subFolder`),
-                seqPieces: GM_config.get(`preset-${i}-seqPieces`),
-                autoTMM: GM_config.get(`preset-${i}-autoTMM`),
-                skipHash: GM_config.get(`preset-${i}-skipHash`),
-            }
-
-            if ( presetSettings.ratioLimit == 0 ) { presetSettings.ratioLimit = '' }
-            if ( presetSettings.seedTime == 0 ) { presetSettings.seedTime = '' }
-            if ( presetSettings.dlLimit == 0 ) { presetSettings.dlLimit = '' }
-            if ( presetSettings.upLimit == 0 ) { presetSettings.upLimit = '' }
-            if ( presetSettings.instance == 0 ) { presetSettings.instance = '' }
-
-            var presetItem = {
-                content: presetName,
-                events: {
-                    click: function(event) {
-                        // This menuItem was clicked, so use the selected preset
-                        let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
-                        bunnyButton.id = '__CLICKED__'
-                        bunnyButton.textContent = ' 🕓 '
-
-                        let torrentURL = bunnyButton.dataset.torrenturl
-
-                        addTorrent({
-                            quiURL: SETTINGS.quiURL, 
-                            quiApiKey: SETTINGS.quiApiKey, 
-                            torrentURL: torrentURL,
-                            instance: presetSettings.instance, 
-                            category: presetSettings.category, 
-                            savePath: presetSettings.savePath, 
-                            tags: presetSettings.tags, 
-                            ratioLimit: presetSettings.ratioLimit, 
-                            seedTime: presetSettings.seedTime, 
-                            dlLimit: presetSettings.dlLimit, 
-                            upLimit: presetSettings.upLimit, 
-                            startPaused: presetSettings.startPaused, 
-                            subFolder: presetSettings.subFolder, 
-                            seqPieces: presetSettings.seqPieces, 
-                            autoTMM: presetSettings.autoTMM, 
-                            skipHash: presetSettings.skipHash})
-
-                    },
-                    mouseover: function(event) {
-                        this.title = ` ─── 🚀 ${presetName} 🚀 ─── 
- 🗃️ = ${presetSettings.category}
- 💾 = ${presetSettings.savePath}
- 🏷️ = ${presetSettings.tags}
- ⚖️ = ${presetSettings.ratioLimit}
- 🌱 = ${presetSettings.seedTime}
- ⬇️ = ${presetSettings.dlLimit}
- ⬆️ = ${presetSettings.upLimit}
- 🎯 = ${presetSettings.instance}
- ⏸️ = ${presetSettings.startPaused}
- 📁 = ${presetSettings.subFolder}
- 🧩 = ${presetSettings.seqPieces}
- 🤖 = ${presetSettings.autoTMM}
- 🛡️ = ${presetSettings.skipHash}`
-
-                    }
-                }
-            }
-        }
-
-        menuItems.push(presetItem)
-
-    }
-
-    if ( menuItems.length == 0 ) {
-        // No presets were detected for this tracker, so let the user know and provide some default options
-
-        menuItems = [{
-            content: '🚀 No Presets for this Tracker 🚀',
-            events: {
-                mouseover: function(event) {
-                    // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
-                    this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
-                },
-            }
-        },
-        {   content: 'quiCKIE Settings',
-            events: {
-                click: function(event) {
-                    GM_config.open()
-                }
-            }
-        },
-        {   content: 'qui Tab',
-            events: {
-                click: function(event) {
-                    window.open(SETTINGS.quiURL, '_blank').focus()
-                }
-            }
-        }]
-
-    }
-
-    return menuItems
-
-}
-
-
-function attachPresetsMenu(targetSelector) {
+function attachPresetsMenu(targetSelector, trackerDomain = trackerDomain) {
     // append the menuItems to the target elements
 
     const presetsMenu = new ContextMenu({
         // targetSelector == CSS Selector
         target: targetSelector,
         // An array of objects to display in the presets-menu
-        menuItems: presetMenuItems
+        menuItems: allTrackerPresetItems[trackerDomain]
     })
     
     // init() will stack a 'contextmenu' eventlistener on elements, so don't call it more than once per bunnyButton
@@ -2406,7 +2407,6 @@ function quickieTrackerHandler({
             // Using the provided CSS selector, get an array of all the downloadElements
             let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
-            console.log('scanning')
             if ( allDownloadElements.length >= 1 ) {
                 // If the .torrent file should be forced to download through the browser
                 forceTorrentFile == true ? SETTINGS.forceTorrentFile = true : null
@@ -2445,7 +2445,7 @@ function quickieTrackerHandler({
                 }
 
                 // After the bunnyButtons have been generated, call the function that will attach to them the right-click presetsMenu
-                callAttachPresetsMenu == true ? attachPresetsMenu('a.quickie_newBunnyButton') : null
+                callAttachPresetsMenu == true ? attachPresetsMenu('a.quickie_newBunnyButton', trackerDomain) : null
             }
 
             if ( SETTINGS.paginationLoop >= 500 ) {
@@ -2512,7 +2512,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                 }
 
-                attachPresetsMenu('a.quickie_newBunnyButton')
+                attachPresetsMenu('a.quickie_newBunnyButton', trackerDomain)
 
                 if ( SETTINGS.paginationLoop >= 500 ) {
                     // The tracker handler will continuosly scan the page for new downloadElements
