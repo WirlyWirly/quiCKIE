@@ -2477,6 +2477,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
         setTimeout(() => {
             let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
+            console.log('scanning')
             if ( allDownloadElements.length >= 1 ) {
                 let separator = getPageSeparator(allDownloadElements[0])
 
@@ -2514,12 +2515,12 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                 attachPresetsMenu('a.quickie_newBunnyButton', trackerDomain)
 
-                if ( SETTINGS.paginationLoop >= 500 ) {
-                    // The tracker handler will continuosly scan the page for new downloadElements
-                    processDownloadElements(SETTINGS.paginationLoop)
-                }
             }
 
+            if ( SETTINGS.paginationLoop >= 500 ) {
+                // The tracker handler will continuosly scan the page for new downloadElements
+                processDownloadElements(SETTINGS.paginationLoop)
+            }
 
         }, delay )
 
