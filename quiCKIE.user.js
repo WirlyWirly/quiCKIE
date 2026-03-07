@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.02
+// @version     1.03
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
@@ -1599,6 +1599,7 @@ function getTrackerSettings(trackerDomain) {
     let SETTINGS = {
         trackerDomain: trackerDomain,
         forceTorrentFile: false,
+        firstThirdPartyScan: true,
 
         // The global qui saved settings
         quiURL: GM_config.get('quiURL'),
@@ -2457,23 +2458,13 @@ function quiPOST(torrentPostData) {
 
 // @thirdPartyIntegrations
 function scanForThirdPartyTorrentURLS(delay) {
-    // Check for elements that have the unique 'data-quickie_torrenturl' attribute designating them as thirdParty torrentURLs for which to generate a BunnyButton
-    // This function will first run after 2000ms (default) and then loop every 5000ms thereafter
+    // Check for elements that have the unique 'data-quickie_torrenturl' attribute designating them as integrated thirdParty torrentURLs for which to generate a BunnyButton. This process will loop every 5000ms.
     
-    let firstThirdPartyScan = true
-
     setTimeout(() => {
 
         let allThirdPartyElements = document.querySelectorAll('[data-quickie_torrenturl]')
 
         if ( allThirdPartyElements.length > 0 ) {
-
-            if ( firstThirdPartyScan ) {
-                // This being the first scan and returning actual results, update the presetMenuItems object so that it includes properties for ALL trackers
-                presetMenuItems = createPresetItems(Object.keys(settingsPanelEntries))
-                firstThirdPartyScan = false
-
-            }
 
             // Use an existing BunnyButton as the base for which to pull styles from
             let existingBB = document.querySelector('a.quickie_bunnyButton:not(a.quickie_thirdParty)')
@@ -2500,6 +2491,14 @@ function scanForThirdPartyTorrentURLS(delay) {
 
                 // If allowd, check for the tracker-specific settings for this thirdParty DL element
                 if ( SETTINGS.thirdPartyScan == 'On + 🌎' ) {
+
+                    if ( SETTINGS.firstThirdPartyScan ) {
+                        // This being the first scan, update the presetMenuItems object so that it includes properties for ALL trackers
+                        presetMenuItems = createPresetItems(Object.keys(settingsPanelEntries))
+                        SETTINGS.firstThirdPartyScan = false
+
+                    }
+
                     // [quickie_tracker] : Check if the thirdParty element has specified from which tracker the bunnyButtons should get their settings
                     if ( downloadElement.dataset.quickie_tracker != undefined ) {
                         let thirdPartyDomain = settingsLabelToDomain[`${downloadElement.dataset.quickie_tracker.toLowerCase()}`]
