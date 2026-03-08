@@ -1963,7 +1963,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                 for (let downloadElement of allDownloadElements) {
                     // For each downloadElement, generate and insert a bunnyButton
 
-                    let bunnyButton = createBunnyButton({torrentURL: downloadElement.href, altButtonStyles: bunnyButtonAltStyles, buttonText: bunnyButtonText})
+                    let bunnyButton = createBunnyButton({torrentURL: downloadElement.href, buttonText: bunnyButtonText, torrentSettings: SETTINGS, altButtonStyles: bunnyButtonAltStyles})
                     
                     if ( torrentDetailsPage == true ) {
                         // Place alongside the parentElement so that the bunnyButton appears on the same row
@@ -2162,7 +2162,7 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
                 quiURL: SETTINGS.quiURL,
                 quiApiKey: SETTINGS.quiApiKey,
                 torrentURL: bunnyButton.dataset.torrenturl,
-                intance: torrentSettings.instance,
+                instance: torrentSettings.instance,
                 category: torrentSettings.category,
                 savePath: torrentSettings.savePath,
                 tags: torrentSettings.tags,
