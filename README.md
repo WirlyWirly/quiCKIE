@@ -10,6 +10,7 @@ Only the **quiURL** and **ApiKey** are required, everything else is optional. Ho
 
 This UserScript is similar to the official qui [add-on](https://addons.mozilla.org/en-US/firefox/addon/qui/), except we're creating a BunnyButton on the page itself, thus making it more seamless, convenient, and even accessible on mobile devices.
 
+<br>
 > **Left-Click \ Mobile Tap**: Send torrent to qui with the settings for the current tracker<br>
 > **Right-Click \ Mobile Long-press**: Select a preset to use when sending the torrent to qui<br>
 > **Middle-Click**: Open qui in a new tab<br>
@@ -21,6 +22,7 @@ This UserScript is similar to the official qui [add-on](https://addons.mozilla.o
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [qui - quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
 > Written on [LibreWolf](https://librewolf.net/) via [Violentmonkey](https://violentmonkey.github.io/)<br>
+<br>
 
 # Integrating Third-Party UserScripts
 If you are the author of a UserScript that creates torrent `DL` (Download) buttons on a page that is serviced by quiCKIE, you can very easily integrate your UserScript so that your `DL` elements receive their very own and fully functioning BunnyButton 🐰: [Integrating Third-Party UserScripts](https://github.com/WirlyWirly/quiCKIE/wiki/Integrating-Other-UserScripts)
