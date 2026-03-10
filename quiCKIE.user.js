@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.04
+// @version     1.05
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
@@ -1737,6 +1737,13 @@ function createPresetItems(trackerDomains) {
 
                             let torrentURL = bunnyButton.dataset.torrenturl
 
+                            let startPaused = presetSettings.startPaused
+
+                            if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
+                                // Shift-Ctrl-Click: Add the torrent in a paused state
+                                presetSettings.startPaused = true
+                            }
+
                             addTorrent({
                                 quiURL: SETTINGS.quiURL, 
                                 quiApiKey: SETTINGS.quiApiKey, 
@@ -1754,6 +1761,8 @@ function createPresetItems(trackerDomains) {
                                 seqPieces: presetSettings.seqPieces, 
                                 autoTMM: presetSettings.autoTMM, 
                                 skipHash: presetSettings.skipHash})
+                            
+                            presetSettings.startPaused = startPaused
 
                         },
                         mouseover: function(event) {
@@ -2053,13 +2062,19 @@ function createBunnyButton({
     bunnyButton.addEventListener('mouseup', function(event) {
         // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
 
-        // if ( event.key == ' ' || event.code == 'Space' || event.keyCode == 32 ) {
-        //     // Space-Click: Perform the click action with a StartPaused override
-        //     console.log('startedpaused')
-        //     SETTINGS.startPaused = true
-        // }
 
-        if ( event.shiftKey && event.button == 0 ) {
+        if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
+            // Shift-Ctrl-Click: Add the torrent in a paused state
+
+            let pausedSetting = torrentSettings.startPaused
+            torrentSettings.startPaused = true
+
+            // This tracker is using a specified leftClick action
+            bunnyButtonClickedActions(this, torrentSettings, 'Tracker')
+
+            torrentSettings.startPaused = pausedSetting
+
+        } else if ( event.shiftKey && event.button == 0 ) {
             // Shift-Click: Open the quiCKIE settings panel
 
             GM_config.open()
@@ -2069,7 +2084,11 @@ function createBunnyButton({
 
             window.open(SETTINGS.quiURL).focus()
             
-            
+        } else if ( event.button == 1 ) {
+            // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
+
+            bunnyButtonClickedActions(this, torrentSettings, 'globalMiddleClickAction')
+
         } else if ( event.button == 0 ) {
             // Left-Click
 
@@ -2079,17 +2098,9 @@ function createBunnyButton({
                 bunnyButtonClickedActions(this, torrentSettings, 'globalLeftClickAction')
             } else {
                 // This tracker is using a specified leftClick action
-                bunnyButtonClickedActions(this, SETTINGS.leftClick)
+                bunnyButtonClickedActions(this, torrentSettings, SETTINGS.leftClick)
             }
-
-
-        } else if ( event.button == 1 ) {
-            // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
-
-            bunnyButtonClickedActions(this, torrentSettings, 'globalMiddleClickAction')
-
         }
-
 
     })
 
