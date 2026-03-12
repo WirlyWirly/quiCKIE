@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.05
+// @version     1.06
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
@@ -1656,31 +1656,22 @@ function createPresetItems(trackerDomains) {
         let menuItems = []
         for ( let i=1; i <= presetCount; i++ ) {
             // for each preset, create a menuItem object to put in the right-click presets-menu
-
             let presetName = GM_config.get(`preset-${i}-preset`)
+            let presetTrackersList = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase()
 
-            if ( presetName == '' ) {
-                // A empty preset name, so don't add it to the presets-menu
+            if ( presetName == '' || presetTrackersList == '') {
+                // A empty preset name or no specified trackers, so don't add this item to the presets-menu
                 continue
             }
 
-            // Check if one of the items in the presetTrackers field contains a match against the domain of the current site
-            let presetTrackersArray = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase().replace(' ', '').split(',')
-            let domainMatch = false
-
-            for (let presetTrackersItem of presetTrackersArray) {
-                if ( presetTrackersItem == '*' || settingsLabelToDomain[`${presetTrackersItem}`] == trackerDomain ) {
-                    domainMatch = true
-                    break
-                }
-
+            // Check if the list of trackers in the presetTrackers field contains a match against the settings panel label of this tracker
+            let settingsPanelLabel = settingsPanelEntries[`${trackerDomain}`].toLowerCase()
+            if ( !presetTrackersList.match(/\*/) && !presetTrackersList.match(settingsPanelLabel) ) {
+                // Neither a wildcard nor a matching tracker label, so don't add this item to the presets-menu
+                continue
             }
 
-            if ( domainMatch == false || presetTrackersArray == '' /* empty field */ ) {
-                // This preset is not to be displayed on this tracker
-                continue
-
-            } else if ( presetName.match(/^[-=\.\s]+$/) ) {
+            if ( presetName.match(/^[-=\.\s]+$/) ) {
                 // A menu separator, so create a menuItem that does nothing when clicked
 
                 // Replace - = . with their respective symbols
