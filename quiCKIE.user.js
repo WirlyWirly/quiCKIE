@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.06
+// @version     1.07
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
 //              To be used with a running instance of qui: https://getqui.com/
@@ -35,7 +35,7 @@
 // @match   https://alpharatio.cc/torrents.php*
 
 // @match   https://animebytes.tv/artist.php?id=*
-// @match   https://animebytes.tv/collage.php?id=*
+// @match   https://animebytes.tv/collage.php?*id=*
 // @match   https://animebytes.tv/company.php?id=*
 // @match   https://animebytes.tv/series.php?id=*
 // @match   https://animebytes.tv/torrents*
@@ -82,10 +82,10 @@
 // @match   https://gazellegames.net/collections.php?id=*
 // @match   https://gazellegames.net/torrents.php*
 
-// @match   https://www.happyfappy.org/collage/*
-// @match   https://www.happyfappy.org/top10.php*
-// @match   https://www.happyfappy.org/torrents.php*
-// @match   https://www.happyfappy.org/user.php?id=*
+// @match   https://www.happyfappy.net/collage/*
+// @match   https://www.happyfappy.net/top10.php*
+// @match   https://www.happyfappy.net/torrents.php*
+// @match   https://www.happyfappy.net/user.php?id=*
 
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php?id=*
@@ -111,6 +111,7 @@
 // @match   https://materialize.is/torrents.php*
 
 // @match   https://www.myanonamouse.net/
+// @match   https://www.myanonamouse.net/stats/top10Tor.php*
 // @match   https://www.myanonamouse.net/t/*
 // @match   https://www.myanonamouse.net/tor/browse.php*
 
@@ -527,6 +528,9 @@ if ( trackerDomain == 'animebytes' ) {
         let target = document.getElementById('ssr')
         let config = { childList: true }
 
+        trackerURL.match(/\/top10Tor\.php/) ? target = document.getElementById('top10') : null
+        console.log(target)
+
         observer.observe(target, config)
     }
 
@@ -890,7 +894,7 @@ function createGMConfigSettingsPanel() {
         'globalsTitles': {
             'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nℹ️ Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\nExample: http://localhost:7476/qui/instances/1\n\n────────────────\n\nSeedbox\\Swizzin users might try...\n\nhttps://username:password@seedboxDomain.com/qui/instances/1",
             'quiApiKey': '─── 🔑 qui ApiKey 🔑 ───\n\nA valid and active ApiKey created by qui\n\nFrom the qui interface, you can generate a ApiKey by going to...\n\nSettings > API Keys > Create API Key',
-            'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated and available for use from the presets menu (right-click) of a BunnyButton\n\nHover over '🚀 Preset' header for details on how each field can be filled in\n\n⚠️ Lowering this number will REMOVE those rows which will DELETE the settings of the removed rows",
+            'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
             'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe default action to take when performing a Left-Click\\Tap on a Bunny button\n\nℹ️ Affects all BuunyButtons with the 'Global' setting",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
@@ -933,7 +937,7 @@ function createGMConfigSettingsPanel() {
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nWhen this setting is used, these torrents will have ATMM (Auto Torrent Management Mode) disabled. This means that changing the category later on will NOT move the torrents based on the new category. You will need to enable ATMM for these torrents if you would like to get that behaviour back\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
             'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
             'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete',
             'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
@@ -945,8 +949,8 @@ function createGMConfigSettingsPanel() {
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
             'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Shift-Ctrl-Click on a BunnyButton or Preset to override the Start Paused setting to be True",
-            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This does not affect multi-file torrents that are already in a folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially to allow for media playback while the file is downloading\n\n⚠️ This may impact download speed',
+            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This has no affect on torrents that are already in their own folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
+            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\nThis behaviour results in the files being downloaded in-order and also being capable of playback while downloading\n\n⚠️ This may impact download speeds',
             'autotmm': "─── 🤖 Auto Torrent Management 🤖 ───\n\nFor these torrents, enable Auto Torrent Management\n\n⚠️ This will download the torrent to a folder based on the '🗃️ Category', ignoring whatever is specified in the '💾 Save Path'",
             'skiphash': '─── 🛡️ Skip Hash Check 🛡️ ───\n\nWhen Adding torrents, skip the initial hash check\n\n⚠️ Hash checks are used to verify file integrity and prevent corrupted data, although this check may take a long time with larger torrents. Know what you are doing before enabling this.',
 
@@ -1021,7 +1025,7 @@ function createGMConfigSettingsPanel() {
             'bunnyButtonPlacement': {
                 'label': '↔️ Placement:',
                 'type': 'select',
-                'options': ['Before', 'After'],
+                'options': ['After', 'Before'],
                 'default': 'After',
             },
             'thirdPartyDelay': {
@@ -2337,12 +2341,12 @@ function addTorrent({
         // The object containing the finalized data needed to POST a torrent
         'quiApiURL': quiApiAddTorrentURL,
         'quiApiKey': quiApiKey,
-        'form': form,
+        'formData': form,
         'torrentURL': torrentURL
     }
 
     // ----- torrentURL Authentication ----- 
-    if ( torrentPostData.torrentURL.match(/(auth=|authkey=|magnet:\?xt=urn:btih:)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
+    if ( torrentPostData.torrentURL.match(/(auth=|authkey=|passkey=|magnet:\?xt=urn:btih:)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
         // Yes, this is an authenticated url or magnet link, so send it directly to the client
         quiPOST(torrentPostData)
 
@@ -2369,7 +2373,7 @@ function getFileBlob(torrentPostData) {
             // ----- File Downloaded ----- 
             let blobData = response.response
 
-            torrentPostData.form.append('torrent', blobData)
+            torrentPostData.formData.append('torrent', blobData)
             document.getElementById('__CLICKED__').textContent = ' 🕓 '
 
             quiPOST(torrentPostData)
@@ -2404,7 +2408,7 @@ function quiPOST(torrentPostData) {
         // Use the internal GM function to prevent source-origin errors
         method: 'POST',
         url: torrentPostData.quiApiURL,
-        data: torrentPostData.form,
+        data: torrentPostData.formData,
         headers: {
             'X-API-Key': torrentPostData.quiApiKey,
         },
