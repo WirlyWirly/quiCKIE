@@ -6,8 +6,8 @@
 // @author      WirlyWirly + contributors 🫶
 // @version     1.10
 // @homepage    https://github.com/WirlyWirly/quiCKIE
-// @description A UserScript to quickly send torrents from a tracker to qui, with customizable per-site settings and presets 🐰 
-//              To be used with a running instance of qui: https://getqui.com/
+// @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰 
+//              Orignally written for qui, later extended to support more torrent clients
 //              Written on LibreWolf via Violentmonkey
 
 // @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
@@ -21,7 +21,7 @@
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
-// Local resource urls used during development. Files served over http via MiniServe: https://github.com/svenstaro/miniserve
+// Local resource urls used during development. Files can be served over http via MiniServe: https://github.com/svenstaro/miniserve
 
 // resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
@@ -423,7 +423,7 @@ if ( trackerDomain == 'animebytes' ) {
     // Browse | Collages | Details | Top10 
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
         bunnyButtonFontSize: '125%',
         bunnyButtonText: '🐰',
     }
@@ -2449,7 +2449,7 @@ function addTorrent({
         try {
             // quiURL Example: http://localhost:7476/qui/instances/1
             let quiURLCaptures = torrentClient.quiURL.match(/^(.*)\/(instances\/\d+)/) // [1] == domain, [2] == instance
-            postData.qui.addURL = `${quiURLCaptures[1]}/api/${quiURLCaptures[2]}/torrents`
+            postData.qui.url = `${quiURLCaptures[1]}/api/${quiURLCaptures[2]}/torrents`
 
         } catch(error) {
             // Failed to parse quiURL for the API endpoint
@@ -2466,7 +2466,7 @@ function addTorrent({
         // ----- Check for qui Target Instance ----- 
         if ( instance != '' && instance > 0 ) {
             // SETTINGS.instance: Update the apiURL to point to the specified instance id
-            postData.qui.addURL = postData.qui.addURL.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
+            postData.qui.url = postData.qui.url.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
         }
 
         postData.qui.apiKey = torrentClient.quiApiKey
@@ -2489,7 +2489,7 @@ function addTorrent({
         // ----------------------------------- Transmission -----------------------------------
 
         if ( torrentClient.transmissionURL == '' ) {
-            // No qBitTorrentURL has been provided, alert the user and return
+            // No transmissionURL has been provided, alert the user and return
             window.alert(`❌ quiCKIE ❌\n\nA TransmissionURL is required for adding torrents to Transmission`)
             return
         }
@@ -2501,8 +2501,9 @@ function addTorrent({
         postData.transmission.password = torrentClient.transmissionPassword
 
     }
-    // ----- POST form ----- 
-    // The form data that will be passed to the client
+    
+    // ----- POST Form Data ----- 
+    // The form data that will be either passed to the client (qui\qBitTorrent) or extracted from (Transmission)
 
     let form = new FormData()
     form.append('urls', torrentURL)
@@ -2641,7 +2642,7 @@ function getFileBlob(postData) {
             document.getElementById('__CLICKED__').textContent = ' ❌ '
             document.getElementById('__CLICKED__').removeAttribute('id')
 
-            window.alert(`❌ quiCKIE ❌\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThere was a problem getting the .torrent file from the tracker's server\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed durring .torrent download\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThere was a problem getting the .torrent file from the tracker\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -2650,7 +2651,7 @@ function getFileBlob(postData) {
             document.getElementById('__CLICKED__').textContent = ' ❌ '
             document.getElementById('__CLICKED__').removeAttribute('id')
 
-            window.alert(`❌ quiCKIE ❌\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe connection when getting the .torrent file from the tracker's server timedout\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed during .torrent download\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe connection when getting the .torrent file from the tracker's server timedout\n\nThe full response has been printed in the console`)
 
         }
     }) 
@@ -2664,7 +2665,7 @@ function quiPOST(postData) {
     GM_xmlhttpRequest({
         // Use the internal GM function to prevent source-origin errors
         method: 'POST',
-        url: postData.qui.addURL,
+        url: postData.qui.url,
         data: postData.formData,
         headers: {
             'X-API-Key': postData.qui.apiKey,
@@ -2802,7 +2803,7 @@ function qBitTorrentPOST(postData) {
                 document.getElementById('__CLICKED__').textContent = ' ❌ '
                 document.getElementById('__CLICKED__').removeAttribute('id')
 
-                window.alert(`❌ quiCKIE ❌\n\nFailed during login\n\nStatus Code: ${response.status}\n\nqBitTorrent was reached, but there was a problem logging in. Check your Username\\Password for typos. \n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
+                window.alert(`❌ quiCKIE ❌\n\nFailed during login\n\nStatus Code: ${response.status}\n\nqBitTorrent was reached, but there was a problem logging in. Check your username and password for typos. \n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
             }
 
@@ -2847,7 +2848,7 @@ function transmissionPOST(postData) {
     }
 
     if ( postData.formData.get('torrent') ) {
-        // POST using the .torrent blob, but first convert to base64
+        // POST using the .torrent blob, but first convert it to base64 as required by Transmission
 
         function blobToBase64(blob) {
             return new Promise(function(resolve) {
@@ -2864,7 +2865,7 @@ function transmissionPOST(postData) {
         })
 
     } else {
-        // No .torrent blob, so POST using the torrentURL 
+        // No .torrent blob in postData, so POST using the torrentURL 
         transmissionData.arguments.filename = postData.torrentURL
         transmissionData = JSON.stringify(transmissionData)
     }
@@ -2889,7 +2890,7 @@ function transmissionPOST(postData) {
             }
 
             if ( transmissionSessionId != '') {
-                // Succesfully logged into Transmission, ready to send another POST to add a new torrent
+                // Succesfully logged into Transmission, send another POST to add the new torrent
                 
                 document.getElementById('__CLICKED__').textContent = ' 🕓 '
                 GM_xmlhttpRequest({
