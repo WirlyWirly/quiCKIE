@@ -766,7 +766,7 @@ function createGMConfigSettingsPanel() {
             },
             [`${trackerDomain}-${trackerFieldSuffixes[9]}`]: {
                 'type': 'select',
-                'options': ['Global', 'Tracker', 'Settings', 'quiTab', 'Nothing'],
+                'options': ['Global', 'Tracker', 'Settings', 'clientTab', 'Nothing'],
                 'default': 'Global',
             },
             [`${trackerDomain}-${trackerFieldSuffixes[10]}`]: {
@@ -1028,14 +1028,14 @@ function createGMConfigSettingsPanel() {
             'globalLeftClickAction': {
                 'label': '🖱️ Left-Click \\ Tap:',
                 'type': 'select',
-                'options': ['Tracker', 'Settings', 'quiTab', 'Nothing'],
+                'options': ['Tracker', 'Settings', 'clientTab', 'Nothing'],
                 'default': 'Tracker',
             },
             'globalMiddleClickAction': {
                 'label': '🖱️ Middle-Click:',
                 'type': 'select',
-                'options': ['Tracker', 'Settings', 'quiTab', 'Nothing'],
-                'default': 'quiTab',
+                'options': ['Tracker', 'Settings', 'clientTab', 'Nothing'],
+                'default': 'clientTab',
             },
             'bunnyButtonPlacement': {
                 'label': '↔️ Placement:',
@@ -2388,9 +2388,15 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
         // Open the quiCKIE Settings Panel
         GM_config.open()
 
-    } else if ( buttonAction == 'quiTab') {
-        // Open the quiURL in a new tab
-        window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
+    } else if ( buttonAction == 'clientTab') {
+        // Open the clientURL in a new tab
+        if ( SETTINGS.torrentClient.client == 'qui') {
+            window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
+        } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
+            window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
+        } else if ( SETTINGS.torrentClient.client == 'Transmission') {
+            window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
+        }
 
     } else if ( buttonAction == 'Nothing') {
         // Do nothing, a null button
