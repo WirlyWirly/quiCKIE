@@ -8,8 +8,8 @@ There is currently support for **30+** different trackers. If a tracker you know
 
 Depending on your client, only the ***clientURL*** and the corresponding credentials (ApiKey\Username\Password) are required, everything else is optional. Hover over the various emojis for more info about what each field does and how it can be filled in. Greyed-out fields are not applicable to the selected torrent client, only qui has full support for all settings. The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton, or from the menu of your UserScript Manager, which is the dialogue on your toolbar that lists the currently active UserScripts. 
 
-> **Left-Click \ Mobile Tap**: Send torrent to qui with the settings for the current tracker<br>
-> **Right-Click \ Mobile Long-press**: Select a preset to use when sending the torrent to qui<br>
+> **Left-Click \ Mobile Tap**: Send torrent to client with the settings for the current tracker<br>
+> **Right-Click \ Mobile Long-press**: Select a preset to use when sending the torrent to your client<br>
 > **Middle-Click**: Open torrent client in a new tab<br>
 > 
 > **Shift-Click**: Open quiCKIE settings panel<br>
