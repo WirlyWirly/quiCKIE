@@ -37,7 +37,9 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 
 #quiCKIE_config_field_quiURL,
 #quiCKIE_config_field_qBitTorrentURL,
-#quiCKIE_config_field_transmissionURL {
+#quiCKIE_config_field_transmissionURL,
+#quiCKIE_config_field_delugeURL,
+#quiCKIE_config_field_ruTorrentURL {
     /* TorrentClient input */
     width: 210px;
     max-width: 210px;
@@ -47,7 +49,11 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 #quiCKIE_config_field_qBitTorrentUsername,
 #quiCKIE_config_field_qBitTorrentPassword,
 #quiCKIE_config_field_transmissionUsername,
-#quiCKIE_config_field_transmissionPassword {
+#quiCKIE_config_field_transmissionPassword,
+#quiCKIE_config_field_delugeUsername,
+#quiCKIE_config_field_delugePassword,
+#quiCKIE_config_field_ruTorrentUsername,
+#quiCKIE_config_field_ruTorrentPassword {
     /* ApiKey input */
     width: 55px;
     max-width: 55px;
@@ -55,8 +61,8 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 
 #quiCKIE_config_field_torrentClient {
     /* Preset input */
-    width: 115px;
-    max-width: 115px;
+    width: 100px;
+    max-width: 100px;
 }
 
 #quiCKIE_config_field_presetCount {
@@ -305,6 +311,12 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"]:checked {
 #quiCKIE_config_field_transmissionURL,
 #quiCKIE_config_field_transmissionUsername,
 #quiCKIE_config_field_transmissionPassword,
+#quiCKIE_config_field_delugeURL,
+#quiCKIE_config_field_delugeUsername,
+#quiCKIE_config_field_delugePassword,
+#quiCKIE_config_field_ruTorrentURL,
+#quiCKIE_config_field_ruTorrentUsername,
+#quiCKIE_config_field_ruTorrentPassword,
 #quiCKIE_config_field_presetCount,
 #quiCKIE_config_field_thirdPartyDelay,
 #quiCKIE_config_field_hiddenTrackers,

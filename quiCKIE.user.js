@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.10
+// @version     1.15
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰 
 //              Orignally written for qui, later extended to support more torrent clients
@@ -14,7 +14,7 @@
 // @namespace   https://github.com/WirlyWirly
 // @run-at      document-end
 
-// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
@@ -916,9 +916,16 @@ function createGMConfigSettingsPanel() {
             'qBitTorrentUsername': '─── 🔑 qBitTorrent Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface',
             'qBitTorrentPassword': '─── 🔑 qBitTorrent Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface',
 
-            'transmissionURL': "─── 🔗 Transmission URL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091",
+            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091",
             'transmissionUsername': '─── 🔑 Transmission Username 🔑 ───\n\nThe username for logging into Transmission through the web interface',
             'transmissionPassword': '─── 🔑 Transmission Password 🔑 ───\n\nThe password for logging into Transmission through the web interface',
+
+            'delugeURL': "─── 🔗 DelugeURL 🔗 ───\n\nThe full URL to a running Deluge service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8112",
+            'delugePassword': '─── 🔑 Deluge Password 🔑 ───\n\nThe password for logging into Deluge through the web interface',
+
+            'ruTorrentURL': "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
+            'ruTorrentUsername': '─── 🔑 ruTorrent Username 🔑 ───\n\nThe username for logging into ruTorrent through the web interface',
+            'ruTorrentPassword': '─── 🔑 ruTorrent Password 🔑 ───\n\nThe password for logging into ruTorrent through the web interface',
         },
 
         'columnText': {
@@ -1017,7 +1024,7 @@ function createGMConfigSettingsPanel() {
             'torrentClient': {
                 'label': '🖥️ Client:',
                 'type': 'select',
-                'options': ['qui', 'qBitTorrent', 'Transmission'], //, 'Deluge'],
+                'options': ['qui', 'qBitTorrent', 'Transmission', 'Deluge', 'ruTorrent 🛠️'],
                 'default': 'qui',
             },
             'presetCount': {
@@ -1066,7 +1073,7 @@ function createGMConfigSettingsPanel() {
 
             // ----- qui -----
             'quiURL': {
-                'label': '🔗 quiURL:',
+                'label': '🔗 qui:',
                 'type': 'text',
             },
             'quiApiKey': {
@@ -1080,11 +1087,11 @@ function createGMConfigSettingsPanel() {
                 'type': 'text',
             },
             'qBitTorrentUsername': {
-                'label': '🧑 :',
+                'label': '🧑 Username:',
                 'type': 'text',
             },
             'qBitTorrentPassword': {
-                'label': '🔑 :',
+                'label': '🔑 Password:',
                 'type': 'text',
             },
 
@@ -1094,11 +1101,35 @@ function createGMConfigSettingsPanel() {
                 'type': 'text',
             },
             'transmissionUsername': {
-                'label': '🧑:',
+                'label': '🧑 Username:',
                 'type': 'text',
             },
             'transmissionPassword': {
-                'label': '🔑:',
+                'label': '🔑 Password:',
+                'type': 'text',
+            },
+            
+            // ----- Deluge -----
+            'delugeURL': {
+                'label': '🔗 Deluge:',
+                'type': 'text',
+            },
+            'delugePassword': {
+                'label': '🔑 Password:',
+                'type': 'text',
+            },
+            
+            // ----- ruTorrent -----
+            'ruTorrentURL': {
+                'label': '🔗 ruTorrent:',
+                'type': 'text',
+            },
+            'ruTorrentUsername': {
+                'label': '🧑 Username:',
+                'type': 'text',
+            },
+            'ruTorrentPassword': {
+                'label': '🔑 Password:',
                 'type': 'text',
             },
 
@@ -1406,6 +1437,13 @@ function createGMConfigSettingsPanel() {
                     document.getElementById('quiCKIE_config_field_transmissionUsername').placeholder = 'abc123'
                     document.getElementById('quiCKIE_config_field_transmissionPassword').placeholder = 'abc123'
 
+                    document.getElementById('quiCKIE_config_field_delugeURL').placeholder = 'http://localhost:8112'
+                    document.getElementById('quiCKIE_config_field_delugePassword').placeholder = 'abc123'
+
+                    document.getElementById('quiCKIE_config_field_ruTorrentURL').placeholder = 'http://localhost:8080'
+                    document.getElementById('quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
+                    document.getElementById('quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
+
                     document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, secret-cinema, NYAA'
                     document.getElementById('quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
                     document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
@@ -1457,14 +1495,6 @@ function createGMConfigSettingsPanel() {
                 settingsDivFirst.classList.add('quiCKIE_settingsDiv')
                 document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', settingsDivFirst)
                 
-                // --- TorrentClient ---
-                let torrentClientLabel = document.getElementById('quiCKIE_config_torrentClient_field_label')
-                let torrentClientField = document.getElementById('quiCKIE_config_field_torrentClient')
-                torrentClientLabel.classList.add('settingsDivLabel')
-                torrentClientLabel.title = panelTextData.globalsTitles.torrentClient
-                settingsDivFirst.appendChild(torrentClientLabel)
-                settingsDivFirst.appendChild(torrentClientField)
-
                 // --- Presets ---
                 let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
                 let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
@@ -1505,29 +1535,37 @@ function createGMConfigSettingsPanel() {
                 settingsDivFirst.appendChild(middleClickLabel)
                 settingsDivFirst.appendChild(middleClickField)
 
-                // --- 3rd Party Delay ---
-                let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
-                let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
-                thirdPartyDelayLabel.classList.add('settingsDivLabel')
-                thirdPartyDelayLabel.title = panelTextData.globalsTitles.thirdPartyDelay
-                settingsDivFirst.appendChild(thirdPartyDelayLabel)
-                settingsDivFirst.appendChild(thirdPartyDelayField)
+                // ------ SECOND ROW ------
+
+                let settingsDivSecond = document.createElement('div')
+                settingsDivSecond.classList.add('quiCKIE_settingsDiv')
+                settingsDivSecond.id = 'quiCKIE_settingsDivSecond'
+                settingsDivFirst.insertAdjacentElement('afterend', settingsDivSecond)
 
                 // --- Hidden Trackers ---
                 let hiddenTrackersLabel = document.getElementById('quiCKIE_config_hiddenTrackers_field_label')
                 let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
                 hiddenTrackersLabel.classList.add('settingsDivLabel')
                 hiddenTrackersLabel.title = panelTextData.globalsTitles.hiddenTrackers
-                settingsDivFirst.appendChild(hiddenTrackersLabel)
-                settingsDivFirst.appendChild(hiddenTrackersField)
+                settingsDivSecond.appendChild(hiddenTrackersLabel)
+                settingsDivSecond.appendChild(hiddenTrackersField)
                 
-                // ------ SECOND ROW ------
+                // --- 3rd Party Delay ---
+                let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
+                let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
+                thirdPartyDelayLabel.classList.add('settingsDivLabel')
+                thirdPartyDelayLabel.title = panelTextData.globalsTitles.thirdPartyDelay
+                settingsDivSecond.appendChild(thirdPartyDelayLabel)
+                settingsDivSecond.appendChild(thirdPartyDelayField)
                 
-                let settingsDivSecond = document.createElement('div')
-                settingsDivSecond.classList.add('quiCKIE_settingsDiv')
-                settingsDivSecond.id = 'quiCKIE_settingsDivSecond'
-                settingsDivFirst.insertAdjacentElement('afterend', settingsDivSecond)
-                
+                // --- TorrentClient ---
+                let torrentClientLabel = document.getElementById('quiCKIE_config_torrentClient_field_label')
+                let torrentClientField = document.getElementById('quiCKIE_config_field_torrentClient')
+                torrentClientLabel.classList.add('settingsDivLabel')
+                torrentClientLabel.title = panelTextData.globalsTitles.torrentClient
+                settingsDivSecond.appendChild(torrentClientLabel)
+                settingsDivSecond.appendChild(torrentClientField)
+
                 // --- quiURL ---
                 let quiURLLabel = document.getElementById('quiCKIE_config_quiURL_field_label')
                 let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
@@ -1606,6 +1644,60 @@ function createGMConfigSettingsPanel() {
                 settingsDivSecond.appendChild(transmissionPasswordLabel)
                 settingsDivSecond.appendChild(transmissionPasswordField)
 
+                // --- DelugeURL ---
+                let delugeURLLabel = document.getElementById('quiCKIE_config_delugeURL_field_label')
+                let delugeURLField = document.getElementById('quiCKIE_config_field_delugeURL')
+                let delugeURLTooltip = panelTextData.globalsTitles.delugeURL
+                delugeURLLabel.classList.add('settingsDivLabel')
+                delugeURLLabel.title = delugeURLTooltip
+                delugeURLField.title = delugeURLTooltip
+                delugeURLField.classList.add('quiCKIE_obfuscate')
+                settingsDivSecond.appendChild(delugeURLLabel)
+                settingsDivSecond.appendChild(delugeURLField)
+
+                // --- DelugePassword ---
+                let delugePasswordLabel = document.getElementById('quiCKIE_config_delugePassword_field_label')
+                let delugePasswordField = document.getElementById('quiCKIE_config_field_delugePassword')
+                delugePasswordLabel.classList.add('settingsDivLabel')
+                delugePasswordLabel.title = panelTextData.globalsTitles.delugePassword
+                delugePasswordField.classList.add('quiCKIE_obfuscate')
+                settingsDivSecond.appendChild(delugePasswordLabel)
+                settingsDivSecond.appendChild(delugePasswordField)
+
+                // --- ruTorrentURL ---
+                let ruTorrentURLLabel = document.getElementById('quiCKIE_config_ruTorrentURL_field_label')
+                let ruTorrentURLField = document.getElementById('quiCKIE_config_field_ruTorrentURL')
+                let ruTorrentURLTooltip = panelTextData.globalsTitles.ruTorrentURL
+                ruTorrentURLLabel.classList.add('settingsDivLabel')
+                ruTorrentURLLabel.title = ruTorrentURLTooltip
+                ruTorrentURLField.title = ruTorrentURLTooltip
+                ruTorrentURLField.classList.add('quiCKIE_obfuscate')
+                settingsDivSecond.appendChild(ruTorrentURLLabel)
+                settingsDivSecond.appendChild(ruTorrentURLField)
+
+                // --- ruTorrentUsername ---
+                let ruTorrentUsernameLabel = document.getElementById('quiCKIE_config_ruTorrentUsername_field_label')
+                let ruTorrentUsernameField = document.getElementById('quiCKIE_config_field_ruTorrentUsername')
+                ruTorrentUsernameLabel.classList.add('settingsDivLabel')
+                ruTorrentUsernameLabel.title = panelTextData.globalsTitles.ruTorrentUsername
+                ruTorrentUsernameField.classList.add('quiCKIE_obfuscate')
+                settingsDivSecond.appendChild(ruTorrentUsernameLabel)
+                settingsDivSecond.appendChild(ruTorrentUsernameField)
+                
+                // --- ruTorrentPassword ---
+                let ruTorrentPasswordLabel = document.getElementById('quiCKIE_config_ruTorrentPassword_field_label')
+                let ruTorrentPasswordField = document.getElementById('quiCKIE_config_field_ruTorrentPassword')
+                ruTorrentPasswordLabel.classList.add('settingsDivLabel')
+                ruTorrentPasswordLabel.title = panelTextData.globalsTitles.ruTorrentPassword
+                ruTorrentPasswordField.classList.add('quiCKIE_obfuscate')
+                settingsDivSecond.appendChild(ruTorrentPasswordLabel)
+                settingsDivSecond.appendChild(ruTorrentPasswordField)
+                
+                document.getElementById('quiCKIE_config_field_torrentClient').querySelector('[value="ruTorrent 🛠️"]').disabled = true
+                ruTorrentPasswordField.disabled = true
+                ruTorrentURLField.disabled = true
+                ruTorrentUsernameField.disabled = true
+
                 // Remove now empty <div> elements
                 document.getElementById('quiCKIE_config_torrentClient_var').remove()
                 document.getElementById('quiCKIE_config_presetCount_var').remove()
@@ -1624,6 +1716,11 @@ function createGMConfigSettingsPanel() {
                 document.getElementById('quiCKIE_config_transmissionURL_var').remove()
                 document.getElementById('quiCKIE_config_transmissionUsername_var').remove()
                 document.getElementById('quiCKIE_config_transmissionPassword_var').remove()
+                document.getElementById('quiCKIE_config_delugeURL_var').remove()
+                document.getElementById('quiCKIE_config_delugePassword_var').remove()
+                document.getElementById('quiCKIE_config_ruTorrentURL_var').remove()
+                document.getElementById('quiCKIE_config_ruTorrentUsername_var').remove()
+                document.getElementById('quiCKIE_config_ruTorrentPassword_var').remove()
                 
                 // Obfuscate the client credentials on blur
                 for ( let inputField of document.querySelectorAll('.quiCKIE_obfuscate') ) {
@@ -1649,41 +1746,126 @@ function createGMConfigSettingsPanel() {
                     }
                 }
 
-                // Disable Fields not applicable to the current torrentClient
                 function torrentClientChange() {
-                    // The torernt client was changed, so disable the quiCKIE fields that no longer apply
+                    // The torernt client was changed, so disable the quiCKIE fields that no longer apply and hide the clientFields not belonging to this client
 
+                    // 1: Enable all previously disabled fields, 2: Disable fields not applicable to the selected client, 3: Hide client settings not applicable to the selected client
+                    
+                    let allClientFields = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
+                    let hideClientFields
+
+                    let allInputFields = document.querySelectorAll('input.quiCKIE_disabledField')
+                    for ( inputField of allInputFields ) {
+                        // Enable any disabled fields
+                        inputField.disabled = false
+                        inputField.classList.remove('quiCKIE_disabledField')
+                    }
+
+                        
+                    // The currently selected torrent client from the dropdown list
                     let torrentClient = document.getElementById('quiCKIE_config_field_torrentClient').value
 
-                    if ( torrentClient.match(/(qui|qBitTorrent)/) ) {
-                        let allInputFields = document.querySelectorAll('input.quiCKIE_disabledField')
+                    if ( torrentClient == 'qui' ) {
 
-                        for ( inputField of allInputFields ) {
-                            inputField.disabled = false
-                            inputField.classList.remove('quiCKIE_disabledField')
-                        }
+                        hideClientFields = allClientFields.filter(function(item) { return item != 'qui' })
 
-                        if ( torrentClient == 'qBitTorrent' ) {
-                            // qBitTorrent does not support instances
-                            for ( let inputField of document.querySelectorAll('input[data-fieldtype="instance"]') ) {
-                                inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
-                            }
+                    } else if ( torrentClient == 'qBitTorrent' ) {
+
+                        hideClientFields = allClientFields.filter(function(item) { return item != 'qBitTorrent' })
+
+                        for ( let inputField of document.querySelectorAll('input[data-fieldtype="instance"]') ) {
+                            inputField.disabled = true
+                            inputField.classList.add('quiCKIE_disabledField')
                         }
 
                     } else if ( torrentClient == 'Transmission' ) {
-                        // Transmission is selected
+
+                        hideClientFields = allClientFields.filter(function(item) { return item != 'transmission' })
 
                         let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-
                         for ( field of fieldsToDisable ) {
                             let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
-
                             for ( inputField of allInputFields ) {
                                 inputField.disabled = true
                                 inputField.classList.add('quiCKIE_disabledField')
                             }
                         }
+
+                    } else if ( torrentClient == 'Deluge' ) {
+
+                        hideClientFields = allClientFields.filter(function(item) { return item != 'deluge' })
+
+                        let fieldsToDisable = ['category', 'tags', 'ratioLimit', 'seedTime', 'instance', 'subFolder', 'autoTMM', 'skipHash']
+                        for ( field of fieldsToDisable ) {
+                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
+                            for ( inputField of allInputFields ) {
+                                inputField.disabled = true
+                                inputField.classList.add('quiCKIE_disabledField')
+                            }
+                        }
+
+                    } else if ( torrentClient == 'ruTorrent' ) {
+                        // ruTorrent is selected
+
+                        hideClientFields = allClientFields.filter(function(item) { return item != 'ruTorrent' })
+
+                        let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
+                        for ( field of fieldsToDisable ) {
+                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
+                            for ( inputField of allInputFields ) {
+                                inputField.disabled = true
+                                inputField.classList.add('quiCKIE_disabledField')
+                            }
+                        }
+
+                    }
+
+                    for ( let clientFieldName of allClientFields ) {
+                        // Start by revealing all client fields
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = ''
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = ''
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = ''
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = ''
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = ''
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = ''
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = ''
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = ''
+                        } catch(error) {}
+
+                    }
+
+                    for ( let clientFieldName of hideClientFields ) {
+                        // Hide client fields not applicable to the selected client
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = 'none'
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = 'none'
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = 'none'
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = 'none'
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = 'none'
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = 'none'
+                        } catch(error) {}
+
+                        try {
+                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = 'none'
+                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = 'none'
+                        } catch(error) {}
+
                     }
                 }
 
@@ -1789,6 +1971,13 @@ function getTrackerSettings(trackerDomain) {
             'transmissionURL': GM_config.get('transmissionURL'),
             'transmissionUsername': GM_config.get('transmissionUsername'),
             'transmissionPassword': GM_config.get('transmissionPassword'),
+
+            'delugeURL': GM_config.get('delugeURL'),
+            'delugePassword': GM_config.get('delugePassword'),
+
+            'ruTorrentURL': GM_config.get('ruTorrentURL'),
+            'ruTorrentUsername': GM_config.get('ruTorrentUsername'),
+            'ruTorrentPassword': GM_config.get('ruTorrentPassword'),
         },
 
 
@@ -2396,6 +2585,10 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
             window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
         } else if ( SETTINGS.torrentClient.client == 'Transmission') {
             window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
+        } else if ( SETTINGS.torrentClient.client == 'Deluge') {
+            window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
+        } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
+            window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
         }
 
     } else if ( buttonAction == 'Nothing') {
@@ -2434,6 +2627,8 @@ function addTorrent({
         'qui': {},
         'qBitTorrent': {},
         'transmission': {},
+        'deluge': {},
+        'ruTorrent': {},
 
     }
 
@@ -2481,7 +2676,7 @@ function addTorrent({
         }
 
 
-        postData.qBitTorrent.url = torrentClient.qBitTorrentURL.match(/^(.+)\/?$/)[1]
+        postData.qBitTorrent.url = torrentClient.qBitTorrentURL.match(/^(.+?)\/?$/)[1]
         postData.qBitTorrent.username = torrentClient.qBitTorrentUsername
         postData.qBitTorrent.password = torrentClient.qBitTorrentPassword
 
@@ -2496,14 +2691,42 @@ function addTorrent({
 
 
         // TransmissionURL Example: http://localhost:9091
-        postData.transmission.url = torrentClient.transmissionURL.match(/^(.*)\/?/)[1] // [1] == domain, [2] == instance
+        postData.transmission.url = torrentClient.transmissionURL.match(/^(.+?)\/?$/)[1] // [1] == domain, [2] == instance
         postData.transmission.username = torrentClient.transmissionUsername
         postData.transmission.password = torrentClient.transmissionPassword
+
+    } else if ( torrentClient.client == 'Deluge' ) {
+        // ----------------------------------- Deluge -----------------------------------
+
+        if ( torrentClient.delugeURL == '' ) {
+            // No delugeURL has been provided, alert the user and return
+            window.alert(`❌ quiCKIE ❌\n\nA delugeURL is required for adding torrents to Deluge`)
+            return
+        }
+
+        // Deluge Example: http://localhost:8080
+        postData.deluge.url = torrentClient.delugeURL.match(/^(.+?)\/?$/)[1] 
+        postData.deluge.password = torrentClient.delugePassword
+
+    } else if ( torrentClient.client == 'ruTorrent' ) {
+        // ----------------------------------- ruTorrent -----------------------------------
+
+        if ( torrentClient.ruTorrentURL == '' ) {
+            // No ruTorrentURL has been provided, alert the user and return
+            window.alert(`❌ quiCKIE ❌\n\nA ruTorrentURL is required for adding torrents to ruTorrent`)
+            return
+        }
+
+
+        // ruTorrent Example: http://localhost:8080
+        postData.ruTorrent.url = torrentClient.ruTorrentURL.match(/^(.*)\/?$/)[1] // [1] == domain, [2] == instance
+        postData.ruTorrent.username = torrentClient.ruTorrentUsername
+        postData.ruTorrent.password = torrentClient.ruTorrentPassword
 
     }
     
     // ----- POST Form Data ----- 
-    // The form data that will be either passed to the client (qui\qBitTorrent) or extracted from (Transmission)
+    // The form data that will store all the torrent settings
 
     let form = new FormData()
     form.append('urls', torrentURL)
@@ -2594,6 +2817,12 @@ function addTorrent({
         } else if ( postData.torrentClient == 'Transmission' ) {
             // Add to Transmission
             transmissionPOST(postData)
+        } else if ( postData.torrentClient == 'Deluge' ) {
+            // Add to Deluge
+            delugePOST(postData)
+        } else if ( postData.torrentClient == 'ruTorrent' ) {
+            // Add to ruTorrent
+            ruTorrentPOST(postData)
         }
 
     } else {
@@ -2620,19 +2849,23 @@ function getFileBlob(postData) {
             let blobData = response.response
 
             postData.formData.append('torrent', blobData)
-            document.getElementById('__CLICKED__').textContent = ' 🕓 '
 
+            document.getElementById('__CLICKED__').textContent = ' 🕓 '
             if ( postData.torrentClient == 'qui' ) {
                 // Add to qui
                 quiPOST(postData)
-
             } else if ( postData.torrentClient == 'qBitTorrent' ) {
                 // Add to qBitTorrent
                 qBitTorrentPOST(postData)
-
             } else if ( postData.torrentClient == 'Transmission' ) {
                 // Add to Transmission
                 transmissionPOST(postData)
+            } else if ( postData.torrentClient == 'Deluge' ) {
+                // Add to Deluge
+                delugePOST(postData)
+            } else if ( postData.torrentClient == 'ruTorrent' ) {
+                // Add to ruTorrent
+                ruTorrentPOST(postData)
             }
 
         },
@@ -2659,7 +2892,7 @@ function getFileBlob(postData) {
 }
 
 
-function quiPOST(postData) {
+async function quiPOST(postData) {
     // Using the properties of the paramater object, send a POST to qui
 
     GM_xmlhttpRequest({
@@ -2720,7 +2953,7 @@ function quiPOST(postData) {
 }
 
 
-function qBitTorrentPOST(postData) {
+async function qBitTorrentPOST(postData) {
     // First send a POST to login and then on success send another POST to add a torrent
 
     // qBitTorrent expects a different name for these fields
@@ -2831,7 +3064,7 @@ function qBitTorrentPOST(postData) {
 }
 
 
-function transmissionPOST(postData) {
+async function transmissionPOST(postData) {
     // First send a POST to login and then on success send another POST to add a torrent
 
     let labels 
@@ -2859,7 +3092,7 @@ function transmissionPOST(postData) {
 
         }
 
-        blobToBase64(postData.formData.get('torrent')).then(function(result) {
+        await blobToBase64(postData.formData.get('torrent')).then(function(result) {
             transmissionData.arguments.metainfo = result
             transmissionData = JSON.stringify(transmissionData)
         })
@@ -2977,6 +3210,158 @@ function transmissionPOST(postData) {
         }
     })
 
+
+}
+
+
+async function delugePOST(postData) {
+    // First send a POST to login to Deluge, then send another POST to upload the .torrent to the server, then send a third POST to add the now local .torrent to Deluge 
+
+    let torrentOptions = {
+        'download_location': postData.formData.get('savepath'),
+        'max_upload_speed': Number(postData.formData.get('upLimit')),
+        'max_download_speed': Number(postData.formData.get('dlLimit')),
+        'add_paused': postData.formData.get('paused'),
+        'sequential_downloads': postData.formData.get('sequentialDownload'),
+        'prioritize_first_last_pieces': postData.formData.get('firstLastPiecePrio'),
+    }
+
+    let delugeData = {
+        method: '',
+        params: [],
+    }
+
+    if ( postData.formData.get('torrent') != null ) {
+        // POST using the .torrent blob, but first convert it to base64 as required by Deluge
+
+        function blobToBase64(blob) {
+            return new Promise(function(resolve) {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result.replace(/^data:.+;base64,/, ''))
+                reader.readAsDataURL(blob)
+            })
+
+        }
+
+        await blobToBase64(postData.formData.get('torrent')).then(function(result) {
+            delugeData.method = 'core.add_torrent_file'
+            delugeData.params.push('quiCKIE.torrent')
+            delugeData.params.push(result)
+            delugeData.params.push(torrentOptions)
+
+        })
+
+    } else {
+        // No .torrent blob in postData, so POST using the torrentURL 
+        
+        if ( postData.torrentURL.match(/magnet:\?xt=urn/) ) {
+            // POST as a magnet link
+            delugeData.method = 'core.add_torrent_magnet'
+            delugeData.params.push(postData.torrentURL)
+            delugeData.params.push(torrentOptions)
+        } else {
+            // torrentURL is neither a .torrent blob or a magnet link, so call getFileBlob() to get a .torrent blob
+            document.getElementById('__CLICKED__').textContent = ' 🧲 '
+            getFileBlob(postData)
+            return
+        }
+
+    }
+
+    document.getElementById('__CLICKED__').textContent = ' 🧑 '
+    GM_xmlhttpRequest({
+        // First, send a POST to login to Deluge
+        method: 'POST',
+        url: `${postData.deluge.url}/json`,
+        headers: { 'content-type': 'application/json' },
+        data: JSON.stringify({
+            id: 0,
+            method: 'auth.login',
+            params: [postData.deluge.password],
+        }),
+        onload: function(response) {
+            // ---------- Logged into Deluge ----------
+            // The login POST has been sent and returned, check the response before proceeding...
+
+            let delugeSessionId = ''
+
+            try {
+                delugeSessionId = response.responseHeaders.match(/_session_id=(\w+)/)[1]
+            } catch(error) {
+                // Did not get a cookie when trying to login, so the login failed
+            }
+
+            if ( delugeSessionId != '') {
+                // Succesfully logged into Deluge, send another POST to add the .torrent blob or magnet link
+                
+                document.getElementById('__CLICKED__').textContent = ' 🕓 '
+                GM_xmlhttpRequest({
+                    // Use the internal GM function to prevent source-origin errors
+                    method: 'POST',
+                    url: `${postData.deluge.url}/json`,
+                    referer: postData.deluge.url,
+                    headers: { 'Content-Type': 'application/json' },
+                    data: JSON.stringify({
+                        id: 0,
+                        method: delugeData.method,
+                        params: delugeData.params,
+                    }),
+                    onload: function(response) {
+                        // ---------- The .torrent has been added to the server ----------
+
+                        let postResponse = JSON.parse(response.responseText)
+
+                        if ( postResponse.result != null || response.responseText.match(/Torrent already in session/) ) {
+                            document.getElementById('__CLICKED__').textContent = ' ✔️ '
+                            document.getElementById('__CLICKED__').removeAttribute('id')
+
+                        } else {
+                            // Failed: The torrent POST was sent to the server but NOT added to Deluge, log the response and display an alert...
+                            console.log(response)
+
+                            document.getElementById('__CLICKED__').textContent = ' ❌ '
+                            document.getElementById('__CLICKED__').removeAttribute('id')
+
+                            window.alert(`❌ quiCKIE ❌\n\nFailed when adding the torrent\n\nThe torrentURL or magnet link was send to Deluge, but failed to be added\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+                        }
+                    },
+                })
+
+            } else {
+                // Failed to login to Deluge
+                console.log(response)
+                document.getElementById('__CLICKED__').textContent = ' ❌ '
+                document.getElementById('__CLICKED__').removeAttribute('id')
+
+                window.alert(`❌ quiCKIE ❌\n\nFailed during login\n\nDeluge was reached, but there was a problem logging in. Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+
+            }
+
+        },
+        onerror: function(response) {
+            // There was an error logging in
+            console.log(response)
+            document.getElementById('__CLICKED__').textContent = ' ❌ '
+            document.getElementById('__CLICKED__').removeAttribute('id')
+
+            window.alert(`❌ quiCKIE ❌\n\nFailed during login\n\nThere was a problem logging into Deluge. Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser...\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+
+        },
+        ontimeout: function(response) {
+            // The connection timed out
+            console.log(response)
+            document.getElementById('__CLICKED__').textContent = ' ❌ '
+            document.getElementById('__CLICKED__').removeAttribute('id')
+
+            window.alert(`❌ quiCKIE ❌\n\nFailed during login\n\nThe connection to Deluge timedout\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+
+        }
+    })
+}
+
+
+async function ruTorrentPOST(postData) {
+    // *** TO-DO ***
 
 }
 
