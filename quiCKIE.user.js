@@ -898,14 +898,14 @@ function createGMConfigSettingsPanel() {
         ],
 
         'globalsTitles': {
-            'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings",
+            'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
             'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
             'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe default action to take when performing a Left-Click\\Tap on a Bunny button\n\nℹ️ Affects all BuunyButtons with the 'Global' setting",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party integrated quiCKIE links\n\nOnly affects trackers that have the '🤝' column set to 'On'\n\nℹ️ This delay only affects the FIRST scan of third-party quiCKIE links, not every scan thereafter",
             'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nHover over the tracker name for a '🙈' button that will quickly add the tracker to the hidden list\n\nℹ️ This does not disable the BunnyButtons from being generated on those trackers, it only hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
-            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL should be sent directly to qui or first downloaded through the browser',
+            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to qui\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL should be sent directly to the client or first downloaded through the browser',
 
 
             'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nℹ️ Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\nExample: http://localhost:7476/qui/instances/1\n\n────────────────\n\nSeedbox\\Swizzin users might try...\n\nhttps://username:password@seedboxDomain.com/qui/instances/1",
@@ -915,7 +915,7 @@ function createGMConfigSettingsPanel() {
             'qBitTorrentUsername': '─── 🔑 qBitTorrent Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface',
             'qBitTorrentPassword': '─── 🔑 qBitTorrent Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface',
 
-            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091",
+            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091\n\nℹ️ If Transmission is not using the default rpc, then specify the complete rpc url\n\nExample: http://localhost:9091/your/custom/rpc",
             'transmissionUsername': '─── 🔑 Transmission Username 🔑 ───\n\nThe username for logging into Transmission through the web interface',
             'transmissionPassword': '─── 🔑 Transmission Password 🔑 ───\n\nThe password for logging into Transmission through the web interface',
 
@@ -2711,8 +2711,8 @@ function addTorrent({
         }
 
 
-        // TransmissionURL Example: http://localhost:9091
-        postData.transmission.url = torrentClient.transmissionURL.match(/^(.+?)\/?$/)[1] // [1] == domain, [2] == instance
+        // TransmissionURL Example: http://localhost:9091 | http://localhost:9091/custom/rpc
+        postData.transmission.url = torrentClient.transmissionURL.match(/^(.+?)\/?$/)[1]
         postData.transmission.username = torrentClient.transmissionUsername
         postData.transmission.password = torrentClient.transmissionPassword
 
@@ -2740,7 +2740,7 @@ function addTorrent({
 
 
         // ruTorrent Example: http://localhost:8080
-        postData.ruTorrent.url = torrentClient.ruTorrentURL.match(/^(.+?)\/?$/)[1] // [1] == domain, [2] == instance
+        postData.ruTorrent.url = torrentClient.ruTorrentURL.match(/^(.+?)\/?$/)[1]
         postData.ruTorrent.username = torrentClient.ruTorrentUsername
         postData.ruTorrent.password = torrentClient.ruTorrentPassword
 
@@ -2824,31 +2824,38 @@ function addTorrent({
     postData.formData = form
 
     // ----- torrentURL Authentication ----- 
-    if ( postData.torrentURL.match(/(auth=|authkey=|passkey=|magnet:\?xt=urn:btih:)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
-        // Yes, this is an authenticated url or magnet link, so send it directly to the client
+    let torrentURLAuthentication = false
+
+    if ( postData.torrentURL.match(/magnet:\?xt=urn:btih:/) ) {
+        // magnetLink: This torrentURL is a magnetLink, so must be sent directly to the client as it does not support .torrent downloading 
+        torrentURLAuthentication = true
+    } else if ( postData.torrentURL.match(/(auth=|authkey=|passkey=)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
+        // Authenticated: This torrentURL is authenticated and no setting is specifying that it must be downloaded through the browser, so POST directly to the client
+        torrentURLAuthentication = true
+    }
+
+    if ( torrentURLAuthentication ) {
+        // The torrentURL is a magnetLink or has authentication so POST directly to the client
 
         if ( postData.torrentClient == 'qui' ) {
-            // Add to qui
+            // Add torrentURL to qui
             quiPOST(postData)
-
         } else if ( postData.torrentClient == 'qBitTorrent' ) {
-            // Add to qBitTorrent
+            // Add torrentURL to qBitTorrent
             qBitTorrentPOST(postData)
-
         } else if ( postData.torrentClient == 'Transmission' ) {
-            // Add to Transmission
+            // Add torrentURL to Transmission
             transmissionPOST(postData)
         } else if ( postData.torrentClient == 'Deluge' ) {
-            // Add to Deluge
+            // Add torrentURL to Deluge
             delugePOST(postData)
         } else if ( postData.torrentClient == 'ruTorrent' ) {
-            // Add to ruTorrent
+            // Add torrentURL to ruTorrent
             ruTorrentPOST(postData)
         }
 
     } else {
-        // No, this url has no authentication or is being forced to download the .torrent file through the browser before sending it to the client
-        document.getElementById('__CLICKED__').textContent = ' 🧲 '
+        // The torrentURL has not authentication or a setting has specified it be downloaded through the browser before being sent to the client
         getFileBlob(postData)
 
     }
@@ -2861,6 +2868,7 @@ async function getFileBlob(postData) {
 
     let fileURL = postData.torrentURL
 
+    document.getElementById('__CLICKED__').textContent = ' 🧲 '
     let results = GM_xmlhttpRequest({
         method: 'get',
         url: fileURL,
@@ -2870,6 +2878,7 @@ async function getFileBlob(postData) {
             let blobData = response.response
 
             if ( blobData.type != 'application/x-bittorrent' ) {
+                // The downloaded file is NOT a .torrent type, abort the POST
                 console.log(response)
                 document.getElementById('__CLICKED__').textContent = ' ❌ '
                 document.getElementById('__CLICKED__').removeAttribute('id')
@@ -2877,26 +2886,29 @@ async function getFileBlob(postData) {
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file. Aborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nStatus Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
                 return
 
-            }
+            } else {
+                // The downloaded file is a valid .torrent type, so POST it to the client
 
-            postData.formData.append('torrent', blobData)
+                postData.formData.append('torrent', blobData)
 
-            document.getElementById('__CLICKED__').textContent = ' 🕓 '
-            if ( postData.torrentClient == 'qui' ) {
-                // Add to qui
-                quiPOST(postData)
-            } else if ( postData.torrentClient == 'qBitTorrent' ) {
-                // Add to qBitTorrent
-                qBitTorrentPOST(postData)
-            } else if ( postData.torrentClient == 'Transmission' ) {
-                // Add to Transmission
-                transmissionPOST(postData)
-            } else if ( postData.torrentClient == 'Deluge' ) {
-                // Add to Deluge
-                delugePOST(postData)
-            } else if ( postData.torrentClient == 'ruTorrent' ) {
-                // Add to ruTorrent
-                ruTorrentPOST(postData)
+                document.getElementById('__CLICKED__').textContent = ' 🕓 '
+
+                if ( postData.torrentClient == 'qui' ) {
+                    // Add torrentURL to qui
+                    quiPOST(postData)
+                } else if ( postData.torrentClient == 'qBitTorrent' ) {
+                    // Add torrentURL to qBitTorrent
+                    qBitTorrentPOST(postData)
+                } else if ( postData.torrentClient == 'Transmission' ) {
+                    // Add torrentURL to Transmission
+                    transmissionPOST(postData)
+                } else if ( postData.torrentClient == 'Deluge' ) {
+                    // Add torrentURL to Deluge
+                    delugePOST(postData)
+                } else if ( postData.torrentClient == 'ruTorrent' ) {
+                    // Add torrentURL to ruTorrent
+                    ruTorrentPOST(postData)
+                }
             }
 
         },
@@ -2906,7 +2918,7 @@ async function getFileBlob(postData) {
             document.getElementById('__CLICKED__').textContent = ' ❌ '
             document.getElementById('__CLICKED__').removeAttribute('id')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}. Make sure the server is online and the torrentURL is a valid http link and NOT a magnet link\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -2915,7 +2927,7 @@ async function getFileBlob(postData) {
             document.getElementById('__CLICKED__').textContent = ' ❌ '
             document.getElementById('__CLICKED__').removeAttribute('id')
 
-            window.alert(`❌ quiCKIE ❌\n\nThe connection timed out when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThe connection timed out when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
 
         }
     }) 
@@ -3133,11 +3145,14 @@ async function transmissionPOST(postData) {
     }
 
 
+    // If the user provided a full rpc url use it, otherwise append the default
+    postData.transmission.url.match(/\/rpc$/) ? null : postData.transmission.url = `${postData.transmission.url}/transmission/rpc`
+
     document.getElementById('__CLICKED__').textContent = ' 🧑 '
     GM_xmlhttpRequest({
         // First, send a POST to login to Transmission
         method: 'POST',
-        url: `${postData.transmission.url}/transmission/rpc`,
+        url: `${postData.transmission.url}`,
         headers: {
             Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
         },
@@ -3158,7 +3173,7 @@ async function transmissionPOST(postData) {
                 GM_xmlhttpRequest({
                     // Use the internal GM function to prevent source-origin errors
                     method: 'POST',
-                    url: `${postData.transmission.url}/transmission/rpc`,
+                    url: `${postData.transmission.url}`,
                     headers: {
                         Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
                         'X-Transmission-Session-Id': transmissionSessionId,
@@ -3289,7 +3304,6 @@ async function delugePOST(postData) {
         
     } else {
         // Neither a file blob nor a magnetLink is available, so call getFileBlob(), which will download the torrentURL as a file blob and then re-call delugePOST()
-        document.getElementById('__CLICKED__').textContent = ' 🧲 '
         getFileBlob(postData)
         return
     }
