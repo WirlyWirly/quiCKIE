@@ -2551,37 +2551,28 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
     }
 
     if ( buttonAction == 'Tracker' ) {
-        // Add the torrentURL to qui using the tracker settings
+        // Add the torrentURL to the tracker using the tracker settings
 
-        if ( SETTINGS.quiURL == '' || SETTINGS.quiApiKey == '' ) {
-            // Alert the user that both a quiURL and ApiKey are required
+        let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
+        bunnyButton.id = bunnyButtonId
+        addTorrent({
+            torrentURL: bunnyButton.dataset.torrenturl,
+            torrentClient: SETTINGS.torrentClient,
+            bunnyButtonId: bunnyButtonId,
 
-            window.alert('🐰 quiCKIE 🐰\n\nBoth a quiURL and ApiKey are required to communicate with qui\n\nShift-Click the BunnyButton to open the setting panel')
-
-        } else {
-            // Run the function to add the torrent to qui with the current site settings
-            let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
-            bunnyButton.id = bunnyButtonId
-            addTorrent({
-                torrentURL: bunnyButton.dataset.torrenturl,
-                torrentClient: SETTINGS.torrentClient,
-                bunnyButtonId: bunnyButtonId,
-
-                instance: torrentSettings.instance,
-                category: torrentSettings.category,
-                savePath: torrentSettings.savePath,
-                tags: torrentSettings.tags,
-                ratioLimit: torrentSettings.ratioLimit,
-                seedTime: torrentSettings.seedTime,
-                dlLimit: torrentSettings.dlLimit,
-                upLimit: torrentSettings.upLimit,
-                startPaused: torrentSettings.startPaused,
-                subFolder: torrentSettings.subFolder,
-                seqPieces: torrentSettings.seqPieces,
-                autoTMM: torrentSettings.autoTMM,
-                skipHash: torrentSettings.skipHash})
-
-        }
+            instance: torrentSettings.instance,
+            category: torrentSettings.category,
+            savePath: torrentSettings.savePath,
+            tags: torrentSettings.tags,
+            ratioLimit: torrentSettings.ratioLimit,
+            seedTime: torrentSettings.seedTime,
+            dlLimit: torrentSettings.dlLimit,
+            upLimit: torrentSettings.upLimit,
+            startPaused: torrentSettings.startPaused,
+            subFolder: torrentSettings.subFolder,
+            seqPieces: torrentSettings.seqPieces,
+            autoTMM: torrentSettings.autoTMM,
+            skipHash: torrentSettings.skipHash})
 
     } else if ( buttonAction == 'Presets' ) {
         // Simultate a right-click to open the presets-menu
@@ -2685,9 +2676,10 @@ function addTorrent({
     if ( postData.torrentClient == 'qui' ) {
         // ----------------------------------- qui -----------------------------------
 
-        if ( torrentClient.quiURL == '' ) {
+        if ( torrentClient.quiURL == '' || torrentClient.quiApiKey == '' ) {
             // No quiURL has been provided, alert the user and return
-            window.alert(`❌ quiCKIE ❌\n\nA quiURL is required for adding torrents to qui`)
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            window.alert('❌ quiCKIE ❌\n\nA quiURL and ApiKey are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
 
@@ -2699,7 +2691,7 @@ function addTorrent({
         } catch(error) {
             // Failed to parse quiURL for the API endpoint
             console.log(error)
-            document.getElementById(postData.bunnyButtonId).textContent == ' ❌ '
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
             window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL into a valid qui apiURL\n\nCheck your quiURL for typos and make sure it is in the expected format. Hover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`)
             return
         }
@@ -2715,9 +2707,10 @@ function addTorrent({
     } else if ( postData.torrentClient == 'qBitTorrent' ) {
         // ----------------------------------- qBitTorrent -----------------------------------
 
-        if ( torrentClient.qBitTorrentURL == '' ) {
-            // No qBitTorrentURL has been provided, alert the user and return
-            window.alert(`❌ quiCKIE ❌\n\nA qBitTorrentURL is required for adding torrents to qBitTorrent`)
+        if ( torrentClient.qBitTorrentURL == '' || torrentClient.qBitTorrentUsername == '' || torrentClient.qBitTorrentPassword == '' ) {
+            // Missing qBitTorrent credentials, alert the user and abort
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            window.alert('❌ quiCKIE ❌\n\nA qBitTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
 
@@ -2729,9 +2722,10 @@ function addTorrent({
     } else if ( postData.torrentClient == 'Transmission' ) {
         // ----------------------------------- Transmission -----------------------------------
 
-        if ( torrentClient.transmissionURL == '' ) {
-            // No transmissionURL has been provided, alert the user and return
-            window.alert(`❌ quiCKIE ❌\n\nA transmissionURL is required for adding torrents to Transmission`)
+        if ( torrentClient.transmissionURL == '' || torrentClient.transmissionUsername == '' || torrentClient.transmissionPassword == '' ) {
+            // Missing Transmission credentials, alert the user and abort
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            window.alert('❌ quiCKIE ❌\n\nA transmissionURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
 
@@ -2744,9 +2738,10 @@ function addTorrent({
     } else if ( postData.torrentClient == 'Deluge' ) {
         // ----------------------------------- Deluge -----------------------------------
 
-        if ( torrentClient.delugeURL == '' ) {
-            // No delugeURL has been provided, alert the user and return
-            window.alert(`❌ quiCKIE ❌\n\nA delugeURL is required for adding torrents to Deluge`)
+        if ( torrentClient.delugeURL == '' || torrentClient.delugePassword == '' ) {
+            // Missing Deluge credentials, alert the user and abort
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            window.alert('❌ quiCKIE ❌\n\nA delugeURL and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
 
@@ -2757,9 +2752,10 @@ function addTorrent({
     } else if ( postData.torrentClient == 'ruTorrent' ) {
         // ----------------------------------- ruTorrent -----------------------------------
 
-        if ( torrentClient.ruTorrentURL == '' ) {
-            // No ruTorrentURL has been provided, alert the user and return
-            window.alert(`❌ quiCKIE ❌\n\nA ruTorrentURL is required for adding torrents to ruTorrent`)
+        if ( torrentClient.ruTorrentURL == '' || torrentClient.ruTorrentUsername == '' || torrentClient.ruTorrentPassword == '' ) {
+            // Missing ruTorrent credentials, alert the user and abort
+            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            window.alert('❌ quiCKIE ❌\n\nA ruTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
 
