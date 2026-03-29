@@ -78,7 +78,8 @@
 // @match   https://www.empornium.sx/user.php?id=*
 
 
-// @match   https://exoticaz.to/*
+// @match   https://exoticaz.to/
+// @match   https://exoticaz.to/torrent*
 
 // @match   https://gazellegames.net/collections.php?id=*
 // @match   https://gazellegames.net/torrents.php*
