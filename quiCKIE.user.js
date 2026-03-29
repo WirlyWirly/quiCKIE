@@ -188,6 +188,8 @@
 // @match   https://thegeeks.click/browse.php*
 // @match   https://thegeeks.click/details.php?id=*
 
+// @match   https://www.torrentleech.org/torrent*
+
 // @match   https://tv-vault.me/torrents.php?id=*
 
 // ----------------------------------- Permissions --------------------------------------
@@ -255,6 +257,7 @@ const settingsPanelEntries = {
     'redacted': 'Redacted',
     'secret-cinema': 'Secret-Cinema', // @tartuffe
     'thegeeks': 'TheGeeks',
+    'torrentleech': 'TorrentLeech',
     'tv-vault': 'TV-Vault',
 
 }
@@ -758,6 +761,37 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+    
+} else if ( trackerDomain == 'torrentleech' ) {
+
+    let observer = new MutationObserver(function(mutations) {
+
+        try {
+
+            let trackerHandlingOptions = {
+                // TorrentLeech download links
+                downloadElementsSelector: 'a[href^="/download/"]',
+
+                bunnyButtonFontSize: '200%',
+                bunnyButtonParentPlacement: true,
+                trackProcessedDownloadElements: true,
+            }
+
+            quickieTrackerHandler(trackerHandlingOptions)
+
+        } catch (error) {
+            return
+        }
+
+    })
+
+    let target = document.body
+    let config = {
+        childList: true,
+        subtree: true,
+    }
+
+    observer.observe(target, config)
 
 } else if ( trackerDomain == 'tv-vault' ) {
     // ----------------------------------- TV-Vault -----------------------------------
