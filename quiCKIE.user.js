@@ -342,12 +342,7 @@ if ( trackerDomain == 'animebytes' ) {
 
 } else if ( trackerDomain == 'aither' ) {
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="/download"]',
-        bunnyButtonFontSize: "100%",
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( trackerDomain == 'anthelion' ) {
     // ----------------------------------- Anthelion -----------------------------------
@@ -424,11 +419,8 @@ if ( trackerDomain == 'animebytes' ) {
     quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( trackerDomain == 'clearjav' ) {
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="/download/"]',
-    }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+    unit3dTrackerHandler('a[href*="/download/"]')
 
 } else if ( trackerDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
@@ -439,7 +431,6 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
-
 
 } else if ( trackerDomain == 'empornium' ) {
     // ----------------------------------- Empornium -----------------------------------
@@ -552,11 +543,8 @@ if ( trackerDomain == 'animebytes' ) {
     quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( trackerDomain == 'luminarr' ) {
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="/download/"]',
-    }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+    unit3dTrackerHandler('a[href^="https://luminarr.me/torrents/download"]')
 
 } else if ( trackerDomain == 'materialize' ) {
     // ----------------------------------- Materialize -----------------------------------
@@ -761,7 +749,7 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
-    
+
 } else if ( trackerDomain == 'torrentleech' ) {
 
     let observer = new MutationObserver(function(mutations) {
