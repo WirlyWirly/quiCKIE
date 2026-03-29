@@ -31,6 +31,10 @@
 
 // Adding a New Tracker: https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker
 
+// @match   https://aither.cc/*/bookmarks*
+// @match   https://aither.cc/playlists/*
+// @match   https://aither.cc/torrents*
+
 // @match   https://alpharatio.cc/top10.php*
 // @match   https://alpharatio.cc/torrents.php*
 
@@ -70,11 +74,12 @@
 
 // @match   https://clearjav.com/torrents*
 // @match   https://clearjav.com/*/bookmarks*
+// @match   https://clearjav.com/playlists/*
 
 // @match   https://www.deepbassnine.com/artist.php?id=*
 // @match   https://www.deepbassnine.com/collages.php?id=*
 // @match   https://www.deepbassnine.com/torrents.php*
-//
+
 // @match   https://www.empornium.sx/collage/*
 // @match   https://www.empornium.sx/top10.php*
 // @match   https://www.empornium.sx/torrents.php*
@@ -122,6 +127,7 @@
 
 // @match   https://luminarr.me/torrents*
 // @match   https://luminarr.me/*/bookmarks
+// @match   https://luminarr.me/playlists/*
 
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
@@ -212,6 +218,7 @@ const settingsPanelEntries = {
     // Example: https://broadcasthe.net/ --> broadcasthe
     // Example: https://www.myanonamouse.net/ --> myanonamouse
 
+    'aither': 'Aither',
     'alpharatio': 'AlphaRatio',
     'animebytes': 'AnimeBytes',
     'anthelion': 'Anthelion', // @malefis
@@ -330,6 +337,15 @@ if ( trackerDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( trackerDomain == 'aither' ) {
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]',
+        bunnyButtonFontSize: "100%",
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( trackerDomain == 'anthelion' ) {
     // ----------------------------------- Anthelion -----------------------------------
     // Browse | Collages | Film
@@ -406,9 +422,7 @@ if ( trackerDomain == 'animebytes' ) {
 
 } else if ( trackerDomain == 'clearjav' ) {
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://clearjav.com/torrents/download/"]',
-        bunnyButtonParentPlacement: true,
-        bunnyButtonfontSize: '8000%',
+        downloadElementsSelector: 'a[href*="/download/"]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -422,6 +436,7 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
 
 } else if ( trackerDomain == 'empornium' ) {
     // ----------------------------------- Empornium -----------------------------------
@@ -535,9 +550,7 @@ if ( trackerDomain == 'animebytes' ) {
 
 } else if ( trackerDomain == 'luminarr' ) {
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://luminarr.me/torrents/download/"]',
-        bunnyButtonParentPlacement: true,
-        bunnyButtonfontSize: '8000%',
+        downloadElementsSelector: 'a[href*="/download/"]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
