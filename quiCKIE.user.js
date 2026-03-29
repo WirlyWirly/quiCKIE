@@ -68,6 +68,9 @@
 
 // @match   https://cinemaz.to/torrent/*
 
+// @match   https://clearjav.com/torrents*
+// @match   https://clearjav.com/*/bookmarks*
+
 // @match   https://www.deepbassnine.com/artist.php?id=*
 // @match   https://www.deepbassnine.com/collages.php?id=*
 // @match   https://www.deepbassnine.com/torrents.php*
@@ -80,6 +83,7 @@
 
 // @match   https://exoticaz.to/
 // @match   https://exoticaz.to/torrent*
+// @match   https://exoticaz.to/*/bookmark*
 
 // @match   https://femdomcult.org/torrents.php*
 // @match   https://femdomcult.org/collage/*
@@ -111,12 +115,21 @@
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
 
+// @match   https://kufirc.com/torrents.php*
+// @match   https://kufirc.com/collages.php*
+// @match   https://kufirc.com/top10.php*
+// @match   https://kufirc.com/bookmarks.php*
+
 // @match   https://luminarr.me/torrents*
 // @match   https://luminarr.me/*/bookmarks
 
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
 // @match   https://materialize.is/torrents.php*
+
+// @match   https://www.morethantv.me/torrents/browse*
+// @match   https://www.morethantv.me/collage/*
+// @match   https://www.morethantv.me/top10.php*
 
 // @match   https://www.myanonamouse.net/
 // @match   https://www.myanonamouse.net/stats/top10Tor.php*
@@ -149,6 +162,10 @@
 // @match   https://portugas.org/*/bookmarks
 // @match   https://portugas.org/playlists/*
 // @match   https://portugas.org/torrents*
+
+// @match   https://privatehd.to/
+// @match   https://privatehd.to/torrent*
+// @match   https://privatehd.to/*/bookmark*
 
 // @match   https://redacted.sh/artist.php?id=*
 // @match   https://redacted.sh/bookmarks.php*
@@ -205,6 +222,7 @@ const settingsPanelEntries = {
     'bitporn': 'BitPorn',
     'broadcasthe': 'BroadcasTheNet',
     'cinemaz' : 'CinemaZ', // @fercats99
+    'clearjav': 'ClearJAV',
     'deepbassnine': 'DeepBassNine', // @tartuffe
     'empornium': 'Empornium',
     'exoticaz' : 'ExoticaZ', // @fercats99
@@ -215,8 +233,10 @@ const settingsPanelEntries = {
     'iptorrents': 'IP-Torrents',
     'jpopsuki': 'JPopsuki', // @tartuffe
     'karagarga': 'Karagarga', // @fercats99
+    'kufirc': 'Kufirc',
     'luminarr': 'Luminarr',
     'materialize': 'Materialize',
+    'morethantv': 'MoreThanTV',
     'myanonamouse': 'MyAnonaMouse',
     'nebulance': 'Nebulance', // @malefis
     'nyaa': 'Nyaa',
@@ -224,6 +244,7 @@ const settingsPanelEntries = {
     'orpheus': 'Orpheus',
     'passthepopcorn': 'PassThePopcorn',
     'portugas': 'Portugas', // @Phreaker
+    'privatehd': 'PrivateHD',
     'redacted': 'Redacted',
     'secret-cinema': 'Secret-Cinema', // @tartuffe
     'thegeeks': 'TheGeeks',
@@ -383,6 +404,15 @@ if ( trackerDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( trackerDomain == 'clearjav' ) {
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://clearjav.com/torrents/download/"]',
+        bunnyButtonParentPlacement: true,
+        bunnyButtonfontSize: '8000%',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( trackerDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
     // Album | Artist | Browse
@@ -495,6 +525,14 @@ if ( trackerDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( trackerDomain == 'kufirc' ) {
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        bunnyButtonFontSize: "140%",
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( trackerDomain == 'luminarr' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://luminarr.me/torrents/download/"]',
@@ -511,6 +549,15 @@ if ( trackerDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href*="torrents.php?action=download&id="]',
         forceTorrentFile: true,
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( trackerDomain == 'morethantv' ) {
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
+        separator: '||',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -614,6 +661,16 @@ if ( trackerDomain == 'animebytes' ) {
     // Browse | Album | Artist
 
     unit3dTrackerHandler('a[href^="https://portugas.org/torrents/download/"]')
+
+} else if ( trackerDomain == 'privatehd' ) {
+    // ----------------------------------- ExoticaZ -----------------------------------
+    // Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://privatehd.to/download/torrent/"]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( trackerDomain == 'redacted' ) {
     // ----------------------------------- Redacted -----------------------------------
