@@ -250,7 +250,7 @@ let trackerURL = document.URL
 // Because the trackerDomain is unique for each site, we can use it to determine what tracker this is and how to proceed from there 
 if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- AnimeBytes -----------------------------------
-    // Browse | Bookmarks | Collages | Company | Serie |
+    // Browse | Bookmarks | Collages | Company | Series
 
     let trackerHandlingOptions = {
         
