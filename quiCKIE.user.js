@@ -709,39 +709,25 @@ if ( trackerDomain == 'animebytes' ) {
     // ----------------------------------- Redacted -----------------------------------
     // Album | Artist | Bookmarks | Browse | Collages | Top10
 
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    }
+
     if ( !trackerURL.match(/collages?\.php\?id=\d+/) ) {
         // This is NOT a collage page, so it doesn't require a MutationObserver
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        }
 
         quickieTrackerHandler(trackerHandlingOptions)
 
     } else {
-        // This is a collage page, which loads DL buttons only after the '+' button of the album is clicked (pagination). Setup nested observation.
+        // This is a collage page, which loads DL buttons after the '+' button of the album is clicked (pagination). Setup nested observation.
 
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-            trackProcessedDownloadElements: true,
-        }
-
-        function initiateTrackerHandler(trackerHandlingOptions) {
-            // When called, use the argument trackerHandlingOptions to initiate the trackerHandler
-
-            try {
-                quickieTrackerHandler(trackerHandlingOptions)
-            } catch(error) {
-                // console.log(error)
-            }
-
-        }
+        trackerHandlingOptions.trackProcessedDownloadElements = true
 
         let pageObserver = new MutationObserver(function(pageMutations) {
             // The actions to take when new PAGES are loaded
 
             // If DL elements are already present, the user has the account setting 'Torrent group display' toggled to 'Open'
-            document.querySelector(trackerHandlingOptions.downloadElementsSelector) ? initiateTrackerHandler(trackerHandlingOptions) : null
+            document.querySelector(trackerHandlingOptions.downloadElementsSelector) ? quickieTrackerHandler(trackerHandlingOptions) : null
 
             waitForElement('#discog_table tbody').then((tbodyElement) => {
                 // The actions to take after the <tbody> of a new page is loaded...
@@ -751,7 +737,7 @@ if ( trackerDomain == 'animebytes' ) {
                     let tbodyObserver = new MutationObserver(function(tbodyMutations) {
                         // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
 
-                        initiateTrackerHandler(trackerHandlingOptions)
+                        quickieTrackerHandler(trackerHandlingOptions)
 
                     })
 
@@ -2384,65 +2370,70 @@ function quickieTrackerHandler({
     function processDownloadElements(delay) {
         // query and create a BunnyButton for all downloadElements
 
-        setTimeout(() => {
-            // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
-            let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
+        try {
+            setTimeout(() => {
+                // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
+                let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
-            if ( allDownloadElements.length >= 1 ) {
-                // The query returned results that have not yet been processed, so generate a bunnyButton for each downloadElement
+                if ( allDownloadElements.length >= 1 ) {
+                    // The query returned results that have not yet been processed, so generate a bunnyButton for each downloadElement
 
-                // The separator used between the DL button and the BunnyButton
-                separator == true ? separator = 'automatic' : null
-                separator == 'automatic' ? separator = getPageSeparator(allDownloadElements[0]) : null
+                    // The separator used between the DL button and the BunnyButton
+                    separator == true ? separator = 'automatic' : null
+                    separator == 'automatic' ? separator = getPageSeparator(allDownloadElements[0]) : null
 
-                // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
-                for (let downloadElement of allDownloadElements) {
+                    // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
+                    for (let downloadElement of allDownloadElements) {
 
-                    // Use the supplied attribute (which should be a torrentURL) to create a bunnyButton for this downloadElement
-                    let bunnyButton = createBunnyButton({ torrentURL: downloadElement[torrentURLAttribute], fontSize: bunnyButtonFontSize, buttonText: bunnyButtonText, torrentSettings: SETTINGS, altButtonStyles: bunnyButtonAltStyles, addButtonClasses: bunnyButtonAddClasses })
+                        // Use the supplied attribute (which should be a torrentURL) to create a bunnyButton for this downloadElement
+                        let bunnyButton = createBunnyButton({ torrentURL: downloadElement[torrentURLAttribute], fontSize: bunnyButtonFontSize, buttonText: bunnyButtonText, torrentSettings: SETTINGS, altButtonStyles: bunnyButtonAltStyles, addButtonClasses: bunnyButtonAddClasses })
 
-                    let placementElement
-                    bunnyButtonParentPlacement == true ? placementElement = downloadElement.parentElement : placementElement = downloadElement
+                        let placementElement
+                        bunnyButtonParentPlacement == true ? placementElement = downloadElement.parentElement : placementElement = downloadElement
 
-                    // Insert the bunnyButton after the placementElement
-                    placementElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
+                        // Insert the bunnyButton after the placementElement
+                        placementElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
 
-                    if ( SETTINGS.hideDL == false ) {
-                        // Insert the separator between the placementElement and the bunnyButton
-                        separator == false ? null : placementElement.insertAdjacentText(bunnyButtonPlacement, separator)
-                    } else {
-                        // Hide the DL button and don't insert a separator
-                        downloadElement.style.display = 'none'
+                        if ( SETTINGS.hideDL == false ) {
+                            // Insert the separator between the placementElement and the bunnyButton
+                            separator == false ? null : placementElement.insertAdjacentText(bunnyButtonPlacement, separator)
+                        } else {
+                            // Hide the DL button and don't insert a separator
+                            downloadElement.style.display = 'none'
+                        }
+
+                        // If enabled, mark this downloadElement as having been processed by assigning it a unique attribute
+                        trackProcessedDownloadElements == true ? downloadElement.setAttribute('data-quickie_processed', 'true') : null
+                            
                     }
 
-                    // If enabled, mark this downloadElement as having been processed by assigning it a unique attribute
-                    trackProcessedDownloadElements == true ? downloadElement.setAttribute('data-quickie_processed', 'true') : null
-                        
+                    // After the bunnyButtons have been generated, call the function that will attach to them the right-click presetsMenu
+                    callAttachPresetsMenu == true ? attachPresetsMenu('a.quickie_newBunnyButton', SETTINGS.trackerDomain) : null
+
+                } else {
+                    // The query returned no results
+
+                    if ( SETTINGS.firstTrackerHandlerScan && !['myanonamouse'].includes(trackerDomain) ) {
+                        // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
+
+                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${settingsPanelEntries[trackerDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.`)
+                    }
+
+
                 }
 
-                // After the bunnyButtons have been generated, call the function that will attach to them the right-click presetsMenu
-                callAttachPresetsMenu == true ? attachPresetsMenu('a.quickie_newBunnyButton', SETTINGS.trackerDomain) : null
+                SETTINGS.firstTrackerHandlerScan = false
 
-            } else {
-                // The query returned no results
-
-                if ( SETTINGS.firstTrackerHandlerScan && !['myanonamouse'].includes(trackerDomain) ) {
-                    // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
-
-                    console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${settingsPanelEntries[trackerDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.`)
+                if ( SETTINGS.paginationLoop >= 500 ) {
+                    // The paginationLoop timer has been set, so quiCKIE will continuosly scan the page for new downloadElements
+                    processDownloadElements(SETTINGS.paginationLoop)
                 }
 
+            }, delay )
 
-            }
-
-            SETTINGS.firstTrackerHandlerScan = false
-
-            if ( SETTINGS.paginationLoop >= 500 ) {
-                // The paginationLoop timer has been set, so quiCKIE will continuosly scan the page for new downloadElements
-                processDownloadElements(SETTINGS.paginationLoop)
-            }
-
-        }, delay )
+        } catch(error) {
+            // console.log(error)
+        } 
 
     }
 
