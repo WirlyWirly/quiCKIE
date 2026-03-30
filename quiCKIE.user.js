@@ -52,20 +52,20 @@
 // @match   https://bakabt.me/torrent/*
 
 // @match   https://beyond-hd.me/
-// @match   https://beyond-hd.me/torrents*
 // @match   https://beyond-hd.me/bookmarks*
-// @match   https://beyond-hd.me/watchlist*
-// @match   https://beyond-hd.me/library*
 // @match   https://beyond-hd.me/download/*
+// @match   https://beyond-hd.me/library*
+// @match   https://beyond-hd.me/torrents*
 // @match   https://beyond-hd.me/torrents/seed*
+// @match   https://beyond-hd.me/watchlist*
 
 // @match   https://bibliotik.me/collections/*
 // @match   https://bibliotik.me/torrents/*
 
 // @match   https://bitporn.eu/
+// @match   https://bitporn.eu/*/bookmarks*
 // @match   https://bitporn.eu/playlists/*
 // @match   https://bitporn.eu/torrents*
-// @match   https://bitporn.eu/*/bookmarks*
 
 // @match   https://broadcasthe.net/collages.php?id=*
 // @match   https://broadcasthe.net/series.php?id=*
@@ -74,9 +74,9 @@
 // @match   https://cinemaz.to/torrent/*
 
 // @match   https://clearjav.com/
-// @match   https://clearjav.com/torrents*
 // @match   https://clearjav.com/*/bookmarks*
 // @match   https://clearjav.com/playlists/*
+// @match   https://clearjav.com/torrents*
 
 // @match   https://www.deepbassnine.com/artist.php?id=*
 // @match   https://www.deepbassnine.com/collages.php?id=*
@@ -87,13 +87,12 @@
 // @match   https://www.empornium.sx/torrents.php*
 // @match   https://www.empornium.sx/user.php?id=*
 
-
 // @match   https://exoticaz.to/
-// @match   https://exoticaz.to/torrent*
 // @match   https://exoticaz.to/*/bookmark*
+// @match   https://exoticaz.to/torrent*
 
-// @match   https://femdomcult.org/torrents.php*
 // @match   https://femdomcult.org/collage/*
+// @match   https://femdomcult.org/torrents.php*
 
 // @match   https://gazellegames.net/collections.php?id=*
 // @match   https://gazellegames.net/torrents.php*
@@ -124,22 +123,22 @@
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
 
-// @match   https://kufirc.com/torrents.php*
+// @match   https://kufirc.com/bookmarks.php*
 // @match   https://kufirc.com/collages.php*
 // @match   https://kufirc.com/top10.php*
-// @match   https://kufirc.com/bookmarks.php*
+// @match   https://kufirc.com/torrents.php*
 
-// @match   https://luminarr.me/torrents*
 // @match   https://luminarr.me/*/bookmarks
 // @match   https://luminarr.me/playlists/*
+// @match   https://luminarr.me/torrents*
 
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
 // @match   https://materialize.is/torrents.php*
 
-// @match   https://www.morethantv.me/torrents/browse*
 // @match   https://www.morethantv.me/collage/*
 // @match   https://www.morethantv.me/top10.php*
+// @match   https://www.morethantv.me/torrents/browse*
 
 // @match   https://www.myanonamouse.net/
 // @match   https://www.myanonamouse.net/stats/top10Tor.php*
@@ -235,21 +234,21 @@ const settingsPanelEntries = {
     'bitporn': 'BitPorn',
     'broadcasthe': 'BroadcasTheNet',
     'cinemaz' : 'CinemaZ', // @fercats99
-    'clearjav': 'ClearJAV',
+    'clearjav': 'ClearJAV', // @holy-elbow
     'deepbassnine': 'DeepBassNine', // @tartuffe
     'empornium': 'Empornium',
-    'exoticaz' : 'ExoticaZ', // @fercats99
-    'femdomcult': 'Femdomcult',
+    'exoticaz' : 'ExoticaZ', // @fercats99 > @holy-elbow
+    'femdomcult': 'Femdomcult', // @holy-elbow
     'gazellegames': 'GazelleGames',
     'happyfappy': 'HappyFappy', // @empDM
     'hdbits': 'HDBits',
     'iptorrents': 'IP-Torrents',
     'jpopsuki': 'JPopsuki', // @tartuffe
     'karagarga': 'Karagarga', // @fercats99
-    'kufirc': 'Kufirc',
-    'luminarr': 'Luminarr',
+    'kufirc': 'Kufirc', // @holy-elbow
+    'luminarr': 'Luminarr', // @holy-elbow
     'materialize': 'Materialize',
-    'morethantv': 'MoreThanTV',
+    'morethantv': 'MoreThanTV', // @holy-elbow
     'myanonamouse': 'MyAnonaMouse',
     'nebulance': 'Nebulance', // @malefis
     'nyaa': 'Nyaa',
@@ -257,11 +256,11 @@ const settingsPanelEntries = {
     'orpheus': 'Orpheus',
     'passthepopcorn': 'PassThePopcorn',
     'portugas': 'Portugas', // @Phreaker
-    'privatehd': 'PrivateHD',
+    'privatehd': 'PrivateHD', // @holy-elbow
     'redacted': 'Redacted',
     'secret-cinema': 'Secret-Cinema', // @tartuffe
     'thegeeks': 'TheGeeks',
-    'torrentleech': 'TorrentLeech',
+    'torrentleech': 'TorrentLeech', // @holy-elbow
     'tv-vault': 'TV-Vault',
 
 }
@@ -553,6 +552,7 @@ if ( trackerDomain == 'animebytes' ) {
 } else if ( trackerDomain == 'kufirc' ) {
     // ----------------------------------- Kufirc -----------------------------------
     // Browse | Collages | Details | Top10
+
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
         bunnyButtonFontSize: "140%",
@@ -691,7 +691,7 @@ if ( trackerDomain == 'animebytes' ) {
     unit3dTrackerHandler('a[href^="https://portugas.org/torrents/download/"]')
 
 } else if ( trackerDomain == 'privatehd' ) {
-    // ----------------------------------- ExoticaZ -----------------------------------
+    // ----------------------------------- PrivateHD -----------------------------------
     // Details
 
     let trackerHandlingOptions = {
@@ -720,7 +720,7 @@ if ( trackerDomain == 'animebytes' ) {
             // The actions to take when new PAGES are loaded
 
             waitForElement('#discog_table tbody').then((tbodyElement) => {
-                // After a new page is loaded, wait until the <tbody> containing the <tr> torrent rows is loaded
+                // The actions to take after the <tbody> of a new page is loaded...
 
                 try {
 
@@ -777,12 +777,17 @@ if ( trackerDomain == 'animebytes' ) {
 } else if ( trackerDomain == 'torrentleech' ) {
     // ----------------------------------- TorrentLeech -----------------------------------
     // Browse | Top
+
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="/download/"]',
         bunnyButtonFontSize: '200%',
     }
-    trackerURL.match(/browse|top/) ? trackerHandlingOptions.forcePaginationLooping = true : null
-    trackerURL.match(/browse|top/) ? trackerHandlingOptions.bunnyButtonParentPlacement = true : null
+
+    if ( trackerURL.match(/browse|top/) ) {
+        // The Browse and Top pages, both of which use pagination
+        trackerHandlingOptions.forcePaginationLooping = true
+        trackerHandlingOptions.bunnyButtonParentPlacement = true 
+    }
 
     quickieTrackerHandler(trackerHandlingOptions)
 
