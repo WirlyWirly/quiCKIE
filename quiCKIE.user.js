@@ -607,10 +607,10 @@ if ( trackerDomain == 'animebytes' ) {
             bunnyButtonFontSize: '125%',
             bunnyButtonText: '🐰 quiCKIE',
             bunnyButtonAddStyles: `
-            background: #CBE9FF;
+            background: #202020;
             border-radius: 5px;
-            border: #000000 solid 1px;
-            color: #000000;
+            border: #CBE9FF solid 1px;
+            color: #CBE9FF;
             font-weight: Bold;
             margin: 0px 10px 0px 10px;
             padding: 3px 10px 5px 10px;
