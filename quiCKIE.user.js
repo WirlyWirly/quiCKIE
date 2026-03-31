@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.21
+// @version     1.22
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -385,8 +385,18 @@ if ( trackerDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a.download_link[href^="/download/"]',
-        bunnyButtonFontSize: '175%',
-        bunnyButtonAddStyles: 'vertical-align: text-bottom;',
+        bunnyButtonFontSize: '150%',
+        bunnyButtonText: '🐰 quiCKIE',
+        bunnyButtonAddClasses: ['download_link'],
+        bunnyButtonAddStyles: `
+        background: #517B27;
+        color: #FFFFFF;
+        display: inline;
+        font-weight: normal;
+        margin: 0px 5px 0px 5px;
+        padding: 3px 10px 3px 10px;
+        vertical-align: super;
+        `,
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -462,6 +472,41 @@ if ( trackerDomain == 'animebytes' ) {
     // This is a collage page, so place the bunnyButton on the parentElement
     trackerURL.match(/\/collage\/\d+/) ? trackerHandlingOptions.bunnyButtonParentPlacement = true : null
 
+    if ( trackerURL.match(/torrents\.php\?id=\d+/) ) {
+        // This is a details page, so apply styling to certain bunnyButtons
+
+        waitForElement('span.torrent_buttons a.quickie_bunnyButton').then((ready) => {
+            // Once the bunnyButtons have been generated, apply button specific bar-type styling 
+
+            for ( let bunnyButton of document.querySelectorAll('span.torrent_buttons a.quickie_bunnyButton') ) {
+
+                bunnyButton.textContent = '🐰 quiCKIE'
+
+                bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+                    border-radius: 5px;
+                    border: #CBE9FF solid 1px;
+                    color: #CBE9FF;
+                    font-size: 100%;
+                    font-weight: Bold;
+                    margin: 0px 8px 0px 0px;
+                    padding: 4px 10px 4px 10px;
+                    vertical-align: middle;`)
+
+                if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
+                    // This is the Freeleech button
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}color: #A0DA83; border: #A0DA83 solid 1px;`)
+                    bunnyButton.textContent = '🐰 Freeleech'
+
+                } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
+                    // This is the Doubleseed button
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}color: #F09D63; border: #F09D63 solid 1px;`)
+                    bunnyButton.textContent = '🐰 Doubleseed'
+                }
+            }
+
+        })
+    }
+
     quickieTrackerHandler(trackerHandlingOptions)
 
 
@@ -529,6 +574,15 @@ if ( trackerDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href*="download.php"]',
         bunnyButtonFontSize: '160%',
         bunnyButtonText: '🐰',
+    }
+
+    if ( trackerURL.match(/(torrent|details)\.php\?id=\d+/) ) {
+        // This is a details page, so apply styling to certain bunnyButtons
+
+        waitForElement('div.info a.quickie_bunnyButton').then((bunnyButton) => {
+            // Once the bunnyButtons have been generated, apply button specific styling 
+            bunnyButton.style.fontSize = '700%'
+        })
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -617,6 +671,23 @@ if ( trackerDomain == 'animebytes' ) {
 
         }
 
+        waitForElement('#download a.quickie_bunnyButton').then((ready) => {
+            // Once the bunnyButtons have been generated, apply button specific bar-type styling 
+
+            for ( let bunnyButton of document.querySelectorAll('#download a.quickie_bunnyButton') ) {
+
+                if ( bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ) {
+                    // This is the Freeleech Wedge button
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}color: #DAD983; border: #DAD983 solid 1px;`)
+                    bunnyButton.textContent = '🐰 Wedge'
+
+                }
+
+                SETTINGS.hideDL == true ? bunnyButton.style.display = 'block' : null
+            }
+
+        })
+
         quickieTrackerHandler(trackerHandlingOptions)
 
     } else {
@@ -635,6 +706,22 @@ if ( trackerDomain == 'animebytes' ) {
                 }
 
                 quickieTrackerHandler(trackerHandlingOptions)
+
+                if ( SETTINGS.hideDL ) {
+                    // Site download buttons are hidden, so change the Wedge button to be distinct from the Download button
+
+                    waitForElement('a.quickie_bunnyButton').then((ready) => {
+                        // Once the bunnyButtons have been generated, apply button specific styling 
+
+                        for ( let bunnyButton of document.querySelectorAll('a.quickie_bunnyButton') ) {
+
+                            bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ? bunnyButton.textContent = '🧀' : null
+
+                        }
+
+                    })
+
+                }
 
             } catch(error) {
                 // console.log(error)
@@ -669,6 +756,9 @@ if ( trackerDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="magnet:?xt\=urn:btih:"]',
     }
+
+    // The Details page
+    trackerURL.match(/view\/\d+/) ? trackerHandlingOptions.bunnyButtonText = ' 🐰 quiCKIE ' : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -2520,7 +2610,6 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                         // Hide the DL button if enabled
                         SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
                     }
-
 
                     if ( trackProcessedDownloadElements ) {
                         // Keep track of this downloadElement as having been processed my marking it with a unique attribute
