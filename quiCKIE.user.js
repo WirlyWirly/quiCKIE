@@ -476,7 +476,7 @@ if ( trackerDomain == 'animebytes' ) {
     if ( trackerURL.match(/torrents\.php\?id=\d+/) ) {
         // This is a details page, so apply styling to certain bunnyButtons
 
-        waitForElement('#user-sidebar > a.quickie_bunnyButton').then((ready) => {
+        waitForElement('span.torrent_buttons a.quickie_bunnyButton').then((ready) => {
             // The actions to take after the bunnyButtons have been generated...
 
             for ( let bunnyButton of document.querySelectorAll('#user-sidebar > a.quickie_bunnyButton, span.torrent_buttons a.quickie_bunnyButton') ) {
