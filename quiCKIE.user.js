@@ -385,7 +385,7 @@ if ( trackerDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a.download_link[href^="/download/"]',
         bunnyButtonFontSize: '150%',
-        bunnyButtonText: '🐰 quiCKIE',
+        bunnyButtonText: '🐰',
         bunnyButtonAddClasses: ['download_link'],
         bunnyButtonAddStyles: `
         background: #517B27;
@@ -399,6 +399,14 @@ if ( trackerDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+    waitForElement('a.quickie_bunnyButton').then((bunnyButton) => {
+        // The actions to take after the bunnyButtons have been generated...
+
+        // Decrease the width of the site DL button, so that everything fits onto a single row
+        bunnyButton.parentElement.querySelector(trackerHandlingOptions.downloadElementsSelector).style.width = '430px'
+
+    })
 
 } else if ( trackerDomain == 'beyond-hd' ) {
     // ----------------------------------- Beyond-HD -----------------------------------
@@ -493,16 +501,16 @@ if ( trackerDomain == 'animebytes' ) {
                 if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
                     // This is a Freeleech button
                     bunnyButton.textContent = '🐰 Freeleech'
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83;`)
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
 
                 } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
                     // This is a Doubleseed button
                     bunnyButton.textContent = '🐰 Doubleseed'
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; `)
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
                 } else {
                     // This is a standard Download button
                     bunnyButton.textContent = '🐰 quiCKIE'
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7;`)
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
                 }
 
             }
@@ -581,7 +589,16 @@ if ( trackerDomain == 'animebytes' ) {
 
         waitForElement('div.info a.quickie_bunnyButton').then((bunnyButton) => {
             // Once the bunnyButtons have been generated, apply button specific styling 
-            bunnyButton.style.fontSize = '700%'
+
+            bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+                background: #153245;
+                border-radius: 999px;
+                border: #B6D3E7 solid 1px;
+                font-size: 500%;
+                margin: 5px 5px 5px 5px;
+                padding: 20px;
+                vertical-align: middle;`)
+
         })
     }
 
@@ -661,6 +678,7 @@ if ( trackerDomain == 'animebytes' ) {
             bunnyButtonFontSize: '125%',
             bunnyButtonText: '🐰 quiCKIE',
             bunnyButtonAddStyles: `
+            background: #153245;
             border-radius: 5px;
             border: #B6D3E7 solid 1px;
             color: #B6D3E7;
@@ -680,11 +698,12 @@ if ( trackerDomain == 'animebytes' ) {
 
                 if ( bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ) {
                     // This is the Freeleech Wedge button
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}color: #CBC29E; border: #CBC29E solid 1px;`)
+    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}color: #CBC29E; border: #CBC29E solid 1px; background: #2E2400;`)
                     bunnyButton.textContent = '🐰 Wedge'
 
                 }
 
+                // Change display to block so buttons are spaced apart
                 SETTINGS.hideDL == true ? bunnyButton.style.display = 'block' : null
             }
 
@@ -2565,9 +2584,9 @@ function unit3dTrackerHandler(downloadElementsSelector) {
         torrentDetailsPage = true
 
         // Give the bunnyButton a bar appearance, to fit in better with the other buttons
-        bunnyButtonText = ' 🐰 quiCKIE '
+        bunnyButtonText = '🐰 quiCKIE'
         bunnyButtonAddStyles = `
-        backdrop-filter: blur(9px);
+        background: #153245;
         border-radius: 999px;
         border: #B6D3E7 solid 1px;
         color: #B6D3E7;
@@ -2687,7 +2706,7 @@ function createBunnyButton({
     bunnyButton.addEventListener('mouseover', function(event) {
         // When this bunnyButton is hovered over...
 
-        this.style.textShadow = '0px 0px 1px black, 0 0 5px #2cadff'
+        this.style.textShadow = '0px 0px 1px black, 0 0 5px #B6D3E7'
     })
 
     bunnyButton.addEventListener('mouseout', function(event) {
