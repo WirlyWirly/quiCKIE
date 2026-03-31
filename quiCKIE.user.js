@@ -607,7 +607,6 @@ if ( trackerDomain == 'animebytes' ) {
             bunnyButtonFontSize: '125%',
             bunnyButtonText: '🐰 quiCKIE',
             bunnyButtonAddStyles: `
-            background: #202020;
             border-radius: 5px;
             border: #CBE9FF solid 1px;
             color: #CBE9FF;
@@ -2478,7 +2477,14 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
         // Give the bunnyButton a bar appearance, to fit in better with the other buttons
         bunnyButtonText = ' 🐰 quiCKIE '
-        bunnyButtonAddStyles = 'background: rgba(0, 0, 0, 0.70); backdrop-filter: blur(9px); color: rgb(203, 233, 255); font-weight: bold; border-radius: 999px; width: inherit; padding: 2%'
+        bunnyButtonAddStyles = `
+        backdrop-filter: blur(9px);
+        border-radius: 999px;
+        border: #CBE9FF solid 1px;
+        color: #CBE9FF;
+        font-weight: bold;
+        padding: 1.5%;
+        width: inherit;`
 
     }
 
@@ -2501,13 +2507,19 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                     if ( torrentDetailsPage == true ) {
                         // Place alongside the parentElement so that the bunnyButton appears on the same row
                         downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
+                        
+                        // Hide the <li> parentElement so that there's not a large gap
+                        SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
 
                     } else {
                         downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
-                    }
 
-                    // Hide the DL button if enabled
-                    SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
+                        // If the bunnyButton is After the downloadElement, increase the padding to better fit the page
+                        SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButton.style.paddingLeft = '10px' : null
+                        
+                        // Hide the DL button if enabled
+                        SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
+                    }
 
 
                     if ( trackProcessedDownloadElements ) {
