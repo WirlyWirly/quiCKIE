@@ -620,6 +620,7 @@ if ( trackerDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a.js-download[href^="/download.php/"]',
         bunnyButtonFontSize: '140%',
+        bunnyButtonText: '🐰',
     }
 
     // This is a details page, so apply styling to the single bunnyButton
