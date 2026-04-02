@@ -452,6 +452,7 @@ if ( trackerDomain == 'animebytes' ) {
         trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
             // The actions to take after the bunnyButtons have been created...
 
+            // Style all bunnyButtons, giving them a square-type look to more closely match the site buttons
             for ( let bunnyButton of elements.bunnyButtons ) {
                 bunnyButton.textContent = '🐰'
                 bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
@@ -507,6 +508,7 @@ if ( trackerDomain == 'animebytes' ) {
 
     // This is a collage page, so place the bunnyButton alongside the parentElement
     if ( pageURL.match(/\/collage\/\d+/) ) {
+
         trackerHandlingOptions.bunnyButtonParentPlacement = true 
         trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
             // The actions to take after the bunnyButtons have been created...
@@ -626,6 +628,7 @@ if ( trackerDomain == 'animebytes' ) {
         trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
             // The actions to take after the bunnyButtons have been created...
 
+            // Style the single bunnyButton, setting it apart from the torrentName text 
             let bunnyButton = elements.bunnyButtons[0]
 
             bunnyButton.textContent = '🐰 quiCKIE'
@@ -791,7 +794,7 @@ if ( trackerDomain == 'animebytes' ) {
             afterBunnyButtonCreation: function(elements) {
                 // The actions to take after the bunnyButtons have been created...
 
-                // Site download buttons are hidden, so change the Wedge button to be distinct from the Download button
+                // Site download buttons are hidden, so change the Freelech Wedge button to be cheese
                 if ( SETTINGS.hideDL ) {
 
                     for ( let bunnyButton of elements.bunnyButtons ) {
