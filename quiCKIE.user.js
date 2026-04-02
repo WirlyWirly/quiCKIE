@@ -222,8 +222,9 @@
 
 // @quickieSettingsPanelTrackers
 const settingsPanelTrackers = {
-    // Each line below uses the trackerDomain (lowercase) as the property, followed by the trackerLabel (TitleCase) as the value.
-    // Keep this list alphabetical,  a row for each tracker in the settings panel.
+    // Each line uses the trackerDomain (lowercase) as the property, followed by the trackerLabel (TitleCase) as the value 
+    // Keep this list alphabetical, as each tracker here will appear as a row in the quiCKIE settings panel
+
     // Example: https://broadcasthe.net/ --> broadcasthe
     // Example: https://www.myanonamouse.net/ --> myanonamouse
     // Example: https://sukebei.nyaa.si/ --> nyaa
@@ -1053,7 +1054,7 @@ function createGMConfigSettingsPanel() {
     // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in
     const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'paginationLoop', 'leftClick', 'thirdPartyScan', 'hideDL', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
     let gmConfigTrackerFields = {}
-    let trackerDomains = Object.keys(settingsPanelTrackers)
+    let trackerDomains = Object.keys(settingsPanelTrackers).sort()
     for ( let trackerDomain of trackerDomains ) {
         // For each trackerDomain (property) of the settingsPanelTrackers object, generate the fields that will be used by GM_config() to save\load settings.
         // Each tracker MUST have the fields displayed in the settings panel; Category (+ row label), SavePath, Tags, RatioLimit, Paused, Piece
@@ -1525,7 +1526,7 @@ function createGMConfigSettingsPanel() {
                 // Append the headers to the <thead> (tableHeader) element
                 thead.appendChild(headersRow)
 
-                let uniqueDomains = Object.keys(settingsPanelTrackers)
+                let uniqueDomains = Object.keys(settingsPanelTrackers).sort()
                 for (let uniqueDomainKey of uniqueDomains) {
                     // For each tracker, create 1 <tr> (tablerow). For each <tr>, create 1 <td> (tabledata) to contain the tracker's hyperlink. Create the <a> hyperlink then move the tracker's label into that <a> element.
 
@@ -1674,7 +1675,7 @@ function createGMConfigSettingsPanel() {
                     }
 
                     // Create the list of selectable items that appears when typing to the presetTrackers field
-                    let trackerTitles = Object.entries(settingsPanelTrackers).map (
+                    let trackerTitles = Object.entries(settingsPanelTrackers).sort().map (
                         ([key, value]) => [value]
 
                     )
