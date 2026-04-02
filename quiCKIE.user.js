@@ -428,6 +428,8 @@ if ( trackerDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="/torrents/"][title="Download"]',
+        bunnyButtonFontSize: '120%',
+        bunnyButtonAddStyles: 'vertical-align: bottom',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -626,24 +628,16 @@ if ( trackerDomain == 'animebytes' ) {
     // This is a details page, so apply styling to the single bunnyButton
     if ( pageURL.match(/details\.php\?id=\d+/) ) {
 
-        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
-            // The actions to take after the bunnyButtons have been created...
-
-            // Style the single bunnyButton, setting it apart from the torrentName text 
-            let bunnyButton = elements.bunnyButtons[0]
-
-            bunnyButton.textContent = '🐰 quiCKIE'
-            bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
-                background: #153245;
-                border-radius: 3px;
-                border: #B6D3E7 solid 1px;
-                color: #B6D3E7;
-                font-size: 90%;
-                margin: 0px 2px 0px 8px;
-                padding: 2px 7px 2px 7px;
-                vertical-align: unset;`)
-
-        }
+        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+        background: #153245;
+        border-radius: 3px;
+        border: #B6D3E7 solid 1px;
+        color: #B6D3E7;
+        font-size: 90%;
+        margin: 0px 2px 0px 8px;
+        padding: 2px 7px 2px 7px;
+        vertical-align: unset;`
 
     }
 
@@ -662,10 +656,10 @@ if ( trackerDomain == 'animebytes' ) {
     if ( pageURL.match(/(torrent|details)\.php\?id=\d+/) ) {
         // This is a details page, so apply styling to certain bunnyButtons
 
-        waitForElement('div.info a.quickie_bunnyButton').then(bunnyButton => {
-            // Once the bunnyButtons have been generated, apply button specific styling 
+        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
+            // The actions to take after the bunnyButtons have been created...
 
-            bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+            elements.bunnyButtons[0].setAttribute('style', `${elements.bunnyButtons[0].style.cssText}
                 background: #153245;
                 border-radius: 999px;
                 border: #B6D3E7 solid 1px;
@@ -674,7 +668,7 @@ if ( trackerDomain == 'animebytes' ) {
                 padding: 20px;
                 vertical-align: middle;`)
 
-        })
+        }
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
