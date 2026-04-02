@@ -2917,6 +2917,11 @@ function getPageSeparator(downloadElement, manualSeparator=false) {
 
 }
 
+function replaceEmojis(targetElement, newEmoji) {
+    // Replace the emojis in the targetElement with the newEmoji
+    targetElement.textContent = targetElement.textContent.replace(/🐰|🪙|🧀|🕓|🧲|🧑|❌|✔️/g, newEmoji)
+}
+
 
 function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) {
     // Determine what action to take depending on the mouse button settings
@@ -2933,6 +2938,7 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
 
         let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
         bunnyButton.id = bunnyButtonId
+
         addTorrent({
             torrentURL: bunnyButton.dataset.torrenturl,
             torrentClient: SETTINGS.torrentClient,
@@ -2969,10 +2975,12 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
 
     } else if ( buttonAction == 'Settings') {
         // Open the quiCKIE Settings Panel
+
         GM_config.open()
 
     } else if ( buttonAction == 'Client') {
         // Open the clientURL in a new tab
+
         if ( SETTINGS.torrentClient.client == 'qui') {
             window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
         } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
@@ -2987,6 +2995,7 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
 
     } else if ( buttonAction == 'Nothing') {
         // Do nothing, a null button
+
         null
 
     }
@@ -3013,8 +3022,8 @@ function addTorrent({
     autoTMM = false,
     skipHash = false}) {
 
-    // Signify POST processing by updating the icon of the clicked on BunnyButton
-    document.getElementById(bunnyButtonId).textContent = ' 🕓 '
+    // Signify the start of addTorrent by changing the emoji of the clicked on BunnyButton
+    replaceEmojis(document.getElementById(bunnyButtonId), '🕓')
 
     // ----- POST object -----
     let postData = {
@@ -3056,7 +3065,7 @@ function addTorrent({
 
         if ( torrentClient.quiURL == '' || torrentClient.quiApiKey == '' ) {
             // No quiURL has been provided, alert the user and return
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert('❌ quiCKIE ❌\n\nA quiURL and ApiKey are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
@@ -3069,7 +3078,7 @@ function addTorrent({
         } catch(error) {
             // Failed to parse quiURL for the API endpoint
             console.log(error)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL into a valid qui apiURL\n\nCheck your quiURL for typos and make sure it is in the expected format. Hover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`)
             return
         }
@@ -3087,7 +3096,7 @@ function addTorrent({
 
         if ( torrentClient.qBitTorrentURL == '' || torrentClient.qBitTorrentUsername == '' || torrentClient.qBitTorrentPassword == '' ) {
             // Missing qBitTorrent credentials, alert the user and abort
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert('❌ quiCKIE ❌\n\nA qBitTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
@@ -3102,7 +3111,7 @@ function addTorrent({
 
         if ( torrentClient.transmissionURL == '' || torrentClient.transmissionUsername == '' || torrentClient.transmissionPassword == '' ) {
             // Missing Transmission credentials, alert the user and abort
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert('❌ quiCKIE ❌\n\nA transmissionURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
@@ -3118,7 +3127,7 @@ function addTorrent({
 
         if ( torrentClient.delugeURL == '' || torrentClient.delugePassword == '' ) {
             // Missing Deluge credentials, alert the user and abort
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert('❌ quiCKIE ❌\n\nA delugeURL and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
@@ -3132,7 +3141,7 @@ function addTorrent({
 
         if ( torrentClient.ruTorrentURL == '' || torrentClient.ruTorrentUsername == '' || torrentClient.ruTorrentPassword == '' ) {
             // Missing ruTorrent credentials, alert the user and abort
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
             window.alert('❌ quiCKIE ❌\n\nA ruTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
             return
         }
@@ -3267,7 +3276,7 @@ async function getFileBlob(postData) {
 
     let fileURL = postData.torrentURL
 
-    document.getElementById(postData.bunnyButtonId).textContent = ' 🧲 '
+    replaceEmojis(document.getElementById(postData.bunnyButtonId), '🧲')
     let results = GM_xmlhttpRequest({
         method: 'get',
         url: fileURL,
@@ -3279,7 +3288,7 @@ async function getFileBlob(postData) {
             if ( blobData.type != 'application/x-bittorrent' ) {
                 // The downloaded file is NOT a .torrent type, abort the POST
                 console.log(response)
-                document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file. Aborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nStatus Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
                 return
@@ -3289,7 +3298,7 @@ async function getFileBlob(postData) {
 
                 postData.formData.append('torrent', blobData)
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' 🕓 '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '🕓')
 
                 if ( postData.torrentClient == 'qui' ) {
                     // Add torrentURL to qui
@@ -3313,7 +3322,7 @@ async function getFileBlob(postData) {
         onerror: function(response) {
             // There was an error getting the .torrent file
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThere was an error when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}. Make sure the server is online and the torrentURL is a valid http link and NOT a magnet link\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
 
@@ -3321,7 +3330,7 @@ async function getFileBlob(postData) {
         ontimeout: function(response) {
             // The connection timed out
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThe connection timed out when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
 
@@ -3348,13 +3357,13 @@ async function quiPOST(postData) {
             if (response.status == 201) {
                 // Success: The torrent has been added to qui
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' ✔️ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '✔️')
 
             } else {
                 // Failed: The torrent was NOT added to qui, log the response and display an alert...
                 console.log(response)
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                 if (response.status == 401) {
                     // Unauthorized
@@ -3369,7 +3378,7 @@ async function quiPOST(postData) {
         onerror: function(response) {
             // There was an error making the POST
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui. This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}quiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
 
@@ -3377,7 +3386,7 @@ async function quiPOST(postData) {
         ontimeout: function(response) {
             // The connection timed out
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThe connection to qui timed out. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
 
@@ -3398,7 +3407,7 @@ async function qBitTorrentPOST(postData) {
     postData.formData.get('upLimit') > 0 ? postData.formData.set('upLimit', Number(postData.formData.get('upLimit')) * 1024) : null
 
 
-    document.getElementById(postData.bunnyButtonId).textContent = ' 🧑 '
+    replaceEmojis(document.getElementById(postData.bunnyButtonId), '🧑')
     GM_xmlhttpRequest({
         // First, send a POST to login to qBittorrent
         method: 'POST',
@@ -3416,7 +3425,7 @@ async function qBitTorrentPOST(postData) {
             if ( response.responseText == 'Ok.' ) {
                 // Succesfully logged into qBitTorrent, ready to send another POST to add a new torrent
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' 🕓 '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '🕓')
                 GM_xmlhttpRequest({
                     // Use the internal GM function to prevent source-origin errors
                     method: 'POST',
@@ -3428,13 +3437,13 @@ async function qBitTorrentPOST(postData) {
                         if (response.status == 200) {
                             // Success: The torrent has been added to qBitTorrent
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ✔️ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '✔️')
 
                         } else {
                             // Failed: The torrent was NOT added to qBitTorrent, log the response and display an alert...
                             console.log(response)
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                             window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3444,7 +3453,7 @@ async function qBitTorrentPOST(postData) {
                     onerror: function(response) {
                         // There was an error making the POST
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3452,7 +3461,7 @@ async function qBitTorrentPOST(postData) {
                     ontimeout: function(response) {
                         // The connection timed out
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3462,7 +3471,7 @@ async function qBitTorrentPOST(postData) {
             } else if ( response.responseText == 'Fails.' ) {
                 // Failed to login to qBitTorrent
                 console.log(response)
-                document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                 window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached, but the login attempt failed. Check your username\\password for typos\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3472,7 +3481,7 @@ async function qBitTorrentPOST(postData) {
         onerror: function(response) {
             // There was an error logging in
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to qBitTorrent to attempt the login. Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3480,7 +3489,7 @@ async function qBitTorrentPOST(postData) {
         ontimeout: function(response) {
             // The connection timed out
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThe connection to qBitTorrent timed out when attempting the login. Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
@@ -3533,7 +3542,7 @@ async function transmissionPOST(postData) {
     // If the user provided a full rpc url use it, otherwise append the default
     postData.transmission.url.match(/\/rpc$/) ? null : postData.transmission.url = `${postData.transmission.url}/transmission/rpc`
 
-    document.getElementById(postData.bunnyButtonId).textContent = ' 🧑 '
+    replaceEmojis(document.getElementById(postData.bunnyButtonId), '🧑')
     GM_xmlhttpRequest({
         // First, send a POST to login to Transmission
         method: 'POST',
@@ -3554,7 +3563,7 @@ async function transmissionPOST(postData) {
             if ( transmissionSessionId != '') {
                 // Succesfully logged into Transmission, send another POST to add the new torrent
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' 🕓 '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '🕓')
                 GM_xmlhttpRequest({
                     // Use the internal GM function to prevent source-origin errors
                     method: 'POST',
@@ -3572,13 +3581,13 @@ async function transmissionPOST(postData) {
                         if ( postResponse.result == 'success' ) {
                             // Success: The torrent has been added to Transmission
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ✔️ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '✔️')
 
                         } else {
                             // Failed: The torrent was NOT added to Transmission, log the response and display an alert...
                             console.log(response)
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                             window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3588,7 +3597,7 @@ async function transmissionPOST(postData) {
                     onerror: function(response) {
                         // There was an error making the POST
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3596,7 +3605,7 @@ async function transmissionPOST(postData) {
                     ontimeout: function(response) {
                         // The connection timed out
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but the connection timedout when trying to POSt the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3607,7 +3616,7 @@ async function transmissionPOST(postData) {
                 // Failed to login to Transmission
 
                 console.log(response)
-                document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                 window.alert(`❌ quiCKIE ❌\n\nTransmission was reached, but the login attempt failed. Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3617,7 +3626,7 @@ async function transmissionPOST(postData) {
         onerror: function(response) {
             // There was an error logging in
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Transmission to attempt the login. Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3625,7 +3634,7 @@ async function transmissionPOST(postData) {
         ontimeout: function(response) {
             // The connection timed out
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThe connection to Transmission timed out when attempting the login. Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
@@ -3686,7 +3695,7 @@ async function delugePOST(postData) {
         return
     }
 
-    document.getElementById(postData.bunnyButtonId).textContent = ' 🧑 '
+    replaceEmojis(document.getElementById(postData.bunnyButtonId), '🧑')
     GM_xmlhttpRequest({
         // First, send a POST to login to Deluge
         method: 'POST',
@@ -3712,7 +3721,7 @@ async function delugePOST(postData) {
             if ( delugeSessionId != '') {
                 // Succesfully logged into Deluge, send another POST to add the .torrent blob or magnet link
 
-                document.getElementById(postData.bunnyButtonId).textContent = ' 🕓 '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '🕓')
                 GM_xmlhttpRequest({
                     // Use the internal GM function to prevent source-origin errors
                     method: 'POST',
@@ -3736,14 +3745,14 @@ async function delugePOST(postData) {
                                 console.log("According to the Deluge response, this torrent can't be added because it already exists in your session\n\nIf the torrent is not in your UI, it may be lingering in your daemon session")
                             }
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ✔️ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '✔️')
 
 
                         } else {
                             // Failed: The torrent POST was sent to the server but NOT added to Deluge, log the response and display an alert...
                             console.log(response)
 
-                            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                             window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
                         }
@@ -3751,7 +3760,7 @@ async function delugePOST(postData) {
                     onerror: function(response) {
                         // There was an error in the torrent add POST
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelgueURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
@@ -3759,7 +3768,7 @@ async function delugePOST(postData) {
                     ontimeout: function(response) {
                         // The connection timed out
                         console.log(response)
-                        document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                        replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                         window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
@@ -3769,7 +3778,7 @@ async function delugePOST(postData) {
             } else {
                 // Failed to login to Deluge
                 console.log(response)
-                document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+                replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
                 window.alert(`❌ quiCKIE ❌\n\nDeluge was reached, but the login attempt failed. Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
@@ -3779,7 +3788,7 @@ async function delugePOST(postData) {
         onerror: function(response) {
             // There was an error logging in
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Deluge to attempt the login. Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
@@ -3787,7 +3796,7 @@ async function delugePOST(postData) {
         ontimeout: function(response) {
             // The connection timed out
             console.log(response)
-            document.getElementById(postData.bunnyButtonId).textContent = ' ❌ '
+            replaceEmojis(document.getElementById(postData.bunnyButtonId), '❌')
 
             window.alert(`❌ quiCKIE ❌\n\nThe connection to Deluge timed out when attempting the login. Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
