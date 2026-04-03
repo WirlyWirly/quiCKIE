@@ -6,7 +6,7 @@ This [UserScript](https://openuserjs.org/about/Userscript-Beginners-HOWTO) will 
 
 Integrating BunnyButtons into the page itself allows for support on both **desktop** and **mobile** devices. In addition, this integration has been done so in a **non-destructive** manner, ensuring quiCKIE is friendly\compatible with other UserScripts and default browser functions.
 
-quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)** and **35+** different trackers. If a tracker you know of is not listed, check the quiCKIE WiKi for a simple 3-step guide on how anyone may easily contribute a new tracker: **[Adding a New Tracker](https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker)**
+quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)** and **40+** different trackers. If a tracker you know of is not listed, check the quiCKIE WiKi for a simple 3-step guide on how anyone may easily contribute a new tracker: **[Adding a New Tracker](https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker)**
 
 Only the **clientURL** and **login credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for more info about what each field does and how it may be filled in.
 

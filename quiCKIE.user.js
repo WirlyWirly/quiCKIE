@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.33
+// @version     1.34
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -112,12 +112,9 @@
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
 
-// @match   https://iptorrents.eu/details.php?id=*
-// @match   https://iptorrents.eu/t*
-// @match   https://iptorrents.eu/torrent.php?id=*
-// @match   https://iptorrents.me/details.php?id=*
-// @match   https://iptorrents.me/t*
-// @match   https://iptorrents.me/torrent.php?id=*
+// @include   /^https://iptorrents\.\w+/details.php?id=.*/
+// @include   /^https://iptorrents\.\w+/t.*/
+// @include   /^https://iptorrents\.\w+/torrent.php?id=.*/
 
 // @match   https://jpopsuki.eu/artist.php?id=*
 // @match   https://jpopsuki.eu/collages.php?id=*
@@ -132,6 +129,12 @@
 // @match   https://kufirc.com/top10.php*
 // @match   https://kufirc.com/torrents.php*
 
+// @match   https://lat-team.com/
+// @match   https://lat-team.com/*/bookmarks
+// @match   https://lat-team.com/playlists/*
+// @match   https://lat-team.com/torrents*
+
+// @match   https://luminarr.me/
 // @match   https://luminarr.me/*/bookmarks
 // @match   https://luminarr.me/playlists/*
 // @match   https://luminarr.me/torrents*
@@ -153,10 +156,8 @@
 // @match   https://nebulance.io/top10.php*
 // @match   https://nebulance.io/torrents.php*
 
-// @match   https://nyaa.si/*
-// @match   https://nyaa.si/view/*
-// @match   https://sukebei.nyaa.si/*
-// @match   https://sukebei.nyaa.si/view/*
+// @include   /^https://(sukebei\.)?nyaa\.\w+/.*/
+// @include   /^https://(sukebei\.)?nyaa\.\w+/view/.*/
 
 // @match   https://oldtoons.world/
 // @match   https://oldtoons.world/*/bookmarks
@@ -252,6 +253,7 @@ const settingsPanelTrackers = {
     'jpopsuki': 'JPopsuki', // @tartuffe
     'karagarga': 'Karagarga', // @fercats99
     'kufirc': 'Kufirc', // @holy-elbow
+    'lat-team': 'Lat-Team',
     'luminarr': 'Luminarr', // @holy-elbow
     'materialize': 'Materialize',
     'morethantv': 'MoreThanTV', // @holy-elbow
@@ -713,6 +715,12 @@ if ( trackerDomain == 'animebytes' ) {
     pageURL.match(/top10/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( trackerDomain == 'lat-team' ) {
+    // ----------------------------------- Lat-Team -----------------------------------
+    // Bookmarks | Browse | Details | Homepage | Playlists
+
+    unit3dTrackerHandler('a[href^="https://lat-team.com/torrents/download"]')
 
 } else if ( trackerDomain == 'luminarr' ) {
     // ----------------------------------- Luminarr -----------------------------------
@@ -1252,7 +1260,7 @@ function createGMConfigSettingsPanel() {
         'columnText': {
             'tracker': '🌎 Tracker',
 
-            'preset': '🚀 Preset',
+            'preset': '🚀 Name',
             'presettrackers': '👀 Trackers',
 
             'category': '🗃️ Category',
@@ -1276,9 +1284,9 @@ function createGMConfigSettingsPanel() {
         },
 
         'columnTitles': {
-            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will re-direct you to the tracker's website\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
+            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
-            'preset': "─── 🚀 Preset 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nℹ️ Hovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nℹ️ Hovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
@@ -1300,18 +1308,6 @@ function createGMConfigSettingsPanel() {
             'skiphash': '─── 🛡️ Skip Hash Check 🛡️ ───\n\nWhen Adding torrents, skip the initial hash check\n\n⚠️ Hash checks are used to verify file integrity and prevent corrupted data, although this check may take a long time with larger torrents. Know what you are doing before enabling this.',
 
         }
-
-    }
-
-    // For all @match entries, generate an object with all the uniqueDomains as keys and the site's homepage as the value
-    let trackerHomepages = {}
-    for ( let matchURL of GM_info.script.matches ) {
-
-        let homepageURL = matchURL.match(/^(https?:\/\/.+?\/)/)[1]
-        let uniqueDomain = homepageURL.match(/^https?:\/\/(\w+\.)?(.+?)\..+\/$/)[2].toLowerCase()
-
-
-        trackerHomepages = {...trackerHomepages, ...{ [`${uniqueDomain}`]: homepageURL } }
 
     }
 
@@ -1347,17 +1343,6 @@ function createGMConfigSettingsPanel() {
                 'type': 'int',
                 'default': 3,
             },
-            'bunnyButtonPlacement': {
-                'label': '↔️ Placement:',
-                'type': 'select',
-                'options': ['After', 'Before'],
-                'default': 'After',
-            },
-            'globalForcedTorrentFile': {
-                'label': '🧲 Torrent File:',
-                'type': 'checkbox',
-                'default': false
-            },
             'globalLeftClickAction': {
                 'label': '🖱️ Left-Click \\ Tap:',
                 'type': 'select',
@@ -1369,6 +1354,17 @@ function createGMConfigSettingsPanel() {
                 'type': 'select',
                 'options': ['Tracker', 'Settings', 'Client', 'Nothing'],
                 'default': 'Client',
+            },
+            'bunnyButtonPlacement': {
+                'label': '↔️ Placement:',
+                'type': 'select',
+                'options': ['After', 'Before'],
+                'default': 'After',
+            },
+            'globalForcedTorrentFile': {
+                'label': '🧲 Torrent File:',
+                'type': 'checkbox',
+                'default': false
             },
             'hiddenTrackers': {
                 'label': '🙈 Hidden Trackers:',
@@ -1439,7 +1435,15 @@ function createGMConfigSettingsPanel() {
                     // Export GM_Config settings to a file
 
                     // Pretty-print the settings string to make it easier to read
-                    let jsonString = JSON.stringify(JSON.parse(GM_getValue('quiCKIE_config')), null, 4)
+                    let jsonParsed = JSON.parse(GM_getValue('quiCKIE_config'))
+
+                    // convert preset-X-preset to preset-X-name (for v1.5)
+                    for (let i = 1; i <= presetCount; i++) {
+                        let nameValue = jsonParsed[`preset-${i}-preset`]
+                        jsonParsed[`preset-${i}-name`] = nameValue
+                    }
+
+                    let jsonString = JSON.stringify(jsonParsed, null, 4)
 
                     // Save the quiCKIE settings to a local file
                     saveToFile(jsonString, `quiCKIE-${new Date().toISOString().split('T')[0]}.json`)
@@ -1606,17 +1610,11 @@ function createGMConfigSettingsPanel() {
                     labelData.classList.add('quiCKIE_config_table_td_label')
                     tableRow.appendChild(labelData)
 
-                    // Create the trackerHomepage <a> , append it to the <td>
-                    let trackerHyperlinkElement = document.createElement('a')
-                    trackerHyperlinkElement.href = trackerHomepages[`${uniqueDomainKey}`]
-                    trackerHyperlinkElement.target = '_blank'
-                    labelData.appendChild(trackerHyperlinkElement)
-
-                    // Move the trackerLabel field into the <a>
+                    // Move the trackerLabel field into the <td>
                     let trackerLabelElement = document.getElementById(`quiCKIE_config_${uniqueDomainKey}-category_field_label`)
                     trackerLabelElement.removeAttribute('for')
                     trackerLabelElement.classList.add('quiCKIE_config_field_tracker_label')
-                    trackerHyperlinkElement.appendChild(trackerLabelElement)
+                    labelData.appendChild(trackerLabelElement)
 
                     // The field suffixes as specified in @trackerFieldGeneration
                     for (let fieldSuffix of trackerFieldSuffixes) {
@@ -2081,30 +2079,6 @@ function createGMConfigSettingsPanel() {
                 ruTorrentURLField.disabled = true
                 ruTorrentUsernameField.disabled = true
 
-                // Remove now empty <div> elements
-                document.getElementById('quiCKIE_config_torrentClient_var').remove()
-                document.getElementById('quiCKIE_config_presetCount_var').remove()
-                document.getElementById('quiCKIE_config_bunnyButtonPlacement_var').remove()
-                document.getElementById('quiCKIE_config_globalForcedTorrentFile_var').remove()
-                document.getElementById('quiCKIE_config_globalLeftClickAction_var').remove()
-                document.getElementById('quiCKIE_config_globalMiddleClickAction_var').remove()
-                document.getElementById('quiCKIE_config_thirdPartyDelay_var').remove()
-                document.getElementById('quiCKIE_config_hiddenTrackers_var').remove()
-
-                document.getElementById('quiCKIE_config_quiURL_var').remove()
-                document.getElementById('quiCKIE_config_quiApiKey_var').remove()
-                document.getElementById('quiCKIE_config_qBitTorrentURL_var').remove()
-                document.getElementById('quiCKIE_config_qBitTorrentUsername_var').remove()
-                document.getElementById('quiCKIE_config_qBitTorrentPassword_var').remove()
-                document.getElementById('quiCKIE_config_transmissionURL_var').remove()
-                document.getElementById('quiCKIE_config_transmissionUsername_var').remove()
-                document.getElementById('quiCKIE_config_transmissionPassword_var').remove()
-                document.getElementById('quiCKIE_config_delugeURL_var').remove()
-                document.getElementById('quiCKIE_config_delugePassword_var').remove()
-                document.getElementById('quiCKIE_config_ruTorrentURL_var').remove()
-                document.getElementById('quiCKIE_config_ruTorrentUsername_var').remove()
-                document.getElementById('quiCKIE_config_ruTorrentPassword_var').remove()
-
                 // Obfuscate the client credentials on blur
                 for ( let inputField of document.querySelectorAll('.quiCKIE_obfuscate') ) {
                     inputField.type = 'password'
@@ -2281,9 +2255,11 @@ function createGMConfigSettingsPanel() {
                 buttonsHolderElement.appendChild(importButton)
                 buttonsHolderElement.appendChild(exportButton)
                 
-                document.getElementById('quiCKIE_config_settingsImport_var').remove()
-                document.getElementById('quiCKIE_config_settingsExport_var').remove()
-                
+                // Remove the now empty <div> elements
+                for ( let emptyElement of document.getElementById('quiCKIE_config').querySelectorAll('div.config_var:empty') ) {
+                    emptyElement.remove()
+                }
+
                 // Add success animation to save button
                 let saveButton = doc.getElementById('quiCKIE_config_saveBtn')
                 saveButton.addEventListener('click', () => {
@@ -2434,6 +2410,7 @@ function createPresetItems(trackerDomains) {
         for ( let i=1; i <= presetCount; i++ ) {
             // for each preset, create a menuItem object to put in the right-click presets-menu
             let presetName = GM_config.get(`preset-${i}-preset`)
+            // let presetName = GM_config.get(`preset-${i}-name`)
             let presetTrackersList = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase()
 
             if ( presetName == '' || presetTrackersList == '') {
@@ -3372,7 +3349,6 @@ async function getFileBlob(postData) {
 
             if ( blobData.type != 'application/x-bittorrent' ) {
                 // The downloaded file is NOT a .torrent type, abort the POST
-                console.log(response)
                 replaceEmojis(bunnyButton, '❌')
 
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file. Aborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nStatus Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
@@ -3467,7 +3443,7 @@ async function quiPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui. This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}quiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui. This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {

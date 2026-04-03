@@ -370,7 +370,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     height: 95px;
-    margin: -10px auto 15px auto;
+    margin: -10px auto 55px auto;
     padding: 10px 0px 10px 0px;
     row-gap: 10px;
     text-align: center;
