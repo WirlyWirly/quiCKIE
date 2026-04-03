@@ -1538,6 +1538,7 @@ function createGMConfigSettingsPanel() {
                 panelStyle.transform = 'translate(-50%,-50%)'
                 panelStyle.width = '1650px'
                 panelStyle.overflowY = 'scroll'
+                panelStyle.touchAction = 'pan-x pan-y'
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various trackerDomain <div> elements created by GM_config() into a <table> with columns/rows
