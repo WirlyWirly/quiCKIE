@@ -4045,10 +4045,7 @@ function saveToFile(fileData, filename) {
         // The different MIME types this function is setup to handl. 
         // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
             
-        'jpg': 'image/jpeg',
-        'jpeg': 'image/jpeg',
         'json': 'application/json;charset=utf-8;',
-        'png': 'image/png',
         'text': 'text/plain;charset=utf-8;',
         'torrent': 'application/x-bittorrent',
 
