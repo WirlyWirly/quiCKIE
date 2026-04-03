@@ -2292,13 +2292,13 @@ function createGMConfigSettingsPanel() {
                     setTimeout(() => saveButton.classList.remove('success'), 500)
                 })
 
-                if ( this.get('welcomeMessage') == 'show' ) {
-                    // Display this welcomeMessage when first opening the quiCKIE settings panel
-                    confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients only being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue or leave a comment on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
+                // if ( this.get('welcomeMessage') == 'show' ) {
+                //     // Display this welcomeMessage when first opening the quiCKIE settings panel
+                //     confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients only being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue or leave a comment on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
 
-                    this.set('welcomeMessage', 'hide')
+                //     this.set('welcomeMessage', 'hide')
 
-                }
+                // }
 
             },
             'save': function () {
