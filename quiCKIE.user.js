@@ -91,6 +91,8 @@
 // @match   https://www.empornium.sx/torrents.php*
 // @match   https://www.empornium.sx/user.php?id=*
 
+// @match   https://e*hentai.org/gallerytorrents.php*
+
 // @match   https://exoticaz.to/
 // @match   https://exoticaz.to/*/bookmark*
 // @match   https://exoticaz.to/torrent*
@@ -207,8 +209,7 @@
 // @grant   GM_getValue
 // @grant   GM_listValues
 // @grant   GM_registerMenuCommand
-// @grant   GM:q
-// @setValue
+// @grant   GM_setValue
 // @grant   GM_xmlhttpRequest
 
 // ----------------------------------- Script Links --------------------------------------
@@ -325,6 +326,7 @@ const settingsPanelTrackers = [
         homepageURL: 'https://e-hentai.org',
         primaryDomain: 'e-hentai',
         trackerDomains: ['exhentai'],
+    },
 
     {
         trackerName: 'ExoticaZ', // @fercats99 > @holy-elbow
