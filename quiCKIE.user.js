@@ -482,7 +482,7 @@ const settingsPanelTrackers = [
 
 // The domain of the current site, which MUST be registerd to one of the trackers in the settingsPanelTrackers array
 // Example: https://broadcasthe.net/ --> broadcasthe
-const trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)(\.\w+)$/)[2].toLowerCase()
+let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
 
 // Everything related to the GM_config library, which is used for creating and presenting the settings panel: https://github.com/sizzlemctwizzle/GM_config
 let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
@@ -1245,7 +1245,6 @@ function createGMConfigSettingsPanel(trackerDomain) {
     let primaryDomain, registeredTracker = false
     for ( let tracker of settingsPanelTrackers ) {
         // Check the current trackerDomain against all the registered trackers to retrieve the trackers primaryDomain
-    
 
         let trackerName = tracker.trackerName
         let settingsId = tracker.primaryDomain.toLowerCase().trim()
@@ -1679,7 +1678,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
                     let jsonString = JSON.stringify(jsonParsed, null, 4)
 
                     // Save the quiCKIE settings to a local file
-                    saveToFile(jsonString, `quiCKIE-${new Date().toISOString().split('T')[0]}.json`)
+                    saveToFile(jsonString, `quiCKIE-v${GM_info.script.version}-${new Date().toISOString().split('T')[0]}.json`)
 
                 },
             },
@@ -3175,7 +3174,7 @@ function createBunnyButton({
 }
 
 
-function getPageSeparator(downloadElement, manualSeparator=false) {
+function getPageSeparator(downloadElement, manualSeparator = false) {
     // Determine if the nextSibling element is a separator, and if so return the value
 
 
@@ -4118,7 +4117,7 @@ async function delugePOST(postData) {
 
 async function ruTorrentPOST(postData) {
     // *** TO-DO ***
-    // ruTorrent confuses me, it seems there's different ways to login and I'm not sure which approach to take and the pros/cons... From a brief glance, the torrent POST takes base64 like transmissionPOST()
+    // ruTorrent confuses me, it seems there's different ways to login (either using an http form or through the api) and I'm not sure about the procs\cons of each approach... From a brief glance, the torrent POST requires base64 like transmissionPOST()
 
 }
 
@@ -4278,10 +4277,10 @@ function waitForElement(cssTarget, observeTarget = document.body, observeSubTree
 }
 
 function saveToFile(fileData, filename) {
-    // Save the provided fileData to a local file
+    // Download the provided fileData to a local file
     
     mimeTypes = {
-        // The different MIME types this function is setup to handl. 
+        // The different MIME types this function is setup to handle 
         // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
             
         'json': 'application/json;charset=utf-8;',
