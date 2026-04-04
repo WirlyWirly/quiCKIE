@@ -491,7 +491,7 @@ let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHome
 let [ SETTINGS, presetMenuItems ] = getTrackerSettings(primaryDomain)
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🪙|🕓|🧲|🧑|❌|✔️|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🪙|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
 
 // The URL of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -3584,6 +3584,7 @@ async function getFileBlob(postData) {
                 // The downloaded file is NOT a .torrent type, abort the POST
                 replaceEmojis(bunnyButton, '❌')
 
+                console.log(response)
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file. Aborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nStatus Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
                 return
 
