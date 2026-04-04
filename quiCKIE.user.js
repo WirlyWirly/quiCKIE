@@ -1517,7 +1517,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         },
 
         'columnTitles': {
-            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
+            'tracker': "─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings",
 
             'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nℹ️ Hovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
@@ -1828,26 +1828,31 @@ function createGMConfigSettingsPanel(trackerDomain) {
                 // Append the headers to the <thead> (tableHeader) element
                 thead.appendChild(headersRow)
 
-                let uniqueDomains = allPrimaryDomains
-                for (let uniqueDomainKey of uniqueDomains) {
+                for ( let panelDomain of allPrimaryDomains ) {
                     // For each tracker, create 1 <tr> (tablerow). For each <tr>, create 1 <td> (tabledata) to contain the tracker's hyperlink. Create the <a> hyperlink then move the tracker's label into that <a> element.
 
-                    // 1 <tr> for this tracker, appended to the <tbody> (tableBody)
+                    // 1 <tr> for this tracker, appended it to the <tbody> (tableBody)
                     let tableRow = document.createElement('tr')
-                    tableRow.id = `quiCKIE_config_tracker_table_tr_${uniqueDomainKey}`
+                    tableRow.id = `quiCKIE_config_tracker_table_tr_${panelDomain}`
                     tableRow.classList.add('quiCKIE_config_table_tbody_tr')
                     tbody.appendChild(tableRow)
 
-                    // 1 <td> for this tracker, appended to the <tr>
+                    // 1 <td> to hold the trackerName for this tracker, appended it to the <tr>
                     let labelData = document.createElement('td')
                     labelData.classList.add('quiCKIE_config_table_td_label')
                     tableRow.appendChild(labelData)
 
-                    // Move the trackerLabel field into the <td>
-                    let trackerLabelElement = document.getElementById(`quiCKIE_config_${uniqueDomainKey}-category_field_label`)
+                    // The <a> element to hold the trackerHomepage, append it to the <td>
+                    let trackerHyperlinkElement = document.createElement('a')
+                    trackerHyperlinkElement.href = primaryDomainToHomepage[panelDomain]
+                    trackerHyperlinkElement.target = '_blank'
+                    labelData.appendChild(trackerHyperlinkElement)
+                        
+                    // Move the trackerLabel field into the <a> hyperlink
+                    let trackerLabelElement = document.getElementById(`quiCKIE_config_${panelDomain}-category_field_label`)
                     trackerLabelElement.removeAttribute('for')
                     trackerLabelElement.classList.add('quiCKIE_config_field_tracker_label')
-                    labelData.appendChild(trackerLabelElement)
+                    trackerHyperlinkElement.appendChild(trackerLabelElement)
 
                     // The field suffixes as specified in @trackerFieldGeneration
                     for (let fieldSuffix of trackerFieldSuffixes) {
@@ -1860,12 +1865,12 @@ function createGMConfigSettingsPanel(trackerDomain) {
                         tableRow.appendChild(dataElement)
 
                         // Move the GM_Config field into the <td>
-                        let fieldElement = document.getElementById(`quiCKIE_config_field_${uniqueDomainKey}-${fieldSuffix}`)
+                        let fieldElement = document.getElementById(`quiCKIE_config_field_${panelDomain}-${fieldSuffix}`)
                         fieldElement.setAttribute('data-fieldtype', fieldSuffix)
                         dataElement.appendChild(fieldElement)
 
                         // Clean-up: Remove the now empty GM_config <div> element
-                        document.getElementById(`quiCKIE_config_${uniqueDomainKey}-${fieldSuffix}_var`).remove()
+                        document.getElementById(`quiCKIE_config_${panelDomain}-${fieldSuffix}_var`).remove()
 
                     }
 
