@@ -227,13 +227,13 @@ const settingsPanelTrackers = [
     
     // Each tracker requires 3 things; A TitleCase name, the URL of the homepage, and the primaryDomain of the tracker
     
-    // Identifying the domain of a tracker
-    // Example: https://broadcasthe.net/ --> broadcasthe
-    // Example: https://www.myanonamouse.net/ --> myanonamouse
-    // Example: https://sukebei.nyaa.si/ --> nyaa
+    // Here are examples of identify the domain of a tracker...
+    //  https://broadcasthe.net/ --> broadcasthe
+    //  https://www.myanonamouse.net/ --> myanonamouse
+    //  https://sukebei.nyaa.si/ --> nyaa
 
-    // If the tracker has more than 1 domain that it can be accessed from, you may include an array of domain names, that way these domains will all share the same settings
-    // trackerDomains: ['domain1', 'domain2', 'domain3']
+    // If the tracker has more than 1 domain that it can be accessed from, you may include an array of domain names. This will make it so that these domains all share the same settings.
+    // trackerDomains: ['domain1', 'domain2', 'domain3'],
     
     {
         trackerName: 'Aither', // @holy-elbow
