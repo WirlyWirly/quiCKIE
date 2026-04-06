@@ -1,9 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Bug Report
-    url: https://github.com/WirlyWirly/quiCKIE/issues/new?template=bug-report.md
-    about: Create a new issue for a bug that has not yet been reported
-
   - name: Feature Request
     url: https://github.com/WirlyWirly/quiCKIE/discussions/new?category=feature-request
     about: Start a Discussion For a New Feature Request
