@@ -1,6 +1,15 @@
-# **🐰 quiCKIE 🐰**
+<div align="center">
 
-![](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/preview.webp?raw=true)
+  # **🐰 quiCKIE 🐰**
+</div>
+
+<br>
+
+<div align="center">
+  <img src=".github/assets/quickie.webp" alt="quickie" width="100%" />
+</div>
+
+<br>
 
 This [UserScript](https://openuserjs.org/about/Userscript-Beginners-HOWTO) will generate **BunnyButtons 🐰** alongside a sites regular download buttons. When clicked, the corresponding torrent will be sent to your torrent client using your custom settings.
 
