@@ -1271,7 +1271,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
         let trackerName = tracker.trackerName
         let settingsId = tracker.primaryDomain.toLowerCase().trim()
-        let allDomains = tracker.otherDomains
+        let otherDomains = tracker.otherDomains
 
         // Populate the array\objects that will be returned and made global
         allPrimaryDomains.push(settingsId)
@@ -1279,18 +1279,16 @@ function createGMConfigSettingsPanel(trackerDomain) {
         primaryDomainToHomepage[settingsId] = tracker.homepageURL
         trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId
 
-        if ( allDomains == undefined ) {
+        if ( settingsId == trackerDomain && otherDomains == undefined ) {
             // This tracker only has a primary domain, so check it for a match
-            
-            if ( settingsId == trackerDomain ) {
-                primaryDomain = settingsId
-                registeredTracker = true
-            }
+
+            primaryDomain = settingsId
+            registeredTracker = true
 
         } else {
             // This tracker has an array of otherDomains, so check if either the primaryDomain or an array item is a match
             
-            if ( settingsId == trackerDomain || allDomains.includes(trackerDomain) ) {
+            if ( settingsId == trackerDomain || otherDomains.includes(trackerDomain) ) {
                 primaryDomain = settingsId
                 registeredTracker = true
             }
