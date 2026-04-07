@@ -229,14 +229,14 @@ const settingsPanelTrackers = [
     
     // Each tracker requires 3 things; A TitleCase name, the homepage URL, and the primaryDomain of the tracker
     
+    // If the tracker has more than one domain that it can be accessed from, you may also include the 'otherDomains' property, which should consist of an array (list) of different domain names. This will make it so that these domains all share the same tracker settings.
+    // otherDomains: ['domain1', 'domain2', 'domain3'],
+    
     // Here are examples of identify the domain of a tracker...
     //  https://broadcasthe.net/ --> broadcasthe
     //  https://www.myanonamouse.net/ --> myanonamouse
     //  https://sukebei.nyaa.si/ --> nyaa
 
-    // If the tracker has more than one domain that it can be accessed from, you may also include the 'otherDomains' property, which should consist of an array (list) of different domain names. This will make it so that these domains all share the same tracker settings.
-    // otherDomains: ['domain1', 'domain2', 'domain3'],
-    
     {
         trackerName: 'Aither', // @holy-elbow
         homepageURL: 'https://aither.cc',
@@ -500,7 +500,7 @@ let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHome
 let [ SETTINGS, presetMenuItems ] = getTrackerSettings(primaryDomain)
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🪙|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🪙|🌱|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
 
 // The URL of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -786,7 +786,7 @@ if ( primaryDomain == 'animebytes' ) {
 
                     } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
                         // This is a Doubleseed button
-                        bunnyButton.textContent = '🐰 Doubleseed'
+                        bunnyButton.textContent = '🌱 Doubleseed'
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
                     } else {
                         // This is a standard Download button
@@ -1005,7 +1005,7 @@ if ( primaryDomain == 'animebytes' ) {
 
                     // This is the Freeleech Wedge button, so apply a different style
                     if ( bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ) {
-                        bunnyButton.textContent = '🧀 quiCKIE'
+                        bunnyButton.textContent = '🧀 Freeleech'
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}background: #2E2400; border: #CBC29E solid 1px; color: #CBC29E;`)
                     } 
 

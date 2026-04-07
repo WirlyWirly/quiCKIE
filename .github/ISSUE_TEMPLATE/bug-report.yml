@@ -1,0 +1,68 @@
+name: 🐞 Bug Report
+description: Open a new issue for a bug that has not yet been reported
+title: "bugName"
+labels: ["bug"]
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        If this bug is related to a particular tracker not generating BunnyButtons, know that support can be limited as private trackers are behind closed doors. In this case, you may be called on for patching\testing so that it can be fixed. A broken tracker without anyone willing\able to maintain it is likely to be removed after a time.
+
+  - type: textarea
+    id: bugDescription
+    validations:
+      required: true
+    attributes:
+      label: ✏️ Description
+      description: Briefly explain the expected behaviour, the buggy behaviour, and how this bug can be reproduced.
+
+  - type: input
+    id: userBrowser
+    validations:
+      required: true
+    attributes:
+      label: 🖥️ Browser
+      placeholder: LibreWolf, FireFox, Chrome
+
+  - type: dropdown
+    id: userscriptManager
+    validations:
+      required: true
+    attributes:
+      label: 🐵 UserScript Manager
+      multiple: true
+      options:
+        - Violentmonkey
+        - Tampermonkey
+        - Greasemonkey
+        - Other
+
+  - type: input
+    id: userscriptVersion
+    validations:
+      required: true
+    attributes:
+      label: 🐵 UserScript
+      description: What is the quiCKIE version you are reporting a bug for?
+      placeholder: quiCKIE [v1.5]
+
+  - type: textarea
+    id: consoleMessages
+    validations:
+      required: true
+    attributes:
+      label: 📄 Console Messages
+      description: Copy-paste the browser's console messages related to this bug. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+
+  - type: checkboxes
+    id: userConfirmation
+    attributes:
+      label: Confirm New Issue
+      options:
+        - label: Yes, I can reproduce this bug even after disabling other UserScripts\programs that may cause interference
+          required: true
+        - label: Yes, I have searched for and confirmed this bug has not yet been reported
+          required: true
+

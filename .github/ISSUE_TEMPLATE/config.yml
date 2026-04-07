@@ -1,6 +1,10 @@
+# Enabling this options will make it so that only maintainers can create blank issues
 blank_issues_enabled: false
+
+# Each contact_link will appear as an issue option, but will re-direct the user to the specified url
 contact_links:
-  - name: Feature Request
+
+  - name: 💡 Feature Request
     url: https://github.com/WirlyWirly/quiCKIE/discussions/new?category=feature-request
     about: Start a discussion for a new feature request
 
