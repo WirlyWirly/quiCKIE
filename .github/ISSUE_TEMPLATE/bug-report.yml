@@ -43,7 +43,7 @@ body:
     validations:
       required: true
     attributes:
-      label: 🐵 UserScript
+      label: 🐰 Version
       description: What is the quiCKIE version you are reporting a bug for?
       placeholder: quiCKIE [v1.5]
 
@@ -53,7 +53,7 @@ body:
       required: true
     attributes:
       label: 📄 Console Messages
-      description: Copy-paste the browser's console messages related to this bug. This will be automatically formatted into code, so no need for backticks.
+      description: Copy-paste the browser's console messages related to this bug, making sure to obfuscate any sensitive data. This will be automatically formatted into code, so no need for backticks.
       render: shell
 
   - type: checkboxes
