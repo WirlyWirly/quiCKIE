@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        If this bug is related to a particular tracker not generating BunnyButtons, know that support can be limited as private trackers are behind closed doors. In this case, you may be called on for patching\testing so that it can be fixed. A broken tracker without anyone willing\able to maintain it is likely to be removed after a time.
+        If this bug is related to a particular tracker not generating BunnyButtons, know that support can be limited as private trackers are behind closed doors. In this case, you may be called on for light testing or HTML inspections so that the tracker can be fixed. A broken tracker without anyone willing\able to maintain it is likely to be removed after a time.
 
   - type: textarea
     id: bugDescription
@@ -65,4 +65,5 @@ body:
           required: true
         - label: Yes, I have searched for and confirmed this bug has not yet been reported
           required: true
+        - label: If this bug is related to a particular private tracker, I am willing to help with testing or HTML inspections to get it fixed
 
