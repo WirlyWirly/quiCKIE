@@ -30,18 +30,17 @@ The quiCKIE settings panel can be accessed by performing a **Shift-Click** on an
 > **Shift-Ctrl-Click**: Send torrent to client, but paused (works for both the current tracker settings and presets)<br>
 >
 > **BunnyButton Emojiography***<br>
-> 🐰 = Default | 🌱 = Seeding | 🍂 = Snatched | 🪙 = Freeleech | 🤝 = ThirdParty<br>
+> 🐰 = Default | 🌱 = Seeding | 🍁 = Snatched | 💎 = Freeleech | 🤝 = ThirdParty<br>
 > 🧲 = Downloading .torrent file | 🧑 = Client Login | 🕓 = Sending Torrent | ✔️ = Success | ❌ = Failure
 >
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [qui - quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
 > Written on [LibreWolf](https://librewolf.net/) via [Violentmonkey](https://violentmonkey.github.io/)<br>
 >
+> \* *Full BunnyButton Emojiography is available on select trackers*
+>
 
 <br>
 
 # Integrating Third-Party UserScripts
 If you are the author of a UserScript that creates torrent `DL` (Download) buttons on a page that is serviced by quiCKIE, you can very easily integrate your UserScript so that your `DL` elements receive their very own and fully functioning BunnyButton 🐰: [Integrating Third-Party UserScripts](https://github.com/WirlyWirly/quiCKIE/wiki/Integrating-Other-UserScripts)
-<br>
-
-<small>* *Not all trackers support full BunnyButton emojiography*</small>

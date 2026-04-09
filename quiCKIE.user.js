@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.37
+// @version     1.38
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -501,7 +501,7 @@ let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHome
 let [ SETTINGS, presetMenuItems ] = getTrackerSettings(primaryDomain)
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🪙|🌱|🍂|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
+const emojiRegex = new RegExp('🐰|💎|🌱|🍁|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
 
 // The URL of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -542,15 +542,20 @@ if ( primaryDomain == 'animebytes' ) {
         // Additional class names that will be applied to each bunnyButton, useful for advanced styling
         bunnyButtonAddClasses: [], // Default = [] || Options = An array of strings 
 
-        // A string of valid JavaScript pointing to a nearby element, relative to the downloadElement, that indicates a torrent has the status of 'seeding' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
-        // The string should start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate the target element. If the element is found the bunnyButton emoji will be changed to '🌱'
-        // In addition, if the target element has identifiable text but not attributes, it may be helpful to perform a .textContent.match(/regex/) (see the Redacted block for examples)
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
+        // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
         seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
 
-        // A string of valid JavaScript pointing to a nearby element, relative to the downloadElement, that indicates a torrent has the status of 'snatched' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
-        // The string should start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate the target element. If the element is found the bunnyButton emoji will be changed to '🍂 '
-        // In addition, if the target element has identifiable text but not attributes, it may be helpful to perform a .textContent.match(/regex/) (see the Redacted block for examples)
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
+        // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
         snatchedStatusSelector: "downloadElement.closest('td').querySelector('a.snatched-torrent')", // Default = null || Options = 'downloadElement...'
+
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
+        // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
+        freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
 
         // A function that will be called after all the bunnyButtons have been created, useful for advanced styling or further clean-up (see the BakaBT\Empornium\MyAnonaMouse blocks for examples)
         // The 'elements' parameter will be an object consisting of three arrays: elements = { bunnyButtons: [], downloadElements: [], pairedElements:[] } 
@@ -623,6 +628,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a.download_link[href^="/download/"]',
         bunnyButtonFontSize: '140%',
         bunnyButtonText: '🐰 quiCKIE',
+        freeleechStatusSelector: "document.querySelector('span.freeleech')",
         bunnyButtonAddStyles: `
             background: #153245;
             border-radius: 4px;
@@ -753,7 +759,8 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
         bunnyButtonFontSize: '130%',
         seedingStatusSelector: "downloadElement.parentElement.querySelector('i.torrent_icons.seeding')",
-        snatchedStatusSelector: "downloadElement.parentElement.querySelector('i.torrent_icons.snatched')"
+        snatchedStatusSelector: "downloadElement.parentElement.querySelector('i.torrent_icons.snatched')",
+        freeleechStatusSelector: "downloadElement.closest('span.torrent_icon_container').querySelector('i.font_icon.unlimited_leech')"
     }
 
     // This is a collage page, so place the bunnyButton alongside the parentElement
@@ -800,7 +807,7 @@ if ( primaryDomain == 'animebytes' ) {
 
                     if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
                         // This is a Freeleech button
-                        bunnyButton.textContent = '🪙 Freeleech'
+                        bunnyButton.textContent = '💎 Freeleech'
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
                         bunnyButton.setAttribute('data-emojispecified', 'true')
 
@@ -813,8 +820,11 @@ if ( primaryDomain == 'animebytes' ) {
                         // This is a standard Download button
                         bunnyButton.textContent = '🐰 quiCKIE'
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
-                        mainDownloadButton.querySelector('i.torrent_icons.seeding') != null ? replaceEmojis(bunnyButton, '🌱') : null
-                        mainDownloadButton.querySelector('i.torrent_icons.snatched') != null ? replaceEmojis(bunnyButton, '🍂') : null
+
+                        // Check if the torrent is seeding\snatched\freeleech
+                        mainDownloadButton.closest('.torrent_icon_container').querySelector('i.font_icon.unlimited_leech') != null ? replaceEmojis(bunnyButton, '💎') : null // Freeleech
+                        mainDownloadButton.querySelector('i.torrent_icons.snatched') != null ? replaceEmojis(bunnyButton, '🍁') : null // Snatched
+                        mainDownloadButton.querySelector('i.torrent_icons.seeding') != null ? replaceEmojis(bunnyButton, '🌱') : null // Seeding
                     }
 
                 }
@@ -857,6 +867,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
         seedingStatusSelector: "downloadElement.closest('td').querySelector('#color_seeding')",
         snatchedStatusSelector: "downloadElement.closest('td').querySelector('#color_snatched')",
+        freeleechStatusSelector: "downloadElement.closest('td').querySelector('.freeleech_label, .personal_freeleech_label')",
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -881,12 +892,16 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a.js-download[href^="/download.php/"]',
         bunnyButtonFontSize: '140%',
         bunnyButtonText: '🐰',
+        freeleechStatusSelector: "downloadElement.closest('td').querySelector('a.fl')",
     }
 
     // This is a details page, so apply styling to the single bunnyButton
     if ( pageURL.match(/details\.php\?id=\d+/) ) {
 
         trackerHandlingOptions.seedingStatusSelector = "downloadElement.closest('td').querySelector('span.tag_seeding')"
+        trackerHandlingOptions.snatchedStatusSelector = "downloadElement.closest('td').querySelector('span.tag_completed')"
+        trackerHandlingOptions.freeleechStatusSelector = "downloadElement.closest('td').querySelector('span.tag.freeleech')"
+
         trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
         trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #153245;
@@ -1035,11 +1050,12 @@ if ( primaryDomain == 'animebytes' ) {
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}background: #2E2400; border: #CBC29E solid 1px; color: #CBC29E;`)
 
                     } else {
-                        // This is not the Freeleech Wedge button, so check if the torrent is seeding\snatched
+                        // This is not the Freeleech Wedge button, so check if the torrent is seeding\snatched\freeleech
                         
                         try {
-                            document.getElementById('DLhistory').textContent.match(/seeding/i) ? replaceEmojis(bunnyButton, '🌱') : null
-                            document.getElementById('DLhistory').textContent.match(/seeder/i) ? replaceEmojis(bunnyButton, '🍂') : null
+                            document.getElementById('ratio').textContent.match(/freeleech/i) ? replaceEmojis(bunnyButton, '💎') : null // Freeleech
+                            document.getElementById('DLhistory').textContent.match(/seeder/i) ? replaceEmojis(bunnyButton, '🍁') : null // Snatched
+                            document.getElementById('DLhistory').textContent.match(/seeding/i) ? replaceEmojis(bunnyButton, '🌱') : null // Seeding
                         } catch(error) {
                             // console.log(error)
                         }
@@ -1063,7 +1079,7 @@ if ( primaryDomain == 'animebytes' ) {
             downloadElementsTrackProcessed: true,
             seedingStatusSelector: "downloadElement.closest('tr').querySelector('div.browseAct')",
             snatchedStatusSelector: "downloadElement.closest('tr').querySelector('div.browseInact')",
-
+            freeleechStatusSelector: `downloadElement.closest('tr').querySelector('a[href$="&fl"][title*="Download"]') == null`, // There is no FL Wedge button, so this torrent must already be FL
             afterBunnyButtonCreation: function(elements) {
                 // The actions to take after the bunnyButtons have been created...
 
@@ -1142,7 +1158,8 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        snatchedStatusSelector: "downloadElement.closest('tr').querySelector('strong.tl_snatched')"
+        snatchedStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_snatched')",
+        freeleechStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_free')"
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -1154,7 +1171,8 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
         seedingStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Seeding"]')`,
-        snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Downloaded"]')`
+        snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Downloaded"]')`,
+        freeleechStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link .torrent-info__download-modifier--free')`
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -1182,7 +1200,8 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
         seedingStatusSelector: "downloadElement.closest('tr').querySelector('.tl_notice').textContent.match(/seeding/i)",
-        snatchedStatusSelector: "downloadElement.closest('tr').querySelector('.tl_snatched')"
+        snatchedStatusSelector: "downloadElement.closest('tr').querySelector('.tl_snatched')",
+        freeleechStatusSelector: "downloadElement.closest('tr').querySelector('.tl_free')"
     }
 
     if ( !pageURL.match(/collages?\.php\?id=\d+/) ) {
@@ -2907,6 +2926,7 @@ function quickieTrackerHandler({
     bunnyButtonAddClasses = [],
     seedingStatusSelector = null,
     snatchedStatusSelector = null,
+    freeleechStatusSelector = null,
     afterBunnyButtonCreation = false,
     downloadElementsTorrentURLAttribute = 'href',
     forceTorrentFile = false,
@@ -2930,7 +2950,7 @@ function quickieTrackerHandler({
 
     // Determine if there is a reason to log the bunnyButtons so that they can be referenced after the query loop
     let logElements = false
-    if ( typeof afterBunnyButtonCreation === 'function' || seedingStatusSelector != null || snatchedStatusSelector != null ) {
+    if ( typeof afterBunnyButtonCreation === 'function' || seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null ) {
         logElements = true
     }
 
@@ -3004,37 +3024,56 @@ function quickieTrackerHandler({
                     afterBunnyButtonCreation(loggedElements)
                 }
 
-                if ( seedingStatusSelector != null || snatchedStatusSelector != null && loggedElements['bunnyButtons'].length > 0 ) {
-                    // A torrent status selector was provided and there are newly created bunnyButtons, so check for status
+                if ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null && loggedElements['bunnyButtons'].length > 0 ) {
+                    // A torrent status selector was provided and there are newly created bunnyButtons, so use the selector(s) to check for the torrents current status
 
                     for ( let bothElements of loggedElements.pairedElements ) {
 
+                        let downloadElement = bothElements.downloadElement
+                        let bunnyButton = bothElements.bunnyButton
+
                         try {
 
-                            if ( eval(`bothElements.${seedingStatusSelector}`) && bothElements.bunnyButton.dataset.emojispecified != 'true' ) {
+                            if ( eval(`${seedingStatusSelector}`) && bunnyButton.dataset.emojispecified != 'true' ) {
                                 // A seedingStatusSelector was matched and this is not an already emoji-fied bunnyButton
-                                replaceEmojis(bothElements.bunnyButton, '🌱')
-                                bothElements.bunnyButton.title = bothElements.bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
+                                replaceEmojis(bunnyButton, '🌱')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
+                                continue
 
                             } 
 
                         } catch(error) {
-                            // console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was an error when attempting to query for the element that would indicate the torrents Seeding status. This is likely due to either a bad chaining of selectors or invalid Javascript. BunnyButton functionality is not affected, but this should be reported.\n\ndownloadElement: ${bothElements.downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`)
+                            // There was en error, likely due to either impossible method chaining or invalid JavaScript
+                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was an error when attempting to query for the element that would indicate the torrents Seeding status. This is likely due to either impossible method chaining or invalid Javascript.\n\ndownloadElement: ${downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`)
                         }
 
                         try {
 
-                            if ( eval(`bothElements.${snatchedStatusSelector}`) && bothElements.bunnyButton.dataset.emojispecified != 'true' ) { 
+                            if ( eval(`${snatchedStatusSelector}`) && bunnyButton.dataset.emojispecified != 'true' ) { 
                                 // A snatchedStatusSelector was matched and this is not an already emoji-fied bunnyButton
-                                replaceEmojis(bothElements.bunnyButton, '🍂')
-                                bothElements.bunnyButton.title = bothElements.bunnyButton.title.replace(/🔗/, '🍂 Snatched\n🔗')
+                                replaceEmojis(bunnyButton, '🍁')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Snatched\n🔗')
+                                continue
                             }
 
                         } catch(error) {
-                            // There was en error, likely due to either bad method chaining or invalid JavaScript
-                            // console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was an error when attempting to query for the element that would indicate the torrents Snatched status. This is likely due to either a bad chaining of selectors or invalid Javascript. BunnyButton functionality is not affected, but this should be reported.\n\ndownloadElement: ${bothElements.downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`)
+                            // There was en error, likely due to either impossible method chaining or invalid JavaScript
+                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was an error when attempting to query for the element that would indicate the torrents Snatched status. This is likely due to either impossible method chaining or invalid Javascript.\n\ndownloadElement: ${downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`)
                         }
 
+                        try {
+
+                            if ( eval(`${freeleechStatusSelector}`) && bunnyButton.dataset.emojispecified != 'true' ) { 
+                                // A freeleechStatusSelector was matched and this is not an already emoji-fied bunnyButton
+                                replaceEmojis(bunnyButton, '💎')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '💎 Freeleech\n🔗')
+                                continue
+                            }
+
+                        } catch(error) {
+                            // There was en error, likely due to either impossible method chaining or invalid JavaScript
+                            console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was an error when attempting to query for the element that would indicate the torrents Freeleech status. This is likely due to either impossible method chaining or invalid Javascript.\n\ndownloadElement: ${bothElements.downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`)
+                        }
                     }
                 }
 
@@ -3124,15 +3163,19 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                             downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
                         }
 
-                        if ( document.querySelector('li.torrent-activity-indicator--seeding') != null ) {
+                        if ( document.querySelector('span.torrent-icons i.torrent-icons__freeleech.fa-star') != null ) {
+                            // The freeleechStatusSelector was matched
+                            replaceEmojis(bunnyButton, '💎')
+                            bunnyButton.title = bunnyButton.title.replace(/🔗/, '💎 Freeleech\n🔗')
+                        } else if ( document.querySelector('li.torrent__seeders.torrent-activity-indicator--seeding') != null ) {
                             // The seedingStatusSelector was matched
                             replaceEmojis(bunnyButton, '🌱')
                             bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
 
-                        } else if ( document.querySelector('li.torrent-activity-indicator--completed') != null ) {
+                        } else if ( document.querySelector('li.torrent__completed.torrent-activity-indicator--completed') != null ) {
                             // The snatchedStatusSelector was matched
-                            replaceEmojis(bunnyButton, '🍂')
-                            bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍂 Completed\n🔗')
+                            replaceEmojis(bunnyButton, '🍁')
+                            bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
                         }
 
                     } else {
@@ -3140,14 +3183,22 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
 
-                        if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
-                            // The seedingStatusSelector was matched
-                            replaceEmojis(bunnyButton, '🌱')
-                            bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
-                        } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
-                            // The snatchedStatusSelector was matched
-                            replaceEmojis(bunnyButton, '🍂')
-                            bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍂 Completed\n🔗')
+                        try {
+                            if ( downloadElement.closest('tr').querySelector('i.torrent-icons__freeleech.fa-star') != null ) {
+                                // The freeleechStatusSelector was matched
+                                replaceEmojis(bunnyButton, '💎')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '💎 Freeleech\n🔗')
+                            } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
+                                // The seedingStatusSelector was matched
+                                replaceEmojis(bunnyButton, '🌱')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
+                            } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
+                                // The snatchedStatusSelector was matched
+                                replaceEmojis(bunnyButton, '🍁')
+                                bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
+                            }
+                        } catch(error) {
+                            // An error occured, most likely the page view-type is not a table
                         }
 
                         // If the bunnyButton is After the downloadElement, increase the padding to better fit the page
@@ -3209,7 +3260,7 @@ function createBunnyButton({
 
     // Indicate that this torrentURL will also Freeleech a torrent
     if ( torrentURL.match(/(&usetoken=1|&fl)/) ) { 
-        bunnyButton.textContent = bunnyButton.textContent.replace(/🐰/g, '🪙')
+        bunnyButton.textContent = bunnyButton.textContent.replace(/🐰/g, '💎')
         bunnyButton.setAttribute('data-emojispecified', 'true')
     }
 
