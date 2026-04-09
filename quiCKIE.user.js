@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.39.1
+// @version     1.40
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -498,10 +498,10 @@ let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].t
 let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
 
 // Retrieve the settings and presetMenuItems that are relevant to the current tracker
-let [ SETTINGS, presetMenuItems ] = getTrackerSettings(primaryDomain)
+let SETTINGS, presetMenuItems; [ SETTINGS, presetMenuItems ] = getTrackerSettings(primaryDomain)
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|💸|💎|🌱|🍁|🤝|🕓|🧲|🧑|❌|✔️|🧀', 'g')
+const emojiRegex = new RegExp('🐰|💸|💎|🌱|🍁|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
 
 // The URL of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -1590,7 +1590,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         'columnTitles': {
             'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
 
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nBoth text and emojis are supported\n\nPresets without a name will NOT be displayed\n\nℹ️ Hovering over a preset in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed. Both text and emojis are supported\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ Naming a preset 'Settings', 'Client', or 'TorrentFile' will display special menu items\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
@@ -2636,7 +2636,7 @@ function getTrackerSettings(primaryDomain) {
     // Define the main SETTINGS object and populate it with the current primaryDomain specific settings
 
     // @trackerSettings
-    let SETTINGS = {
+    SETTINGS = {
         primaryDomain: primaryDomain,
         forceTorrentFile: false,
         firstTrackerHandlerScan: true,
@@ -2734,8 +2734,76 @@ function createPresetItems(primaryDomains) {
                 continue
             }
 
-            if ( presetName.match(/^[-=\.\s]+$/) ) {
-                // A menu separator, so create a menuItem that does nothing when clicked
+            if ( presetName.match(/settings/i) ) {
+                // This preset item should open the quiCKIE Settings panel
+
+                var presetItem = {
+                    content: '🛠️ Settings 🛠️',
+                    events: {
+                        click: function(event) {
+                            GM_config.open()
+                        },
+                        mouseover: function(event) {
+                            this.title = '🛠️ Open the quiCKIE Settings Panel 🛠️'
+                        }
+                    }
+                }
+
+            } else if ( presetName.match(/client/i) ) {
+                // This preset item should open a tab to the torrent client
+
+                var presetItem = {
+                    content: `🖥️ ${SETTINGS.torrentClient.client} 🖥️`,
+                    events: {
+                        click: function(event) {
+
+                            if ( SETTINGS.torrentClient.client == 'qui') {
+                                window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
+                            } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
+                                window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
+                            } else if ( SETTINGS.torrentClient.client == 'Transmission') {
+                                window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
+                            } else if ( SETTINGS.torrentClient.client == 'Deluge') {
+                                window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
+                            } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
+                                window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
+                            }
+
+                        },
+                        mouseover: function(event) {
+                            this.title = `🖥️ Open the ${SETTINGS.torrentClient.client} Web Interface 🖥️`
+                        }
+
+                    }
+                }
+
+            } else if ( presetName.match(/torrentfile/i) ) {
+                // This preset item should open the torrentURL
+
+                var presetItem = {
+                    content: '💾 TorrentFile 💾',
+                    events: {
+                        click: function(event) {
+                            // This menuItem was clicked, so use the selected preset
+                            let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
+                            
+                            let fileElement = document.createElement('a')
+                            fileElement.href = bunnyButton.dataset.torrenturl
+
+                            document.body.appendChild(fileElement)
+                            fileElement.click()
+                            document.body.removeChild(fileElement)
+                            replaceEmojis(bunnyButton, '💾')
+
+                        },
+                        mouseover: function(event) {
+                            this.title = `💾 Download .torrent file 💾`
+                        }
+                    }
+                }
+
+            } else if ( presetName.match(/^[-=\.\s]+$/) ) {
+                // This preset item is a menu separator, so create a menuItem that does nothing when clicked
 
                 // Replace - = . with their respective symbols
                 if ( presetName.includes('-') ) {
@@ -2860,20 +2928,55 @@ function createPresetItems(primaryDomains) {
                     },
                 }
             },
-            {   content: 'quiCKIE Settings',
+            {   content: '🛠️ Settings 🛠️',
                 events: {
                     'click': function(event) {
                         GM_config.open()
                     }
                 }
             },
-            {   content: 'qui Tab',
+            {   content: `🖥️ ${SETTINGS.torrentClient.client} 🖥️`,
                 events: {
                     'click': function(event) {
-                        window.open(SETTINGS.quiURL, '_blank').focus()
+
+                        if ( SETTINGS.torrentClient.client == 'qui') {
+                            window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
+                        } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
+                            window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
+                        } else if ( SETTINGS.torrentClient.client == 'Transmission') {
+                            window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
+                        } else if ( SETTINGS.torrentClient.client == 'Deluge') {
+                            window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
+                        } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
+                            window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
+                        }
+
                     }
                 }
-            }]
+            }, 
+            {
+                content: '💾 TorrentFile 💾',
+                events: {
+                    click: function(event) {
+                        // This menuItem was clicked, so use the selected preset
+                        let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
+                        
+                        let fileElement = document.createElement('a')
+                        fileElement.href = bunnyButton.dataset.torrenturl
+
+                        document.body.appendChild(fileElement)
+                        fileElement.click()
+                        document.body.removeChild(fileElement)
+                        replaceEmojis(bunnyButton, '💾')
+
+                    },
+                    mouseover: function(event) {
+                        this.title = `💾 Download .torrent file 💾`
+                    }
+                }
+            },
+
+            ]
 
         }
 
@@ -3035,7 +3138,7 @@ function quickieTrackerHandler({
 
                         } catch(error) {
                             // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe seedingStatusSelector returned an error.\n\nIf you are reading this message and the 🌱 is present on the bunnyButtons that that are indeed seeding, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the seeding torrents are not displaying the 🌱, it is most likely that either the seedingStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`)
+                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe seedingStatusSelector returned an error.\n\nIf you are reading this message and the 🌱 is present on the bunnyButtons that are indeed seeding, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the seeding torrents are not displaying the 🌱, it is most likely that either the seedingStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`)
                         }
 
                         try {
@@ -3049,7 +3152,7 @@ function quickieTrackerHandler({
 
                         } catch(error) {
                             // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe snatchedStatusSelector returned an error.\n\nIf you are reading this message and the 🍁 is present on the bunnyButtons that that are indeed snatched, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the snatched torrents are not displaying the 🍁, it is most likely that either the snatchedStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`)
+                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe snatchedStatusSelector returned an error.\n\nIf you are reading this message and the 🍁 is present on the bunnyButtons that are indeed snatched, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the snatched torrents are not displaying the 🍁, it is most likely that either the snatchedStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`)
                         }
 
                         try {
@@ -3063,7 +3166,7 @@ function quickieTrackerHandler({
 
                         } catch(error) {
                             // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe freeleechStatusSelector returned an error.\n\nIf you are reading this message and the 💎 is present on the bunnyButtons that that are indeed freeleech, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the freeleech torrents are not displaying the 💎, it is most likely that either the freeleechStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`)
+                            // console.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe freeleechStatusSelector returned an error.\n\nIf you are reading this message and the 💎 is present on the bunnyButtons that are indeed freeleech, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the freeleech torrents are not displaying the 💎, it is most likely that either the freeleechStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`)
                         }
                     }
                 }
