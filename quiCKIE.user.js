@@ -542,19 +542,19 @@ if ( primaryDomain == 'animebytes' ) {
         // Additional class names that will be applied to each bunnyButton, useful for advanced styling
         bunnyButtonAddClasses: [], // Default = [] || Options = An array of strings 
 
-        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱' (see the BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples)
         // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
         // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
         seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
 
-        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁' (see the AnimeBytes\BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples)
         // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
-        // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
+        // If the target element has identifiable text but not attributes, you may perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
         snatchedStatusSelector: "downloadElement.closest('td').querySelector('a.snatched-torrent')", // Default = null || Options = 'downloadElement...'
 
-        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎' (see the BroadcasTheNet\Empornium\PassThePopcorn blocks for examples)
+        // A string of valid JavaScript that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎' (see the AnimeBytes\BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples)
         // The string may start with 'downloadElement' then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a target element relative to the downloadElement. If the target element is found, the check is considered 'true'
-        // If the target element has identifiable text but not attributes, it may be helpful to perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
+        // If the target element has identifiable text but not attributes, you may perform a targetElement.textContent.match(/regex/). If a match is found, the check is considered to be 'true' (see the Redacted block for examples)
         freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
 
         // A function that will be called after all the bunnyButtons have been created, useful for advanced styling or further clean-up (see the BakaBT\Empornium\MyAnonaMouse blocks for examples)
