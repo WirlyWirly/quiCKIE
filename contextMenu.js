@@ -45,7 +45,10 @@ class ContextMenu {
     const button = document.createElement("BUTTON");
     const item = document.createElement("LI");
 
-    button.innerHTML = data.content;
+    if ( data.content ) {
+        button.innerHTML = data.content
+    }
+
     button.classList.add("contextMenu-button");
     item.classList.add("contextMenu-item");
 
