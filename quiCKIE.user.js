@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.40
+// @version     1.40.5
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -2709,7 +2709,7 @@ function getTrackerSettings(primaryDomain) {
 
 
 function createPresetItems(primaryDomains) {
-    // For all the primaryDomains (array), generate and return a object who's properties equal the presetMenu items of a primaryDomain
+    // For all the primaryDomains (array), generate and return a object who's properties equal the presetMenu items applicable to that primaryDomain
 
     defaultItems = {
         'basic': {
@@ -2847,23 +2847,20 @@ function createPresetItems(primaryDomains) {
             } else if ( presetName.match(/^[-=\.\s]+$/) ) {
                 // This preset item is a menu separator, so create a menuItem that does nothing when clicked
 
+                let dividerText = presetName
+
                 // Replace - = . with their respective symbols
                 if ( presetName.includes('-') ) {
-                    presetName = presetName.replaceAll(/./g, '─')
+                    dividerText = presetName.replaceAll(/./g, '─')
                 } else if ( presetName.includes('=') ) {
-                    presetName = presetName.replaceAll(/./g, '═')
+                    dividerText = presetName.replaceAll(/./g, '═')
                 } else if ( presetName.includes('.') ) {
-                    presetName = presetName.replaceAll(/./g, '·')
-                }
+                    dividerText = presetName.replaceAll(/./g, '·')
+                } 
 
                 var presetItem = {
-                    content: presetName,
-                    events: {
-                        mouseover: function(event) {
-                            // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
-                            this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
-                        }
-                    }
+                    content: dividerText,
+                    divider: 'true',
                 }
 
             } else {
@@ -3559,6 +3556,7 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
         null
 
     }
+
 }
 
 
@@ -3566,6 +3564,7 @@ function replaceEmojis(targetElement, newEmoji) {
     // Replace the emojis of the targetElement with the newEmoji
     
     targetElement.textContent = targetElement.textContent.replace(emojiRegex, newEmoji)
+
 }
 
 
@@ -4246,7 +4245,6 @@ async function transmissionPOST(postData) {
         }
     })
 
-
 }
 
 
@@ -4410,6 +4408,7 @@ async function delugePOST(postData) {
 
         }
     })
+
 }
 
 
@@ -4573,6 +4572,7 @@ function waitForElement(cssTarget, observeTarget = document.body, observeSubTree
     })
 
 }
+
 
 function saveToFile(fileData, filename) {
     // Download the provided fileData to a local file

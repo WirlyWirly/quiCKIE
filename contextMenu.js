@@ -49,7 +49,12 @@ class ContextMenu {
     button.classList.add("contextMenu-button");
     item.classList.add("contextMenu-item");
 
-    if (data.divider) item.setAttribute("data-divider", data.divider);
+    if (data.divider) {
+        // This is a divider, so mark the LI and BUTTON
+        item.setAttribute("data-divider", data.divider);
+        button.setAttribute("data-divider", data.divider);
+    }
+
     item.appendChild(button);
 
     if (data.events && data.events.length !== 0) {
@@ -100,7 +105,6 @@ class ContextMenu {
     });
 
     this.targetNode.forEach((target) => {
-
         // This element (bunnyButton) has not yet had a contextmenu event attached to it
 
         target.addEventListener("contextmenu", (e) => {

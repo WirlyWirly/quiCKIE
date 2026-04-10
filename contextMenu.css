@@ -12,7 +12,7 @@
   --item-bg-hover: rgba(255, 255, 255, 0.1);
   height: 0;
   overflow: hidden;
-  background: var(--menu-bg);
+  background: var(--menu-bg) !important;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
   position: fixed;
@@ -22,15 +22,17 @@
           animation: menuAnimation 0.4s 0s both;
   transform-origin: left;
   list-style: none;
-  margin: 4px;
-  padding: 0;
+  margin: 4px !important;
+  padding: 0 !important;
   display: flex;
   flex-direction: column;
   z-index: 999999999;
   box-shadow: 0 0 0 1px var(--menu-border), 0 2px 2px rgba(0, 0, 0, 0.03), 0 4px 4px rgba(0, 0, 0, 0.04), 0 10px 8px rgba(0, 0, 0, 0.05), 0 15px 15px rgba(0, 0, 0, 0.06), 0 30px 30px rgba(0, 0, 0, 0.07), 0 70px 65px rgba(0, 0, 0, 0.09);
 }
 .contextMenu-item {
-  padding: 4px;
+  background-color: none !important;
+  padding: 4px !important;
+  margin: 2px !important;
 }
 .contextMenu-item[data-divider=top] {
   border-top: 1px solid;
@@ -44,15 +46,24 @@
 }
 .contextMenu-item[data-divider] {
   border-color: var(--item-border);
+  padding: 1px !important;
+}
+.contextMenu-button[data-divider] {
+  border-color: var(--item-border);
+  color: rgba(255, 255, 255, 0.40) !important;
+  cursor: default !important;
+  padding: 1px !important;
 }
 .contextMenu-button {
-  color: var(--item-color);
-  background: 0;
-  border: 0;
+  color: var(--item-color) !important;
+  background: 0 !important;
+  background-color: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
   white-space: nowrap;
   width: 100%;
   border-radius: 4px;
-  padding: 6px 24px 6px 7px;
+  padding: 6px 24px 6px 7px !important;
   text-align: left;
   display: flex;
   align-items: center;
@@ -63,8 +74,8 @@
   font-family: "Inter", sans-serif;
   cursor: pointer;
 }
-.contextMenu-button:hover {
-  background-color: var(--item-bg-hover);
+.contextMenu-button:not([data-divider]):hover {
+  background-color: var(--item-bg-hover) !important;
 }
 .contextMenu[data-theme=light] {
   --menu-bg: linear-gradient(
