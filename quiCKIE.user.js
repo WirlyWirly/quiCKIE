@@ -1590,7 +1590,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         'columnTitles': {
             'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
 
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed. Both text and emojis are supported\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ Naming a preset 'Settings', 'Client', or 'TorrentFile' will display special menu items\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed. Both text and emojis are supported\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ Naming a preset 'Basic', 'Settings', 'Client', or 'TorrentFile' will display special menu items\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
@@ -2711,6 +2711,96 @@ function getTrackerSettings(primaryDomain) {
 function createPresetItems(primaryDomains) {
     // For all the primaryDomains (array), generate and return a object who's properties equal the presetMenu items of a primaryDomain
 
+    defaultItems = {
+        'basic': {
+            content: '☁️ Basic ☁️',
+            events: {
+                'click': function(event) {
+                    // This menuItem was clicked, so use basic settings to add the torrent
+                    let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
+
+                    let startPaused = false
+                    if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
+                        // Shift-Ctrl-Click: Add the torrent in a paused state
+                        startPaused = true
+                    }
+
+                    let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
+                    bunnyButton.id = bunnyButtonId
+
+                    addTorrent({
+                        torrentURL: bunnyButton.dataset.torrenturl,
+                        torrentClient: SETTINGS.torrentClient,
+                        bunnyButtonId: bunnyButtonId,
+                        startPaused: startPaused,
+                    })
+
+                },
+                mouseover: function(event) {
+                    this.title = `☁️ Send the torrent to ${SETTINGS.torrentClient.client} with no custom settings ☁️`
+                }
+            }
+        },
+        
+        'settings': {
+            content: '🛠️ Settings 🛠️',
+            events: {
+                'click': function(event) {
+                    GM_config.open()
+                },
+                'mouseover': function(event) {
+                    this.title = `🛠️ Open the quiCKIE Settings Panel 🛠️`
+                }
+            }
+        },
+
+        'client': {   
+            content: `🖥️ ${SETTINGS.torrentClient.client} 🖥️`,
+            events: {
+                'click': function(event) {
+
+                    if ( SETTINGS.torrentClient.client == 'qui') {
+                        window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
+                    } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
+                        window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
+                    } else if ( SETTINGS.torrentClient.client == 'Transmission') {
+                        window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
+                    } else if ( SETTINGS.torrentClient.client == 'Deluge') {
+                        window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
+                    } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
+                        window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
+                    }
+
+                },
+                'mouseover': function(event) {
+                    this.title = `🖥️ Open the ${SETTINGS.torrentClient.client} Web Interface 🖥️`
+                }
+            }
+        }, 
+
+        'torrentfile' : {
+            content: '💾 TorrentFile 💾',
+            events: {
+                'click': function(event) {
+                    // This menuItem was clicked, so use the selected preset
+                    let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
+                    
+                    let fileElement = document.createElement('a')
+                    fileElement.href = bunnyButton.dataset.torrenturl
+
+                    document.body.appendChild(fileElement)
+                    fileElement.click()
+                    document.body.removeChild(fileElement)
+                    replaceEmojis(bunnyButton, '💾')
+
+                },
+                mouseover: function(event) {
+                    this.title = `💾 Download the .torrent file 💾`
+                }
+            }
+        },
+    }
+
     let allPresetItems = {}
 
     for ( let primaryDomain of primaryDomains ) {
@@ -2734,73 +2824,25 @@ function createPresetItems(primaryDomains) {
                 continue
             }
 
-            if ( presetName.match(/settings/i) ) {
+            if ( presetName.match(/basic/i) ) {
+                // This preset item should add the torrent with basic settings
+
+                var presetItem = defaultItems['basic']
+
+            } else if ( presetName.match(/settings/i) ) {
                 // This preset item should open the quiCKIE Settings panel
 
-                var presetItem = {
-                    content: '🛠️ Settings 🛠️',
-                    events: {
-                        click: function(event) {
-                            GM_config.open()
-                        },
-                        mouseover: function(event) {
-                            this.title = '🛠️ Open the quiCKIE Settings Panel 🛠️'
-                        }
-                    }
-                }
+                var presetItem = defaultItems['settings']
 
             } else if ( presetName.match(/client/i) ) {
                 // This preset item should open a tab to the torrent client
 
-                var presetItem = {
-                    content: `🖥️ ${SETTINGS.torrentClient.client} 🖥️`,
-                    events: {
-                        click: function(event) {
-
-                            if ( SETTINGS.torrentClient.client == 'qui') {
-                                window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
-                            } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
-                                window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
-                            } else if ( SETTINGS.torrentClient.client == 'Transmission') {
-                                window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
-                            } else if ( SETTINGS.torrentClient.client == 'Deluge') {
-                                window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
-                            } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
-                                window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
-                            }
-
-                        },
-                        mouseover: function(event) {
-                            this.title = `🖥️ Open the ${SETTINGS.torrentClient.client} Web Interface 🖥️`
-                        }
-
-                    }
-                }
+                var presetItem = defaultItems['client']
 
             } else if ( presetName.match(/torrentfile/i) ) {
                 // This preset item should open the torrentURL
 
-                var presetItem = {
-                    content: '💾 TorrentFile 💾',
-                    events: {
-                        click: function(event) {
-                            // This menuItem was clicked, so use the selected preset
-                            let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
-                            
-                            let fileElement = document.createElement('a')
-                            fileElement.href = bunnyButton.dataset.torrenturl
-
-                            document.body.appendChild(fileElement)
-                            fileElement.click()
-                            document.body.removeChild(fileElement)
-                            replaceEmojis(bunnyButton, '💾')
-
-                        },
-                        mouseover: function(event) {
-                            this.title = `💾 Download .torrent file 💾`
-                        }
-                    }
-                }
+                var presetItem = defaultItems['torrentfile']
 
             } else if ( presetName.match(/^[-=\.\s]+$/) ) {
                 // This preset item is a menu separator, so create a menuItem that does nothing when clicked
@@ -2852,7 +2894,7 @@ function createPresetItems(primaryDomains) {
                     content: presetName,
                     events: {
                         click: function(event) {
-                            // This menuItem was clicked, so use the selected preset
+                            // This menuItem was clicked, so use the selected preset to add the torrent
                             let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
 
                             let torrentURL = bunnyButton.dataset.torrenturl
@@ -2919,63 +2961,20 @@ function createPresetItems(primaryDomains) {
         if ( menuItems.length == 0 ) {
             // No presets were detected for this tracker, so let the user know and provide some default options
 
-            menuItems = [{
-                content: '🚀 No Presets for this Tracker 🚀',
-                events: {
-                    'mouseover': function(event) {
-                        // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
-                        this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
-                    },
-                }
-            },
-            {   content: '🛠️ Settings 🛠️',
-                events: {
-                    'click': function(event) {
-                        GM_config.open()
+            menuItems = [
+                {
+                    content: '🚀 No Presets for this Tracker 🚀',
+                    events: {
+                        'mouseover': function(event) {
+                            // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
+                            this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
+                        },
                     }
-                }
-            },
-            {   content: `🖥️ ${SETTINGS.torrentClient.client} 🖥️`,
-                events: {
-                    'click': function(event) {
-
-                        if ( SETTINGS.torrentClient.client == 'qui') {
-                            window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
-                        } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
-                            window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
-                        } else if ( SETTINGS.torrentClient.client == 'Transmission') {
-                            window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
-                        } else if ( SETTINGS.torrentClient.client == 'Deluge') {
-                            window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
-                        } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
-                            window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
-                        }
-
-                    }
-                }
-            }, 
-            {
-                content: '💾 TorrentFile 💾',
-                events: {
-                    click: function(event) {
-                        // This menuItem was clicked, so use the selected preset
-                        let bunnyButton = document.getElementById('__CONTEXTCLICKED__')
-                        
-                        let fileElement = document.createElement('a')
-                        fileElement.href = bunnyButton.dataset.torrenturl
-
-                        document.body.appendChild(fileElement)
-                        fileElement.click()
-                        document.body.removeChild(fileElement)
-                        replaceEmojis(bunnyButton, '💾')
-
-                    },
-                    mouseover: function(event) {
-                        this.title = `💾 Download .torrent file 💾`
-                    }
-                }
-            },
-
+                },
+                defaultItems['basic'],
+                defaultItems['settings'],
+                defaultItems['client'],
+                defaultItems['torrentfile'],
             ]
 
         }
