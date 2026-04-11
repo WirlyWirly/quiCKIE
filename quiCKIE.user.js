@@ -89,6 +89,7 @@
 
 // @match   https://digitalcore.club/
 // @match   https://digitalcore.club/alltorrents*
+// @match   https://digitalcore.club/bookmarks*
 // @match   https://digitalcore.club/movies*
 // @match   https://digitalcore.club/tvseries*
 // @match   https://digitalcore.club/games*
