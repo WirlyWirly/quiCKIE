@@ -89,16 +89,16 @@
 
 // @match   https://digitalcore.club/
 // @match   https://digitalcore.club/alltorrents*
-// @match   https://digitalcore.club/bookmarks*
-// @match   https://digitalcore.club/movies*
-// @match   https://digitalcore.club/tvseries*
-// @match   https://digitalcore.club/games*
-// @match   https://digitalcore.club/music*
 // @match   https://digitalcore.club/apps*
-// @match   https://digitalcore.club/xxx*
+// @match   https://digitalcore.club/bookmarks*
+// @match   https://digitalcore.club/games*
+// @match   https://digitalcore.club/movies*
+// @match   https://digitalcore.club/music*
 // @match   https://digitalcore.club/other*
-// @match   https://digitalcore.club/torrent/*
 // @match   https://digitalcore.club/torrent-lists/*
+// @match   https://digitalcore.club/torrent/*
+// @match   https://digitalcore.club/tvseries*
+// @match   https://digitalcore.club/xxx*
 
 // @match   https://www.empornium.sx/collage/*
 // @match   https://www.empornium.sx/top10.php*
@@ -330,7 +330,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'DigitalCore',
+        trackerName: 'DigitalCore', // @holy-elbow
         homepageURL: 'https://digitalcore.club/',
         primaryDomain: 'digitalcore',
     },    
@@ -586,11 +586,11 @@ if ( primaryDomain == 'animebytes' ) {
         // Only use this on pages that actually contain pagination, which can be filtered by using an if check against the URL: pageURL.match(/pageURLRegex/) ? trackerHandlingOptions.enablePaginationLooping = true : null
         enablePaginationLooping: false, // Default = false || Options = true | false
 
+        // If quiCKIE should mark already processed downloadElements with a special attribute, making it so that they are not matched more than once, which can be useful when dealing with advanced pagination
+        downloadElementsTrackProcessed: false, // Default = false || Options = true | false
+        
         // The name of the downloadElement attribute that contains the torrentURL
         downloadElementsTorrentURLAttribute: 'href', // Default = 'href' || Options = A string matching a attribute name of the download element
-
-        // If quiCKIE should mark already processed downloadElements, useful when dealing with advanced pagination
-        downloadElementsTrackProcessed: false, // Default = false || Options = true | false
 
         // If quiCKIE should ALWAYS download the .torrent file through the browser before sending it to the torrent client, useful if the torrentURL authentication doesn't actually work
         // Magnet links are ALWAYS sent directly to the torrent client, as they are not proper http links that can be downloaded through the browser
@@ -765,55 +765,61 @@ if ( primaryDomain == 'animebytes' ) {
 
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]:has(i.fa-download)',
-            afterBunnyButtonCreation: function(elements) {
-                for ( let bunnyButton of elements.bunnyButtons ) {
-                    bunnyButton.textContent = '🐰 quiCKIE'
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
-                        border-radius: 3px;
-                        font-size: 12px;
-                        padding: 1px 39.817px;
-                        margin-left: 11.033px;
-                        border: #323232 solid 1px;
-                        vertical-align: middle;
-                        color: #ccc;
-                        background: #252525;`)
-                }
-            },
+            bunnyButtonText: '🐰 quiCKIE',
+            bunnyButtonAddStyles: `
+                background: #252525;
+                border-radius: 3px;
+                border: #323232 solid 1px;
+                color: #ccc;
+                font-size: 12px;
+                margin-left: 11.033px;
+                padding: 1px 39.817px;
+                vertical-align: middle;`
+
         }
 
         let observer = new MutationObserver(function(mutations) {
+
             quickieTrackerHandler(trackerHandlingOptions)
         })
+
         let target = document.getElementById('contentContainer')
         let config = { childList: true }
+
         observer.observe(target, config)
 
     } else {
 
-        let trackerHandlingOptions = { 
+        let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
+            downloadElementsTrackProcessed: true,
         }
-        let pageObserver = new MutationObserver(function(pageMutations) {
 
-            waitForElement('div[ng-hide="vm.loadingTorrents"]:not(.ng-hide) tbody', document.getElementById('contentContainer')).then(tbodyElement => {
+        let pageObserver = new MutationObserver(async function(pageMutations) {
 
-                try {
+            let tbodyElement = await waitForElement('div[ng-hide="vm.loadingTorrents"]:not(.ng-hide) tbody', document.getElementById('contentContainer'))
 
-                    let torrentObserver = new MutationObserver(function(torrentMutations) {
+            try {
 
-                        quickieTrackerHandler(trackerHandlingOptions)
-                    })
+                let torrentObserver = new MutationObserver(function(torrentMutations) {
 
-                    torrentObserver.observe(tbodyElement, { childList: true } )
-                } catch(error) {
-                    return
-                }
-            })
+                    quickieTrackerHandler(trackerHandlingOptions)
+
+                })
+
+                torrentObserver.observe(tbodyElement, { childList: true })
+
+            } catch(error) {
+                return
+            }
+
         })
 
         let target = document.getElementById('contentContainer')
         let config = { childList: true }
+
         pageObserver.observe(target, config)
+
     }
 
 } else if ( primaryDomain == 'e-hentai' ) {
