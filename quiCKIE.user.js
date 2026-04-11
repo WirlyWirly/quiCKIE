@@ -802,13 +802,15 @@ if ( primaryDomain == 'animebytes' ) {
     } else {
 
         let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
+            downloadElementsSelector: 'torrents-table[torrents^="vm.torrents"] a[href^="/api/v1/torrents/download"]'',
             downloadElementsTrackProcessed: true,
         }
 
         let pageObserver = new MutationObserver(async function(pageMutations) {
 
-            let tbodyElement = await waitForElement('div[ng-hide="vm.loadingTorrents"]:not(.ng-hide) tbody', document.getElementById('contentContainer'))
+            let tbodyElement = await waitForElement('torrents-table[torrents^="vm.torrents"]', document.getElementById('contentContainer'))
+
+            // let tbodyElement = await waitForElement('div[ng-hide="vm.loadingTorrents"]:not(.ng-hide) tbody', document.getElementById('contentContainer'))
 
             try {
 
