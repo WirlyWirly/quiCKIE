@@ -18,6 +18,7 @@
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
+// /@require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/simpleLogger.js?raw=true
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
@@ -227,6 +228,43 @@
 // This string helps prevent various JavaScript oddities when working with variables
 'use strict'
 
+// Set to true to enable verbose console logging
+const LOGGING = true
+
+class simpleLogger {
+    // A simple console logger, which will only display messages in the console when it has been enabled
+    constructor({ enabled = false, scriptName = 'UserScript', levels = ['log', 'user', 'debug', 'error']}) {
+        this.enabled = enabled
+        this.levels = levels
+        this.scriptName = scriptName
+    }
+
+    log(message) {
+        if ( this.enabled == true && this.levels.includes('log') ) {
+            console.log(`---------- [LOG] ${this.scriptName} ----------\n\n${message}`)
+        }
+    }
+
+    user(message) {
+        if ( this.enabled == true && this.levels.includes('user') ) {
+            console.info(`---------- ${this.scriptName} ----------\n\n${message}`)
+        }
+    }
+
+    debug(message) {
+        if ( this.enabled == true && this.levels.includes('debug') ) {
+            console.log(`---------- [DEBUG] ${this.scriptName} ----------\n\n${message}`)
+        }
+    }
+
+    error(message) {
+        if ( this.enabled == true && this.levels.includes('error') ) {
+            console.error(`---------- ⚠️ ${this.scriptName} ⚠️ ----------\n\n${message}`)
+        }
+    }
+
+
+}
 // =================================== SETTINGS PANEL TRACKERS ======================================
 
 // @quickieSettingsPanelTrackers
@@ -504,6 +542,11 @@ const settingsPanelTrackers = [
 // The domain of the current site, which MUST be registerd to one of the trackers in the settingsPanelTrackers array
 // Example: https://broadcasthe.net/ --> broadcasthe
 let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
+
+// A simple logger, which will only console log messages when it has been enabled
+let logger = new simpleLogger({ enabled: LOGGING, scriptName: 'quiCKIE'})
+
+logger.user('test')
 
 // Everything related to the GM_config library, which is used for creating and presenting the settings panel: https://github.com/sizzlemctwizzle/GM_config
 let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
@@ -3249,27 +3292,39 @@ function unit3dTrackerHandler(downloadElementsSelector) {
     // If there is a specified paginationLoop, mark the processed elements so that bunnyButtons are not repeatedly generated
     SETTINGS.paginationLoop >= 500 ? downloadElementsTrackProcessed = true : null
 
-    let unit3dLooping = false
+    if ( document.location.pathname.match(/(\/|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
+        // This is the search page or homepage, both of which require a MutationObserver
 
-    if ( document.location.pathname.match(/\/$/) && SETTINGS.paginationLoop < 500 ) {
-        // This is the homepage, so enable time-based paginationLooping
-        unit3dLooping = true
-        SETTINGS.paginationLoop = 750
         downloadElementsTrackProcessed = true
 
-    } else if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
-        // This is the search page, so enable URL change based pagination handling
+        let observer = new MutationObserver( function(mutations) {
+            // Functionality to run when changes are detected to the target element
 
-        SETTINGS.paginationLoop = ''
-        downloadElementsTrackProcessed = true
+            try {
+                processDownloadElements(0)
+            } catch(error) {
+                // logger.error(error)
+            }
 
-        window.navigation.addEventListener('navigate', function() {
-            // Whenever the page\URL changes, process the new downloadElements
-            processDownloadElements(0)
         })
+        
+        let target, config
+
+        if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
+            // The search page observer configs
+            target = document.querySelector('div.page__torrents > script[nonce]')
+            config = { attributes: true }
+        } else {
+            // The homepage observer configs
+            target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
+            config = { childList: true }
+        }
+            
+
+        observer.observe(target, config)
 
     } else if ( pageURL.match(/\/torrents\/\d+/) ) {
-        // The torrents details page, so change the look of the BunnyButton
+        // The torrents details page, so change the style of the BunnyButton
         torrentDetailsPage = true
 
         // Give the bunnyButton a bar appearance, to fit in better with the other buttons
@@ -3365,7 +3420,6 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                             bunnyButton.style.padding = '4px'
 
-
                         } else if ( downloadElement.closest('td.user-bookmarks__actions') ) {
                             // This is the Bookmarks view, move bunnyButton into it's own <li>
 
@@ -3424,7 +3478,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
             SETTINGS.firstTrackerHandlerScan = false
 
-            if ( SETTINGS.paginationLoop >= 500 || unit3dLooping == true ) {
+            if ( SETTINGS.paginationLoop >= 500 ) {
                 // The tracker handler will continuosly scan the page for new downloadElements
                 processDownloadElements(SETTINGS.paginationLoop)
             }
@@ -4640,6 +4694,8 @@ function scanForThirdPartyTorrentURLS(delay) {
 
 
 // =================================== HELPER FUNCTIONS ======================================
+
+
 
 function waitForElement(cssTarget, observeTarget = document.body, observeSubTree = true) {
     // Wait until the cssTarget exists within the observeTarget and then resolve the promise
