@@ -191,6 +191,11 @@
 // @match   https://redacted.sh/torrents.php*
 // @match   https://redacted.sh/userhistory.php?action=subscribed_collages
 
+// @match   https://retro-movies.club/
+// @match   https://retro-movies.club/*/bookmarks
+// @match   https://retro-movies.club/playlists/*
+// @match   https://retro-movies.club/torrents*
+
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
 // @match   https://secret-cinema.pw/top10.php*
@@ -459,6 +464,12 @@ const settingsPanelTrackers = [
         trackerName: 'Redacted',
         homepageURL: 'https://redacted.sh',
         primaryDomain: 'redacted', 
+    },
+
+    {
+        trackerName: 'RetroMoviesClub', // @LilithOfTheValley
+        homepageURL: 'https://retro-movies.club',
+        primaryDomain: 'retro-movies',
     },
 
     {
@@ -1247,6 +1258,11 @@ if ( primaryDomain == 'animebytes' ) {
 
     }
 
+} else if ( primaryDomain == 'retro-movies' ) {
+    // ----------------------------------- RetroMoviesClub -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://retro-movies.club/torrents/download/"]')
 
 } else if ( primaryDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
