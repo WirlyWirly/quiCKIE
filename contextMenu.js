@@ -33,7 +33,7 @@ class ContextMenu {
       const item = this.createItemMarkup(data);
       item.firstChild.setAttribute(
         "style",
-        `animation-delay: ${index * 0.025}s`
+        `animation-delay: ${index * 0.020}s`
       );
       nodes.push(item);
     });
