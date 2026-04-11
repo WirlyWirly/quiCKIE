@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.42.8
+// @version     1.43
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -203,6 +203,11 @@
 // @match   https://redacted.sh/top10.php*
 // @match   https://redacted.sh/torrents.php*
 // @match   https://redacted.sh/userhistory.php?action=subscribed_collages
+
+// @match   https://retro-movies.club/
+// @match   https://retro-movies.club/*/bookmarks
+// @match   https://retro-movies.club/playlists/*
+// @match   https://retro-movies.club/torrents*
 
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
@@ -481,6 +486,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'RetroMoviesClub', // @LilithOfTheValley
+        homepageURL: 'https://retro-movies.club',
+        primaryDomain: 'retro-movies',
+    },
+
+    {
         trackerName: 'Secret-Cinema', // @tartuffe
         homepageURL: 'https://secret-cinema.pw',
         primaryDomain: 'secret-cinema',
@@ -586,9 +597,9 @@ if ( primaryDomain == 'animebytes' ) {
         // Only use this on pages that actually contain pagination, which can be filtered by using an if check against the URL: pageURL.match(/pageURLRegex/) ? trackerHandlingOptions.enablePaginationLooping = true : null
         enablePaginationLooping: false, // Default = false || Options = true | false
 
-        // If quiCKIE should mark already processed downloadElements with a special attribute, making it so that they are not matched more than once, which can be useful when dealing with advanced pagination
+        // If quiCKIE should mark already processed downloadElements with a special attribute, which will prevent them from being queried twice and ending up with duplicate bunnyButtons, useful when dealing with advanced pagination
         downloadElementsTrackProcessed: false, // Default = false || Options = true | false
-        
+
         // The name of the downloadElement attribute that contains the torrentURL
         downloadElementsTorrentURLAttribute: 'href', // Default = 'href' || Options = A string matching a attribute name of the download element
 
@@ -874,7 +885,6 @@ if ( primaryDomain == 'animebytes' ) {
             // The actions to take after the bunnyButtons have been created...
 
             // Determine the seeding\snatched status of this torrent
-            let torrentStatus
             let mainDownloadButton = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
                 
             for ( let bunnyButton of elements.bunnyButtons ) {
@@ -1331,6 +1341,11 @@ if ( primaryDomain == 'animebytes' ) {
 
     }
 
+} else if ( primaryDomain == 'retro-movies' ) {
+    // ----------------------------------- RetroMoviesClub -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://retro-movies.club/torrents/download/"]')
 
 } else if ( primaryDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
@@ -3128,17 +3143,18 @@ function quickieTrackerHandler({
     bunnyButtonText = ' 🐰 ' ,
     bunnyButtonParentPlacement = false,
     elementsSeparator = 'automatic',
-    enablePaginationLooping = false,
     bunnyButtonAddStyles = '',
     bunnyButtonAddClasses = [],
     seedingStatusSelector = null,
     snatchedStatusSelector = null,
     freeleechStatusSelector = null,
     afterBunnyButtonCreation = false,
+    enablePaginationLooping = false,
+    downloadElementsTrackProcessed = false,
     downloadElementsTorrentURLAttribute = 'href',
     forceTorrentFile = false,
-    downloadElementsTrackProcessed = false,
     bunnyButtonAttachPresetsMenu = true,
+
 }) {
     // Using the provided arguments, generate bunnyButtons for matching elements on this page
 
@@ -3304,7 +3320,7 @@ function quickieTrackerHandler({
 
 function unit3dTrackerHandler(downloadElementsSelector) {
     // A tracker handler focused on the layout of the UNIT3D Framework. Generate a bunnyButton for each queried DownloadElement
-    // ! This function used 'Oldtoons' as the model and is not WirlyWirly tested for other sites
+    // ! This function uses 'Oldtoons' as the model and is not WirlyWirly guaranteed for other sites
 
     // Mutable variables dependent on the current page
     let downloadElementsTrackProcessed = false
@@ -3319,11 +3335,22 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
     let unit3dLooping = false
 
-    if ( document.location.pathname.match(/(\/|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
-        // This is the homepage or search page, so enable paginationLooping
+    if ( document.location.pathname.match(/\/$/) && SETTINGS.paginationLoop < 500 ) {
+        // This is the homepage, so enable time-based paginationLooping
         unit3dLooping = true
         SETTINGS.paginationLoop = 750
         downloadElementsTrackProcessed = true
+
+    } else if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
+        // This is the search page, so enable URL change based pagination handling
+
+        SETTINGS.paginationLoop = ''
+        downloadElementsTrackProcessed = true
+
+        window.navigation.addEventListener('navigate', function() {
+            // Whenever the page\URL changes, process the new downloadElements
+            processDownloadElements(0)
+        })
 
     } else if ( pageURL.match(/\/torrents\/\d+/) ) {
         // The torrents details page, so change the look of the BunnyButton
