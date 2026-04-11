@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.42.5
+// @version     1.42.8
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -3306,7 +3306,6 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
                         
-
                         if ( downloadElement.closest('td.torrent-search--list__buttons') ) {
                             // This is a List view
                             bunnyButton.style.display = 'inline-grid'
