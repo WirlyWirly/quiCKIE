@@ -4401,7 +4401,7 @@ async function delugePOST(postData) {
         return
     }
 
-    // Signify the start of delugePOST  by changing the emoji of the clicked on BunnyButton
+    // Signify the start of delugePOST by changing the emoji of the clicked on BunnyButton
     let bunnyButton = document.getElementById(postData.bunnyButtonId)
     replaceEmojis(bunnyButton, '🧑')
 
