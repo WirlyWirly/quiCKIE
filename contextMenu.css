@@ -18,8 +18,8 @@
   position: fixed;
   top: var(--top);
   left: var(--left);
-  -webkit-animation: menuAnimation 0.4s 0s both;
-          animation: menuAnimation 0.4s 0s both;
+  -webkit-animation: menuAnimation 0.2s 0s both;
+          animation: menuAnimation 0.2s 0s both;
   transform-origin: left;
   list-style: none;
   margin: 4px !important;

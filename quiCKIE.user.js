@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.41
+// @version     1.42
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -2820,7 +2820,7 @@ function createPresetItems(primaryDomains) {
 
                 },
                 'mouseover': function(event) {
-                    this.title = `💾 Download the .torrent file`
+                    this.title = `💾 Download the .torrent file\n\nℹ️ BunnyButtons based off MagnetLinks will instead open the link`
                 }
             }
         },
@@ -2849,27 +2849,27 @@ function createPresetItems(primaryDomains) {
                 continue
             }
 
-            if ( presetName.match(/sendpaused/i) ) {
-                // This preset item should send the torrent to the client no custom settings, except for startPaused = true
-
-                var presetItem = defaultItems['sendPaused']
-
-            } else if ( presetName.match(/send/i) ) {
+            if ( presetName.match(/^send$/i) ) {
                 // This preset item should send the torrent to the client no custom settings
 
                 var presetItem = defaultItems['send']
 
-            } else if ( presetName.match(/settings/i) ) {
+            } else if ( presetName.match(/^sendpaused$/i) ) {
+                // This preset item should send the torrent to the client no custom settings, except for startPaused = true
+
+                var presetItem = defaultItems['sendPaused']
+
+            } else if ( presetName.match(/^settings$/i) ) {
                 // This preset item should open the quiCKIE Settings panel
 
                 var presetItem = defaultItems['settings']
 
-            } else if ( presetName.match(/client/i) ) {
+            } else if ( presetName.match(/^client$/i) ) {
                 // This preset item should open a tab to the torrent client
 
                 var presetItem = defaultItems['client']
 
-            } else if ( presetName.match(/torrentfile/i) ) {
+            } else if ( presetName.match(/^torrentfile$/i) ) {
                 // This preset item should open the torrentURL
 
                 var presetItem = defaultItems['torrentfile']
@@ -3684,7 +3684,7 @@ function addTorrent({
         } catch(error) {
             // Failed to parse quiURL for the API endpoint
             replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL\n\nCheck your quiURL for typos, making sure it is in the expected format and that it starts with the appropriate http(s) protocol\n\nHover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL\n\nℹ️ Check your quiURL for typos, making sure it is in the expected format and that it starts with the appropriate http(s) protocol\n\nHover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`)
             return
         }
 
@@ -3711,7 +3711,7 @@ function addTorrent({
             postData.qBitTorrent.url = torrentClient.qBitTorrentURL.match(/^(https?:\/\/.+?)\/?$/)[1]
         } catch(error) {
             replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved qBitTorrentURL\n\nThe URL must start with the appropriate http(s) protocol\n\nHover the qBitTorrentURL emoji for examples\n\nqBitTorrentURL: ${torrentClient.qBitTorrentURL}`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved qBitTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the qBitTorrentURL emoji for examples\n\nqBitTorrentURL: ${torrentClient.qBitTorrentURL}`)
             return
         }
 
@@ -3734,7 +3734,7 @@ function addTorrent({
             postData.transmission.url = torrentClient.transmissionURL.match(/^(https?:\/\/.+?)\/?$/)[1]
         } catch(error) {
             replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved transmissionURL\n\nThe URL must start with the appropriate http(s) protocol\n\nHover the transmissionURL emoji for examples\n\ntransmissionURL: ${torrentClient.transmissionURL}`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved transmissionURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the transmissionURL emoji for examples\n\ntransmissionURL: ${torrentClient.transmissionURL}`)
             return
         }
 
@@ -3756,7 +3756,7 @@ function addTorrent({
             postData.deluge.url = torrentClient.delugeURL.match(/^(https?:\/\/.+?)\/?$/)[1]
         } catch(error) {
             replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved delgueURL\n\nThe URL must start with the appropriate http(s) protocol\n\nHover the delgueURL emoji for examples\n\ndelugeURL: ${torrentClient.delgueURL}`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved delgueURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the delgueURL emoji for examples\n\ndelugeURL: ${torrentClient.delgueURL}`)
             return
         }
 
@@ -3778,7 +3778,7 @@ function addTorrent({
             postData.ruTorrent.url = torrentClient.ruTorrentURL.match(/^(https?:\/\/.+?)\/?$/)[1]
         } catch(error) {
             replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved ruTorrentURL\n\nThe URL must start with the appropriate http(s) protocol\n\nHover the ruTorrentURL emoji for examples\n\nruTorrentURL: ${torrentClient.ruTorrentURL}`)
+            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved ruTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the ruTorrentURL emoji for examples\n\nruTorrentURL: ${torrentClient.ruTorrentURL}`)
             return
         }
         postData.ruTorrent.username = torrentClient.ruTorrentUsername
@@ -4004,7 +4004,7 @@ async function quiPOST(postData) {
 
                 if (response.status == 401) {
                     // Unauthorized
-                    window.alert(`❌ quiCKIE ❌\n\nqui was reached but then failed authorization. This usually means a bad ApiKey, check it for typos and make sure it's still valid\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nApiKey: ${postData.quiApiKey}\n\nThe full response has been printed in the console`)
+                    window.alert(`❌ quiCKIE ❌\n\nqui was reached but then failed authorization\n\nℹ️ This usually means a bad ApiKey, check it for typos and make sure it's still valid\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nApiKey: ${postData.quiApiKey}\n\nThe full response has been printed in the console`)
                 } else {
                     window.alert(`❌ quiCKIE ❌\n\nqui was reached but then failed to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe full response has been printed in the console`)
                 }
@@ -4017,7 +4017,7 @@ async function quiPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui. This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same instance url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui\n\nℹ️ This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same instance url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -4025,7 +4025,7 @@ async function quiPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to qui timed out. Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThe connection to qui timed out\n\nℹ️ Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
 
         }
     })
@@ -4113,7 +4113,7 @@ async function qBitTorrentPOST(postData) {
                 console.log(response)
                 replaceEmojis(bunnyButton, '❌')
 
-                window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached, but the login attempt failed. Check your username\\password for typos\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
+                window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached, but the login attempt failed\n\nℹ️ Check your username\\password for typos\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
             }
 
@@ -4123,7 +4123,7 @@ async function qBitTorrentPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to qBitTorrent to attempt the login. Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to qBitTorrent to attempt the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -4131,7 +4131,7 @@ async function qBitTorrentPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to qBitTorrent timed out when attempting the login. Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThe connection to qBitTorrent timed out when attempting the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
 
         }
     })
@@ -4156,24 +4156,15 @@ async function transmissionPOST(postData) {
     }
 
     if ( postData.formData.get('torrent') ) {
-        // POST using the .torrent blob, but first convert it to base64 as required by Transmission
+        // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Transmission
 
-        function blobToBase64(blob) {
-            return new Promise(function(resolve) {
-                const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result.replace(/^data:.+;base64,/, ''))
-                reader.readAsDataURL(blob)
-            })
+        let base64String = await encodeToBase64(postData.formData.get('torrent'))
 
-        }
-
-        await blobToBase64(postData.formData.get('torrent')).then(function(result) {
-            transmissionData.arguments.metainfo = result
-            transmissionData = JSON.stringify(transmissionData)
-        })
+        transmissionData.arguments.metainfo = base64String
+        transmissionData = JSON.stringify(transmissionData)
 
     } else {
-        // No .torrent blob in postData, so POST using the torrentURL
+        // torrentURL|magnetLink: POST using the provided URL
         transmissionData.arguments.filename = postData.torrentURL
         transmissionData = JSON.stringify(transmissionData)
     }
@@ -4261,7 +4252,7 @@ async function transmissionPOST(postData) {
                 console.log(response)
                 replaceEmojis(bunnyButton, '❌')
 
-                window.alert(`❌ quiCKIE ❌\n\nTransmission was reached, but the login attempt failed. Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
+                window.alert(`❌ quiCKIE ❌\n\nTransmission was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
             }
 
@@ -4271,7 +4262,7 @@ async function transmissionPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Transmission to attempt the login. Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Transmission to attempt the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -4279,7 +4270,7 @@ async function transmissionPOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to Transmission timed out when attempting the login. Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThe connection to Transmission timed out when attempting the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
 
         }
     })
@@ -4306,24 +4297,14 @@ async function delugePOST(postData) {
     }
 
     if ( postData.formData.get('torrent') != null ) {
-        // fileBlob: POST using the .torrent blob, but first convert it to base64 as required by Deluge
+        // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Deluge
 
-        function blobToBase64(blob) {
-            return new Promise(function(resolve) {
-                const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result.replace(/^data:.+;base64,/, ''))
-                reader.readAsDataURL(blob)
-            })
+        let base64String = await encodeToBase64(postData.formData.get('torrent'))
 
-        }
-
-        await blobToBase64(postData.formData.get('torrent')).then(function(result) {
-            delugeData.method = 'core.add_torrent_file'
-            delugeData.params.push('quiCKIE.torrent')
-            delugeData.params.push(result)
-            delugeData.params.push(torrentOptions)
-
-        })
+        delugeData.method = 'core.add_torrent_file'
+        delugeData.params.push('quiCKIE.torrent')
+        delugeData.params.push(base64String)
+        delugeData.params.push(torrentOptions)
 
     } else if ( postData.torrentURL.match(/magnet:\?xt=urn/) ) {
         // magnetLink: POST the torrentURL as a magnet link
@@ -4332,7 +4313,7 @@ async function delugePOST(postData) {
         delugeData.params.push(torrentOptions)
 
     } else {
-        // Neither a file blob nor a magnetLink is available, so call getFileBlob(), which will download the torrentURL as a file blob and then re-call delugePOST()
+        // torrentURL: torrentURL can not be sent directly, it must first be downloaded as a blob
         getFileBlob(postData)
         return
     }
@@ -4387,7 +4368,7 @@ async function delugePOST(postData) {
                             // ---------- The torrent has been added to Deluge ----------
 
                             if ( response.responseText.match(/Torrent already in session/) ) {
-                                console.log("According to the Deluge response, this torrent can't be added because it already exists in your session\n\nIf the torrent is not in your UI, it may be lingering in your daemon session")
+                                console.log(`According to the Deluge response, this torrent can not be added because it already exists in your session\n\nℹ️ If the torrent is not listed in the WebUi, it may be lingering in the daemon session\n\ntorrentURL: ${postData.torrentURL}`)
                             }
 
                             replaceEmojis(bunnyButton, '✔️')
@@ -4399,7 +4380,7 @@ async function delugePOST(postData) {
 
                             replaceEmojis(bunnyButton, '❌')
 
-                            window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+                            window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but then failed when trying to add the torrent.\n\nℹ️ This usually means that the WebUi is not connected to the daemon, check the Connection Manager in the WebUi\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
                         }
                     },
                     onerror: function(response) {
@@ -4425,7 +4406,7 @@ async function delugePOST(postData) {
                 console.log(response)
                 replaceEmojis(bunnyButton, '❌')
 
-                window.alert(`❌ quiCKIE ❌\n\nDeluge was reached, but the login attempt failed. Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+                window.alert(`❌ quiCKIE ❌\n\nDeluge was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
             }
 
@@ -4435,7 +4416,7 @@ async function delugePOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Deluge to attempt the login. Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Deluge to attempt the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
         },
         ontimeout: function(response) {
@@ -4443,7 +4424,7 @@ async function delugePOST(postData) {
             console.log(response)
             replaceEmojis(bunnyButton, '❌')
 
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to Deluge timed out when attempting the login. Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
+            window.alert(`❌ quiCKIE ❌\n\nThe connection to Deluge timed out when attempting the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
 
         }
     })
@@ -4588,7 +4569,7 @@ function waitForElement(cssTarget, observeTarget = document.body, observeSubTree
     // Wait until the cssTarget exists within the observeTarget and then resolve the promise
     // Source: https://stackoverflow.com/a/61511955
 
-    return new Promise(resolve => {
+    return new Promise( function(resolve) {
 
         if ( observeTarget.querySelector(cssTarget) ) {
             // The cssTarget already exists within the observeTarget, so immediately resolve the promise
@@ -4606,8 +4587,27 @@ function waitForElement(cssTarget, observeTarget = document.body, observeSubTree
         })
 
         // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-        observer.observe(observeTarget, { childList: true, subtree: observeSubTree })
+        try {
+            observer.observe(observeTarget, { childList: true, subtree: observeSubTree })
+        } catch (error) {
+        }
 
+    })
+
+}
+
+
+function encodeToBase64(data) {
+    // Convert the data parameter (blob, string, etc) to a base64 string
+
+    return new Promise( function(resolve) {
+        const reader = new FileReader()
+        reader.onloadend = function() {
+            // After the file has been read\loaded, clean the base64 and resolve the promise
+            resolve(reader.result.replace(/^data:.+;base64,/, ''))
+        }
+
+        reader.readAsDataURL(data)
     })
 
 }
@@ -4622,6 +4622,7 @@ function saveToFile(fileData, filename) {
             
         'json': 'application/json;charset=utf-8;',
         'text': 'text/plain;charset=utf-8;',
+        'txt': 'text/plain;charset=utf-8;',
         'torrent': 'application/x-bittorrent',
 
     }
@@ -4634,7 +4635,7 @@ function saveToFile(fileData, filename) {
 
     } catch {
         // No file extension was provided, so assume it to be a text type
-        filetype = 'txt'
+        filetype = 'text'
 
     }
 
