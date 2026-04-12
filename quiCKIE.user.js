@@ -813,70 +813,12 @@ if ( primaryDomain == 'animebytes' ) {
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
             downloadElementsTrackProcessed: true,
+            enablePaginationLooping: true,
         }
 
-        let carouselElement = await waitForElement('div.carousel-inner', document.getElementById('contentContainer'))
-
-        let allCarouselItems = carouselElement.querySelectorAll('div.item')
-
-        for ( let carouselItem of allCarouselItems ) {
-            // Monitor each Carousel item for when its 'class=' attribute changes
-            
-            let itemObserver = new MutationObserver() {
-                quickieTrackerHandler(trackerHandlingOptions)
-                itemObserver.disconnect()
-            }
-
-            itemObserver.observe(carouselItem, { attributesFilter: ['class'] })
-        }
-
-        // let pageObserver = new MutationObserver(async function(pageMutations) {
-
-            // try {
-            //     var carouselElement = await waitForElement('div[class="carousel-inner"]', document.getElementById('contentContainer'))
-            // } catch (error) {
-            //     console.log(error)
-            //     return
-            // }
-            
-
-            // try {
-            //     let carouselObserver = new MutationObserver(async function(carouselMutations) {
-
-                    // let activeCarouselDiv = await waitForElement('> div.active', carouselElement)
-
-
-                    // try {
-                    //     var tbodyElement = await waitForElement('torrents-table[torrents] tbody', document.querySelector('div[class*="active"]'))
-                    // } catch (error) {
-                    //     console.log(error)
-                    //     return
-                    // }
-
-                    // try {
-
-                    //     let tbodyObserver = new MutationObserver(function() {
-                    //         quickieTrackerHandler(trackerHandlingOptions)
-                    //     })
-                    //     tbodyObserver.observe(tbodyElement, { childList: true } )
-                    // } catch (error) {
-                    //     console.log(error)
-                    //     return
-                    // }
-                // })
-                // carouselObserver.observe(carouselElement, { childList: true } )
-            // } catch (error) {
-                // console.log(error)
-                // return
-            // }
-
-        // })
-        // let target = document.getElementById('contentContainer')
-        // let config = { childList: true }
-        // pageObserver.observe(target, config)
+        quickieTrackerHandler(trackerHandlingOptions)
 
     } else {
-
 
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
