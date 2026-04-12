@@ -520,7 +520,7 @@ let SETTINGS = getTrackerSettings(primaryDomain)
 let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|💸|💎|🌱|🍁|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🌱|🍁|💎|🏆|💸|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
 
 // The URL of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -3254,7 +3254,7 @@ function quickieTrackerHandler({
 
 
 function unit3dTrackerHandler(downloadElementsSelector) {
-    // A tracker handler focused on the layout of the UNIT3D Framework. Generate a bunnyButton for each queried DownloadElement
+    // A tracker handler focused on the layout of the UNIT3D Framework. Generate a bunnyButton for each queried downloadElement matching the provided CSS selector
     // ! This function uses 'Oldtoons' as the model and is not WirlyWirly guaranteed for other sites
 
     // Mutable variables dependent on the current page
@@ -3353,8 +3353,12 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                             // The snatchedStatusSelector was matched
                             replaceEmojis(bunnyButton, '🍁')
                             bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
-                        } else if ( document.querySelector('span.torrent-icons i.torrent-icons__freeleech.fa-star') != null ) {
-                            // The freeleechStatusSelector was matched
+                        } else if ( document.querySelector('span.torrent-icons i.torrent-icons__featured') != null ) {
+                            // This is a featured torrent
+                            replaceEmojis(bunnyButton, '🏆')
+                            bunnyButton.title = bunnyButton.title.replace(/🖥️/, '🏆 Featured 🏆\n💎 Freeleech 💎\n\n🖥️')
+                        } else if ( document.querySelector('span.torrent-icons i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, span.torrent-icons i.fa.fa-globe') != null ) {
+                            // The freeleechStatusSelector was matched: Star, Calendar, Globe
                             replaceEmojis(bunnyButton, '💎')
                             bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n🖥️')
                         }
@@ -3419,8 +3423,12 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                                 // The snatchedStatusSelector was matched
                                 replaceEmojis(bunnyButton, '🍁')
                                 bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
-                            } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__freeleech.fa-star') != null ) {
-                                // The freeleechStatusSelector was matched
+                            } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__featured') != null ) {
+                                // This is a featured torrent
+                                replaceEmojis(bunnyButton, '🏆')
+                                bunnyButton.title = bunnyButton.title.replace(/🖥️/, '🏆 Featured 🏆\n💎 Freeleech 💎\n\n🖥️')
+                            } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, i.fa.fa-globe') != null ) {
+                                // The freeleechStatusSelector was matched: Star, Calendar, Globe
                                 replaceEmojis(bunnyButton, '💎')
                                 bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n🖥️')
                             }
@@ -4722,7 +4730,6 @@ function base64encode(inputData) {
     })
 
 }
-
 
 
 function saveToFile(fileData, filename) {
