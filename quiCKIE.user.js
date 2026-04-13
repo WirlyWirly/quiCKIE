@@ -39,6 +39,10 @@
 // @match   https://alpharatio.cc/top10.php*
 // @match   https://alpharatio.cc/torrents.php*
 
+// @match   https://animez.to/
+// @match   https://animez.to/torrents*
+// @match   https://animez.to/torrent-bookmarks*
+
 // @match   https://animebytes.tv/alltorrents.php?*&userid=*
 // @match   https://animebytes.tv/artist.php?id=*
 // @match   https://animebytes.tv/bookmarks.php*
@@ -270,6 +274,12 @@ const settingsPanelTrackers = [
         trackerName: 'AlphaRatio',
         homepageURL: 'https://alpharatio.cc',
         primaryDomain: 'alpharatio',
+    },
+
+    {
+        trackerName: 'AnimeZ',
+        homepageURL: 'https://animez.to',
+        primaryDomain: 'animez',
     },
 
     {
@@ -636,6 +646,15 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
     }
 
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'animez' ) {
+    // --------------------------------- AnimeZ ------------------------------------
+    // Home | Browse| Bookmarks
+
+    let trackerHandlingOptions = {
+        downloadELementsSelector: 'a[href^="https://animez.to/torrents/"][href$="/download"]',
+    }
     quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'anthelion' ) {
