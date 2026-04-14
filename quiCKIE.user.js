@@ -1001,6 +1001,25 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://exoticaz.to/download/torrent/"]',
     }
+    if ( pageURL.match(/\/torrent\/\d+/) ) {
+
+        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            background: #e94a93;
+            color: #e8e6e3;
+            font-size: .8203125rem;
+            display: inline-block;
+            padding: .2rem .7rem;
+            border-radius: 0;
+            font-weight: 400
+            border: 1px solid transparent;
+            line-height: 1;
+            font-family: 'Roboto';
+            margin-left: 5px;
+            margin-right: 1px;
+            margin-top: 3px;
+        `
+    }
 
     quickieTrackerHandler(trackerHandlingOptions)
 
