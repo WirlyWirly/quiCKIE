@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.43.6
+// @version     1.43.7
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -14,19 +14,20 @@
 // @namespace   https://github.com/WirlyWirly
 // @run-at      document-end
 
-// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
-// @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
+// resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
-// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
+// require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
 // Local resource urls used during development. Files can be served over http via MiniServe: https://github.com/svenstaro/miniserve
+//
 
-// resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
-// resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
-// require     http://localhost:12345/ContextMenu.js
+// @resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
+// @resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
+// @require     http://localhost:12345/ContextMenu.js
 
 // ----------------------------------- Matches --------------------------------------
 
@@ -269,6 +270,7 @@ const settingsPanelTrackers = [
         homepageURL: 'https://aither.cc',
         primaryDomain: 'aither',
     },
+
 
     {
         trackerName: 'AlphaRatio',
@@ -618,6 +620,9 @@ if ( primaryDomain == 'animebytes' ) {
         // If quiCKIE should mark already processed downloadElements with a special attribute, which will prevent them from being queried twice and ending up with duplicate bunnyButtons, useful when dealing with advanced pagination
         downloadElementsTrackProcessed: false, // Default = false || Options = true | false
 
+        // The element that will be used as the root when performing .querySelectorAll(downloadElementsSelector) to find all the downloadElements
+        queryFromElement: document, // Default = document || Options = document | A specific element (node)
+
         // The name of the downloadElement attribute that contains the torrentURL
         downloadElementsTorrentURLAttribute: 'href', // Default = 'href' || Options = A string matching a attribute name of the download element
 
@@ -837,6 +842,7 @@ if ( primaryDomain == 'animebytes' ) {
         }
 
         let observer = new MutationObserver(function(mutations) {
+
 
             quickieTrackerHandler(trackerHandlingOptions)
         })
@@ -3238,6 +3244,7 @@ function quickieTrackerHandler({
     afterBunnyButtonCreation = false,
     enablePaginationLooping = false,
     downloadElementsTrackProcessed = false,
+    queryFromElement = document,
     downloadElementsTorrentURLAttribute = 'href',
     forceTorrentFile = false,
     bunnyButtonAttachPresetsMenu = true,
@@ -3273,7 +3280,7 @@ function quickieTrackerHandler({
         try {
             setTimeout(() => {
                 // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
-                let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
+                let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
                 logger.info('allDownloadElements')
                 logger.log(allDownloadElements)
@@ -3419,6 +3426,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
     let downloadElementsTrackProcessed = false
     let bunnyButtonPlacement
     let torrentDetailsPage = false
+    let queryFromElement = document
     let bunnyButtonAddStyles = ''
     let bunnyButtonAddClasses
     let bunnyButtonText = ' 🐰 '
@@ -3446,6 +3454,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
         if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
             // The search page observer configs
+            queryFromElement = document.querySelector('div.page__torrents')
             target = document.querySelector('div.page__torrents > script[nonce]')
             config = { attributes: true }
         } else {
@@ -3480,7 +3489,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
         setTimeout(() => {
 
-            let allDownloadElements = document.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
+            let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
 
             if ( allDownloadElements.length >= 1 ) {
 
@@ -4193,11 +4202,12 @@ async function getFileBlob(postData) {
             // ----- File Downloaded -----
             let blobData = response.response
 
-            if ( blobData.type != 'application/x-bittorrent' ) {
+            if ( !blobData.type.match(/application\/x-bittorrent/i) ) {
                 // The downloaded file is NOT a .torrent type, abort the POST
                 replaceEmojis(bunnyButton, '❌')
 
                 console.log(response)
+
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file. Aborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nStatus Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
                 return
 
@@ -4745,7 +4755,7 @@ function scanForThirdPartyTorrentURLS(delay) {
                     skipHash: SETTINGS.skipHash,
                 }
 
-                // If allowd, check for the tracker-specific settings for this thirdParty DL element
+                // If allowed, check for the tracker-specific settings for this thirdParty DL element
                 if ( SETTINGS.thirdPartyScan == 'On + 🌎' ) {
 
                     if ( SETTINGS.firstThirdPartyScan ) {

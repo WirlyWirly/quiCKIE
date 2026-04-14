@@ -1,5 +1,6 @@
 #quiCKIE_config * {
 font-family: "Roboto Condensed", Tahoma, Arial;
+
 }
 
 #quiCKIE_config .field_label {
@@ -504,7 +505,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
 /* a.quiCKIE_bunnyButton[title]:after { */
 /*     background-color: #2C3E50; */
 /*     border-radius: 5px; */
-/*     box-shadow: 0 2px 5px #2C3E50; */    
+/*     box-shadow: 0 2px 5px #2C3E50; */
 /*     color: #FFFFFF; */
 /*     content: attr(title); */
 /*     font-family: "Roboto Condensed", Tahoma, Arial; */
@@ -512,7 +513,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
 /*     margin: 20px 0px 0px 5px; */
 /*     max-width: 95%; */
 /*     padding: 2px 2px 2px 2px; */
-/*     position: absolute; */ 
+/*     position: absolute; */
 /*     visibility: hidden; */
 /*     width: 500px; */
 /*     z-index: 999; */
