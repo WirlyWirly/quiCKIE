@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.43.8
+// @version     1.43.9
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -46,6 +46,10 @@
 // @match   https://animebytes.tv/company.php?id=*
 // @match   https://animebytes.tv/series.php?id=*
 // @match   https://animebytes.tv/torrents*
+
+// @match   https://animez.to/
+// @match   https://animez.to/torrents*
+// @match   https://animez.to/torrent-bookmarks*
 
 // @match   https://anthelion.me/torrents.php*
 
@@ -281,6 +285,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'AnimeZ', // @holy-elbow
+        homepageURL: 'https://animez.to',
+        primaryDomain: 'animez',
+    },
+
+    {
         trackerName: 'Anthelion', // @malefis
         homepageURL: 'https://anthelion.me',
         primaryDomain: 'anthelion',
@@ -347,16 +357,16 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'Empornium',
-        homepageURL: 'https://www.empornium.sx',
-        primaryDomain: 'empornium',
-    },
-
-    {
         trackerName: 'E-Hentai', // @holy-elbow
         homepageURL: 'https://e-hentai.org',
         primaryDomain: 'e-hentai',
         otherDomains: ['exhentai'],
+    },
+
+    {
+        trackerName: 'Empornium',
+        homepageURL: 'https://www.empornium.sx',
+        primaryDomain: 'empornium',
     },
 
     {
@@ -640,6 +650,33 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
     }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'animez' ) {
+    // --------------------------------- AnimeZ ------------------------------------
+    // Home | Browse| Bookmarks
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://animez.to/torrents/"][href$="/download"]',
+    }
+
+    if ( pageURL.match(/\/torrents\/\d+/) ) {
+
+        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            background: #4263eb;
+            border-radius: 8px;
+            border 1px solid transparent;
+            color: #f9fafb;
+            box-shadow: 0 1px 1px rgba(229, 231, 235, .06);
+            padding: 0.6875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5rem;
+        `
+    }
+
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -969,6 +1006,25 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://exoticaz.to/download/torrent/"]',
+    }
+    if ( pageURL.match(/\/torrent\/\d+/) ) {
+
+        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            background: #e94a93;
+            color: #e8e6e3;
+            font-size: .8203125rem;
+            display: inline-block;
+            padding: .2rem .7rem;
+            border-radius: 0;
+            font-weight: 400
+            border: 1px solid transparent;
+            line-height: 1;
+            font-family: 'Roboto';
+            margin-left: 5px;
+            margin-right: 1px;
+            margin-top: 3px;
+        `
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
