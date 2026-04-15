@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.43.8
+// @version     1.43.9
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -39,10 +39,6 @@
 // @match   https://alpharatio.cc/top10.php*
 // @match   https://alpharatio.cc/torrents.php*
 
-// @match   https://animez.to/
-// @match   https://animez.to/torrents*
-// @match   https://animez.to/torrent-bookmarks*
-
 // @match   https://animebytes.tv/alltorrents.php?*&userid=*
 // @match   https://animebytes.tv/artist.php?id=*
 // @match   https://animebytes.tv/bookmarks.php*
@@ -50,6 +46,10 @@
 // @match   https://animebytes.tv/company.php?id=*
 // @match   https://animebytes.tv/series.php?id=*
 // @match   https://animebytes.tv/torrents*
+
+// @match   https://animez.to/
+// @match   https://animez.to/torrents*
+// @match   https://animez.to/torrent-bookmarks*
 
 // @match   https://anthelion.me/torrents.php*
 
@@ -279,15 +279,15 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'AnimeZ',
-        homepageURL: 'https://animez.to',
-        primaryDomain: 'animez',
-    },
-
-    {
         trackerName: 'AnimeBytes',
         homepageURL: '',
         primaryDomain: 'animebytes',
+    },
+
+    {
+        trackerName: 'AnimeZ', // @holy-elbow
+        homepageURL: 'https://animez.to',
+        primaryDomain: 'animez',
     },
 
     {
@@ -357,16 +357,16 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'Empornium',
-        homepageURL: 'https://www.empornium.sx',
-        primaryDomain: 'empornium',
-    },
-
-    {
         trackerName: 'E-Hentai', // @holy-elbow
         homepageURL: 'https://e-hentai.org',
         primaryDomain: 'e-hentai',
         otherDomains: ['exhentai'],
+    },
+
+    {
+        trackerName: 'Empornium',
+        homepageURL: 'https://www.empornium.sx',
+        primaryDomain: 'empornium',
     },
 
     {
@@ -660,7 +660,7 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://animez.to/torrents/"][href$="/download"]',
     }
-    
+
     if ( pageURL.match(/\/torrents\/\d+/) ) {
 
         trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
@@ -676,7 +676,7 @@ if ( primaryDomain == 'animebytes' ) {
             line-height: 1.5rem;
         `
     }
-            
+
 
     quickieTrackerHandler(trackerHandlingOptions)
 
