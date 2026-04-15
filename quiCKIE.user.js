@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + contributors 🫶
-// @version     1.43.7
+// @version     1.43.8
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -24,7 +24,6 @@
 // ----------------------------------- Development --------------------------------------
 // Local resource urls used during development. Files can be served over http via MiniServe: https://github.com/svenstaro/miniserve
 //
-
 // resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
 // require     http://localhost:12345/ContextMenu.js
@@ -237,6 +236,7 @@
 
 // @updateURL   https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
 // @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
+//
 // ==/UserScript==
 
 // Set to true to enable verbose console logging, useful during development or troubleshooting
@@ -253,13 +253,13 @@ const settingsPanelTrackers = [
 
     // Each tracker requires 3 things; A TitleCase name, the homepage URL, and the primaryDomain of the tracker
 
-    // If the tracker has more than one domain that it can be accessed from, you may also include the 'otherDomains' property, which should consist of an array (list) of different domain names. This will make it so that these domains all share the same tracker settings.
-    // otherDomains: ['domain1', 'domain2', 'domain3'],
-
     // Here are examples of identify the domain of a tracker...
     //  https://broadcasthe.net/ --> broadcasthe
     //  https://www.myanonamouse.net/ --> myanonamouse
     //  https://sukebei.nyaa.si/ --> nyaa
+
+    // ℹ️ If the tracker has more than one domain that it can be accessed from (common in public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domain names. This will make it so that these domains all share the same tracker settings.
+    // otherDomains: ['domain1', 'domain2', 'domain3'],
 
     {
         trackerName: 'Aither', // @holy-elbow
@@ -2907,6 +2907,7 @@ function createPresetItems(primaryDomains) {
             content: '🛠️ Settings',
             events: {
                 'click': function(event) {
+                    // This menuItem was clicked, so open the quiCKIE settings panel
                     GM_config.open()
                 },
                 'mouseover': function(event) {
@@ -2919,6 +2920,7 @@ function createPresetItems(primaryDomains) {
             content: `🖥️ ${SETTINGS.torrentClient.client}`,
             events: {
                 'click': function(event) {
+                    // This menuItem was clicked, so open the webUI of the active torrent client
 
                     if ( SETTINGS.torrentClient.client == 'qui') {
                         window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
@@ -2943,7 +2945,7 @@ function createPresetItems(primaryDomains) {
             content: '💾 TorrentFile',
             events: {
                 'click': function(event) {
-                    // This menuItem was clicked, so use the selected preset
+                    // This menuItem was clicked, so simulate a click of the torrentURL\magnetLink to download\open the .torrent file
 
                     let bunnyButtonId = this.dataset.targetid
                     let bunnyButton = document.getElementById(bunnyButtonId)
