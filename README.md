@@ -17,14 +17,14 @@ quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https
 
 Only the **clientURL** and **login credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for more info about what each field does and how it may be filled in.
 
-The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton, or from the menu of your UserScript Manager, which is the dialogue on your toolbar that lists the currently active UserScripts. 
+The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton, or from the menu of your UserScript Manager, which is the dialogue on your toolbar that lists the currently active UserScripts.
 
 <br>
 
 > **Left-Click \ Mobile Tap**: Send torrent to client with the settings for the current tracker<br>
 > **Right-Click \ Mobile Long-press**: Select a preset to use when sending the torrent to your client<br>
 > **Middle-Click**: Open torrent client in a new tab<br>
-> 
+>
 > **Shift-Click**: Open quiCKIE settings panel<br>
 > **Ctrl-Click**: Open torrent client in a new tab<br>
 > **Shift-Ctrl-Click**: Send torrent to client, but paused (works for both the current tracker settings and presets)<br>

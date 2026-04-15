@@ -7,7 +7,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        If this bug is related to a particular tracker not generating BunnyButtons, know that support can be limited as private trackers are behind closed doors. In this case, you may be called on for light testing or HTML inspections so that the tracker can be fixed. **A broken tracker without anyone willing to help maintain it is likely to be removed after a time**
+        If this bug is related to a specific private tracker, know that support may be limited as private trackers are behind closed doors. You may be asked to perfrom light testing or HTML inspections if the issue is to be resolved.
+
+        **A tracker without anyone willing to help maintain it is likely to be removed after a time**
 
   - type: textarea
     id: bugDescription
@@ -15,7 +17,24 @@ body:
       required: true
     attributes:
       label: ✏️ Description
-      description: Briefly explain the expected behaviour, the buggy behaviour, and how this bug can be reproduced.
+      description: Explain the issue, including the text of any window alerts or things of note.
+
+  - type: textarea
+    id: consoleMessages
+    validations:
+      required: true
+    attributes:
+      label: 📄 Console Messages
+      description: Copy-paste the browser's console messages related to this bug, making sure to obfuscate any sensitive data. This will be automatically formatted into code, so no need for backticks.
+      render: console
+
+  - type: input
+    id: userscriptVersion
+    validations:
+      required: true
+    attributes:
+      label: 🐰 quiCKIE Version
+      placeholder: quiCKIE [v1.5]
 
   - type: input
     id: userBrowser
@@ -38,24 +57,6 @@ body:
         - Greasemonkey
         - Other
 
-  - type: input
-    id: userscriptVersion
-    validations:
-      required: true
-    attributes:
-      label: 🐰 Version
-      description: What is the quiCKIE version you are reporting a bug for?
-      placeholder: quiCKIE [v1.5]
-
-  - type: textarea
-    id: consoleMessages
-    validations:
-      required: true
-    attributes:
-      label: 📄 Console Messages
-      description: Copy-paste the browser's console messages related to this bug, making sure to obfuscate any sensitive data. This will be automatically formatted into code, so no need for backticks.
-      render: shell
-
   - type: checkboxes
     id: userConfirmation
     attributes:
@@ -66,4 +67,3 @@ body:
           required: true
         - label: Yes, I have searched for and confirmed this bug has not yet been reported
           required: true
-

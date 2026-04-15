@@ -6,7 +6,7 @@
 // @author      WirlyWirly + contributors 🫶
 // @version     1.43.9
 // @homepage    https://github.com/WirlyWirly/quiCKIE
-// @description A UserScript to quickly send torrents from a tracker to a torrent client, with customizable per-site settings and presets 🐰
+// @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
 //              Written on LibreWolf via Violentmonkey
 
@@ -540,18 +540,18 @@ const settingsPanelTrackers = [
 // Example: https://broadcasthe.net/ --> broadcasthe
 let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
 
-// A simple logger, which will only console log messages when it has been enabled
+// A simple logger, which will only console log messages when it has been enabled above
 let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'quiCKIE'})
 
-// Everything related to the GM_config library, which is used for creating and presenting the settings panel: https://github.com/sizzlemctwizzle/GM_config
-let [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
+// Everything related to the GM_config library, which is used for saving and creating the settings panel: https://github.com/sizzlemctwizzle/GM_config
+let [ primaryDomain, allPrimaryDomains, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
 
 // Retrieve the settings and presetMenuItems that are relevant to the current tracker
 let SETTINGS = getTrackerSettings(primaryDomain)
 let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🌱|🍁|💎|🏆|💸|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🌱|🍁|💎|📢|💸|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
 
 // The full URL and Path of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -1507,7 +1507,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
     // These array\objects will later allow us to easily cross-reference the settingsPanelTrackers data
     let allPrimaryDomains = []
-    let primaryDomainToName = {}
+    let primaryDomainToTrackerName = {}
     let primaryDomainToHomepage = {}
     let trackerNameToPrimaryDomain = {}
 
@@ -1521,7 +1521,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
         // Populate the array\objects that will be returned and made global
         allPrimaryDomains.push(settingsId)
-        primaryDomainToName[settingsId] = trackerName
+        primaryDomainToTrackerName[settingsId] = trackerName
         primaryDomainToHomepage[settingsId] = tracker.homepageURL
         trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId
 
@@ -1572,7 +1572,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         // --- GM_config() Fields ---
         let generatedTrackerFields = {
             [`${primaryDomain}-${trackerFieldSuffixes[0]}`]: {
-                'label': primaryDomainToName[primaryDomain],
+                'label': primaryDomainToTrackerName[primaryDomain],
                 'type': 'text'
             },
             [`${primaryDomain}-${trackerFieldSuffixes[1]}`]: {
@@ -1618,7 +1618,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
             },
             [`${primaryDomain}-${trackerFieldSuffixes[10]}`]: {
                 'type': 'select',
-                'options': ['On', 'Off', 'On + 🌎'],
+                'options': ['Off', 'On', 'On + 🌎'],
                 'default': 'Off',
             },
             [`${primaryDomain}-${trackerFieldSuffixes[11]}`]: {
@@ -1797,8 +1797,8 @@ function createGMConfigSettingsPanel(trackerDomain) {
             'dllimit': '─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents',
             'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
             'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
-            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For UNIT3D trackers, this feature is automatically enabled on certain pages\n\n⚠️ You should NOT enable this feature unless you are on a site that actually has pagination\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
-            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nThe developer of a third-party UserScript may setup quiCKIE integration for their UserScript, that way the DL buttons their UserScript generates will also receive a BunnyButton\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
+            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For UNIT3D trackers, pagination has already be taken care of on certain pages\n\n⚠️ You should NOT enable this feature unless you are on a site that actually has pagination that isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
+            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nDevelopers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
             'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Shift-Ctrl-Click on a BunnyButton or Preset to override the Start Paused setting to be True",
@@ -2244,7 +2244,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
                     }
 
                     // Create the list of selectable items that appears when typing to the presetTrackers field
-                    let trackerTitles = Object.entries(primaryDomainToName).sort().map (
+                    let trackerTitles = Object.entries(primaryDomainToTrackerName).sort().map (
                         ([key, value]) => [value]
 
                     )
@@ -2254,7 +2254,6 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
                     // Append the list somewhere nearby, in this case into the presetTrackers column
                     document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').appendChild(datalistElement)
-
 
                     for ( let tracker of trackerTitles ) {
                         let datalistItem = document.createElement('option')
@@ -2292,6 +2291,9 @@ function createGMConfigSettingsPanel(trackerDomain) {
                     hideButton.textContent = '🙈 '
                     hideButton.style.display = 'none'
                     hideButton.style.cursor = 'pointer'
+                    hideButton.addEventListener('mouseover', () => { hideButton.style.textShadow = '0px 0px 1px black, 0 0 5px #B6D3E7' } )
+                    hideButton.addEventListener('mouseout', () => { hideButton.style.textShadow = 'none' } )
+
                     hideButton.addEventListener('click', () => {
                         let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
                         let hiddenTrackers = hiddenTrackersField.value.split(',')
@@ -2776,7 +2778,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
                 if ( this.get('welcomeMessage') == 'show' ) {
                     // Display this welcomeMessage when first opening the quiCKIE settings panel
-                    confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients only being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue or leave a comment on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
+                    confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
 
                     this.set('welcomeMessage', 'hide')
 
@@ -2824,7 +2826,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     })
 
 
-    return [ primaryDomain, allPrimaryDomains, primaryDomainToName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
+    return [ primaryDomain, allPrimaryDomains, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
 
 }
 
@@ -3040,7 +3042,7 @@ function createPresetItems(primaryDomains) {
             }
 
             // Check if the list of trackers in the presetTrackers field contains a match against the settings panel label of this tracker
-            let settingsPanelLabel = primaryDomainToName[primaryDomain].toLowerCase()
+            let settingsPanelLabel = primaryDomainToTrackerName[primaryDomain].toLowerCase()
             if ( !presetTrackersList.match(/\*/) && !presetTrackersList.match(settingsPanelLabel) ) {
                 // Neither a wildcard nor a matching tracker label, so don't add this item to the presets-menu
                 continue
@@ -3337,7 +3339,7 @@ function quickieTrackerHandler({
                     if ( SETTINGS.firstTrackerHandlerScan && !['myanonamouse'].includes(primaryDomain) ) {
                         // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
 
-                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
+                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
                     }
 
                 }
@@ -3524,8 +3526,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                             bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
                         } else if ( document.querySelector('span.torrent-icons i.torrent-icons__featured') != null ) {
                             // This is a featured torrent
-                            replaceEmojis(bunnyButton, '🏆')
-                            bunnyButton.title = bunnyButton.title.replace(/🖥️/, '🏆 Featured 🏆\n💎 Freeleech 💎\n\n🖥️')
+                            replaceEmojis(bunnyButton, '📢')
+                            bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n💎 Freeleech 💎\n\n🖥️')
                         } else if ( document.querySelector('span.torrent-icons i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, span.torrent-icons i.fa.fa-globe') != null ) {
                             // The freeleechStatusSelector was matched: Star, Calendar, Globe
                             replaceEmojis(bunnyButton, '💎')
@@ -3594,8 +3596,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                                 bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Completed\n🔗')
                             } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__featured') != null ) {
                                 // This is a featured torrent
-                                replaceEmojis(bunnyButton, '🏆')
-                                bunnyButton.title = bunnyButton.title.replace(/🖥️/, '🏆 Featured 🏆\n💎 Freeleech 💎\n\n🖥️')
+                                replaceEmojis(bunnyButton, '📢')
+                                bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n💎 Freeleech 💎\n\n🖥️')
                             } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, i.fa.fa-globe') != null ) {
                                 // The freeleechStatusSelector was matched: Star, Calendar, Globe
                                 replaceEmojis(bunnyButton, '💎')
@@ -3624,7 +3626,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
             } else {
 
                 if ( SETTINGS.firstTrackerHandlerScan ) {
-                    console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
+                    console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
                 }
 
 
@@ -3674,7 +3676,7 @@ function createBunnyButton({
 
     addButtonClasses.length > 0 ? addButtonClasses.forEach(classItem => bunnyButton.classList.add(classItem) ) : null
 
-    bunnyButton.title = ` ─── 🌎 ${primaryDomainToName[`${torrentSettings.primaryDomain}`]} 🌎 ───
+    bunnyButton.title = ` ─── 🌎 ${primaryDomainToTrackerName[`${torrentSettings.primaryDomain}`]} 🌎 ───
  🗃️ = ${torrentSettings.category}
  💾 = ${torrentSettings.savePath}
  🏷️ = ${torrentSettings.tags}
