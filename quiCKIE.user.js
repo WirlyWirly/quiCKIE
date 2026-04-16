@@ -14,22 +14,6 @@
 // @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
 // @run-at      document-end
 
-// ----------------------------------- Dependencies --------------------------------------
-
-// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
-// @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
-
-// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
-// @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
-
-// ----------------------------------- Development --------------------------------------
-// Local resource urls used during development. Files can be served over http via MiniServe: https://github.com/svenstaro/miniserve
-
-// resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
-// resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
-// require     http://localhost:12345/ContextMenu.js
-
 // ----------------------------------- Matches --------------------------------------
 
 // Adding a New Tracker: https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker
@@ -237,6 +221,22 @@
 // @grant   GM_registerMenuCommand
 // @grant   GM_setValue
 // @grant   GM_xmlhttpRequest
+
+// ----------------------------------- Dependencies --------------------------------------
+
+// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
+
+// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
+// @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
+
+// ----------------------------------- Development --------------------------------------
+// localhost urls used during development. Easily served over http by MiniServe: https://github.com/svenstaro/miniserve
+
+// resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
+// resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
+// require     http://localhost:12345/ContextMenu.js
 
 // ----------------------------------- Script Links --------------------------------------
 
