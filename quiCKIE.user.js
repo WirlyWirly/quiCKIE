@@ -3,16 +3,18 @@
 // ----------------------------------- MetaData --------------------------------------
 
 // @name        qui - quiCKIE
-// @author      WirlyWirly + contributors 🫶
-// @version     1.43.9
+// @author      WirlyWirly + Contributors 🫶
+// @version     1.44
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
 //              Written on LibreWolf via Violentmonkey
 
-// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
 // @namespace   https://github.com/WirlyWirly
+// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
 // @run-at      document-end
+
+// ----------------------------------- Dependencies --------------------------------------
 
 // @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
@@ -23,7 +25,7 @@
 
 // ----------------------------------- Development --------------------------------------
 // Local resource urls used during development. Files can be served over http via MiniServe: https://github.com/svenstaro/miniserve
-//
+
 // resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
 // require     http://localhost:12345/ContextMenu.js
@@ -262,7 +264,7 @@ const settingsPanelTrackers = [
     //  https://www.myanonamouse.net/ --> myanonamouse
     //  https://sukebei.nyaa.si/ --> nyaa
 
-    // ℹ️ If the tracker has more than one domain that it can be accessed from (common in public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domain names. This will make it so that these domains all share the same tracker settings.
+    // ℹ️ If the tracker has more than one domain that it can be accessed from (common for public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domains. This will make it so that these domains all share the same tracker settings from within the quiCKIE settings panel.
     // otherDomains: ['domain1', 'domain2', 'domain3'],
 
     {
@@ -1542,7 +1544,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     logger.info(`primaryDomain: ${primaryDomain}`)
 
     // Verify that the trackerDomain is registered as an entry in the settingsPanelTrackers object, if not then abort all further exectuion of this script
-    if ( registeredTracker == false ) { console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site if not registered to a tracker supported by quiCKIE: ${trackerDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you have included this trackerDomain to a tracker in Step #2 of the 'Adding a New Tracker' guide`); throw new Error('Aborting further quiCKIE execution') }
+    if ( registeredTracker == false ) { throw `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site if not registered to a tracker supported by quiCKIE: ${trackerDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you have included this trackerDomain to a tracker in Step #2 of the 'Adding a New Tracker' guide` }
 
     // Determine the saved number of preset fields that should be generated in the settings panel and presets-menu
     let presetCount
@@ -1556,9 +1558,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     }
 
     // New installs will not have a presetCount, so default to 3
-    if ( presetCount == undefined ) {
-        presetCount = 3
-    }
+    presetCount == undefined ? presetCount = 3 : null
 
     logger.info(`presetCount: ${presetCount}`)
 
@@ -1734,7 +1734,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\nℹ️ This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
-            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nHover over the tracker name for a '🙈' button that will quickly add the tracker to this hidden list\n\nℹ️ This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel\n\nExample:  HDBits, secret-cinema, NYAA",
+            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nHover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\nℹ️ This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
             'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\nℹ️ Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
 
 
@@ -1786,11 +1786,11 @@ function createGMConfigSettingsPanel(trackerDomain) {
         'columnTitles': {
             'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
 
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed. Both text and emojis are supported\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings\n\nℹ️ Naming a preset 'Send', 'SendPaused', 'Settings', 'Client', or 'TorrentFile' will display special menu items. Hover over them for details.\n\nℹ️ To display a divider in your list, pick one of these characters and use it as the name...\n- = . [space]",
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\nUsing one of these names will create a special menu item...\nSettings, TorrentFile, Client, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nWhen this setting is used, these torrents will have ATMM (Auto Torrent Management Mode) disabled. This means that changing the category later on will NOT move the torrents based on the new category. You will need to enable ATMM for these torrents if you would like to get that behaviour back\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nℹ️ Specifying a save path implicitly disables ATMM (Auto Torrent Management Mode)\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
             'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
             'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete',
             'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
@@ -2295,12 +2295,20 @@ function createGMConfigSettingsPanel(trackerDomain) {
                     hideButton.addEventListener('mouseout', () => { hideButton.style.textShadow = 'none' } )
 
                     hideButton.addEventListener('click', () => {
+                        // Add the selected tracker to the hiddenTrackers list
                         let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
                         let hiddenTrackers = hiddenTrackersField.value.split(',')
                         hiddenTrackers.push(trackerLabelData.children[1].textContent)
-                        hiddenTrackers.sort()
 
-                        hiddenTrackersField.value = hiddenTrackers.toString().match(/^,?(.*)/)[1]
+                        // Format the new list, sorting it alphabetically and removing surrounding whitespace
+                        let updatedList = []
+                        hiddenTrackers.forEach( tracker => {
+                            if ( tracker == '' ) { return }
+                            updatedList.push(tracker.trim())
+                        })
+
+                        updatedList.sort()
+                        hiddenTrackersField.value = updatedList.join(', ')
 
                         trackerRow.remove()
                     })
@@ -2333,7 +2341,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
                     document.getElementById('quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
                     document.getElementById('quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, secret-cinema, NYAA'
+                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
                     document.getElementById('quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
                     document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
                     document.getElementById('quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
@@ -3197,10 +3205,10 @@ function createPresetItems(primaryDomains) {
                         },
                     }
                 },
-                defaultItems['send'],
                 defaultItems['settings'],
-                defaultItems['client'],
                 defaultItems['torrentfile'],
+                defaultItems['client'],
+                defaultItems['send'],
             ]
 
         }
