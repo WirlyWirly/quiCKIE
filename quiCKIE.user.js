@@ -581,7 +581,9 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="/torrent/"][title="Download torrent"]',
 
         // --------------------------OPTIONAL -------------------------
-        // The following properties are all optional and can be applied on a per-tracker basis when appropriate to do so
+        // The following properties are all optional and can be applied on a per-tracker basis or when appropriate to do so depending on the page of the tracker
+
+        // ℹ️ Tip: To apply options on a per-page basis, use an 'if' statement to determine the current page based on the pageURL. From there, you can apply the options relevant to that page (See the BroadCasTheNet\Empornium\IP-Torrents\MyAnonaMouse\Nyaa blocks for examples)
 
 
         // - - - - - - - - - PRESENTATION - - - - - - - - -
@@ -626,7 +628,7 @@ if ( primaryDomain == 'animebytes' ) {
         seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
 
         // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁'
-        snatchedStatusSelector: "downloadElement.closest('td').querySelector('a.snatched-torrent')", // Default = null || Options = 'downloadElement...'
+        snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.snatched-torrent')`, // Default = null || Options = 'downloadElement...'
 
         // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎'
         freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
