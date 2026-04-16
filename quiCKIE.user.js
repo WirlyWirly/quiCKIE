@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.44
+// @version     1.44.1
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -546,7 +546,7 @@ let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].t
 let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'quiCKIE'})
 
 // Everything related to the GM_config library, which is used for saving and creating the settings panel: https://github.com/sizzlemctwizzle/GM_config
-let [ primaryDomain, allPrimaryDomains, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
+let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
 
 // Retrieve the settings and presetMenuItems that are relevant to the current tracker
 let SETTINGS = getTrackerSettings(primaryDomain)
@@ -1509,6 +1509,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
     // These array\objects will later allow us to easily cross-reference the settingsPanelTrackers data
     let allPrimaryDomains = []
+    let allTrackerNames = []
     let primaryDomainToTrackerName = {}
     let primaryDomainToHomepage = {}
     let trackerNameToPrimaryDomain = {}
@@ -1523,6 +1524,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
         // Populate the array\objects that will be returned and made global
         allPrimaryDomains.push(settingsId)
+        allTrackerNames.push(trackerName.toLowerCase())
         primaryDomainToTrackerName[settingsId] = trackerName
         primaryDomainToHomepage[settingsId] = tracker.homepageURL
         trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId
@@ -2834,7 +2836,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     })
 
 
-    return [ primaryDomain, allPrimaryDomains, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
+    return [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
 
 }
 
@@ -4782,35 +4784,40 @@ function scanForThirdPartyTorrentURLS(delay) {
                         SETTINGS.firstThirdPartyScan = false
                     }
 
-                    // [quickie_tracker] : Check if the thirdParty element has specified from which tracker the bunnyButtons should get their settings
+                    // [quickie_tracker] : Check if the thirdParty element has specified from which tracker the bunnyButton should get its settings
                     if ( downloadElement.dataset.quickie_tracker != undefined ) {
 
-                        // Using the provided trackerName, get the primaryDomain for the corresponding tracker
-                        let thirdPartyDomain = trackerNameToPrimaryDomain[`${downloadElement.dataset.quickie_tracker.toLowerCase()}`]
+                        let thirdPartyTracker = downloadElement.dataset.quickie_tracker.toLowerCase()
 
-                        // Get and update the torrentSettings with those appropriate of the thirdPartyDomain
-                        torrentSettings.primaryDomain = thirdPartyDomain
-                        torrentSettings.category = GM_config.get(`${thirdPartyDomain}-category`)
-                        torrentSettings.savePath = GM_config.get(`${thirdPartyDomain}-savePath`)
-                        torrentSettings.tags = GM_config.get(`${thirdPartyDomain}-tags`)
-                        torrentSettings.ratioLimit = GM_config.get(`${thirdPartyDomain}-ratioLimit`)
-                        torrentSettings.seedTime = GM_config.get(`${thirdPartyDomain}-seedTime`)
-                        torrentSettings.dlLimit = GM_config.get(`${thirdPartyDomain}-dlLimit`)
-                        torrentSettings.upLimit = GM_config.get(`${thirdPartyDomain}-upLimit`)
-                        torrentSettings.instance = GM_config.get(`${thirdPartyDomain}-instance`)
-                        torrentSettings.startPaused = GM_config.get(`${thirdPartyDomain}-startPaused`)
-                        torrentSettings.subFolder = GM_config.get(`${thirdPartyDomain}-subFolder`)
-                        torrentSettings.seqPieces = GM_config.get(`${thirdPartyDomain}-seqPieces`)
-                        torrentSettings.autoTMM = GM_config.get(`${thirdPartyDomain}-autoTMM`)
-                        torrentSettings.skipHash = GM_config.get(`${thirdPartyDomain}-skipHash`)
+                        if ( Object.keys(trackerNameToPrimaryDomain).includes(thirdPartyTracker) || allPrimaryDomains.includes(thirdPartyTracker) ) {
+                            // The [quickie_tracker] is valid as either a quiCKIE supported trackerName or primaryDomain
 
-                        // Empty problematic integer values before they cause unexpected results in the torrent client
-                        torrentSettings.ratioLimit == 0 ? torrentSettings.ratioLimit = '' : null
-                        torrentSettings.seedTime == 0 ? torrentSettings.seedTime = '' : null
-                        torrentSettings.dlLimit <= 0 ? torrentSettings.dlLimit = '' : null
-                        torrentSettings.upLimit <= 0 ? torrentSettings.upLimit = '' : null
-                        torrentSettings.instance <= 0 ? torrentSettings.instance = '' : null
+                            let thirdPartyDomain = trackerNameToPrimaryDomain[thirdPartyTracker] ?? thirdPartyTracker
 
+                            // Get and update the torrentSettings with those appropriate of the thirdPartyDomain
+                            torrentSettings.primaryDomain = thirdPartyDomain
+                            torrentSettings.category = GM_config.get(`${thirdPartyDomain}-category`)
+                            torrentSettings.savePath = GM_config.get(`${thirdPartyDomain}-savePath`)
+                            torrentSettings.tags = GM_config.get(`${thirdPartyDomain}-tags`)
+                            torrentSettings.ratioLimit = GM_config.get(`${thirdPartyDomain}-ratioLimit`)
+                            torrentSettings.seedTime = GM_config.get(`${thirdPartyDomain}-seedTime`)
+                            torrentSettings.dlLimit = GM_config.get(`${thirdPartyDomain}-dlLimit`)
+                            torrentSettings.upLimit = GM_config.get(`${thirdPartyDomain}-upLimit`)
+                            torrentSettings.instance = GM_config.get(`${thirdPartyDomain}-instance`)
+                            torrentSettings.startPaused = GM_config.get(`${thirdPartyDomain}-startPaused`)
+                            torrentSettings.subFolder = GM_config.get(`${thirdPartyDomain}-subFolder`)
+                            torrentSettings.seqPieces = GM_config.get(`${thirdPartyDomain}-seqPieces`)
+                            torrentSettings.autoTMM = GM_config.get(`${thirdPartyDomain}-autoTMM`)
+                            torrentSettings.skipHash = GM_config.get(`${thirdPartyDomain}-skipHash`)
+
+                            // Empty problematic integer values before they cause unexpected results in the torrent client
+                            torrentSettings.ratioLimit == 0 ? torrentSettings.ratioLimit = '' : null
+                            torrentSettings.seedTime == 0 ? torrentSettings.seedTime = '' : null
+                            torrentSettings.dlLimit <= 0 ? torrentSettings.dlLimit = '' : null
+                            torrentSettings.upLimit <= 0 ? torrentSettings.upLimit = '' : null
+                            torrentSettings.instance <= 0 ? torrentSettings.instance = '' : null
+
+                        }
                     }
 
                 }
