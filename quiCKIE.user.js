@@ -558,7 +558,7 @@ let SETTINGS = getTrackerSettings(primaryDomain)
 let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🌱|🍁|💎|📢|💸|🤝|🕓|🧲|🧑|❌|✔️|💾|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🌱|🍁|💎|📢|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|💾|🧀', 'g')
 
 // The full URL and Path of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL

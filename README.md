@@ -30,7 +30,7 @@ Only the **clientURL** and **credentials** for the selected torrent client are r
 > **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 >
 > **BunnyButton Emojiography***<br>
-> 🐰 = Default | 💸 = Spend Token | 🌱 = Seeding | 🍁 = Snatched | 💎 = Freeleech | 🤝 = ThirdParty<br>
+> 🐰 = Default | 🌱 = Seeding | 🍁 = Snatched | 💎 = Freeleech | 📢 = Featured | 💸 = Spend Token | 🤝 = ThirdParty | 🌎 = ThirdParty + TrackerSettings<br>
 > 🧲 = Downloading .torrent file | 🧑 = Client Login | 🕓 = Sending Torrent | ✔️ = Success | ❌ = Failure
 >
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
