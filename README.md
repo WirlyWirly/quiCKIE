@@ -62,15 +62,15 @@ Even so, it was a few hours after I began that my then unnamed UserScript added 
 
 > Fun-fact: The first torrent to **ever** be sent by this script (even before it had a name) was from MyAnonaMouse 🐭
 
-After I had it working, I added the other trackers I use and was ready to finalize my work. I'd made it easy for myself to add more trackers in the future, so I could come back to it if I ended up joining another tracker... However, I also added a few more optional settings I thought I might one day find useful, one of which was **Start Paused**
+After I had it working, I added the other trackers I use and was ready to finalize my work. I'd made it easy for myself to add more trackers in the future, so I could come back to it if I ended up joining another tracker... However, I also added a few more optional settings I thought I might one day find useful, one of which was **Paused**
 
 The problem was, I couldn't actually get that setting to work 😕... Also, it was bedtime, and since I didn't want to finalize a faulty UserScript, what was suppose to be `v1.0 [Final]` became `v0.1`.
 
-Before going to bed, I posted quiCKIE onto a few forums for folk to check out, with a disclaimer that *Start Paused* wasn't working yet... That might have been a mistake, because in my mind this project was still open for editing, which means inspiration hit again while I was at work the next day... and then again the next day... and the next... It was another **month** before I would push `v1.0`, which again was **suppose** to be *Final*, but after a few days inspiration hit **again**... At that point, I gave up on finalizing this script, and now we're at whatever version is current 😅
+Before going to bed, I posted quiCKIE onto a few forums for folk to check out, with a disclaimer that *Paused* wasn't working yet... That might have been a mistake, because in my mind this project was still open for editing, which means inspiration hit again while I was at work the next day... and then again the next day... and the next... It was another **month** before I would push `v1.0`, which again was **suppose** to be *Final*, but after a few days inspiration hit **again**... At that point, I gave up on finalizing this script, and now we're at whatever version is current 😅
 
 Even so, while there are a few more options and trackers now than what I had originally planned for, overall I'm happy with the result and I think it still remains identifiable to that little ~400 line script I put together that night before bedtime 🛌
 
-This script is written to be reliable, maintainable, and expandable, so hopefully the work put in by myself and my contributors will continue to give dividends for not only myself, but anyone in the community who happens upon this page 🍻
+This script is written to be reliable, maintainable, and easily contributed to, so hopefully the work put in by myself and my contributors will continue to give dividends for not only myself, but anyone in the community who happens upon this page 🍻
 
   <div align="center">
     <img src=".github/assets/quickiev0.1.webp" alt="quickie" width="100%" />
