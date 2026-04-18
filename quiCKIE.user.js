@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.44.2
+// @version     1.44.5
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -76,6 +76,7 @@
 
 // @match   https://clearjav.com/
 // @match   https://clearjav.com/*/bookmarks*
+// @match   https://clearjav.com/movies/*
 // @match   https://clearjav.com/playlists/*
 // @match   https://clearjav.com/torrents*
 
@@ -644,9 +645,6 @@ if ( primaryDomain == 'animebytes' ) {
         // If quiCKIE should repeatedly check for new download elements, which works as a simple approach for handling pagination
         enablePaginationLooping: false, // Default = false || Options = true | false
 
-        // If quiCKIE should mark already processed downloadElements with a special attribute, which will prevent them from being queried twice and ending up with duplicate bunnyButtons, useful when configuring MutationObservers for advanced pagination
-        downloadElementsTrackProcessed: false, // Default = false || Options = true | false
-
 
         // - - - - - - - - - OTHER - - - - - - - - -
         // Options to perform a vareity of tasks that may or may not apply to certain trackers
@@ -779,6 +777,10 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="/torrents/"][title="Download"]',
         bunnyButtonFontSize: '120%',
         bunnyButtonAddStyles: 'vertical-align: bottom',
+
+        // These status selectors are currently only working on the users seeding\snatched page
+        seedingStatusSelector: `downloadElement.closest('tr').querySelector('a.seeders').nextSibling.baseURI.match(/seeding/)`,
+        snatchedStatusSelector: `downloadElement.closest('tr').querySelector('a.snatches').nextSibling.baseURI.match(/snatches/)`,
     }
 
     // This is a details page, so apply styling to the only bunnyButton
@@ -851,9 +853,9 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'clearjav' ) {
     // ----------------------------------- ClearJAV -----------------------------------
-    // Bookmarks | Browse | Details | Playlists
+    // Bookmarks | Browse | Details | Movies| Playlists
 
-    unit3dTrackerHandler('a[href*="/download/"]')
+    unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]')
 
 } else if ( primaryDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
@@ -874,7 +876,6 @@ if ( primaryDomain == 'animebytes' ) {
 
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]:has(i.fa-download)',
-            downloadElementsTrackProcessed: true,
             bunnyButtonText: '🐰 quiCKIE',
             bunnyButtonAddStyles: `
                 background: #252525;
@@ -905,25 +906,22 @@ if ( primaryDomain == 'animebytes' ) {
 
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
-            downloadElementsTrackProcessed: true,
             enablePaginationLooping: true,
         }
 
         quickieTrackerHandler(trackerHandlingOptions)
 
     } else {
+        // The browse page
 
         let trackerHandlingOptions = {
             downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
-            downloadElementsTrackProcessed: true,
         }
 
         let pageObserver = new MutationObserver(async function(pageMutations) {
 
-
             // Wait until the <tbody> of is loaded...
             let tbodyElement = await waitForElement('torrents-table[torrents] tbody', document.getElementById('contentContainer'))
-
 
             try {
 
@@ -1043,7 +1041,9 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://exoticaz.to/download/torrent/"]',
     }
+
     if ( pageURL.match(/\/torrent\/\d+/) ) {
+        // This is a details page, so apply styling to the only bunnyButton
 
         trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
         trackerHandlingOptions.bunnyButtonAddStyles = `
@@ -1310,7 +1310,6 @@ if ( primaryDomain == 'animebytes' ) {
             downloadElementsSelector: 'a[href^="/tor/download.php/"][title*="Download"]',
             bunnyButtonFontSize: '150%',
             bunnyButtonText: '🐰',
-            downloadElementsTrackProcessed: true,
             seedingStatusSelector: "downloadElement.closest('tr').querySelector('div.browseAct')",
             snatchedStatusSelector: "downloadElement.closest('tr').querySelector('div.browseInact')",
             freeleechStatusSelector: `downloadElement.closest('tr').querySelector('a[href$="&fl"][title*="Download"]') == null`, // There is no FL Wedge button, so this torrent must already be FL
@@ -1448,7 +1447,6 @@ if ( primaryDomain == 'animebytes' ) {
         // This is a collage page, which loads DL buttons after the '+' button of the album is clicked (pagination). Setup nested observation.
 
         trackerHandlingOptions.downloadElementsSelector = `#discog_table tbody ${trackerHandlingOptions.downloadElementsSelector}`
-        trackerHandlingOptions.downloadElementsTrackProcessed = true
 
         let pageObserver = new MutationObserver( async function(pageMutations) {
             // The actions to take when new PAGES are loaded
@@ -3319,7 +3317,6 @@ function quickieTrackerHandler({
     featuredStatusSelector = null,
     afterBunnyButtonCreation = false,
     enablePaginationLooping = false,
-    downloadElementsTrackProcessed = false,
     queryFromElement = document,
     downloadElementsTorrentURLAttribute = 'href',
     forceTorrentFile = false,
@@ -3341,22 +3338,20 @@ function quickieTrackerHandler({
     // If pagination looping should be enforced on this page
     enablePaginationLooping == true ? SETTINGS.paginationLoop = 750 : null
 
-    // If there is a paginationLoop timer, mark the processed elements so that bunnyButtons are not repeatedly generated
-    SETTINGS.paginationLoop >= 500 ? downloadElementsTrackProcessed = true : null
-
     // Determine if there is a reason to log the bunnyButtons so that they can be referenced after the query loop
     let logElements = false
     if ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null || typeof afterBunnyButtonCreation === 'function' ) {
         logElements = true
     }
 
-    function processDownloadElements(delay) {
-        // query and create a BunnyButton for all downloadElements
+    function bunnyButtonGeneration(delay) {
+        // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
 
         try {
+
             setTimeout(() => {
                 // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
-                let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
+                let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_done="true"])`)
 
                 logger.info('allDownloadElements')
                 logger.log(allDownloadElements)
@@ -3397,8 +3392,8 @@ function quickieTrackerHandler({
                             elementsSeparator == false ? null : placementElement.insertAdjacentText(bunnyButtonPlacement, elementsSeparator)
                         }
 
-                        // If enabled, mark this downloadElement as having been processed by assigning it a unique attribute
-                        downloadElementsTrackProcessed == true ? downloadElement.setAttribute('data-quickie_processed', 'true') : null
+                        // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
+                        downloadElement.setAttribute('data-quickie_done', 'true')
 
                         // Store the processed elements in the object to be passed to the afterBunnyButtonCreation() function
                         if ( logElements == true ) {
@@ -3495,7 +3490,7 @@ function quickieTrackerHandler({
 
                 if ( SETTINGS.paginationLoop >= 500 ) {
                     // The paginationLoop timer has been set, so quiCKIE will continuosly scan the page for new downloadElements
-                    processDownloadElements(SETTINGS.paginationLoop)
+                    bunnyButtonGeneration(SETTINGS.paginationLoop)
                 }
 
             }, delay )
@@ -3506,7 +3501,7 @@ function quickieTrackerHandler({
 
     }
 
-    processDownloadElements(0)
+    bunnyButtonGeneration(0)
 
 }
 
@@ -3516,7 +3511,6 @@ function unit3dTrackerHandler(downloadElementsSelector) {
     // ! This function uses 'Oldtoons' as the model and is not WirlyWirly guaranteed for other sites
 
     // Mutable variables dependent on the current page
-    let downloadElementsTrackProcessed = false
     let bunnyButtonPlacement
     let torrentDetailsPage = false
     let queryFromElement = document
@@ -3524,43 +3518,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
     let bunnyButtonAddClasses
     let bunnyButtonText = ' 🐰 '
 
-    // If there is a specified paginationLoop, mark the processed elements so that bunnyButtons are not repeatedly generated
-    SETTINGS.paginationLoop >= 500 ? downloadElementsTrackProcessed = true : null
-
-    if ( document.location.pathname.match(/(\/|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
-        // This is the search page or homepage, both of which require a MutationObserver
-
-        downloadElementsTrackProcessed = true
-
-        let observer = new MutationObserver( function(mutations) {
-            // Functionality to run when changes are detected to the target element
-
-            try {
-                processDownloadElements(0)
-            } catch (error) {
-                logger.debug(error)
-            }
-
-        })
-
-        let target, config
-
-        if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
-            // The search page observer configs
-            queryFromElement = document.querySelector('div.page__torrents')
-            target = document.querySelector('div.page__torrents > script[nonce]')
-            config = { attributes: true }
-        } else {
-            // The homepage observer configs
-            target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
-            config = { childList: true }
-        }
-
-
-        observer.observe(target, config)
-
-    } else if ( pageURL.match(/\/torrents\/\d+/) ) {
-        // The torrents details page, so change the style of the BunnyButton
+    if ( pagePath.match(/\/torrents\/\d+/) ) {
+        // The torrents details page, so change the style of the only BunnyButton
         torrentDetailsPage = true
 
         // Give the bunnyButton a bar appearance, to fit in better with the other buttons
@@ -3574,15 +3533,65 @@ function unit3dTrackerHandler(downloadElementsSelector) {
         padding: 1.5%;
         width: 98%;`
 
+    } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
+        // The search parge or homepage, both of which require a MutationObserver
+
+        let observer = new MutationObserver( function(mutations) {
+            // Functionality to run when changes are detected to the target element
+
+            try {
+                bunnyButtonGeneration(0)
+            } catch (error) {
+                logger.debug(error)
+            }
+
+        })
+
+        let target, config // The target element and configurations that will be used by the MutationObserver
+
+        if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
+            // The search page, query for a valid target element to observe
+            queryFromElement = document.querySelector('div.page__torrents')
+
+            // Preferred: A <script> element who's attribute changes with every search\page
+            target = document.querySelector('div.page__torrents > script[nonce]')
+            config = { attributes: true }
+
+            // Backup: The torrent <section> (table) and its entire subtree
+            if ( target == null ) {
+                target = document.querySelector('section.torrent-search__results')
+                config = { childList: true, subtree: true }
+            }
+
+        } else {
+            // The homepage, query for a valid target element to observe
+            queryFromElement = document.querySelector('section.panelV2.blocks__top-torrents')
+
+            target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
+            config = { childList: true }
+
+        }
+
+
+        if ( target != null ) {
+            // Yes, there is a valid target to observe for mutations
+            observer.observe(target, config)
+
+        } else {
+            // No, there is not a valid target to observe for mutations, so fallback to time-base paginationLooping
+            queryFromElement = document
+            SETTINGS.paginationLoop = 500
+        }
+
     }
 
 
-    function processDownloadElements(delay) {
-        // query and create a BunnyButton for all downloadElements
+    function bunnyButtonGeneration(delay) {
+        // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
 
         setTimeout(() => {
 
-            let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_processed="true"])`)
+            let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_done="true"])`)
 
             if ( allDownloadElements.length >= 1 ) {
 
@@ -3702,10 +3711,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                     // Hide the downloadElement, as specified by the current tracker settings
                     SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
 
-                    if ( downloadElementsTrackProcessed ) {
-                        // Keep track of this downloadElement as having been processed my marking it with a unique attribute
-                        downloadElement.setAttribute('data-quickie_processed', 'true')
-                    }
+                    // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
+                    downloadElement.setAttribute('data-quickie_done', 'true')
 
                 }
 
@@ -3724,14 +3731,14 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
             if ( SETTINGS.paginationLoop >= 500 ) {
                 // The tracker handler will continuosly scan the page for new downloadElements
-                processDownloadElements(SETTINGS.paginationLoop)
+                bunnyButtonGeneration(SETTINGS.paginationLoop)
             }
 
         }, delay )
 
     }
 
-    processDownloadElements(0)
+    bunnyButtonGeneration(0)
 
 }
 
