@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.44.5
+// @version     1.44.6
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -97,10 +97,10 @@
 // @match   https://digitalcore.club/tvseries*
 // @match   https://digitalcore.club/xxx*
 
-// @match   https://www.empornium.sx/collage/*
-// @match   https://www.empornium.sx/top10.php*
-// @match   https://www.empornium.sx/torrents.php*
-// @match   https://www.empornium.sx/user.php?id=*
+// @include   /^https://(www\.empornium|emparadise)\.(sx|rs)/collage/\d.*/
+// @include   /^https://(www\.empornium|emparadise)\.(sx|rs)/top10\.php.*/
+// @include   /^https://(www\.empornium|emparadise)\.(sx|rs)/torrents\.php.*/
+// @include   /^https://(www\.empornium|emparadise)\.(sx|rs)/user\.php\?id=\d+/
 
 // @match   https://e*hentai.org/gallerytorrents.php*
 
@@ -373,8 +373,9 @@ const settingsPanelTrackers = [
 
     {
         trackerName: 'Empornium',
-        homepageURL: 'https://www.empornium.sx',
+        homepageURL: 'https://emparadise.rs',
         primaryDomain: 'empornium',
+        otherDomains: ['emparadise']
     },
 
     {
@@ -963,7 +964,7 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'empornium' ) {
     // ----------------------------------- Empornium -----------------------------------
-    // Browse | Collages | Details | Top10
+    // Browse | Collages | Details | Top10 | UserProfile
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
@@ -1790,7 +1791,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         'globalsTitles': {
             'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
             'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
-            'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a Bunny button\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
+            'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\nℹ️ This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
@@ -1857,11 +1858,11 @@ function createGMConfigSettingsPanel(trackerDomain) {
             'dllimit': '─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents',
             'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
             'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
-            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser doesn't do a full refresh between pages\\searches. Since the page isn't actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For UNIT3D trackers, pagination has already be taken care of on certain pages\n\n⚠️ You should NOT enable this feature unless you are on a site that actually has pagination that isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
+            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser does not do a full refresh between pages\\searches. Since the page is not actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For officially supported trackers, pagination should hopefully already be handled and thus make this setting unnecessary\n\n⚠️ You should NOT enable this setting unless you are on a site that actually has pagination and it isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
             'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nDevelopers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
             'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
             'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
-            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Shift-Ctrl-Click on a BunnyButton or Preset to override the Start Paused setting to be True",
+            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Performing a 'Shift-Ctrl-Click' on a BunnyButton or Preset will temporarily override those settings so that Start Paused is enabled",
             'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This has no affect on torrents that are already in their own folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
             'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\nThis behaviour results in the files being downloaded in-order and also being capable of playback while downloading\n\n⚠️ This may impact download speeds',
             'autotmm': "─── 🤖 Auto Torrent Management 🤖 ───\n\nFor these torrents, enable Auto Torrent Management\n\n⚠️ This will download the torrent to a folder based on the '🗃️ Category', ignoring whatever is specified in the '💾 Save Path'",
