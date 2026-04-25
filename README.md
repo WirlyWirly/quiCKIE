@@ -30,8 +30,8 @@ Only the **clientURL** and **credentials** for the selected torrent client are r
 > **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 >
 > **BunnyButton Emojiography***<br>
-> 🐰 = Default | 🌱 = Seeding | 🍁 = Snatched | 💎 = Freeleech | 📢 = Featured | 💸 = Spend Token | 🤝 = ThirdParty | 🌎 = ThirdParty + TrackerSettings<br>
-> 🧲 = Downloading .torrent file | 🧑 = Client Login | 🕓 = Sending Torrent | ✔️ = Success | ❌ = Failure
+> 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + TrackerSettings<br>
+> 🧲 Downloading .torrent file | 🧑 Client Login | 🕓 Adding Torrent | ✔️ Success | ❌ Failure
 >
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [qui - quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
@@ -48,7 +48,7 @@ If you are the author of a UserScript that creates torrent `DL` (Download) butto
 <br>
 
 <details>
-<summary> quiCKIE v0.1: A ramble </summary>
+<summary> quiCKIE v0.1: A Ramble </summary>
 
 The day before I began work on quiCKIE, I had migrated all my torrents from Transmission to qBitTorrent so that I could use that fancy new web-interface all the cool kids were talking about; qui
 
@@ -70,7 +70,7 @@ Before going to bed, I posted quiCKIE onto a few forums for folk to check out, w
 
 Even so, while there are a few more trackers, a couple more options, and an extra 5000+ lines than I had originally planned, I'm happy that at it's core this still remains the same little ~400 line script I put together that night before bedtime 🛌
 
-From the beginning, this script was written to be reliable, maintainable, and easily expanded on. With that in mind, my hope is that the work put in by myself and my contributors (both here and in the forums 🫶) will continue to pay dividends for many years to come, for anyone in the community who happens upon this page 🍻
+From the beginning, this script was written to be reliable, maintainable, and easily expanded on. With that in mind, my hope is that the work put in by myself and my contributors (both here and in the forums 🫶) will continue to pay dividends for many years to come, for anyone in the community who happens onto this page 🍻
 
   <div align="center">
     <img src=".github/assets/quickiev0.1.webp" alt="quickie" width="100%" />
