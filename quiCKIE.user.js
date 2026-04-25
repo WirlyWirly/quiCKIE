@@ -1312,7 +1312,7 @@ if ( primaryDomain == 'animebytes' ) {
             downloadElementsSelector: 'a[href^="/tor/download.php/"][title*="Download"]',
             bunnyButtonFontSize: '150%',
             bunnyButtonText: '🐰',
-            seedingStatusSelector: "downloadElement.closest('tr').querySelector('div.browseAct')",
+            seedingStatusSelector: "downloadElement.closest('tr').querySelector('div.browseAct').textContent.match(/Recently Seeding/i)",
             snatchedStatusSelector: "downloadElement.closest('tr').querySelector('div.browseInact')",
             freeleechStatusSelector: `downloadElement.closest('tr').querySelector('a[href$="&fl"][title*="Download"]') == null`, // There is no FL Wedge button, so this torrent must already be FL
             afterBunnyButtonCreation: function(elements) {
@@ -1393,8 +1393,9 @@ if ( primaryDomain == 'animebytes' ) {
     // Album | Artist | Browse | Collages
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        seedingStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_seeding')",
         snatchedStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_snatched')",
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
         freeleechStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_free')"
     }
 
@@ -3551,7 +3552,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
         let target, config // The target element and configurations that will be used by the MutationObserver
 
-        if ( document.location.pathname.match(/(\/torrents[^/]*)$/) ) {
+        if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
             // The search page, query for a valid target element to observe
             queryFromElement = document.querySelector('div.page__torrents')
 
