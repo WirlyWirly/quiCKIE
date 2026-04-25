@@ -168,6 +168,7 @@
 // @match   https://nebulance.io/bookmarks.php*
 // @match   https://nebulance.io/top10.php*
 // @match   https://nebulance.io/torrents.php*
+// @match   https://nebulance.io/details.php*
 
 // @include   /^https://(sukebei\.)?nyaa\.\w+/.*/
 // @include   /^https://(sukebei\.)?nyaa\.\w+/view/.*/
