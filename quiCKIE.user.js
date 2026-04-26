@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.44.7
+// @version     1.45
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -988,8 +988,8 @@ if ( primaryDomain == 'animebytes' ) {
         trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
             // The actions to take after the bunnyButtons have been created...
 
-            // Determine the seeding\snatched status of this torrent
-            let mainDownloadButton = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
+            // The main downloadElement, which will be referenced to determine the current torrentStatus
+            let mainDownloadElement = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
 
             for ( let bunnyButton of elements.bunnyButtons ) {
 
@@ -1020,10 +1020,10 @@ if ( primaryDomain == 'animebytes' ) {
                         bunnyButton.textContent = '🐰 quiCKIE'
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
 
-                        // Check if the torrent is seeding\snatched\freeleech
-                        mainDownloadButton.closest('.torrent_icon_container').querySelector('i.font_icon.unlimited_leech') != null ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null // Freeleech
-                        mainDownloadButton.querySelector('i.torrent_icons.snatched') != null ? bunnyButtonTorrentStatus(bunnyButton, 'snatched') : null // Snatched
-                        mainDownloadButton.querySelector('i.torrent_icons.seeding') != null ? bunnyButtonTorrentStatus(bunnyButton, 'seeding') : null // Seeding
+                        // Check for torrentStatus relative to the mainDownloadElement
+                        mainDownloadElement.closest('.torrent_icon_container').querySelector('i.font_icon.unlimited_leech') != null ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null // Freeleech
+                        mainDownloadElement.querySelector('i.torrent_icons.snatched') != null ? bunnyButtonTorrentStatus(bunnyButton, 'snatched') : null // Snatched
+                        mainDownloadElement.querySelector('i.torrent_icons.seeding') != null ? bunnyButtonTorrentStatus(bunnyButton, 'seeding') : null // Seeding
                     }
 
                 }
@@ -1101,6 +1101,61 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
         bunnyButtonFontSize: '125%',
         bunnyButtonText: '🐰',
+        seedingStatusSelector: `downloadElement.querySelector('span.icon_disk_seed')`,
+        snatchedStatusSelector: `downloadElement.querySelector('span.icon_disk_snatched')`,
+        freeleechStatusSelector: `downloadElement.parentElement.querySelector('img[alt="Freeleech"]')`,
+    }
+
+    // This is a details page, so apply styling to certain bunnyButtons
+    if ( pageURL.match(/torrents\.php\?id=\d+/) ) {
+
+        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
+            // The actions to take after the bunnyButtons have been created...
+
+            // The main downloadElement, which will be referenced to determine the current torrentStatus
+            let mainDownloadElement = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
+
+            for ( let bunnyButton of elements.bunnyButtons ) {
+
+                // Style the bunnyButtons that match this CSS selector, giving them a bar-type look to more closely match the larger site buttons
+                if ( bunnyButton.matches('span.torrent_buttons a.quickie_bunnyButton, #user-sidebar > a.quickie_bunnyButton') ) {
+
+                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+                        border-radius: 5px;
+                        font-size: 125%;
+                        font-weight: Bold;
+                        margin: 0px 8px 0px 0px;
+                        padding: 4px 10px 4px 10px;
+                        vertical-align: auto;`)
+
+                    if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
+                        // This is a Freeleech button
+                        bunnyButton.textContent = '💸 Freeleech'
+                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
+                        bunnyButton.setAttribute('data-emojospecified', 'true')
+
+                    } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
+                        // This is a Doubleseed button
+                        bunnyButton.textContent = '🌱 Doubleseed'
+                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
+                        bunnyButton.setAttribute('data-emojospecified', 'true')
+                    } else {
+                        // This is a standard Download button
+                        bunnyButton.textContent = '🐰 quiCKIE'
+                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
+
+                        // Check for torrentStatus relative to the mainDownloadElement
+                        mainDownloadElement.parentElement.querySelector('img[alt="Freeleech"]') != null ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null // Freeleech
+                        mainDownloadElement.querySelector('span.icon_disk_snatched') != null ? bunnyButtonTorrentStatus(bunnyButton, 'snatched') : null // Snatched
+                        mainDownloadElement.querySelector('span.icon_disk_seed') != null ? bunnyButtonTorrentStatus(bunnyButton, 'seeding') : null // Seeding
+                    }
+
+                }
+
+            }
+
+        }
+
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -3568,8 +3623,6 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
         } else {
             // The homepage, query for a valid target element to observe
-            queryFromElement = document.querySelector('section.panelV2.blocks__top-torrents')
-
             target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
             config = { childList: true }
 
@@ -3746,6 +3799,11 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 }
 
 
+// The CSS style to make bunnyButtons glow on mouseover
+GM_addStyle(`a.quickie_bunnyButton:hover {
+    text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
+}`)
+
 function createBunnyButton({
     // Create the bunnyButton that will be displayed on the site
     torrentURL,
@@ -3792,21 +3850,8 @@ function createBunnyButton({
 🖥️ ${SETTINGS.torrentClient.client}
 🔗 ${bunnyButton.dataset.torrenturl}`
 
-    bunnyButton.addEventListener('mouseover', function(event) {
-        // When this bunnyButton is hovered over...
-
-        this.style.textShadow = '0px 0px 1px black, 0 0 5px #B6D3E7'
-    })
-
-    bunnyButton.addEventListener('mouseout', function(event) {
-        // When this bunnyButton is hovered out...
-
-        this.style.textShadow = 'none'
-    })
-
     bunnyButton.addEventListener('mouseup', function(event) {
         // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
-
 
         if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
             // Shift-Ctrl-Click: Add the torrent in a paused state
