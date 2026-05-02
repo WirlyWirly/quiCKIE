@@ -87,7 +87,7 @@ class ContextMenu {
 
       menu.remove();
     }
-      
+
     // No menu item was selected, so remove the ID from the clicked-on element
     try{
         document.getElementById('__CONTEXTCLICKED__').removeAttribute('id')
@@ -110,7 +110,7 @@ class ContextMenu {
         // This target element (bunnyButton) has not yet had a contextmenu event attached to it
 
         target.addEventListener("contextmenu", (e) => {
-          
+
         // For later reference, mark this target element (BunnyButton) as having been the element that was right-clicked on to open the context menu
         let targetElementId = `quiCKIE_bb_${Date.now()}`
         target.id = targetElementId

@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.45
+// @version     1.46
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -289,7 +289,7 @@ const settingsPanelTrackers = [
 
     {
         trackerName: 'AnimeBytes',
-        homepageURL: '',
+        homepageURL: 'https://animebytes.tv',
         primaryDomain: 'animebytes',
     },
 
@@ -1904,7 +1904,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         'columnTitles': {
             'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
 
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\nUsing one of these names will create a special menu item...\nSettings, TorrentFile, Client, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\nUsing one of these names will create a special menu item...\nSettings, TorrentFile, Client, LeftClickAll, MiddleClickAll, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
             'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
@@ -2036,7 +2036,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
                             } catch (error) {
                                 // The JSON parse has failed, so abort the import
                                 logger.error(error)
-                                window.alert(`quiCKIE\n\nThe imported settings file was not valid JSON\n\nThe settings were not imported`)
+                                window.alert(`🐰 quiCKIE\n\nThe imported settings file was not valid JSON\n\nThe settings were not imported`)
                             }
                        }
 
@@ -3100,6 +3100,91 @@ function createPresetItems(primaryDomains) {
             }
         },
 
+        'leftClickAll': {
+            content: '🐰 Left-Click All',
+            events: {
+                'click': function(event) {
+                    // Simulate a left-click on every bunnyButton of the page
+
+                    let leftClickAction
+                    SETTINGS.leftClick == 'Global' ? leftClickAction = SETTINGS.globalLeftClickAction : leftClickAction = SETTINGS.leftClick
+
+                    let confirmation = confirm(`🐰 quiCKIE 🐰\n\n You have selected the '🐰 Left-Click All' action\n\nAre you sure you want to Left-Click every BunnyButton on the page?\n\nLeft-Click Action: ${leftClickAction}`)
+
+                    if ( confirmation == false ) {
+                        // The user has chosen to abort the Left-Click All
+                        return
+                    }
+
+                    let allBunnyButtons = document.querySelectorAll('a.quickie_bunnyButton')
+
+                    let delay = 0
+
+                    for ( let bunnyButton of allBunnyButtons ) {
+
+                        // Add the 'leftClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
+                        bunnyButton.classList.add('leftClickAllTriggered')
+
+                        setTimeout(() => {
+                            // After the delay, trigger a 'mouseup' event on this bunnyButton
+                            let clickEvent = new Event('mouseup', { bubbles: true, cancelable: true });
+                            bunnyButton.dispatchEvent(clickEvent);
+
+                            bunnyButton.classList.remove('leftClickAllTriggered')
+
+                        }, delay)
+
+                        delay += 50
+                    }
+
+                },
+                'mouseover': function(event) {
+                    this.title = '🐰 Perform a Left-Click on every BunnyButton of the page'
+                }
+            }
+        },
+
+        'middleClickAll': {
+            content: '🐰 Middle-Click All',
+            events: {
+                'click': function(event) {
+                    // Simulate a left-click on every bunnyButton of the page
+
+                    let confirmation = confirm(`🐰 quiCKIE 🐰\n\n You have selected the '🐰 Middle-Click All' action\n\nAre you sure you want to Middle-Click every BunnyButton on the page?\n\nMiddle-Click Action: ${SETTINGS.globalMiddleClickAction}`)
+
+                    if ( confirmation == false ) {
+                        // The user has chosen to abort the Middle-Click All
+                        return
+                    }
+
+                    let allBunnyButtons = document.querySelectorAll('a.quickie_bunnyButton')
+
+                    let delay = 0
+
+                    for ( let bunnyButton of allBunnyButtons ) {
+
+                        // Add the 'middleClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
+                        bunnyButton.classList.add('middleClickAllTriggered')
+
+                        setTimeout(() => {
+                            // After the delay, trigger a 'mouseup' event on this bunnyButton
+                            let clickEvent = new Event('mouseup', { bubbles: true, cancelable: true })
+                            bunnyButton.dispatchEvent(clickEvent)
+
+                            bunnyButton.classList.remove('middleClickAllTriggered')
+
+                        }, delay)
+
+                        delay += 50
+                    }
+
+                },
+                'mouseover': function(event) {
+                    this.title = '🐰 Perform a Middle-Click on every BunnyButton of the page'
+                }
+            }
+        },
+
         'client': {
             content: `🖥️ ${SETTINGS.torrentClient.client}`,
             events: {
@@ -3174,7 +3259,17 @@ function createPresetItems(primaryDomains) {
                 continue
             }
 
-            if ( presetName.match(/^send$/i) ) {
+            if ( presetName.match(/^leftclickall$/i) ){
+                // This preset item should perform a Left-Click action on EVERY bunnyButton on the page
+
+                var presetItem = defaultItems['leftClickAll']
+
+            } else if ( presetName.match(/^middleclickall$/i) ){
+                // This preset item should perform a Middle-Click action on EVERY bunnyButton on the page
+
+                var presetItem = defaultItems['middleClickAll']
+
+            } else if ( presetName.match(/^send$/i) ) {
                 // This preset item should send the torrent to the client no custom settings
 
                 var presetItem = defaultItems['send']
@@ -3338,6 +3433,7 @@ function createPresetItems(primaryDomains) {
     return allPresetItems
 
 }
+
 
 let presetsMenuCSS = GM_getResourceText('presetsMenuCSS')
 GM_addStyle(presetsMenuCSS)
@@ -3875,12 +3971,12 @@ function createBunnyButton({
 
             bunnyButtonClickedActions(this, torrentSettings, 'Client')
 
-        } else if ( event.button == 1 ) {
+        } else if ( event.button == 1 || this.classList.contains('middleClickAllTriggered')) {
             // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
 
             bunnyButtonClickedActions(this, torrentSettings, 'globalMiddleClickAction')
 
-        } else if ( event.button == 0 ) {
+        } else if ( event.button == 0 || this.classList.contains('leftClickAllTriggered') ) {
             // Left-Click: If the tracker setting is 'Global', perform the globalLeftClickAction, otherwise do the specified action
 
             if ( SETTINGS.leftClick == 'Global' ) {
