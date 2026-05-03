@@ -3834,6 +3834,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                         }
 
                         try {
+                            // TorrentStatus check: Table | Grouped
 
                             if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
                                 // This is a Seeding torrent
@@ -3855,6 +3856,19 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         } catch (error) {
                             // An error occured, most likely the page view-type is not a table and therefore the 'tr' is not available
+                            logger.debug(error)
+                        }
+
+                        try {
+                            // TorrentStatus check: Cards
+
+                            if ( downloadElement.closest('article').querySelector('.torrent-activity-indicator--seeding') != null ) {
+                                // This is a Seeding torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
+                            }
+
+                        } catch (error) {
+                            // An error occured, most likely the page view-type does not have <article> elements and therefore the 'article.torrent-card' is not available
                             logger.debug(error)
                         }
 
