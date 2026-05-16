@@ -37,11 +37,19 @@ body:
       placeholder: quiCKIE [v1.5]
 
   - type: input
+    id: clientVersion
+    validations:
+      required: false
+    attributes:
+      label: 🖥️ Torrent Client
+      placeholder: qui [v1.18] and qBitTorrent [v5.1.4]
+
+  - type: input
     id: userBrowser
     validations:
       required: true
     attributes:
-      label: 🖥️ Browser
+      label: 🌐 Browser
       placeholder: LibreWolf, FireFox, Chrome
 
   - type: dropdown

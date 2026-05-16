@@ -698,7 +698,7 @@ if ( primaryDomain == 'animebytes' ) {
         trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #4263eb;
             border-radius: 8px;
-            border 1px solid transparent;
+            border; 1px solid transparent;
             color: #f9fafb;
             box-shadow: 0 1px 1px rgba(229, 231, 235, .06);
             padding: 0.6875rem 1.5rem;
@@ -1928,9 +1928,6 @@ function createGMConfigSettingsPanel(trackerDomain) {
         }
 
     }
-
-    // Import the fonts used by the Settings Panel
-    GM_addStyle("@import url('https://fonts.googleapis.com/css2?family=Lilita+One&family=Roboto+Condensed:wght@500&display=swap');")
 
     // The element the settings panel will be appended to, so that it's not a floating iFrame and can be inspected.
     let configFrame = document.createElement('div')
@@ -3433,7 +3430,6 @@ function createPresetItems(primaryDomains) {
     return allPresetItems
 
 }
-
 
 let presetsMenuCSS = GM_getResourceText('presetsMenuCSS')
 GM_addStyle(presetsMenuCSS)
