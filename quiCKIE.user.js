@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.46
+// @version     1.47
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally written for qui, later extended to support more torrent clients
@@ -447,7 +447,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'LST', //@LilithOfTheValley
+        trackerName: 'LST', // @LilithOfTheValley
         homepageURL: 'https://lst.gg',
         primaryDomain: 'lst',
     },
@@ -1298,13 +1298,13 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Homepage | Playlists
 
     unit3dTrackerHandler('a[href^="https://lat-team.com/torrents/download"]')
-    
+
 } else if ( primaryDomain == 'lst' ) {
     // ----------------------------------- LST -----------------------------------
     // Bookmarks | Browse | Details | Homepage | Playlists | MediaHub
 
     unit3dTrackerHandler('a[href^="https://lst.gg/torrents/download"]')
-    
+
 } else if ( primaryDomain == 'luminarr' ) {
     // ----------------------------------- Luminarr -----------------------------------
     // Bookmarks | Browse | Details | Playlists
