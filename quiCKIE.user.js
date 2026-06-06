@@ -1598,7 +1598,7 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="download.php?id="], a[href^="https://sportscult.org/download.php?id="]',
-        bunnyButtonFontSize: '120%',
+        bunnyButtonFontSize: '140%',
         elementsSeparator: ' ',
     }
 
