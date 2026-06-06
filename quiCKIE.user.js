@@ -1596,7 +1596,7 @@ if ( primaryDomain == 'animebytes' ) {
     // xbtit 3.5.1 based tracker
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="download.php?id="], a[href*="page=download"], a[href*="page=downloadcheck"]',
+        downloadElementsSelector: 'a[href^="download.php?id="], a[href^="https://sportscult.org/download.php?id="]',
         bunnyButtonFontSize: '120%',
         elementsSeparator: ' ',
     }
