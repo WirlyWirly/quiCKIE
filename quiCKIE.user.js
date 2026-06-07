@@ -130,6 +130,9 @@
 // @include   /^https://iptorrents\.\w+/t.*/
 // @include   /^https://iptorrents\.\w+/torrent.php?id=.*/
 
+// @match   https://itatorrents.xyz/
+// @match   https://itatorrents.xyz/torrents*
+
 // @match   https://jpopsuki.eu/artist.php?id=*
 // @match   https://jpopsuki.eu/collages.php?id=*
 // @match   https://jpopsuki.eu/top10.php*
@@ -161,6 +164,8 @@
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
 // @match   https://materialize.is/torrents.php*
+
+// @match   https://mircrew-releases.org/*
 
 // @match   https://www.morethantv.me/collage/*
 // @match   https://www.morethantv.me/top10.php*
@@ -426,6 +431,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'ItaTorrents', // @steventrux
+        homepageURL: 'https://itatorrents.xyz',
+        primaryDomain: 'itatorrents',
+    },
+
+    {
         trackerName: 'JPopsuki', // @tartuffe
         homepageURL: 'https://jpopsuki.eu',
         primaryDomain: 'jpopsuki',
@@ -465,6 +476,12 @@ const settingsPanelTrackers = [
         trackerName: 'Materialize',
         homepageURL: 'https://materialize.is',
         primaryDomain: 'materialize',
+    },
+
+    {
+        trackerName: 'MirCrew', // @steventrux
+        homepageURL: 'https://mircrew-releases.org',
+        primaryDomain: 'mircrew-releases',
     },
 
     {
@@ -1268,6 +1285,12 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'itatorrents' ) {
+    // ----------------------------------- ItaTorrents -----------------------------------
+    // Browse | Details
+
+    unit3dTrackerHandler('a[href*="/torrents/download/"]')
+
 } else if ( primaryDomain == 'jpopsuki' ) {
     // ----------------------------------- JpopSuki -----------------------------------
     // Album | Artist | Browse
@@ -1327,6 +1350,18 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href*="torrents.php?action=download&id="]',
         forceTorrentFile: true,
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'mircrew-releases' ) {
+    // ----------------------------------- MirCrew -----------------------------------
+    // phpBB forum posts with public tracker magnet links
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="magnet:?xt=urn:btih:"]',
+        bunnyButtonFontSize: '240%',
+        elementsSeparator: ' ',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
