@@ -268,473 +268,476 @@
 // ==/UserScript==
 
 // Set to true to enable verbose console logging, useful during development or troubleshooting
-const verboseConsoleLogging = false
+const verboseConsoleLogging = false;
 
 // This string helps prevent various JavaScript oddities when working with variables
-'use strict'
+("use strict");
 
 // =================================== SETTINGS PANEL TRACKERS ======================================
 
 // @quickieSettingsPanelTrackers
 const settingsPanelTrackers = [
-    // Keep this list alphabetical, as each tracker here will appear as a row in the quiCKIE settings panel
+  // Keep this list alphabetical, as each tracker here will appear as a row in the quiCKIE settings panel
 
-    // Each tracker requires 3 things; A TitleCase name, the homepage URL, and the primaryDomain of the tracker
+  // Each tracker requires 3 things; A TitleCase name, the homepage URL, and the primaryDomain of the tracker
 
-    // Here are examples of identify the domain of a tracker...
-    //  https://broadcasthe.net/ --> broadcasthe
-    //  https://www.myanonamouse.net/ --> myanonamouse
-    //  https://sukebei.nyaa.si/ --> nyaa
+  // Here are examples of identify the domain of a tracker...
+  //  https://broadcasthe.net/ --> broadcasthe
+  //  https://www.myanonamouse.net/ --> myanonamouse
+  //  https://sukebei.nyaa.si/ --> nyaa
 
-    // ℹ️ If the tracker has more than one domain that it can be accessed from (common for public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domains. This will make it so that these domains all share the same tracker settings from within the quiCKIE settings panel.
-    // otherDomains: ['domain1', 'domain2', 'domain3'],
+  // ℹ️ If the tracker has more than one domain that it can be accessed from (common for public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domains. This will make it so that these domains all share the same tracker settings from within the quiCKIE settings panel.
+  // otherDomains: ['domain1', 'domain2', 'domain3'],
 
-    {
-        trackerName: 'Aither', // @holy-elbow
-        homepageURL: 'https://aither.cc',
-        primaryDomain: 'aither',
-    },
+  {
+    trackerName: "Aither", // @holy-elbow
+    homepageURL: "https://aither.cc",
+    primaryDomain: "aither",
+  },
 
+  {
+    trackerName: "AlphaRatio",
+    homepageURL: "https://alpharatio.cc",
+    primaryDomain: "alpharatio",
+  },
 
-    {
-        trackerName: 'AlphaRatio',
-        homepageURL: 'https://alpharatio.cc',
-        primaryDomain: 'alpharatio',
-    },
+  {
+    trackerName: "AnimeBytes",
+    homepageURL: "https://animebytes.tv",
+    primaryDomain: "animebytes",
+  },
 
-    {
-        trackerName: 'AnimeBytes',
-        homepageURL: 'https://animebytes.tv',
-        primaryDomain: 'animebytes',
-    },
+  {
+    trackerName: "AnimeZ", // @holy-elbow
+    homepageURL: "https://animez.to",
+    primaryDomain: "animez",
+  },
 
-    {
-        trackerName: 'AnimeZ', // @holy-elbow
-        homepageURL: 'https://animez.to',
-        primaryDomain: 'animez',
-    },
+  {
+    trackerName: "Anthelion", // @malefis
+    homepageURL: "https://anthelion.me",
+    primaryDomain: "anthelion",
+  },
 
-    {
-        trackerName: 'Anthelion', // @malefis
-        homepageURL: 'https://anthelion.me',
-        primaryDomain: 'anthelion',
-    },
+  {
+    trackerName: "AvistaZ", // @fercats99
+    homepageURL: "https://avistaz.to",
+    primaryDomain: "avistaz",
+  },
 
-    {
-        trackerName: 'AvistaZ', // @fercats99
-        homepageURL: 'https://avistaz.to',
-        primaryDomain: 'avistaz',
-    },
+  {
+    trackerName: "BakaBT",
+    homepageURL: "https://bakabt.me",
+    primaryDomain: "bakabt",
+  },
 
-    {
-        trackerName: 'BakaBT',
-        homepageURL: 'https://bakabt.me',
-        primaryDomain: 'bakabt',
-    },
+  {
+    trackerName: "Beyond-HD", // @empUser
+    homepageURL: "https://beyond-hd.me",
+    primaryDomain: "beyond-hd",
+  },
 
-    {
-        trackerName: 'Beyond-HD', // @empUser
-        homepageURL: 'https://beyond-hd.me',
-        primaryDomain: 'beyond-hd',
-    },
+  {
+    trackerName: "Bibliotik",
+    homepageURL: "https://bibliotik.me",
+    primaryDomain: "bibliotik",
+  },
 
-    {
-        trackerName: 'Bibliotik',
-        homepageURL: 'https://bibliotik.me',
-        primaryDomain: 'bibliotik',
-    },
+  {
+    trackerName: "BitPorn",
+    homepageURL: "https://bitporn.eu",
+    primaryDomain: "bitporn",
+  },
 
-    {
-        trackerName: 'BitPorn',
-        homepageURL: 'https://bitporn.eu',
-        primaryDomain: 'bitporn',
-    },
+  {
+    trackerName: "BroadcasTheNet",
+    homepageURL: "https://broadcasthe.net",
+    primaryDomain: "broadcasthe",
+  },
 
-    {
-        trackerName: 'BroadcasTheNet',
-        homepageURL: 'https://broadcasthe.net',
-        primaryDomain: 'broadcasthe',
-    },
+  {
+    trackerName: "CinemaZ", // @fercats99
+    homepageURL: "https://cinemaz.to",
+    primaryDomain: "cinemaz",
+  },
 
-    {
-        trackerName: 'CinemaZ', // @fercats99
-        homepageURL: 'https://cinemaz.to',
-        primaryDomain: 'cinemaz',
-    },
+  {
+    trackerName: "ClearJAV", // @holy-elbow
+    homepageURL: "https://clearjav.com",
+    primaryDomain: "clearjav",
+  },
 
-    {
-        trackerName: 'ClearJAV', // @holy-elbow
-        homepageURL: 'https://clearjav.com',
-        primaryDomain: 'clearjav',
-    },
+  {
+    trackerName: "DeepBassNine", // @tartuffe
+    homepageURL: "https://www.deepbassnine.com",
+    primaryDomain: "deepbassnine",
+  },
 
-    {
-        trackerName: 'DeepBassNine', // @tartuffe
-        homepageURL: 'https://www.deepbassnine.com',
-        primaryDomain: 'deepbassnine',
-    },
+  {
+    trackerName: "DigitalCore", // @holy-elbow
+    homepageURL: "https://digitalcore.club/",
+    primaryDomain: "digitalcore",
+  },
 
-    {
-        trackerName: 'DigitalCore', // @holy-elbow
-        homepageURL: 'https://digitalcore.club/',
-        primaryDomain: 'digitalcore',
-    },
+  {
+    trackerName: "E-Hentai", // @holy-elbow
+    homepageURL: "https://e-hentai.org",
+    primaryDomain: "e-hentai",
+    otherDomains: ["exhentai"],
+  },
 
-    {
-        trackerName: 'E-Hentai', // @holy-elbow
-        homepageURL: 'https://e-hentai.org',
-        primaryDomain: 'e-hentai',
-        otherDomains: ['exhentai'],
-    },
+  {
+    trackerName: "Empornium",
+    homepageURL: "https://emparadise.rs",
+    primaryDomain: "empornium",
+    otherDomains: ["emparadise"],
+  },
 
-    {
-        trackerName: 'Empornium',
-        homepageURL: 'https://emparadise.rs',
-        primaryDomain: 'empornium',
-        otherDomains: ['emparadise']
-    },
+  {
+    trackerName: "ExoticaZ", // @fercats99 > @holy-elbow
+    homepageURL: "https://exoticaz.to",
+    primaryDomain: "exoticaz",
+  },
 
-    {
-        trackerName: 'ExoticaZ', // @fercats99 > @holy-elbow
-        homepageURL: 'https://exoticaz.to',
-        primaryDomain: 'exoticaz',
-    },
+  {
+    trackerName: "Femdomcult", // @holy-elbow
+    homepageURL: "https://femdomcult.org",
+    primaryDomain: "femdomcult",
+  },
 
-    {
-        trackerName: 'Femdomcult', // @holy-elbow
-        homepageURL: 'https://femdomcult.org',
-        primaryDomain: 'femdomcult',
-    },
+  {
+    trackerName: "GazelleGames",
+    homepageURL: "https://gazellegames.net",
+    primaryDomain: "gazellegames",
+  },
 
-    {
-        trackerName: 'GazelleGames',
-        homepageURL: 'https://gazellegames.net',
-        primaryDomain: 'gazellegames',
-    },
+  {
+    trackerName: "HappyFappy", // @empUser
+    homepageURL: "https://www.happyfappy.org",
+    primaryDomain: "happyfappy",
+  },
 
-    {
-        trackerName: 'HappyFappy', // @empUser
-        homepageURL: 'https://www.happyfappy.org',
-        primaryDomain: 'happyfappy',
-    },
+  {
+    trackerName: "HDBits",
+    homepageURL: "https://hdbits.org",
+    primaryDomain: "hdbits",
+  },
 
-    {
-        trackerName: 'HDBits',
-        homepageURL: 'https://hdbits.org',
-        primaryDomain: 'hdbits',
-    },
+  {
+    trackerName: "IP-Torrents",
+    homepageURL: "https://iptorrents.me",
+    primaryDomain: "iptorrents",
+  },
 
-    {
-        trackerName: 'IP-Torrents',
-        homepageURL: 'https://iptorrents.me',
-        primaryDomain: 'iptorrents',
-    },
+  {
+    trackerName: "ItaTorrents", // @steventrux
+    homepageURL: "https://itatorrents.xyz",
+    primaryDomain: "itatorrents",
+  },
 
-    {
-        trackerName: 'ItaTorrents', // @steventrux
-        homepageURL: 'https://itatorrents.xyz',
-        primaryDomain: 'itatorrents',
-    },
+  {
+    trackerName: "JPopsuki", // @tartuffe
+    homepageURL: "https://jpopsuki.eu",
+    primaryDomain: "jpopsuki",
+  },
 
-    {
-        trackerName: 'JPopsuki', // @tartuffe
-        homepageURL: 'https://jpopsuki.eu',
-        primaryDomain: 'jpopsuki',
-    },
+  {
+    trackerName: "Karagarga", // @fercats99
+    homepageURL: "https://karagarga.in",
+    primaryDomain: "karagarga",
+  },
 
-    {
-        trackerName: 'Karagarga', // @fercats99
-        homepageURL: 'https://karagarga.in',
-        primaryDomain: 'karagarga',
-    },
+  {
+    trackerName: "Kufirc", // @holy-elbow
+    homepageURL: "https://kufirc.com",
+    primaryDomain: "kufirc",
+  },
 
-    {
-        trackerName: 'Kufirc', // @holy-elbow
-        homepageURL: 'https://kufirc.com',
-        primaryDomain: 'kufirc',
-    },
+  {
+    trackerName: "Lat-Team",
+    homepageURL: "https://lat-team.com",
+    primaryDomain: "lat-team",
+  },
 
-    {
-        trackerName: 'Lat-Team',
-        homepageURL: 'https://lat-team.com',
-        primaryDomain: 'lat-team',
-    },
+  {
+    trackerName: "LST", // @LilithOfTheValley
+    homepageURL: "https://lst.gg",
+    primaryDomain: "lst",
+  },
 
-    {
-        trackerName: 'LST', // @LilithOfTheValley
-        homepageURL: 'https://lst.gg',
-        primaryDomain: 'lst',
-    },
+  {
+    trackerName: "Luminarr", // @holy-elbow
+    homepageURL: "https://lumniarr.me",
+    primaryDomain: "luminarr",
+  },
 
-    {
-        trackerName: 'Luminarr', // @holy-elbow
-        homepageURL: 'https://lumniarr.me',
-        primaryDomain: 'luminarr',
-    },
+  {
+    trackerName: "Materialize",
+    homepageURL: "https://materialize.is",
+    primaryDomain: "materialize",
+  },
 
-    {
-        trackerName: 'Materialize',
-        homepageURL: 'https://materialize.is',
-        primaryDomain: 'materialize',
-    },
+  {
+    trackerName: "MirCrew", // @steventrux
+    homepageURL: "https://mircrew-releases.org",
+    primaryDomain: "mircrew-releases",
+  },
 
-    {
-        trackerName: 'MirCrew', // @steventrux
-        homepageURL: 'https://mircrew-releases.org',
-        primaryDomain: 'mircrew-releases',
-    },
+  {
+    trackerName: "MoreThanTV", // @holy-elbow
+    homepageURL: "https://www.morethantv.me",
+    primaryDomain: "morethantv",
+  },
 
-    {
-        trackerName: 'MoreThanTV', // @holy-elbow
-        homepageURL: 'https://www.morethantv.me',
-        primaryDomain: 'morethantv',
-    },
+  {
+    trackerName: "MyAnonaMouse",
+    homepageURL: "https://www.myanonamouse.net",
+    primaryDomain: "myanonamouse",
+  },
 
-    {
-        trackerName: 'MyAnonaMouse',
-        homepageURL: 'https://www.myanonamouse.net',
-        primaryDomain: 'myanonamouse',
-    },
+  {
+    trackerName: "Nebulance", // @malefis
+    homepageURL: "https://nebulance.io",
+    primaryDomain: "nebulance",
+  },
 
-    {
-        trackerName: 'Nebulance', // @malefis
-        homepageURL: 'https://nebulance.io',
-        primaryDomain: 'nebulance',
-    },
+  {
+    trackerName: "Nyaa",
+    homepageURL: "https://nyaa.si",
+    primaryDomain: "nyaa",
+  },
 
-    {
-        trackerName: 'Nyaa',
-        homepageURL: 'https://nyaa.si',
-        primaryDomain: 'nyaa',
-    },
+  {
+    trackerName: "Oldtoons",
+    homepageURL: "https://oldtoons.world",
+    primaryDomain: "oldtoons",
+  },
 
-    {
-        trackerName: 'Oldtoons',
-        homepageURL: 'https://oldtoons.world',
-        primaryDomain: 'oldtoons',
-    },
+  {
+    trackerName: "Orpheus",
+    homepageURL: "https://orpheus.network",
+    primaryDomain: "orpheus",
+  },
 
-    {
-        trackerName: 'Orpheus',
-        homepageURL: 'https://orpheus.network',
-        primaryDomain: 'orpheus',
-    },
+  {
+    trackerName: "PassThePopcorn",
+    homepageURL: "https://passthepopcorn.me",
+    primaryDomain: "passthepopcorn",
+  },
 
-    {
-        trackerName: 'PassThePopcorn',
-        homepageURL: 'https://passthepopcorn.me',
-        primaryDomain: 'passthepopcorn',
-    },
+  {
+    trackerName: "Portugas", // @Phreaker
+    homepageURL: "https://portugas.org",
+    primaryDomain: "portugas",
+  },
 
-    {
-        trackerName: 'Portugas', // @Phreaker
-        homepageURL: 'https://portugas.org',
-        primaryDomain: 'portugas',
-    },
+  {
+    trackerName: "PrivateHD", // @holy-elbow
+    homepageURL: "https://privatehd.to",
+    primaryDomain: "privatehd",
+  },
 
-    {
-        trackerName: 'PrivateHD', // @holy-elbow
-        homepageURL: 'https://privatehd.to',
-        primaryDomain: 'privatehd',
-    },
+  {
+    trackerName: "Redacted",
+    homepageURL: "https://redacted.sh",
+    primaryDomain: "redacted",
+  },
 
-    {
-        trackerName: 'Redacted',
-        homepageURL: 'https://redacted.sh',
-        primaryDomain: 'redacted',
-    },
+  {
+    trackerName: "RetroMoviesClub", // @LilithOfTheValley
+    homepageURL: "https://retro-movies.club",
+    primaryDomain: "retro-movies",
+  },
 
-    {
-        trackerName: 'RetroMoviesClub', // @LilithOfTheValley
-        homepageURL: 'https://retro-movies.club',
-        primaryDomain: 'retro-movies',
-    },
+  {
+    trackerName: "Secret-Cinema", // @tartuffe
+    homepageURL: "https://secret-cinema.pw",
+    primaryDomain: "secret-cinema",
+  },
 
-    {
-        trackerName: 'Secret-Cinema', // @tartuffe
-        homepageURL: 'https://secret-cinema.pw',
-        primaryDomain: 'secret-cinema',
-    },
+  {
+    trackerName: "SportsCult", // @steventrux
+    homepageURL: "https://sportscult.org",
+    primaryDomain: "sportscult",
+  },
 
-    {
-        trackerName: 'SportsCult', // @steventrux
-        homepageURL: 'https://sportscult.org',
-        primaryDomain: 'sportscult',
-    },
+  {
+    trackerName: "TheGeeks",
+    homepageURL: "https://thegeeks.click",
+    primaryDomain: "thegeeks",
+  },
 
-    {
-        trackerName: 'TheGeeks',
-        homepageURL: 'https://thegeeks.click',
-        primaryDomain: 'thegeeks',
-    },
+  {
+    trackerName: "TorrentLeech", // @holy-elbow
+    homepageURL: "https://www.torrentleech.org",
+    primaryDomain: "torrentleech",
+  },
 
-    {
-        trackerName: 'TorrentLeech', // @holy-elbow
-        homepageURL: 'https://www.torrentleech.org',
-        primaryDomain: 'torrentleech',
-    },
-
-    {
-        trackerName: 'TV-Vault',
-        homepageURL: 'https://tv-vault.me',
-        primaryDomain: 'tv-vault',
-    },
-
-]
-
+  {
+    trackerName: "TV-Vault",
+    homepageURL: "https://tv-vault.me",
+    primaryDomain: "tv-vault",
+  },
+];
 
 // =================================== quiCKIE SETTINGS ======================================
 
 // The domain of the current site, which MUST be registerd to one of the trackers in the settingsPanelTrackers array
 // Example: https://broadcasthe.net/ --> broadcasthe
-let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
+let trackerDomain = document.location.hostname
+  .match(/^(\w+\.)?(.+?)\..+$/)[2]
+  .toLowerCase();
 
 // A simple logger, which will only console log messages when it has been enabled above
-let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'quiCKIE'})
+let logger = new simpleLogger({
+  enabled: verboseConsoleLogging,
+  scriptName: "quiCKIE",
+});
 
 // Everything related to the GM_config library, which is used for saving and creating the settings panel: https://github.com/sizzlemctwizzle/GM_config
-let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
+let [
+  primaryDomain,
+  allPrimaryDomains,
+  allTrackerNames,
+  primaryDomainToTrackerName,
+  primaryDomainToHomepage,
+  trackerNameToPrimaryDomain,
+  presetCount,
+] = createGMConfigSettingsPanel(trackerDomain);
 
 // Retrieve the settings and presetMenuItems that are relevant to the current tracker
-let SETTINGS = getTrackerSettings(primaryDomain)
-let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
+let SETTINGS = getTrackerSettings(primaryDomain);
+let presetMenuItems = createPresetItems([SETTINGS.primaryDomain]);
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|💾|🧀', 'g')
+const emojiRegex = new RegExp(
+  "🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|💾|🧀",
+  "g",
+);
 
 // The full URL and Path of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
-const pageURL = document.URL
-const pagePath = document.location.pathname
-
+const pageURL = document.URL;
+const pagePath = document.location.pathname;
 
 // =================================== TRACKER SPECIFIC HANDLING ======================================
 
 // @trackerSpecificHandling
 // Because the primaryDomain is unique for each quiCKIE supported tracker, we can use it to determine what tracker this is and how to proceed from there
-if ( primaryDomain == 'animebytes' ) {
-    // ----------------------------------- AnimeBytes -----------------------------------
-    // Bookmarks | Browse | Collages | Company | Seeding\Snatched\Leeching | Series
+if (primaryDomain == "animebytes") {
+  // ----------------------------------- AnimeBytes -----------------------------------
+  // Bookmarks | Browse | Collages | Company | Seeding\Snatched\Leeching | Series
 
-    let trackerHandlingOptions = {
+  let trackerHandlingOptions = {
+    // ------------------------- REQUIRED -------------------------
 
-        // ------------------------- REQUIRED -------------------------
+    // A valid CSS selector that is unique to ONLY the download elements (download buttons) on the page
+    downloadElementsSelector: 'a[href^="/torrent/"][title="Download torrent"]',
 
-        // A valid CSS selector that is unique to ONLY the download elements (download buttons) on the page
-        downloadElementsSelector: 'a[href^="/torrent/"][title="Download torrent"]',
+    // --------------------------OPTIONAL -------------------------
+    // The following properties are all optional and can be applied on a per-tracker basis or when appropriate to do so depending on the page of the tracker
 
-        // --------------------------OPTIONAL -------------------------
-        // The following properties are all optional and can be applied on a per-tracker basis or when appropriate to do so depending on the page of the tracker
+    // ℹ️ Tip: To apply options on a per-page basis, use an 'if' statement to determine the current page based on the pageURL. From there, you can apply the options relevant to that page (See the BroadCasTheNet\Empornium\IP-Torrents\MyAnonaMouse\Nyaa blocks for examples)
 
-        // ℹ️ Tip: To apply options on a per-page basis, use an 'if' statement to determine the current page based on the pageURL. From there, you can apply the options relevant to that page (See the BroadCasTheNet\Empornium\IP-Torrents\MyAnonaMouse\Nyaa blocks for examples)
+    // - - - - - - - - - PRESENTATION - - - - - - - - -
+    // Options to assist with the visual presentation\styling of bunnyButtons
 
+    // The text that will be displayed by EVERY bunnyButton, useful for removing the surrounding whitespace included with the default setting, or when performing advanced styling
+    bunnyButtonText: " 🐰 ", // Default = ' 🐰 ' || Options = Any string
 
-        // - - - - - - - - - PRESENTATION - - - - - - - - -
-        // Options to assist with the visual presentation\styling of bunnyButtons
+    // The font-size of EVERY bunnyButton, useful for re-sizing them to better fit the page
+    bunnyButtonfontSize: "inherit", // Default = 'inherit' || Options = Any percentile | A valid 'font-size' css value
 
-        // The text that will be displayed by EVERY bunnyButton, useful for removing the surrounding whitespace included with the default setting, or when performing advanced styling
-        bunnyButtonText: ' 🐰 ', // Default = ' 🐰 ' || Options = Any string
+    // Additional CSS style properties that will be applied to EVERY bunnyButton, useful for advanced styling (see the BakabT\HDBits\MyAnonaMouse\Nyaa blocks for examples)
+    bunnyButtonAddStyles: "", // Default = '' || Options = A string containing css style properties
 
-        // The font-size of EVERY bunnyButton, useful for re-sizing them to better fit the page
-        bunnyButtonfontSize: 'inherit', // Default = 'inherit' || Options = Any percentile | A valid 'font-size' css value
+    // Additional class names that will be applied to EVERY bunnyButton, useful for advanced styling
+    bunnyButtonAddClasses: [], // Default = [] || Options = An array of strings
 
-        // Additional CSS style properties that will be applied to EVERY bunnyButton, useful for advanced styling (see the BakabT\HDBits\MyAnonaMouse\Nyaa blocks for examples)
-        bunnyButtonAddStyles: '', // Default = '' || Options = A string containing css style properties
+    // If EVERY bunnyButton should be placed alongside its respective downloadElement.parentElement, which may result in the bunnyButton appearing on the same row as the downloadElement
+    bunnyButtonParentPlacement: false, // Default = false || Options = true | false
 
-        // Additional class names that will be applied to EVERY bunnyButton, useful for advanced styling
-        bunnyButtonAddClasses: [], // Default = [] || Options = An array of strings
+    // If the downloadElement.parentElement should be hidden When '🙈 Hide Download Button' (settings panel) and the above 'bunnyButtonParentPlacement' option are both enabled. Some sites, but not all, will show a noticable gap when both those options are enabled, so this options exists to try preventing that gap.
+    downloadElementHideParentElementGap: false, // Default = false || Options = true | false
 
-        // If EVERY bunnyButton should be placed alongside its respective downloadElement.parentElement, which may result in the bunnyButton appearing on the same row as the downloadElement
-        bunnyButtonParentPlacement: false, // Default = false || Options = true | false
+    // The separator used between EVERY bunnyButton and the downloadElement
+    elementsSeparator: "automatic", // Default = 'automatic' || options = 'automatic' | Any string | false
 
-        // If the downloadElement.parentElement should be hidden When '🙈 Hide Download Button' (settings panel) and the above 'bunnyButtonParentPlacement' option are both enabled. Some sites, but not all, will show a noticable gap when both those options are enabled, so this options exists to try preventing that gap.
-        downloadElementHideParentElementGap: false, // Default = false || Options = true | false
+    // A function that will be called after all the bunnyButtons have been created, useful for advanced styling when certain bunnyButtons on the page have individual styling needs (see the BakaBT\Empornium\MyAnonaMouse blocks for examples)
+    // The provided 'elements' parameter will be an object consisting of three arrays: elements = { bunnyButtons: [], downloadElements: [], pairedElements:[] }
+    // ⚠️ quiCKIE is a NON-DESTRUCTIVE UserScript that does NOT break or destroy the default site elements. This ensures quiCKIE is friendly\compatible with other UserScripts. Always adhere to this principle by only manipulating the bunnyButtons created by quiCKIE itself
+    afterBunnyButtonCreation: false, // Default = false || options = false | function(elements) {...}
 
-        // The separator used between EVERY bunnyButton and the downloadElement
-        elementsSeparator: 'automatic', // Default = 'automatic' || options = 'automatic' | Any string | false
+    // - - - - - - - - - EMOJIOGRAPHY - - - - - - - - -
+    // Options that allow you to add "Emojiography" support to a tracker by providing a string representing a JavaScript comparison. If that check completes successfully and is 'true', it indicates a torrent is seeding\snatched\freeleech and as a result will have its bunnyButton emoji updated to reflect this
 
-        // A function that will be called after all the bunnyButtons have been created, useful for advanced styling when certain bunnyButtons on the page have individual styling needs (see the BakaBT\Empornium\MyAnonaMouse blocks for examples)
-        // The provided 'elements' parameter will be an object consisting of three arrays: elements = { bunnyButtons: [], downloadElements: [], pairedElements:[] }
-        // ⚠️ quiCKIE is a NON-DESTRUCTIVE UserScript that does NOT break or destroy the default site elements. This ensures quiCKIE is friendly\compatible with other UserScripts. Always adhere to this principle by only manipulating the bunnyButtons created by quiCKIE itself
-        afterBunnyButtonCreation: false, // Default = false || options = false | function(elements) {...}
+    // The string may start with 'downloadElement' (representing a DL button) then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a 'targetElement' (which refers to a element in the HTML indicating the torrent has a certain status). If the targetElement is found, the check is considered to be 'true'
+    // See the AnimeBytes\BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples
+    // ℹ️ Tip: If the targetElement has a unique .textContent but not attributes, one option is to perform a `targetElement.textContent.match(/regex/)`. If the regex match is found, the check is considered to be 'true' (see the MyAnonaMouse\Redacted block for examples)
+    // ℹ️ Tip: When inspecting the page from your browser, right-click the DL button HTML element and select the 'Use in Console' option. This will create a variable in your console that you can use to test your chaining. Once you have a working chain that to locate the target element, you can use it for these options.
 
+    // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱'
+    seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
 
-        // - - - - - - - - - EMOJIOGRAPHY - - - - - - - - -
-        // Options that allow you to add "Emojiography" support to a tracker by providing a string representing a JavaScript comparison. If that check completes successfully and is 'true', it indicates a torrent is seeding\snatched\freeleech and as a result will have its bunnyButton emoji updated to reflect this
+    // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁'
+    snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.snatched-torrent')`, // Default = null || Options = 'downloadElement...'
 
-        // The string may start with 'downloadElement' (representing a DL button) then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a 'targetElement' (which refers to a element in the HTML indicating the torrent has a certain status). If the targetElement is found, the check is considered to be 'true'
-        // See the AnimeBytes\BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples
-        // ℹ️ Tip: If the targetElement has a unique .textContent but not attributes, one option is to perform a `targetElement.textContent.match(/regex/)`. If the regex match is found, the check is considered to be 'true' (see the MyAnonaMouse\Redacted block for examples)
-        // ℹ️ Tip: When inspecting the page from your browser, right-click the DL button HTML element and select the 'Use in Console' option. This will create a variable in your console that you can use to test your chaining. Once you have a working chain that to locate the target element, you can use it for these options.
+    // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎'
+    freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
 
-        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱'
-        seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
+    // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'featured', so the bunnyButton emoji will be changed to '📢'
+    featuredStatusSelector: null, // Default = null || Options = 'downloadElement...'
 
-        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁'
-        snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.snatched-torrent')`, // Default = null || Options = 'downloadElement...'
+    // - - - - - - - - - PAGINATION - - - - - - - - -
+    // Options that can assist when the tracker has pagination, which is when the page does not perform a full refresh for new DL buttons, which results in those new DL buttons that are loaded into the page not having bunnyButtons
+    //⚠️ You should not enable or use these options unless the tracker you are adding actually has pagination, in which case the URL's with pagination should be filtered through an if check so as to not apply these options to the entire site: pageURL.match(/pageURLRegex/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
-        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎'
-        freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
+    // If quiCKIE should repeatedly check for new download elements, which works as a simple approach for handling pagination
+    enablePaginationLooping: false, // Default = false || Options = true | false
 
-        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'featured', so the bunnyButton emoji will be changed to '📢'
-        featuredStatusSelector: null, // Default = null || Options = 'downloadElement...'
+    // - - - - - - - - - OTHER - - - - - - - - -
+    // Options to perform a vareity of tasks that may or may not apply to certain trackers
 
+    // The element that will be used as the root when performing .querySelectorAll(downloadElementsSelector) to find all the downloadElements
+    queryFromElement: document, // Default = document || Options = document | A specific element (node)
 
-        // - - - - - - - - - PAGINATION - - - - - - - - -
-        // Options that can assist when the tracker has pagination, which is when the page does not perform a full refresh for new DL buttons, which results in those new DL buttons that are loaded into the page not having bunnyButtons
-        //⚠️ You should not enable or use these options unless the tracker you are adding actually has pagination, in which case the URL's with pagination should be filtered through an if check so as to not apply these options to the entire site: pageURL.match(/pageURLRegex/) ? trackerHandlingOptions.enablePaginationLooping = true : null
+    // The name of the downloadElement attribute that contains the torrentURL
+    downloadElementsTorrentURLAttribute: "href", // Default = 'href' || Options = A string matching a attribute name of the download element
 
-        // If quiCKIE should repeatedly check for new download elements, which works as a simple approach for handling pagination
-        enablePaginationLooping: false, // Default = false || Options = true | false
+    // If quiCKIE should ALWAYS download the .torrent file through the browser before sending it to the torrent client, useful if the torrentURL authentication doesn't actually work
+    // Magnet links are ALWAYS sent directly to the torrent client, as they are not proper http links that can be downloaded through the browser
+    forceTorrentFile: false, // Default = false || Options = true | false
 
+    // If quiCKIE should attach the right-click presetsMenu to the new bunnyButtons, useful for advanced presetsMenu manipulation
+    bunnyButtonAttachPresetsMenu: true, // Default = true || Options = true | false
+  };
 
-        // - - - - - - - - - OTHER - - - - - - - - -
-        // Options to perform a vareity of tasks that may or may not apply to certain trackers
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "aither") {
+  // ----------------------------------- Aither -----------------------------------
+  // Bookmarks | Browse | Details | Playlists
 
-        // The element that will be used as the root when performing .querySelectorAll(downloadElementsSelector) to find all the downloadElements
-        queryFromElement: document, // Default = document || Options = document | A specific element (node)
+  unit3dTrackerHandler('a[href*="/download"]');
+} else if (primaryDomain == "alpharatio") {
+  // ----------------------------------- AlphaRatio -----------------------------------
+  // Browse | Details | Top 10
 
-        // The name of the downloadElement attribute that contains the torrentURL
-        downloadElementsTorrentURLAttribute: 'href', // Default = 'href' || Options = A string matching a attribute name of the download element
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
 
-        // If quiCKIE should ALWAYS download the .torrent file through the browser before sending it to the torrent client, useful if the torrentURL authentication doesn't actually work
-        // Magnet links are ALWAYS sent directly to the torrent client, as they are not proper http links that can be downloaded through the browser
-        forceTorrentFile: false, // Default = false || Options = true | false
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "animez") {
+  // --------------------------------- AnimeZ ------------------------------------
+  // Home | Browse| Bookmarks
 
-        // If quiCKIE should attach the right-click presetsMenu to the new bunnyButtons, useful for advanced presetsMenu manipulation
-        bunnyButtonAttachPresetsMenu: true, // Default = true || Options = true | false
+  let trackerHandlingOptions = {
+    downloadElementsSelector:
+      'a[href^="https://animez.to/torrents/"][href$="/download"]',
+  };
 
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'aither' ) {
-    // ----------------------------------- Aither -----------------------------------
-    // Bookmarks | Browse | Details | Playlists
-
-    unit3dTrackerHandler('a[href*="/download"]')
-
-} else if ( primaryDomain == 'alpharatio' ) {
-    // ----------------------------------- AlphaRatio -----------------------------------
-    // Browse | Details | Top 10
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'animez' ) {
-    // --------------------------------- AnimeZ ------------------------------------
-    // Home | Browse| Bookmarks
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://animez.to/torrents/"][href$="/download"]',
-    }
-
-    if ( pageURL.match(/\/torrents\/\d+/) ) {
-
-        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
+  if (pageURL.match(/\/torrents\/\d+/)) {
+    trackerHandlingOptions.bunnyButtonText = "🐰 quiCKIE";
+    trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #4263eb;
             border-radius: 8px;
             border; 1px solid transparent;
@@ -744,43 +747,38 @@ if ( primaryDomain == 'animebytes' ) {
             font-size: 1rem;
             font-weight: 500;
             line-height: 1.5rem;
-        `
-    }
+        `;
+  }
 
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "anthelion") {
+  // ----------------------------------- Anthelion -----------------------------------
+  // Browse | Collages | Film
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
 
-} else if ( primaryDomain == 'anthelion' ) {
-    // ----------------------------------- Anthelion -----------------------------------
-    // Browse | Collages | Film
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "avistaz") {
+  // ----------------------------------- AvistaZ -----------------------------------
+  // Details
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="https://avistaz.to/download/torrent/"]',
+  };
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "bakabt") {
+  // ----------------------------------- BakaBT -----------------------------------
+  // Details
 
-
-} else if ( primaryDomain == 'avistaz' ) {
-    // ----------------------------------- AvistaZ -----------------------------------
-    // Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://avistaz.to/download/torrent/"]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'bakabt' ) {
-    // ----------------------------------- BakaBT -----------------------------------
-    // Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a.download_link[href^="/download/"]',
-        bunnyButtonFontSize: '140%',
-        bunnyButtonText: '🐰 quiCKIE',
-        freeleechStatusSelector: "document.querySelector('span.freeleech')",
-        bunnyButtonAddStyles: `
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a.download_link[href^="/download/"]',
+    bunnyButtonFontSize: "140%",
+    bunnyButtonText: "🐰 quiCKIE",
+    freeleechStatusSelector: "document.querySelector('span.freeleech')",
+    bunnyButtonAddStyles: `
             background: #153245;
             border-radius: 4px;
             border: #B6D3E7 solid 2px;
@@ -792,42 +790,38 @@ if ( primaryDomain == 'animebytes' ) {
             vertical-align: super;
         `,
 
-        afterBunnyButtonCreation: function(elements) {
-            // The actions to take after the bunnyButtons have been created...
+    afterBunnyButtonCreation: function (elements) {
+      // The actions to take after the bunnyButtons have been created...
 
-            // Decrease the width of the site DL button so that everything fits onto a single row
-            elements.downloadElements[0].style.width = '395px'
+      // Decrease the width of the site DL button so that everything fits onto a single row
+      elements.downloadElements[0].style.width = "395px";
+    },
+  };
 
-        },
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "beyond-hd") {
+  // ----------------------------------- Beyond-HD -----------------------------------
+  // Browse | Details | Homepage | Library
 
-    }
+  unit3dTrackerHandler('a[href^="https://beyond-hd.me/download/"]');
+} else if (primaryDomain == "bibliotik") {
+  // ----------------------------------- Bibliotik -----------------------------------
+  // Browse | Details | Seeing\Snatched\Leeching\Uploads
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/torrents/"][title="Download"]',
+    bunnyButtonFontSize: "120%",
+    bunnyButtonAddStyles: "vertical-align: bottom",
 
-} else if ( primaryDomain == 'beyond-hd' ) {
-    // ----------------------------------- Beyond-HD -----------------------------------
-    // Browse | Details | Homepage | Library
+    // These status selectors are currently only working on the users seeding\snatched page
+    seedingStatusSelector: `downloadElement.closest('tr').querySelector('a.seeders').nextSibling.baseURI.match(/seeding/)`,
+    snatchedStatusSelector: `downloadElement.closest('tr').querySelector('a.snatches').nextSibling.baseURI.match(/snatches/)`,
+  };
 
-    unit3dTrackerHandler('a[href^="https://beyond-hd.me/download/"]')
-
-} else if ( primaryDomain == 'bibliotik' ) {
-    // ----------------------------------- Bibliotik -----------------------------------
-    // Browse | Details | Seeing\Snatched\Leeching\Uploads
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/torrents/"][title="Download"]',
-        bunnyButtonFontSize: '120%',
-        bunnyButtonAddStyles: 'vertical-align: bottom',
-
-        // These status selectors are currently only working on the users seeding\snatched page
-        seedingStatusSelector: `downloadElement.closest('tr').querySelector('a.seeders').nextSibling.baseURI.match(/seeding/)`,
-        snatchedStatusSelector: `downloadElement.closest('tr').querySelector('a.snatches').nextSibling.baseURI.match(/snatches/)`,
-    }
-
-    // This is a details page, so apply styling to the only bunnyButton
-    if ( pagePath.match(/\/torrents\/\d+/) ) {
-        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
+  // This is a details page, so apply styling to the only bunnyButton
+  if (pagePath.match(/\/torrents\/\d+/)) {
+    trackerHandlingOptions.bunnyButtonText = "🐰 quiCKIE";
+    trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #153245 !important;
             border-radius: 3px;
             border: #B6D3E7 solid 1px;
@@ -836,89 +830,86 @@ if ( primaryDomain == 'animebytes' ) {
             margin: 0px 2px 0px 8px;
             padding: 2px 5px 2px 5px;
             vertical-align: center;
-        `
-    }
+        `;
+  }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "bitporn") {
+  // ----------------------------------- BitPorn -----------------------------------
+  // Browse | Details
 
-} else if ( primaryDomain == 'bitporn' ) {
-    // ----------------------------------- BitPorn -----------------------------------
-    // Browse | Details
+  unit3dTrackerHandler('a[href^="https://bitporn.eu/torrents/download/"]');
+} else if (primaryDomain == "broadcasthe") {
+  // ----------------------------------- BroadcasTheNet -----------------------------------
+  // Browse | Series | Season\Episodes
 
-    unit3dTrackerHandler('a[href^="https://bitporn.eu/torrents/download/"]')
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    seedingStatusSelector:
+      "downloadElement.closest('td').querySelector('a.tor_highlight_seed')",
+    snatchedStatusSelector:
+      "downloadElement.closest('td').querySelector('a.tor_highlight_snatch')",
+  };
 
-} else if ( primaryDomain == 'broadcasthe' ) {
-    // ----------------------------------- BroadcasTheNet -----------------------------------
-    // Browse | Series | Season\Episodes
+  // This is a browse page (not Season\Episode), so apply styling to all bunnyButtons
+  if (pageURL.match(/torrents\.php(?!\?id=\d+)/)) {
+    trackerHandlingOptions.afterBunnyButtonCreation = function (elements) {
+      // The actions to take after the bunnyButtons have been created...
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        seedingStatusSelector: "downloadElement.closest('td').querySelector('a.tor_highlight_seed')",
-        snatchedStatusSelector: "downloadElement.closest('td').querySelector('a.tor_highlight_snatch')",
-    }
-
-    // This is a browse page (not Season\Episode), so apply styling to all bunnyButtons
-    if ( pageURL.match(/torrents\.php(?!\?id=\d+)/) ) {
-
-        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
-            // The actions to take after the bunnyButtons have been created...
-
-            // Style all bunnyButtons, giving them a square-type look to more closely match the site buttons
-            for ( let bunnyButton of elements.bunnyButtons ) {
-                bunnyButton.textContent = '🐰'
-                bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+      // Style all bunnyButtons, giving them a square-type look to more closely match the site buttons
+      for (let bunnyButton of elements.bunnyButtons) {
+        bunnyButton.textContent = "🐰";
+        bunnyButton.setAttribute(
+          "style",
+          `${bunnyButton.style.cssText}
                     background: #153245;
                     border-radius: 3px;
                     border: #B6D3E7 solid 1px;
                     color: #B6D3E7;
                     font-size: 80%;
                     padding: 2px 2px 2px 2px;
-                    vertical-align: unset;`)
-            }
+                    vertical-align: unset;`,
+        );
+      }
+    };
+  }
 
-        }
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "cinemaz") {
+  // ----------------------------------- CinemaZ -----------------------------------
+  // Details
 
-    }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
+  };
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "clearjav") {
+  // ----------------------------------- ClearJAV -----------------------------------
+  // Bookmarks | Browse | Details | Movies| Playlists
 
-} else if ( primaryDomain == 'cinemaz' ) {
-    // ----------------------------------- CinemaZ -----------------------------------
-    // Details
+  unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]');
+} else if (primaryDomain == "deepbassnine") {
+  // ----------------------------------- DeepBassNine -----------------------------------
+  // Album | Artist | Browse
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "digitalcore") {
+  // ---------------------------------- DigitalCore ---------------------------------
+  // Browse | Details | Home
+
+  if (pageURL.match(/\/torrent\/\d+/)) {
+    // The torrent details page
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'clearjav' ) {
-    // ----------------------------------- ClearJAV -----------------------------------
-    // Bookmarks | Browse | Details | Movies| Playlists
-
-    unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]')
-
-} else if ( primaryDomain == 'deepbassnine' ) {
-    // ----------------------------------- DeepBassNine -----------------------------------
-    // Album | Artist | Browse
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'digitalcore' ) {
-    // ---------------------------------- DigitalCore ---------------------------------
-    // Browse | Details | Home
-
-    if ( pageURL.match(/\/torrent\/\d+/) ) {
-        // The torrent details page
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]:has(i.fa-download)',
-            bunnyButtonText: '🐰 quiCKIE',
-            bunnyButtonAddStyles: `
+      downloadElementsSelector:
+        'a[href^="/api/v1/torrents/download"]:has(i.fa-download)',
+      bunnyButtonText: "🐰 quiCKIE",
+      bunnyButtonAddStyles: `
                 background: #252525;
                 border-radius: 3px;
                 border: #323232 solid 1px;
@@ -927,167 +918,179 @@ if ( primaryDomain == 'animebytes' ) {
                 margin-left: 11.033px;
                 padding: 1px 39.817px;
                 vertical-align: middle;
-            `
+            `,
+    };
 
-        }
+    let observer = new MutationObserver(function (mutations) {
+      quickieTrackerHandler(trackerHandlingOptions);
+    });
 
-        let observer = new MutationObserver(function(mutations) {
+    let target = document.getElementById("contentContainer");
+    let config = { childList: true };
 
-            quickieTrackerHandler(trackerHandlingOptions)
-
-        })
-
-        let target = document.getElementById('contentContainer')
-        let config = { childList: true }
-
-        observer.observe(target, config)
-
-    } else if ( pagePath.match(/^\/?$/) ) {
-        // The homepage
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
-            enablePaginationLooping: true,
-        }
-
-        quickieTrackerHandler(trackerHandlingOptions)
-
-    } else {
-        // The browse page
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
-        }
-
-        let pageObserver = new MutationObserver(async function(pageMutations) {
-
-            // Wait until the <tbody> of is loaded...
-            let tbodyElement = await waitForElement('torrents-table[torrents] tbody', document.getElementById('contentContainer'))
-
-            try {
-
-                let torrentObserver = new MutationObserver(function(torrentMutations) {
-                    // The actions to take when there are changes to the <tbody>
-
-                    quickieTrackerHandler(trackerHandlingOptions)
-
-                })
-
-                torrentObserver.observe(tbodyElement, { childList: true })
-
-            } catch(error) {
-                return
-            }
-
-        })
-
-        let target = document.getElementById('contentContainer')
-        let config = { childList: true }
-
-        pageObserver.observe(target, config)
-
-    }
-
-} else if ( primaryDomain == 'e-hentai' ) {
-    // ----------------------------------- E-Hentai -----------------------------------
-    // Torrents
+    observer.observe(target, config);
+  } else if (pagePath.match(/^\/?$/)) {
+    // The homepage
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://ehtracker.org/get/"]',
-    }
+      downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
+      enablePaginationLooping: true,
+    };
 
-    if ( pageURL.match(/exhentai/) ) {
-        trackerHandlingOptions.downloadElementsSelector = 'a[href^="https://exhentai.org/torrent/"]'
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'empornium' ) {
-    // ----------------------------------- Empornium -----------------------------------
-    // Browse | Collages | Details | Top10 | UserProfile
+    quickieTrackerHandler(trackerHandlingOptions);
+  } else {
+    // The browse page
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
-        bunnyButtonFontSize: '130%',
-        seedingStatusSelector: "downloadElement.parentElement.querySelector('i.torrent_icons.seeding')",
-        snatchedStatusSelector: "downloadElement.parentElement.querySelector('i.torrent_icons.snatched')",
-        freeleechStatusSelector: "downloadElement.closest('span.torrent_icon_container').querySelector('i.font_icon.unlimited_leech')"
-    }
+      downloadElementsSelector: 'a[href^="/api/v1/torrents/download"]',
+    };
 
-    // This is a collage page, so place the bunnyButton alongside the parentElement
-    if ( pageURL.match(/\/collage\/\d+/) ) {
-        trackerHandlingOptions.bunnyButtonParentPlacement = true
-        trackerHandlingOptions.downloadElementHideParentElementGap = true
-    }
+    let pageObserver = new MutationObserver(async function (pageMutations) {
+      // Wait until the <tbody> of is loaded...
+      let tbodyElement = await waitForElement(
+        "torrents-table[torrents] tbody",
+        document.getElementById("contentContainer"),
+      );
 
+      try {
+        let torrentObserver = new MutationObserver(function (torrentMutations) {
+          // The actions to take when there are changes to the <tbody>
 
-    // This is a details page, so apply styling to certain bunnyButtons
-    if ( pageURL.match(/torrents\.php\?id=\d+/) ) {
+          quickieTrackerHandler(trackerHandlingOptions);
+        });
 
-        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
-            // The actions to take after the bunnyButtons have been created...
+        torrentObserver.observe(tbodyElement, { childList: true });
+      } catch (error) {
+        return;
+      }
+    });
 
-            // The main downloadElement, which will be referenced to determine the current torrentStatus
-            let mainDownloadElement = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
+    let target = document.getElementById("contentContainer");
+    let config = { childList: true };
 
-            for ( let bunnyButton of elements.bunnyButtons ) {
+    pageObserver.observe(target, config);
+  }
+} else if (primaryDomain == "e-hentai") {
+  // ----------------------------------- E-Hentai -----------------------------------
+  // Torrents
 
-                // Style the bunnyButtons that match this CSS selector, giving them a bar-type look to more closely match the larger site buttons
-                if ( bunnyButton.matches('span.torrent_buttons a.quickie_bunnyButton, #user-sidebar > a.quickie_bunnyButton') ) {
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="https://ehtracker.org/get/"]',
+  };
 
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+  if (pageURL.match(/exhentai/)) {
+    trackerHandlingOptions.downloadElementsSelector =
+      'a[href^="https://exhentai.org/torrent/"]';
+  }
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "empornium") {
+  // ----------------------------------- Empornium -----------------------------------
+  // Browse | Collages | Details | Top10 | UserProfile
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
+    bunnyButtonFontSize: "130%",
+    seedingStatusSelector:
+      "downloadElement.parentElement.querySelector('i.torrent_icons.seeding')",
+    snatchedStatusSelector:
+      "downloadElement.parentElement.querySelector('i.torrent_icons.snatched')",
+    freeleechStatusSelector:
+      "downloadElement.closest('span.torrent_icon_container').querySelector('i.font_icon.unlimited_leech')",
+  };
+
+  // This is a collage page, so place the bunnyButton alongside the parentElement
+  if (pageURL.match(/\/collage\/\d+/)) {
+    trackerHandlingOptions.bunnyButtonParentPlacement = true;
+    trackerHandlingOptions.downloadElementHideParentElementGap = true;
+  }
+
+  // This is a details page, so apply styling to certain bunnyButtons
+  if (pageURL.match(/torrents\.php\?id=\d+/)) {
+    trackerHandlingOptions.afterBunnyButtonCreation = function (elements) {
+      // The actions to take after the bunnyButtons have been created...
+
+      // The main downloadElement, which will be referenced to determine the current torrentStatus
+      let mainDownloadElement = document.querySelector(
+        `#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`,
+      );
+
+      for (let bunnyButton of elements.bunnyButtons) {
+        // Style the bunnyButtons that match this CSS selector, giving them a bar-type look to more closely match the larger site buttons
+        if (
+          bunnyButton.matches(
+            "span.torrent_buttons a.quickie_bunnyButton, #user-sidebar > a.quickie_bunnyButton",
+          )
+        ) {
+          bunnyButton.setAttribute(
+            "style",
+            `${bunnyButton.style.cssText}
                         border-radius: 5px;
                         font-size: 100%;
                         font-weight: Bold;
                         margin: 0px 8px 0px 0px;
                         padding: 4px 10px 4px 10px;
-                        vertical-align: middle;`)
+                        vertical-align: middle;`,
+          );
 
-                    if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
-                        // This is a Freeleech button
-                        bunnyButton.textContent = '💸 Freeleech'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
-                        bunnyButton.setAttribute('data-emojospecified', 'true')
+          if (bunnyButton.dataset.torrenturl.match(/&usetoken=1/)) {
+            // This is a Freeleech button
+            bunnyButton.textContent = "💸 Freeleech";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`,
+            );
+            bunnyButton.setAttribute("data-emojospecified", "true");
+          } else if (bunnyButton.dataset.torrenturl.match(/&usetoken=2/)) {
+            // This is a Doubleseed button
+            bunnyButton.textContent = "🌱 Doubleseed";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`,
+            );
+            bunnyButton.setAttribute("data-emojospecified", "true");
+          } else {
+            // This is a standard Download button
+            bunnyButton.textContent = "🐰 quiCKIE";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`,
+            );
 
-                    } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
-                        // This is a Doubleseed button
-                        bunnyButton.textContent = '🌱 Doubleseed'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
-                        bunnyButton.setAttribute('data-emojospecified', 'true')
-                    } else {
-                        // This is a standard Download button
-                        bunnyButton.textContent = '🐰 quiCKIE'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
-
-                        // Check for torrentStatus relative to the mainDownloadElement
-                        mainDownloadElement.closest('.torrent_icon_container').querySelector('i.font_icon.unlimited_leech') != null ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null // Freeleech
-                        mainDownloadElement.querySelector('i.torrent_icons.snatched') != null ? bunnyButtonTorrentStatus(bunnyButton, 'snatched') : null // Snatched
-                        mainDownloadElement.querySelector('i.torrent_icons.seeding') != null ? bunnyButtonTorrentStatus(bunnyButton, 'seeding') : null // Seeding
-                    }
-
-                }
-
-            }
-
+            // Check for torrentStatus relative to the mainDownloadElement
+            mainDownloadElement
+              .closest(".torrent_icon_container")
+              .querySelector("i.font_icon.unlimited_leech") != null
+              ? bunnyButtonTorrentStatus(bunnyButton, "freeleech")
+              : null; // Freeleech
+            mainDownloadElement.querySelector("i.torrent_icons.snatched") !=
+            null
+              ? bunnyButtonTorrentStatus(bunnyButton, "snatched")
+              : null; // Snatched
+            mainDownloadElement.querySelector("i.torrent_icons.seeding") != null
+              ? bunnyButtonTorrentStatus(bunnyButton, "seeding")
+              : null; // Seeding
+          }
         }
+      }
+    };
+  }
 
-    }
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "exoticaz") {
+  // ----------------------------------- ExoticaZ -----------------------------------
+  // Details
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector:
+      'a[href^="https://exoticaz.to/download/torrent/"]',
+  };
 
-} else if ( primaryDomain == 'exoticaz' ) {
-    // ----------------------------------- ExoticaZ -----------------------------------
-    // Details
+  if (pageURL.match(/\/torrent\/\d+/)) {
+    // This is a details page, so apply styling to the only bunnyButton
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://exoticaz.to/download/torrent/"]',
-    }
-
-    if ( pageURL.match(/\/torrent\/\d+/) ) {
-        // This is a details page, so apply styling to the only bunnyButton
-
-        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
+    trackerHandlingOptions.bunnyButtonText = "🐰 quiCKIE";
+    trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #e94a93;
             border-radius: 0;
             border: #e8e6e3 solid 1px;
@@ -1102,124 +1105,144 @@ if ( primaryDomain == 'animebytes' ) {
             margin-right: 1px;
             margin-top: 3px;
             padding: .2rem .7rem;
-        `
-    }
+        `;
+  }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "femdomcult") {
+  // ----------------------------------- Femdomcult -----------------------------------
+  // Bookmarks | Browse | Collages | Details |
 
-} else if ( primaryDomain == 'femdomcult' ) {
-    // ----------------------------------- Femdomcult -----------------------------------
-    // Bookmarks | Browse | Collages | Details |
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
+    bunnyButtonFontSize: "125%",
+    bunnyButtonParentPlacement: true,
+  };
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
-        bunnyButtonFontSize: '125%',
-        bunnyButtonParentPlacement: true,
-    }
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "gazellegames") {
+  // ----------------------------------- GazelleGames -----------------------------------
+  // Browse | Bundles | Game
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    seedingStatusSelector:
+      "downloadElement.closest('td').querySelector('#color_seeding')",
+    snatchedStatusSelector:
+      "downloadElement.closest('td').querySelector('#color_snatched')",
+    freeleechStatusSelector:
+      "downloadElement.closest('td').querySelector('.freeleech_label, .personal_freeleech_label')",
+  };
 
-} else if ( primaryDomain == 'gazellegames' ) {
-    // ----------------------------------- GazelleGames -----------------------------------
-    // Browse | Bundles | Game
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "happyfappy") {
+  // ----------------------------------- HappyFappy -----------------------------------
+  // Browse | Collages | Details | Top10
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        seedingStatusSelector: "downloadElement.closest('td').querySelector('#color_seeding')",
-        snatchedStatusSelector: "downloadElement.closest('td').querySelector('#color_snatched')",
-        freeleechStatusSelector: "downloadElement.closest('td').querySelector('.freeleech_label, .personal_freeleech_label')",
-    }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
+    bunnyButtonFontSize: "125%",
+    bunnyButtonText: "🐰",
+    seedingStatusSelector: `downloadElement.querySelector('span.icon_disk_seed')`,
+    snatchedStatusSelector: `downloadElement.querySelector('span.icon_disk_snatched')`,
+    freeleechStatusSelector: `downloadElement.parentElement.querySelector('img[alt="Freeleech"]')`,
+  };
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  // This is a details page, so apply styling to certain bunnyButtons
+  if (pageURL.match(/torrents\.php\?id=\d+/)) {
+    trackerHandlingOptions.afterBunnyButtonCreation = function (elements) {
+      // The actions to take after the bunnyButtons have been created...
 
-} else if ( primaryDomain == 'happyfappy' ) {
-    // ----------------------------------- HappyFappy -----------------------------------
-    // Browse | Collages | Details | Top10
+      // The main downloadElement, which will be referenced to determine the current torrentStatus
+      let mainDownloadElement = document.querySelector(
+        `#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`,
+      );
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
-        bunnyButtonFontSize: '125%',
-        bunnyButtonText: '🐰',
-        seedingStatusSelector: `downloadElement.querySelector('span.icon_disk_seed')`,
-        snatchedStatusSelector: `downloadElement.querySelector('span.icon_disk_snatched')`,
-        freeleechStatusSelector: `downloadElement.parentElement.querySelector('img[alt="Freeleech"]')`,
-    }
-
-    // This is a details page, so apply styling to certain bunnyButtons
-    if ( pageURL.match(/torrents\.php\?id=\d+/) ) {
-
-        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
-            // The actions to take after the bunnyButtons have been created...
-
-            // The main downloadElement, which will be referenced to determine the current torrentStatus
-            let mainDownloadElement = document.querySelector(`#user-sidebar ${trackerHandlingOptions.downloadElementsSelector}`)
-
-            for ( let bunnyButton of elements.bunnyButtons ) {
-
-                // Style the bunnyButtons that match this CSS selector, giving them a bar-type look to more closely match the larger site buttons
-                if ( bunnyButton.matches('span.torrent_buttons a.quickie_bunnyButton, #user-sidebar > a.quickie_bunnyButton') ) {
-
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+      for (let bunnyButton of elements.bunnyButtons) {
+        // Style the bunnyButtons that match this CSS selector, giving them a bar-type look to more closely match the larger site buttons
+        if (
+          bunnyButton.matches(
+            "span.torrent_buttons a.quickie_bunnyButton, #user-sidebar > a.quickie_bunnyButton",
+          )
+        ) {
+          bunnyButton.setAttribute(
+            "style",
+            `${bunnyButton.style.cssText}
                         border-radius: 5px;
                         font-size: 125%;
                         font-weight: Bold;
                         margin: 0px 8px 0px 0px;
                         padding: 4px 10px 4px 10px;
-                        vertical-align: auto;`)
+                        vertical-align: auto;`,
+          );
 
-                    if ( bunnyButton.dataset.torrenturl.match(/&usetoken=1/) ) {
-                        // This is a Freeleech button
-                        bunnyButton.textContent = '💸 Freeleech'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
-                        bunnyButton.setAttribute('data-emojospecified', 'true')
+          if (bunnyButton.dataset.torrenturl.match(/&usetoken=1/)) {
+            // This is a Freeleech button
+            bunnyButton.textContent = "💸 Freeleech";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`,
+            );
+            bunnyButton.setAttribute("data-emojospecified", "true");
+          } else if (bunnyButton.dataset.torrenturl.match(/&usetoken=2/)) {
+            // This is a Doubleseed button
+            bunnyButton.textContent = "🌱 Doubleseed";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`,
+            );
+            bunnyButton.setAttribute("data-emojospecified", "true");
+          } else {
+            // This is a standard Download button
+            bunnyButton.textContent = "🐰 quiCKIE";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`,
+            );
 
-                    } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
-                        // This is a Doubleseed button
-                        bunnyButton.textContent = '🌱 Doubleseed'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
-                        bunnyButton.setAttribute('data-emojospecified', 'true')
-                    } else {
-                        // This is a standard Download button
-                        bunnyButton.textContent = '🐰 quiCKIE'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #B6D3E7 solid 1px; color: #B6D3E7; background: #153245;`)
-
-                        // Check for torrentStatus relative to the mainDownloadElement
-                        mainDownloadElement.parentElement.querySelector('img[alt="Freeleech"]') != null ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null // Freeleech
-                        mainDownloadElement.querySelector('span.icon_disk_snatched') != null ? bunnyButtonTorrentStatus(bunnyButton, 'snatched') : null // Snatched
-                        mainDownloadElement.querySelector('span.icon_disk_seed') != null ? bunnyButtonTorrentStatus(bunnyButton, 'seeding') : null // Seeding
-                    }
-
-                }
-
-            }
-
+            // Check for torrentStatus relative to the mainDownloadElement
+            mainDownloadElement.parentElement.querySelector(
+              'img[alt="Freeleech"]',
+            ) != null
+              ? bunnyButtonTorrentStatus(bunnyButton, "freeleech")
+              : null; // Freeleech
+            mainDownloadElement.querySelector("span.icon_disk_snatched") != null
+              ? bunnyButtonTorrentStatus(bunnyButton, "snatched")
+              : null; // Snatched
+            mainDownloadElement.querySelector("span.icon_disk_seed") != null
+              ? bunnyButtonTorrentStatus(bunnyButton, "seeding")
+              : null; // Seeding
+          }
         }
+      }
+    };
+  }
 
-    }
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "hdbits") {
+  // ----------------------------------- HDBits -----------------------------------
+  // Browse | Details | Film
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a.js-download[href^="/download.php/"]',
+    bunnyButtonFontSize: "140%",
+    bunnyButtonText: "🐰",
+    featuredStatusSelector: `downloadElement.closest('tr').className.match(/featured/i)`,
+    freeleechStatusSelector:
+      "downloadElement.closest('td').querySelector('a.fl')",
+  };
 
-} else if ( primaryDomain == 'hdbits' ) {
-    // ----------------------------------- HDBits -----------------------------------
-    // Browse | Details | Film
+  // This is a details page, so apply styling to the only bunnyButton
+  if (pageURL.match(/details\.php\?id=\d+/)) {
+    trackerHandlingOptions.seedingStatusSelector =
+      "downloadElement.closest('td').querySelector('span.tag_seeding')";
+    trackerHandlingOptions.snatchedStatusSelector =
+      "downloadElement.closest('td').querySelector('span.tag_completed')";
+    trackerHandlingOptions.freeleechStatusSelector =
+      "downloadElement.closest('td').querySelector('span.tag.freeleech')";
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a.js-download[href^="/download.php/"]',
-        bunnyButtonFontSize: '140%',
-        bunnyButtonText: '🐰',
-        featuredStatusSelector: `downloadElement.closest('tr').className.match(/featured/i)`,
-        freeleechStatusSelector: "downloadElement.closest('td').querySelector('a.fl')",
-    }
-
-    // This is a details page, so apply styling to the only bunnyButton
-    if ( pageURL.match(/details\.php\?id=\d+/) ) {
-
-        trackerHandlingOptions.seedingStatusSelector = "downloadElement.closest('td').querySelector('span.tag_seeding')"
-        trackerHandlingOptions.snatchedStatusSelector = "downloadElement.closest('td').querySelector('span.tag_completed')"
-        trackerHandlingOptions.freeleechStatusSelector = "downloadElement.closest('td').querySelector('span.tag.freeleech')"
-
-        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
+    trackerHandlingOptions.bunnyButtonText = "🐰 quiCKIE";
+    trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #153245;
             border-radius: 3px;
             border: #B6D3E7 solid 1px;
@@ -1228,170 +1251,165 @@ if ( primaryDomain == 'animebytes' ) {
             margin: 0px 2px 0px 8px;
             padding: 2px 5px 2px 5px;
             vertical-align: unset;
-        `
+        `;
+  }
 
-    }
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "iptorrents") {
+  // ----------------------------------- IP-Torrents -----------------------------------
+  // Browse | Details
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href*="download.php"]',
+    bunnyButtonFontSize: "160%",
+    bunnyButtonText: "🐰",
+  };
 
-} else if ( primaryDomain == 'iptorrents' ) {
-    // ----------------------------------- IP-Torrents -----------------------------------
-    // Browse | Details
+  if (pageURL.match(/(torrent|details)\.php\?id=\d+/)) {
+    // This is a details page, so apply styling to certain bunnyButtons
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="download.php"]',
-        bunnyButtonFontSize: '160%',
-        bunnyButtonText: '🐰',
-    }
+    trackerHandlingOptions.afterBunnyButtonCreation = function (elements) {
+      // The actions to take after the bunnyButtons have been created...
 
-    if ( pageURL.match(/(torrent|details)\.php\?id=\d+/) ) {
-        // This is a details page, so apply styling to certain bunnyButtons
-
-        trackerHandlingOptions.afterBunnyButtonCreation = function(elements) {
-            // The actions to take after the bunnyButtons have been created...
-
-            let firstBunnyButton = true
-            for ( bunnyButton of elements.bunnyButtons ) {
-
-                // The first bunnyButton, so apply special styling
-                if ( firstBunnyButton == true ) {
-                    bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}
+      let firstBunnyButton = true;
+      for (bunnyButton of elements.bunnyButtons) {
+        // The first bunnyButton, so apply special styling
+        if (firstBunnyButton == true) {
+          bunnyButton.setAttribute(
+            "style",
+            `${bunnyButton.style.cssText}
                         background: #153245;
                         border-radius: 999px;
                         border: #B6D3E7 solid 1px;
                         font-size: 500%;
                         margin: 5px 5px 5px 5px;
                         padding: 20px;
-                        vertical-align: middle;`)
+                        vertical-align: middle;`,
+          );
 
-                    // Check if this torrent is freeleech
-                    bunnyButton.closest('div.info').querySelector('span.free') ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null
+          // Check if this torrent is freeleech
+          bunnyButton.closest("div.info").querySelector("span.free")
+            ? bunnyButtonTorrentStatus(bunnyButton, "freeleech")
+            : null;
 
-                    firstBunnyButton = false
-                    continue
-
-                }
-
-                // Check is this torrent is freeleech
-                bunnyButton.closest('tr').querySelector('span.free') ? bunnyButtonTorrentStatus(bunnyButton, 'freeleech') : null
-
-            }
+          firstBunnyButton = false;
+          continue;
         }
 
-    } else {
-        // This is NOT a details page, so do a regular torrentStatus check
-        trackerHandlingOptions.freeleechStatusSelector = `downloadElement.closest('tr').querySelector('span.free')`
-    }
+        // Check is this torrent is freeleech
+        bunnyButton.closest("tr").querySelector("span.free")
+          ? bunnyButtonTorrentStatus(bunnyButton, "freeleech")
+          : null;
+      }
+    };
+  } else {
+    // This is NOT a details page, so do a regular torrentStatus check
+    trackerHandlingOptions.freeleechStatusSelector = `downloadElement.closest('tr').querySelector('span.free')`;
+  }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "itatorrents") {
+  // ----------------------------------- ItaTorrents -----------------------------------
+  // Browse | Details
 
-} else if ( primaryDomain == 'itatorrents' ) {
-    // ----------------------------------- ItaTorrents -----------------------------------
-    // Browse | Details
+  unit3dTrackerHandler('a[href*="/torrents/download/"]');
+} else if (primaryDomain == "jpopsuki") {
+  // ----------------------------------- JpopSuki -----------------------------------
+  // Album | Artist | Browse
 
-    unit3dTrackerHandler('a[href*="/torrents/download/"]')
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
 
-} else if ( primaryDomain == 'jpopsuki' ) {
-    // ----------------------------------- JpopSuki -----------------------------------
-    // Album | Artist | Browse
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "karagarga") {
+  // ----------------------------------- Karagarga -----------------------------------
+  // Browse | Details
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/down.php/"]',
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "kufirc") {
+  // ----------------------------------- Kufirc -----------------------------------
+  // Browse | Collages | Details | Top10
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    bunnyButtonFontSize: "140%",
+  };
+
+  pageURL.match(/top10/)
+    ? (trackerHandlingOptions.enablePaginationLooping = true)
+    : null;
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "lat-team") {
+  // ----------------------------------- Lat-Team -----------------------------------
+  // Bookmarks | Browse | Details | Homepage | Playlists
+
+  unit3dTrackerHandler('a[href^="https://lat-team.com/torrents/download"]');
+} else if (primaryDomain == "lst") {
+  // ----------------------------------- LST -----------------------------------
+  // Bookmarks | Browse | Details | Homepage | Playlists | MediaHub
+
+  unit3dTrackerHandler('a[href^="https://lst.gg/torrents/download"]');
+} else if (primaryDomain == "luminarr") {
+  // ----------------------------------- Luminarr -----------------------------------
+  // Bookmarks | Browse | Details | Playlists
+
+  unit3dTrackerHandler('a[href^="https://luminarr.me/torrents/download"]');
+} else if (primaryDomain == "materialize") {
+  // ----------------------------------- Materialize -----------------------------------
+  // Browse | Collages | Details | Top10
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href*="torrents.php?action=download&id="]',
+    forceTorrentFile: true,
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "mircrew-releases") {
+  // ----------------------------------- MirCrew -----------------------------------
+  // phpBB forum posts with public tracker magnet links
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="magnet:?xt=urn:btih:"]',
+    bunnyButtonFontSize: "240%",
+    elementsSeparator: " ",
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "morethantv") {
+  // ----------------------------------- MoreThanTV -----------------------------------
+  // Browse | Collages | Details | Top10
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
+    elementsSeparator: "||",
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "myanonamouse") {
+  // ----------------------------------- MyAnonaMouse -----------------------------------
+  // Browse | Details | Homepage | Top10
+
+  if (pageURL.match(/\/t\/\d+/)) {
+    // The book details page, which doesn't require a MutationObserver
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-
-} else if ( primaryDomain == 'karagarga' ) {
-    // ----------------------------------- Karagarga -----------------------------------
-    // Browse | Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/down.php/"]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'kufirc' ) {
-    // ----------------------------------- Kufirc -----------------------------------
-    // Browse | Collages | Details | Top10
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        bunnyButtonFontSize: "140%",
-    }
-
-    pageURL.match(/top10/) ? trackerHandlingOptions.enablePaginationLooping = true : null
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'lat-team' ) {
-    // ----------------------------------- Lat-Team -----------------------------------
-    // Bookmarks | Browse | Details | Homepage | Playlists
-
-    unit3dTrackerHandler('a[href^="https://lat-team.com/torrents/download"]')
-
-} else if ( primaryDomain == 'lst' ) {
-    // ----------------------------------- LST -----------------------------------
-    // Bookmarks | Browse | Details | Homepage | Playlists | MediaHub
-
-    unit3dTrackerHandler('a[href^="https://lst.gg/torrents/download"]')
-
-} else if ( primaryDomain == 'luminarr' ) {
-    // ----------------------------------- Luminarr -----------------------------------
-    // Bookmarks | Browse | Details | Playlists
-
-    unit3dTrackerHandler('a[href^="https://luminarr.me/torrents/download"]')
-
-} else if ( primaryDomain == 'materialize' ) {
-    // ----------------------------------- Materialize -----------------------------------
-    // Browse | Collages | Details | Top10
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="torrents.php?action=download&id="]',
-        forceTorrentFile: true,
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'mircrew-releases' ) {
-    // ----------------------------------- MirCrew -----------------------------------
-    // phpBB forum posts with public tracker magnet links
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="magnet:?xt=urn:btih:"]',
-        bunnyButtonFontSize: '240%',
-        elementsSeparator: ' ',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'morethantv' ) {
-    // ----------------------------------- MoreThanTV -----------------------------------
-    // Browse | Collages | Details | Top10
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/torrents.php?action=download&id="]',
-        elementsSeparator: '||',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'myanonamouse' ) {
-    // ----------------------------------- MyAnonaMouse -----------------------------------
-    // Browse | Details | Homepage | Top10
-
-    if ( pageURL.match(/\/t\/\d+/) ) {
-        // The book details page, which doesn't require a MutationObserver
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/tor/download.php/"][title*="Download"]',
-            seedingStatusSelector: "document.getElementById('DLhistory').textContent.match(/seeding/i)",
-            snatchedStatusSelector: "document.getElementById('DLhistory').textContent.match(/seeder/i)",
-            freeleechStatusSelector: "document.getElementById('ratio').textContent.match(/freeleech/i)",
-            bunnyButtonFontSize: '125%',
-            bunnyButtonText: '🐰 quiCKIE',
-            bunnyButtonAddStyles: `
+      downloadElementsSelector:
+        'a[href^="/tor/download.php/"][title*="Download"]',
+      seedingStatusSelector:
+        "document.getElementById('DLhistory').textContent.match(/seeding/i)",
+      snatchedStatusSelector:
+        "document.getElementById('DLhistory').textContent.match(/seeder/i)",
+      freeleechStatusSelector:
+        "document.getElementById('ratio').textContent.match(/freeleech/i)",
+      bunnyButtonFontSize: "125%",
+      bunnyButtonText: "🐰 quiCKIE",
+      bunnyButtonAddStyles: `
             background: #153245;
             border-radius: 8px;
             border: #B6D3E7 solid 1px;
@@ -1402,91 +1420,91 @@ if ( primaryDomain == 'animebytes' ) {
             vertical-align: middle;
             `,
 
-            afterBunnyButtonCreation: function(elements) {
-                // The actions to take after the bunnyButtons have been created...
+      afterBunnyButtonCreation: function (elements) {
+        // The actions to take after the bunnyButtons have been created...
 
-                for ( let bunnyButton of elements.bunnyButtons ) {
+        for (let bunnyButton of elements.bunnyButtons) {
+          // If DL buttons are hidden, change bunnyButton display to block so the buttons are properly spaced apart
+          SETTINGS.hideDL == true
+            ? (bunnyButton.style.display = "block")
+            : null;
 
-                    // If DL buttons are hidden, change bunnyButton display to block so the buttons are properly spaced apart
-                    SETTINGS.hideDL == true ? bunnyButton.style.display = 'block' : null
-
-                    // This is the Freeleech Wedge button, so apply different text\styles
-                    if ( bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ) {
-                        bunnyButton.textContent = '🧀 Freeleech'
-                        bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}background: #2E2400; border: #CBC29E solid 1px; color: #CBC29E;`)
-                    }
-
-                }
-            },
-
+          // This is the Freeleech Wedge button, so apply different text\styles
+          if (bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/)) {
+            bunnyButton.textContent = "🧀 Freeleech";
+            bunnyButton.setAttribute(
+              "style",
+              `${bunnyButton.style.cssText}background: #2E2400; border: #CBC29E solid 1px; color: #CBC29E;`,
+            );
+          }
         }
+      },
+    };
 
-        quickieTrackerHandler(trackerHandlingOptions)
-
-    } else {
-        // The Search or Homepage, both of which require a MutationObserver
-
-        let trackerHandlingOptions = {
-            downloadElementsSelector: 'a[href^="/tor/download.php/"][title*="Download"]',
-            bunnyButtonFontSize: '150%',
-            bunnyButtonText: '🐰',
-            seedingStatusSelector: "downloadElement.closest('tr').querySelector('div.browseAct').textContent.match(/Recently Seeding/i)",
-            snatchedStatusSelector: "downloadElement.closest('tr').querySelector('div.browseInact')",
-            freeleechStatusSelector: `downloadElement.closest('tr').querySelector('img[alt^="VIP"], img[alt="freeleech"], span[title="personal freeleech"]')`,
-            afterBunnyButtonCreation: function(elements) {
-                // The actions to take after the bunnyButtons have been created...
-
-                // Site download buttons are hidden, so change the Freelech Wedge button to cheese now that it won't conflict with the sites wedge button
-                if ( SETTINGS.hideDL ) {
-
-                    for ( let bunnyButton of elements.bunnyButtons ) {
-                        bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ? replaceEmojis(bunnyButton, '🧀') : null
-
-                    }
-
-                }
-
-            },
-
-        }
-
-        let observer = new MutationObserver( function(mutations) {
-            // Functionality to run when changes are detected to the target element
-
-           quickieTrackerHandler(trackerHandlingOptions)
-
-        })
-
-        let target = document.getElementById('ssr') // Search table
-        pageURL.match(/\/top10Tor\.php/) ? target = document.getElementById('top10') : null // Top 10
-
-        let config = { childList: true }
-        observer.observe(target, config)
-    }
-
-} else if ( primaryDomain == 'nebulance' ) {
-    // ----------------------------------- Nebulance -----------------------------------
-    // Bookmarks | Browse | Top 10
+    quickieTrackerHandler(trackerHandlingOptions);
+  } else {
+    // The Search or Homepage, both of which require a MutationObserver
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        bunnyButtonFontSize: '115%',
-    }
+      downloadElementsSelector:
+        'a[href^="/tor/download.php/"][title*="Download"]',
+      bunnyButtonFontSize: "150%",
+      bunnyButtonText: "🐰",
+      seedingStatusSelector:
+        "downloadElement.closest('tr').querySelector('div.browseAct').textContent.match(/Recently Seeding/i)",
+      snatchedStatusSelector:
+        "downloadElement.closest('tr').querySelector('div.browseInact')",
+      freeleechStatusSelector: `downloadElement.closest('tr').querySelector('img[alt^="VIP"], img[alt="freeleech"], span[title="personal freeleech"]')`,
+      afterBunnyButtonCreation: function (elements) {
+        // The actions to take after the bunnyButtons have been created...
 
-    quickieTrackerHandler(trackerHandlingOptions)
+        // Site download buttons are hidden, so change the Freelech Wedge button to cheese now that it won't conflict with the sites wedge button
+        if (SETTINGS.hideDL) {
+          for (let bunnyButton of elements.bunnyButtons) {
+            bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/)
+              ? replaceEmojis(bunnyButton, "🧀")
+              : null;
+          }
+        }
+      },
+    };
 
-} else if ( primaryDomain == 'nyaa' ) {
-    // ----------------------------------- Nyaa -----------------------------------
-    // Browse | Details
+    let observer = new MutationObserver(function (mutations) {
+      // Functionality to run when changes are detected to the target element
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/download/"][href$=".torrent"]',
-    }
+      quickieTrackerHandler(trackerHandlingOptions);
+    });
 
-    // The Details page, so apply styling to the single bunnyButton
-    if ( pageURL.match(/view\/\d+/) ) {
-        trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
+    let target = document.getElementById("ssr"); // Search table
+    pageURL.match(/\/top10Tor\.php/)
+      ? (target = document.getElementById("top10"))
+      : null; // Top 10
+
+    let config = { childList: true };
+    observer.observe(target, config);
+  }
+} else if (primaryDomain == "nebulance") {
+  // ----------------------------------- Nebulance -----------------------------------
+  // Bookmarks | Browse | Top 10
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    bunnyButtonFontSize: "115%",
+  };
+
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "nyaa") {
+  // ----------------------------------- Nyaa -----------------------------------
+  // Browse | Details
+
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/download/"][href$=".torrent"]',
+  };
+
+  // The Details page, so apply styling to the single bunnyButton
+  if (pageURL.match(/view\/\d+/)) {
+    trackerHandlingOptions.bunnyButtonText = "🐰 quiCKIE";
+    trackerHandlingOptions.bunnyButtonAddStyles = `
             background: #153245;
             border-radius: 3px;
             border: #B6D3E7 solid 1px;
@@ -1495,525 +1513,603 @@ if ( primaryDomain == 'animebytes' ) {
             margin: 0px 2px 0px 8px;
             padding: 2px 5px 2px 5px;
             vertical-align: top;
-            `
-    }
+            `;
+  }
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "oldtoons") {
+  // ----------------------------------- OldToons -----------------------------------
+  // Browse | Details | Homepage | Playlists | Similar
 
-} else if ( primaryDomain == 'oldtoons' ) {
-    // ----------------------------------- OldToons -----------------------------------
-    // Browse | Details | Homepage | Playlists | Similar
+  unit3dTrackerHandler('a[href^="https://oldtoons.world/torrents/download/"]');
+} else if (primaryDomain == "orpheus") {
+  // ----------------------------------- Orpheus -----------------------------------
+  // Album | Artist | Browse | Collages
 
-    unit3dTrackerHandler('a[href^="https://oldtoons.world/torrents/download/"]')
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    seedingStatusSelector:
+      "downloadElement.closest('td').querySelector('strong.tl_seeding')",
+    snatchedStatusSelector:
+      "downloadElement.closest('td').querySelector('strong.tl_snatched')",
+    freeleechStatusSelector:
+      "downloadElement.closest('td').querySelector('strong.tl_free')",
+  };
 
-} else if ( primaryDomain == 'orpheus' ) {
-    // ----------------------------------- Orpheus -----------------------------------
-    // Album | Artist | Browse | Collages
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "passthepopcorn") {
+  // ----------------------------------- PassThepopcorn -----------------------------------
+  // Film
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        seedingStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_seeding')",
-        snatchedStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_snatched')",
-        freeleechStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_free')"
-    }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    seedingStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Seeding"]')`,
+    snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Downloaded"]')`,
+    freeleechStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link .torrent-info__download-modifier--free')`,
+  };
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "portugas") {
+  // ----------------------------------- Portugas -----------------------------------
+  // Browse | Album | Artist
 
-} else if ( primaryDomain == 'passthepopcorn' ) {
-    // ----------------------------------- PassThepopcorn -----------------------------------
-    // Film
+  unit3dTrackerHandler('a[href^="https://portugas.org/torrents/download/"]');
+} else if (primaryDomain == "privatehd") {
+  // ----------------------------------- PrivateHD -----------------------------------
+  // Details
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        seedingStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Seeding"]')`,
-        snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Downloaded"]')`,
-        freeleechStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link .torrent-info__download-modifier--free')`
-    }
+  let trackerHandlingOptions = {
+    downloadElementsSelector:
+      'a[href^="https://privatehd.to/download/torrent/"]',
+  };
 
-    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "redacted") {
+  // ----------------------------------- Redacted -----------------------------------
+  // Album | Artist | Bookmarks | Browse | Collages | Top10
 
-} else if ( primaryDomain == 'portugas' ) {
-    // ----------------------------------- Portugas -----------------------------------
-    // Browse | Album | Artist
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    seedingStatusSelector:
+      "downloadElement.closest('tr').querySelector('.tl_notice').textContent.match(/seeding/i)",
+    snatchedStatusSelector:
+      "downloadElement.closest('tr').querySelector('.tl_snatched')",
+    freeleechStatusSelector:
+      "downloadElement.closest('tr').querySelector('.tl_free')",
+  };
 
-    unit3dTrackerHandler('a[href^="https://portugas.org/torrents/download/"]')
+  if (!pageURL.match(/collages?\.php\?id=\d+/)) {
+    // This is NOT a collage page, so it doesn't require a MutationObserver
 
-} else if ( primaryDomain == 'privatehd' ) {
-    // ----------------------------------- PrivateHD -----------------------------------
-    // Details
+    quickieTrackerHandler(trackerHandlingOptions);
+  } else {
+    // This is a collage page, which loads DL buttons after the '+' button of the album is clicked (pagination). Setup nested observation.
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://privatehd.to/download/torrent/"]',
-    }
+    trackerHandlingOptions.downloadElementsSelector = `#discog_table tbody ${trackerHandlingOptions.downloadElementsSelector}`;
 
-    quickieTrackerHandler(trackerHandlingOptions)
+    let pageObserver = new MutationObserver(async function (pageMutations) {
+      // The actions to take when new PAGES are loaded
 
-} else if ( primaryDomain == 'redacted' ) {
-    // ----------------------------------- Redacted -----------------------------------
-    // Album | Artist | Bookmarks | Browse | Collages | Top10
+      // DL elements are already present, meaning the user has the account setting 'Torrent group display' toggled to 'Open'
+      document.querySelector(trackerHandlingOptions.downloadElementsSelector)
+        ? quickieTrackerHandler(trackerHandlingOptions)
+        : null;
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        seedingStatusSelector: "downloadElement.closest('tr').querySelector('.tl_notice').textContent.match(/seeding/i)",
-        snatchedStatusSelector: "downloadElement.closest('tr').querySelector('.tl_snatched')",
-        freeleechStatusSelector: "downloadElement.closest('tr').querySelector('.tl_free')"
-    }
+      try {
+        // Wait until the <tbody> of a new page is loaded...
+        var tbodyElement = await waitForElement(
+          "#discog_table tbody",
+          document.getElementById("discog_table"),
+        );
+      } catch (error) {
+        // There was an error, likely this mutation did not contain the waitForElement query target
+        logger.debug(error);
+        return;
+      }
 
-    if ( !pageURL.match(/collages?\.php\?id=\d+/) ) {
-        // This is NOT a collage page, so it doesn't require a MutationObserver
+      try {
+        let tbodyObserver = new MutationObserver(function () {
+          // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
 
-        quickieTrackerHandler(trackerHandlingOptions)
+          quickieTrackerHandler(trackerHandlingOptions);
+        });
 
-    } else {
-        // This is a collage page, which loads DL buttons after the '+' button of the album is clicked (pagination). Setup nested observation.
+        tbodyObserver.observe(tbodyElement, { childList: true });
+      } catch (error) {
+        logger.debug(error);
+        return;
+      }
+    });
 
-        trackerHandlingOptions.downloadElementsSelector = `#discog_table tbody ${trackerHandlingOptions.downloadElementsSelector}`
+    let target = document.querySelector(
+      'div[data-component="TorrentCollageView"]',
+    );
+    let config = { childList: true };
 
-        let pageObserver = new MutationObserver( async function(pageMutations) {
-            // The actions to take when new PAGES are loaded
+    pageObserver.observe(target, config);
+  }
+} else if (primaryDomain == "retro-movies") {
+  // ----------------------------------- RetroMoviesClub -----------------------------------
+  // Browse | Details | Homepage | Playlists | Similar
 
-            // DL elements are already present, meaning the user has the account setting 'Torrent group display' toggled to 'Open'
-            document.querySelector(trackerHandlingOptions.downloadElementsSelector) ? quickieTrackerHandler(trackerHandlingOptions) : null
+  unit3dTrackerHandler(
+    'a[href^="https://retro-movies.club/torrents/download/"]',
+  );
+} else if (primaryDomain == "secret-cinema") {
+  // ----------------------------------- Secret-Cinema -----------------------------------
+  // Artist (no DL links as of script creation) | Browse | Movie
 
-            try {
-                // Wait until the <tbody> of a new page is loaded...
-                var tbodyElement = await waitForElement('#discog_table tbody', document.getElementById('discog_table'))
-            } catch (error) {
-                // There was an error, likely this mutation did not contain the waitForElement query target
-                logger.debug(error)
-                return
-            }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
 
-            try {
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "sportscult") {
+  // ----------------------------------- SportsCult -----------------------------------
+  // Browse | Details
 
-                let tbodyObserver = new MutationObserver( function() {
-                    // The actions to take when the '+' button of a <tr> is clicked, which will load the DL buttons onto the page
+  let trackerHandlingOptions = {
+    downloadElementsSelector:
+      'a[href^="download.php?id="], a[href^="https://sportscult.org/download.php?id="]',
+    bunnyButtonFontSize: "140%",
+    elementsSeparator: " ",
+  };
 
-                    quickieTrackerHandler(trackerHandlingOptions)
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "thegeeks") {
+  // ----------------------------------- TheGeeks -----------------------------------
+  // Browse | Details
 
-                })
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="download.php/"]',
+  };
 
-                tbodyObserver.observe(tbodyElement, { childList: true } )
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "torrentleech") {
+  // ----------------------------------- TorrentLeech -----------------------------------
+  // Browse | Top
 
-            } catch (error) {
-                logger.debug(error)
-                return
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="/download/"]',
+    bunnyButtonFontSize: "200%",
+  };
 
-            }
+  if (pageURL.match(/(browse|top)/)) {
+    // The Browse and Top pages, both of which have pagination
+    trackerHandlingOptions.bunnyButtonParentPlacement = true;
+    trackerHandlingOptions.enablePaginationLooping = true;
+  }
 
-        })
+  quickieTrackerHandler(trackerHandlingOptions);
+} else if (primaryDomain == "tv-vault") {
+  // ----------------------------------- TV-Vault -----------------------------------
+  // Series
 
-        let target = document.querySelector('div[data-component="TorrentCollageView"]')
-        let config = { childList: true }
+  let trackerHandlingOptions = {
+    downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+  };
 
-        pageObserver.observe(target, config)
-
-    }
-
-} else if ( primaryDomain == 'retro-movies' ) {
-    // ----------------------------------- RetroMoviesClub -----------------------------------
-    // Browse | Details | Homepage | Playlists | Similar
-
-    unit3dTrackerHandler('a[href^="https://retro-movies.club/torrents/download/"]')
-
-} else if ( primaryDomain == 'secret-cinema' ) {
-    // ----------------------------------- Secret-Cinema -----------------------------------
-    // Artist (no DL links as of script creation) | Browse | Movie
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'sportscult' ) {
-    // ----------------------------------- SportsCult -----------------------------------
-    // Browse | Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="download.php?id="], a[href^="https://sportscult.org/download.php?id="]',
-        bunnyButtonFontSize: '140%',
-        elementsSeparator: ' ',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'thegeeks' ) {
-    // ----------------------------------- TheGeeks -----------------------------------
-    // Browse | Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="download.php/"]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'torrentleech' ) {
-    // ----------------------------------- TorrentLeech -----------------------------------
-    // Browse | Top
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/download/"]',
-        bunnyButtonFontSize: '200%',
-    }
-
-    if ( pageURL.match(/(browse|top)/) ) {
-        // The Browse and Top pages, both of which have pagination
-        trackerHandlingOptions.bunnyButtonParentPlacement = true
-        trackerHandlingOptions.enablePaginationLooping = true
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == 'tv-vault' ) {
-    // ----------------------------------- TV-Vault -----------------------------------
-    // Series
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
+  quickieTrackerHandler(trackerHandlingOptions);
 } else {
-    // ----------------------------------- NONE -----------------------------------
+  // ----------------------------------- NONE -----------------------------------
 
-    console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was no definied trackerHandler block for processing the current primaryDomain: ${primaryDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you are using the correct primaryDomain in the 'else if' chain from step #3 of the 'Adding a New Tracker' guide`)
+  console.error(
+    `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThere was no definied trackerHandler block for processing the current primaryDomain: ${primaryDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you are using the correct primaryDomain in the 'else if' chain from step #3 of the 'Adding a New Tracker' guide`,
+  );
 
-    throw new Error('Aborting further quiCKIE execution')
-
+  throw new Error("Aborting further quiCKIE execution");
 }
-
 
 // =================================== THIRD-PARTY INTEGRATIONS ======================================
 
-if ( SETTINGS.thirdPartyScan != 'Off' ) {
-    // After a brief delay, query the document for any thirdParty '[data-quickie_torrenturl]' elements for which a bunnyButton should be created
-    SETTINGS.thirdPartyDelay < 100 ? SETTINGS.thirdPartyDelay = 200 : null
-    scanForThirdPartyTorrentURLS(SETTINGS.thirdPartyDelay)
+if (SETTINGS.thirdPartyScan != "Off") {
+  // After a brief delay, query the document for any thirdParty '[data-quickie_torrenturl]' elements for which a bunnyButton should be created
+  SETTINGS.thirdPartyDelay < 100 ? (SETTINGS.thirdPartyDelay = 200) : null;
+  scanForThirdPartyTorrentURLS(SETTINGS.thirdPartyDelay);
 }
 
 // =================================== SCRIPT FUNCTIONS ======================================
 
 function createGMConfigSettingsPanel(trackerDomain) {
-    // Generate and initialize the GM_config settings panel. It has been done in this function for code cleanliness.
+  // Generate and initialize the GM_config settings panel. It has been done in this function for code cleanliness.
 
-    // These array\objects will later allow us to easily cross-reference the settingsPanelTrackers data
-    let allPrimaryDomains = []
-    let allTrackerNames = []
-    let primaryDomainToTrackerName = {}
-    let primaryDomainToHomepage = {}
-    let trackerNameToPrimaryDomain = {}
+  // These array\objects will later allow us to easily cross-reference the settingsPanelTrackers data
+  let allPrimaryDomains = [];
+  let allTrackerNames = [];
+  let primaryDomainToTrackerName = {};
+  let primaryDomainToHomepage = {};
+  let trackerNameToPrimaryDomain = {};
 
-    let primaryDomain, registeredTracker = false
-    for ( let tracker of settingsPanelTrackers ) {
-        // Check the current trackerDomain against all the registered trackers to retrieve the trackers primaryDomain
+  let primaryDomain,
+    registeredTracker = false;
+  for (let tracker of settingsPanelTrackers) {
+    // Check the current trackerDomain against all the registered trackers to retrieve the trackers primaryDomain
 
-        let trackerName = tracker.trackerName
-        let settingsId = tracker.primaryDomain.toLowerCase().trim()
-        let otherDomains = tracker.otherDomains
+    let trackerName = tracker.trackerName;
+    let settingsId = tracker.primaryDomain.toLowerCase().trim();
+    let otherDomains = tracker.otherDomains;
 
-        // Populate the array\objects that will be returned and made global
-        allPrimaryDomains.push(settingsId)
-        allTrackerNames.push(trackerName.toLowerCase())
-        primaryDomainToTrackerName[settingsId] = trackerName
-        primaryDomainToHomepage[settingsId] = tracker.homepageURL
-        trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId
+    // Populate the array\objects that will be returned and made global
+    allPrimaryDomains.push(settingsId);
+    allTrackerNames.push(trackerName.toLowerCase());
+    primaryDomainToTrackerName[settingsId] = trackerName;
+    primaryDomainToHomepage[settingsId] = tracker.homepageURL;
+    trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId;
 
-        if ( settingsId == trackerDomain ) {
-            // This trackerDomain matches the primaryDomain
-            primaryDomain = settingsId
-            registeredTracker = true
-
-        } else if ( otherDomains != undefined && otherDomains.includes(trackerDomain) ) {
-            // This trackerDomain did not match the primaryDomain, but there are otherDomains and a match was found
-            primaryDomain = settingsId
-            registeredTracker = true
-
-        }
-
+    if (settingsId == trackerDomain) {
+      // This trackerDomain matches the primaryDomain
+      primaryDomain = settingsId;
+      registeredTracker = true;
+    } else if (
+      otherDomains != undefined &&
+      otherDomains.includes(trackerDomain)
+    ) {
+      // This trackerDomain did not match the primaryDomain, but there are otherDomains and a match was found
+      primaryDomain = settingsId;
+      registeredTracker = true;
     }
+  }
 
-    logger.info(`primaryDomain: ${primaryDomain}`)
+  logger.info(`primaryDomain: ${primaryDomain}`);
 
-    // Verify that the trackerDomain is registered as an entry in the settingsPanelTrackers object, if not then abort all further exectuion of this script
-    if ( registeredTracker == false ) { throw `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site if not registered to a tracker supported by quiCKIE: ${trackerDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you have included this trackerDomain to a tracker in Step #2 of the 'Adding a New Tracker' guide` }
+  // Verify that the trackerDomain is registered as an entry in the settingsPanelTrackers object, if not then abort all further exectuion of this script
+  if (registeredTracker == false) {
+    throw `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site if not registered to a tracker supported by quiCKIE: ${trackerDomain}\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, verify that you have included this trackerDomain to a tracker in Step #2 of the 'Adding a New Tracker' guide`;
+  }
 
-    // Determine the saved number of preset fields that should be generated in the settings panel and presets-menu
-    let presetCount
-    if ( GM_getValue('quiCKIE_config') !== undefined ) {
-        // Parse the existing GM_config() settings object
-        let quiCKIESettingsObject = JSON.parse(GM_getValue('quiCKIE_config'))
+  // Determine the saved number of preset fields that should be generated in the settings panel and presets-menu
+  let presetCount;
+  if (GM_getValue("quiCKIE_config") !== undefined) {
+    // Parse the existing GM_config() settings object
+    let quiCKIESettingsObject = JSON.parse(GM_getValue("quiCKIE_config"));
 
-        // Get the previously specified presetCount to determine how many preset rows should be generated
-        presetCount = quiCKIESettingsObject['presetCount']
+    // Get the previously specified presetCount to determine how many preset rows should be generated
+    presetCount = quiCKIESettingsObject["presetCount"];
+  }
 
-    }
+  // New installs will not have a presetCount, so default to 3
+  presetCount == undefined ? (presetCount = 3) : null;
 
-    // New installs will not have a presetCount, so default to 3
-    presetCount == undefined ? presetCount = 3 : null
+  logger.info(`presetCount: ${presetCount}`);
 
-    logger.info(`presetCount: ${presetCount}`)
+  // @trackerFieldGeneration
+  // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in
+  const trackerFieldSuffixes = [
+    "category",
+    "savePath",
+    "tags",
+    "ratioLimit",
+    "seedTime",
+    "dlLimit",
+    "upLimit",
+    "instance",
+    "paginationLoop",
+    "leftClick",
+    "thirdPartyScan",
+    "hideDL",
+    "startPaused",
+    "subFolder",
+    "seqPieces",
+    "autoTMM",
+    "skipHash",
+  ];
+  let gmConfigTrackerFields = {};
+  for (let primaryDomain of allPrimaryDomains) {
+    // For each tracker (primaryDomain) in the settingsPanelTrackers object, generate the fields that will be used by GM_config() to save\load settings for that primaryDomain
 
-    // @trackerFieldGeneration
-    // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in
-    const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'paginationLoop', 'leftClick', 'thirdPartyScan', 'hideDL', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
-    let gmConfigTrackerFields = {}
-    for ( let primaryDomain of allPrimaryDomains ) {
-        // For each tracker (primaryDomain) in the settingsPanelTrackers object, generate the fields that will be used by GM_config() to save\load settings for that primaryDomain
+    // --- GM_config() Fields ---
+    let generatedTrackerFields = {
+      [`${primaryDomain}-${trackerFieldSuffixes[0]}`]: {
+        label: primaryDomainToTrackerName[primaryDomain],
+        type: "text",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[1]}`]: {
+        type: "text",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[2]}`]: {
+        type: "text",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[3]}`]: {
+        label: "Ratio Limit",
+        type: "float",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[4]}`]: {
+        label: "Seed Time",
+        type: "int",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[5]}`]: {
+        label: "Download Limit",
+        type: "int",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[6]}`]: {
+        label: "Upload Limit",
+        type: "int",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[7]}`]: {
+        label: "Instance",
+        type: "int",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[8]}`]: {
+        label: "Pagination Loop",
+        type: "int",
+        default: "",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[9]}`]: {
+        type: "select",
+        options: [
+          "Global",
+          "Tracker",
+          "Settings",
+          "Client",
+          "TorrentFile",
+          "Nothing",
+        ],
+        default: "Global",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[10]}`]: {
+        type: "select",
+        options: ["Off", "On", "On + 🌎"],
+        default: "Off",
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[11]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[12]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[13]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[14]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[15]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`${primaryDomain}-${trackerFieldSuffixes[16]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+    };
 
-        // --- GM_config() Fields ---
-        let generatedTrackerFields = {
-            [`${primaryDomain}-${trackerFieldSuffixes[0]}`]: {
-                'label': primaryDomainToTrackerName[primaryDomain],
-                'type': 'text'
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[1]}`]: {
-                'type': 'text'
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[2]}`]: {
-                'type': 'text'
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[3]}`]: {
-                'label': 'Ratio Limit',
-                'type': 'float',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[4]}`]: {
-                'label': 'Seed Time',
-                'type': 'int',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[5]}`]: {
-                'label': 'Download Limit',
-                'type': 'int',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[6]}`]: {
-                'label': 'Upload Limit',
-                'type': 'int',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[7]}`]: {
-                'label': 'Instance',
-                'type': 'int',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[8]}`]: {
-                'label': 'Pagination Loop',
-                'type': 'int',
-                'default': ''
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[9]}`]: {
-                'type': 'select',
-                'options': ['Global', 'Tracker', 'Settings', 'Client', 'TorrentFile', 'Nothing'],
-                'default': 'Global',
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[10]}`]: {
-                'type': 'select',
-                'options': ['Off', 'On', 'On + 🌎'],
-                'default': 'Off',
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[11]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[12]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[13]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[14]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[15]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`${primaryDomain}-${trackerFieldSuffixes[16]}`]: {
-                'type': 'checkbox',
-                'default': false
-            }
+    gmConfigTrackerFields = {
+      ...gmConfigTrackerFields,
+      ...generatedTrackerFields,
+    };
+  }
 
-        }
+  // @presetFieldGeneration
+  const presetFieldSuffixes = [
+    "preset",
+    "presetTrackers",
+    "category",
+    "savePath",
+    "tags",
+    "ratioLimit",
+    "seedTime",
+    "dlLimit",
+    "upLimit",
+    "instance",
+    "startPaused",
+    "subFolder",
+    "seqPieces",
+    "autoTMM",
+    "skipHash",
+  ];
+  let gmConfigPresetsFields = {};
+  for (let i = 1; i <= presetCount; i++) {
+    // --- GM_config() Fields ---
+    let genereatedPresetFields = {
+      [`preset-${i}-${presetFieldSuffixes[0]}`]: {
+        type: "text",
+      },
+      [`preset-${i}-${presetFieldSuffixes[1]}`]: {
+        type: "text",
+      },
+      [`preset-${i}-${presetFieldSuffixes[2]}`]: {
+        type: "text",
+      },
+      [`preset-${i}-${presetFieldSuffixes[3]}`]: {
+        type: "text",
+      },
+      [`preset-${i}-${presetFieldSuffixes[4]}`]: {
+        type: "text",
+      },
+      [`preset-${i}-${presetFieldSuffixes[5]}`]: {
+        label: "Ratio Limit",
+        type: "float",
+        default: "",
+      },
+      [`preset-${i}-${presetFieldSuffixes[6]}`]: {
+        label: "Seed Time",
+        type: "int",
+        default: "",
+      },
+      [`preset-${i}-${presetFieldSuffixes[7]}`]: {
+        label: "Download Limit",
+        type: "int",
+        default: "",
+      },
+      [`preset-${i}-${presetFieldSuffixes[8]}`]: {
+        label: "Upload Limit",
+        type: "int",
+        default: "",
+      },
+      [`preset-${i}-${presetFieldSuffixes[9]}`]: {
+        label: "Instance",
+        type: "int",
+        default: "",
+      },
+      [`preset-${i}-${presetFieldSuffixes[10]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`preset-${i}-${presetFieldSuffixes[11]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`preset-${i}-${presetFieldSuffixes[12]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`preset-${i}-${presetFieldSuffixes[13]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+      [`preset-${i}-${presetFieldSuffixes[14]}`]: {
+        type: "checkbox",
+        default: false,
+      },
+    };
 
-        gmConfigTrackerFields = {...gmConfigTrackerFields, ...generatedTrackerFields}
+    gmConfigPresetsFields = {
+      ...gmConfigPresetsFields,
+      ...genereatedPresetFields,
+    };
+  }
 
-    }
+  const panelTextData = {
+    // The data that will be used as the '.textContent' and '.title' in the settings panel's elements. The key names are the '.toLowerCase()' of the items in the trackerFieldSuffixes array and the items in the presetFieldSuffixes array.
 
-    // @presetFieldGeneration
-    const presetFieldSuffixes = ['preset', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
-    let gmConfigPresetsFields = {}
-    for (let i = 1; i <= presetCount; i++) {
-        // --- GM_config() Fields ---
-        let genereatedPresetFields = {
-            [`preset-${i}-${presetFieldSuffixes[0]}`]: {
-                'type': 'text'
-            },
-            [`preset-${i}-${presetFieldSuffixes[1]}`]: {
-                'type': 'text'
-            },
-            [`preset-${i}-${presetFieldSuffixes[2]}`]: {
-                'type': 'text'
-            },
-            [`preset-${i}-${presetFieldSuffixes[3]}`]: {
-                'type': 'text'
-            },
-            [`preset-${i}-${presetFieldSuffixes[4]}`]: {
-                'type': 'text',
-            },
-            [`preset-${i}-${presetFieldSuffixes[5]}`]: {
-                'label': 'Ratio Limit',
-                'type': 'float',
-                'default': ''
-            },
-            [`preset-${i}-${presetFieldSuffixes[6]}`]: {
-                'label': 'Seed Time',
-                'type': 'int',
-                'default': ''
-            },
-            [`preset-${i}-${presetFieldSuffixes[7]}`]: {
-                'label': 'Download Limit',
-                'type': 'int',
-                'default': ''
-            },
-            [`preset-${i}-${presetFieldSuffixes[8]}`]: {
-                'label': 'Upload Limit',
-                'type': 'int',
-                'default': ''
-            },
-            [`preset-${i}-${presetFieldSuffixes[9]}`]: {
-                'label': 'Instance',
-                'type': 'int',
-                'default': ''
-            },
-            [`preset-${i}-${presetFieldSuffixes[10]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`preset-${i}-${presetFieldSuffixes[11]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`preset-${i}-${presetFieldSuffixes[12]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`preset-${i}-${presetFieldSuffixes[13]}`]: {
-                'type': 'checkbox',
-                'default': false
-            },
-            [`preset-${i}-${presetFieldSuffixes[14]}`]: {
-                'type': 'checkbox',
-                'default': false
-            }
-        }
+    globalsTitles: {
+      torrentClient:
+        "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
+      presetCount:
+        "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
+      globalLeftClickAction:
+        "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
+      globalMiddleClickAction:
+        "─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton",
+      bunnyButtonPlacement:
+        "─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons",
+      thirdPartyDelay:
+        "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\nℹ️ This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
+      hiddenTrackers:
+        "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nHover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\nℹ️ This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
+      globalForcedTorrentFile:
+        "─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\nℹ️ Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser",
 
-            gmConfigPresetsFields = {...gmConfigPresetsFields, ...genereatedPresetFields}
+      quiURL:
+        "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nℹ️ Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\nExample: http://localhost:7476/qui/instances/1\n\n────────────────\n\nSeedbox\\Swizzin users might try...\n\nhttps://username:password@seedboxDomain.com/qui/instances/1",
+      quiApiKey:
+        "─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created by qui\n\nFrom the qui interface, you can generate a ApiKey by going to...\n\nSettings > API Keys > Create API Key",
 
-    }
+      qBitTorrentURL:
+        "─── 🔗 qBitTorrentURL 🔗 ───\n\nThe full URL to a running qBitTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
+      qBitTorrentUsername:
+        "─── 🔑 Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface",
+      qBitTorrentPassword:
+        "─── 🔑 Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface",
 
-    const panelTextData = {
-        // The data that will be used as the '.textContent' and '.title' in the settings panel's elements. The key names are the '.toLowerCase()' of the items in the trackerFieldSuffixes array and the items in the presetFieldSuffixes array.
+      transmissionURL:
+        "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091\n\nℹ️ If Transmission is not using the default rpc, then specify the complete rpc url\n\nExample: http://localhost:9091/your/custom/rpc",
+      transmissionUsername:
+        "─── 🔑 Username 🔑 ───\n\nThe username for logging into Transmission through the web interface",
+      transmissionPassword:
+        "─── 🔑 Password 🔑 ───\n\nThe password for logging into Transmission through the web interface",
 
-        'globalsTitles': {
-            'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
-            'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
-            'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
-            'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
-            'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
-            'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\nℹ️ This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
-            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nHover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\nℹ️ This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
-            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\nℹ️ Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
+      delugeURL:
+        "─── 🔗 DelugeURL 🔗 ───\n\nThe full URL to a running Deluge service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8112",
+      delugePassword:
+        "─── 🔑 Password 🔑 ───\n\nThe password for logging into Deluge through the web interface",
 
+      ruTorrentURL:
+        "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
+      ruTorrentUsername:
+        "─── 🔑 Username 🔑 ───\n\nThe username for logging into ruTorrent through the web interface",
+      ruTorrentPassword:
+        "─── 🔑 Password 🔑 ───\n\nThe password for logging into ruTorrent through the web interface",
+    },
 
-            'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nℹ️ Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\nExample: http://localhost:7476/qui/instances/1\n\n────────────────\n\nSeedbox\\Swizzin users might try...\n\nhttps://username:password@seedboxDomain.com/qui/instances/1",
-            'quiApiKey': '─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created by qui\n\nFrom the qui interface, you can generate a ApiKey by going to...\n\nSettings > API Keys > Create API Key',
+    columnText: {
+      tracker: "🌎 Tracker",
 
-            'qBitTorrentURL': "─── 🔗 qBitTorrentURL 🔗 ───\n\nThe full URL to a running qBitTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
-            'qBitTorrentUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface',
-            'qBitTorrentPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface',
+      preset: "🚀 Name",
+      presettrackers: "👀 Trackers",
 
-            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091\n\nℹ️ If Transmission is not using the default rpc, then specify the complete rpc url\n\nExample: http://localhost:9091/your/custom/rpc",
-            'transmissionUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into Transmission through the web interface',
-            'transmissionPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into Transmission through the web interface',
+      category: "🗃️ Category",
+      savepath: "💾 SavePath",
+      tags: "🏷️ Tags",
+      ratiolimit: "⚖️",
+      seedtime: "🌱",
+      dllimit: "⬇️",
+      uplimit: "⬆️",
+      instance: "🎯",
+      paginationloop: "🔁",
+      leftclick: "🖱️",
+      thirdpartyscan: "🤝",
+      hidedl: "🙈",
+      startpaused: "⏸️",
+      subfolder: "📁",
+      seqpieces: "🧩",
+      autotmm: "🤖",
+      skiphash: "🛡️",
+    },
 
-            'delugeURL': "─── 🔗 DelugeURL 🔗 ───\n\nThe full URL to a running Deluge service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8112",
-            'delugePassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into Deluge through the web interface',
+    columnTitles: {
+      tracker: `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
 
-            'ruTorrentURL': "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
-            'ruTorrentUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into ruTorrent through the web interface',
-            'ruTorrentPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into ruTorrent through the web interface',
-        },
+      preset:
+        "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\n🎪 Special Entries: Naming your preset after one of these items will display a special menu entry...\nSettings, TorrentFile, Client, LeftClickAll, MiddleClickAll, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
+      presettrackers:
+        "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
 
-        'columnText': {
-            'tracker': '🌎 Tracker',
+      category:
+        "─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents",
+      savepath:
+        "─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nℹ️ Specifying a save path implicitly disables ATMM (Auto Torrent Management Mode)\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path",
+      tags: "─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private",
+      ratiolimit:
+        "─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete",
+      seedtime:
+        "─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.",
+      dllimit:
+        "─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents",
+      uplimit:
+        "─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents",
+      instance:
+        "─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number",
+      paginationloop:
+        "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser does not do a full refresh between pages\\searches. Since the page is not actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For officially supported trackers, pagination should hopefully already be handled and thus make this setting unnecessary\n\n⚠️ You should NOT enable this setting unless you are on a site that actually has pagination and it isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
+      thirdpartyscan:
+        "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nDevelopers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
+      leftclick:
+        "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
+      hidedl:
+        "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
+      startpaused:
+        "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Performing a 'Shift-Ctrl-Click' on a BunnyButton or Preset will temporarily override those settings so that Start Paused is enabled",
+      subfolder:
+        "─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This has no affect on torrents that are already in their own folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b",
+      seqpieces:
+        "─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\nThis behaviour results in the files being downloaded in-order and also being capable of playback while downloading\n\n⚠️ This may impact download speeds",
+      autotmm:
+        "─── 🤖 Auto Torrent Management 🤖 ───\n\nFor these torrents, enable Auto Torrent Management\n\n⚠️ This will download the torrent to a folder based on the '🗃️ Category', ignoring whatever is specified in the '💾 Save Path'",
+      skiphash:
+        "─── 🛡️ Skip Hash Check 🛡️ ───\n\nWhen Adding torrents, skip the initial hash check\n\n⚠️ Hash checks are used to verify file integrity and prevent corrupted data, although this check may take a long time with larger torrents. Know what you are doing before enabling this.",
+    },
+  };
 
-            'preset': '🚀 Name',
-            'presettrackers': '👀 Trackers',
+  // The element the settings panel will be appended to, so that it's not a floating iFrame and can be inspected.
+  let configFrame = document.createElement("div");
+  document.body.appendChild(configFrame);
 
-            'category': '🗃️ Category',
-            'savepath': '💾 SavePath',
-            'tags': '🏷️ Tags',
-            'ratiolimit': '⚖️',
-            'seedtime': '🌱',
-            'dllimit': '⬇️',
-            'uplimit': '⬆️',
-            'instance': '🎯',
-            'paginationloop': '🔁',
-            'leftclick': '🖱️',
-            'thirdpartyscan': '🤝',
-            'hidedl': '🙈',
-            'startpaused': '⏸️',
-            'subfolder': '📁',
-            'seqpieces': '🧩',
-            'autotmm': '🤖',
-            'skiphash': '🛡️',
-
-        },
-
-        'columnTitles': {
-            'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ There is currently ${allPrimaryDomains.length} Supported Trackers!`,
-
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\n🎪 Special Entries: Naming your preset after one of these items will display a special menu entry...\nSettings, TorrentFile, Client, LeftClickAll, MiddleClickAll, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
-            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
-
-            'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nℹ️ Specifying a save path implicitly disables ATMM (Auto Torrent Management Mode)\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
-            'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
-            'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete',
-            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
-            'dllimit': '─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents',
-            'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
-            'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
-            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser does not do a full refresh between pages\\searches. Since the page is not actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For officially supported trackers, pagination should hopefully already be handled and thus make this setting unnecessary\n\n⚠️ You should NOT enable this setting unless you are on a site that actually has pagination and it isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
-            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nDevelopers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
-            'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
-            'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
-            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Performing a 'Shift-Ctrl-Click' on a BunnyButton or Preset will temporarily override those settings so that Start Paused is enabled",
-            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This has no affect on torrents that are already in their own folder\n\nExample: audioBookFile.m4b --> audioBookFile/audioBookFile.m4b',
-            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\nThis behaviour results in the files being downloaded in-order and also being capable of playback while downloading\n\n⚠️ This may impact download speeds',
-            'autotmm': "─── 🤖 Auto Torrent Management 🤖 ───\n\nFor these torrents, enable Auto Torrent Management\n\n⚠️ This will download the torrent to a folder based on the '🗃️ Category', ignoring whatever is specified in the '💾 Save Path'",
-            'skiphash': '─── 🛡️ Skip Hash Check 🛡️ ───\n\nWhen Adding torrents, skip the initial hash check\n\n⚠️ Hash checks are used to verify file integrity and prevent corrupted data, although this check may take a long time with larger torrents. Know what you are doing before enabling this.',
-
-        }
-
-    }
-
-    // The element the settings panel will be appended to, so that it's not a floating iFrame and can be inspected.
-    let configFrame = document.createElement('div')
-    document.body.appendChild(configFrame)
-
-    let reloadWindow = false
-    // The quiCKIE settings panel, which can then be displayed by calling 'GM_config.open()'
-    GM_config.init({
-        'id': 'quiCKIE_config',
-        'frame': configFrame,
-        'title': `
+  let reloadWindow = false;
+  // The quiCKIE settings panel, which can then be displayed by calling 'GM_config.open()'
+  GM_config.init({
+    id: "quiCKIE_config",
+    frame: configFrame,
+    title: `
             <div>
                 <div style="padding: 30px 0px 0px 0px"></div>
                 🐰
@@ -2025,1433 +2121,1805 @@ function createGMConfigSettingsPanel(trackerDomain) {
             </div>
         `,
 
-        'fields': {...{
-            // Merge these two field objects so that GM_config reads them properly
+    fields: {
+      ...{
+        // Merge these two field objects so that GM_config reads them properly
 
-            'presetCount': {
-                'label': '🚀 Presets:',
-                'type': 'int',
-                'default': 3,
-            },
-            'globalLeftClickAction': {
-                'label': '🖱️ Left-Click \\ Tap:',
-                'type': 'select',
-                'options': ['Tracker', 'Settings', 'Client', 'TorrentFile', 'Nothing'],
-                'default': 'Tracker',
-            },
-            'globalMiddleClickAction': {
-                'label': '🖱️ Middle-Click:',
-                'type': 'select',
-                'options': ['Tracker', 'Settings', 'Client', 'TorrentFile', 'Nothing'],
-                'default': 'Client',
-            },
-            'bunnyButtonPlacement': {
-                'label': '↔️ Placement:',
-                'type': 'select',
-                'options': ['After', 'Before'],
-                'default': 'After',
-            },
-            'globalForcedTorrentFile': {
-                'label': '🧲 Torrent File:',
-                'type': 'checkbox',
-                'default': false
-            },
-            'hiddenTrackers': {
-                'label': '🙈 Hidden Trackers:',
-                'type': 'text',
-                'default': '',
-            },
-            'thirdPartyDelay': {
-                'label': '🤝 Delay:',
-                'type': 'int',
-                'default': 2000,
-            },
-            'torrentClient': {
-                'label': '🖥️ Client:',
-                'type': 'select',
-                'options': ['qui', 'qBitTorrent', 'Transmission', 'Deluge', 'ruTorrent 🛠️'],
-                'default': 'qui',
-            },
-            'settingsImport' : {
-                'label': 'Import Settings',
-                'type': 'button',
-                'size': 25,
-                'click': function() {
-                    // Prompt the user to select a file for which to import GM_config settings
+        presetCount: {
+          label: "🚀 Presets:",
+          type: "int",
+          default: 3,
+        },
+        globalLeftClickAction: {
+          label: "🖱️ Left-Click \\ Tap:",
+          type: "select",
+          options: ["Tracker", "Settings", "Client", "TorrentFile", "Nothing"],
+          default: "Tracker",
+        },
+        globalMiddleClickAction: {
+          label: "🖱️ Middle-Click:",
+          type: "select",
+          options: ["Tracker", "Settings", "Client", "TorrentFile", "Nothing"],
+          default: "Client",
+        },
+        bunnyButtonPlacement: {
+          label: "↔️ Placement:",
+          type: "select",
+          options: ["After", "Before"],
+          default: "After",
+        },
+        globalForcedTorrentFile: {
+          label: "🧲 Torrent File:",
+          type: "checkbox",
+          default: false,
+        },
+        hiddenTrackers: {
+          label: "🙈 Hidden Trackers:",
+          type: "text",
+          default: "",
+        },
+        thirdPartyDelay: {
+          label: "🤝 Delay:",
+          type: "int",
+          default: 2000,
+        },
+        torrentClient: {
+          label: "🖥️ Client:",
+          type: "select",
+          options: [
+            "qui",
+            "qBitTorrent",
+            "Transmission",
+            "Deluge",
+            "ruTorrent 🛠️",
+          ],
+          default: "qui",
+        },
+        settingsImport: {
+          label: "Import Settings",
+          type: "button",
+          size: 25,
+          click: function () {
+            // Prompt the user to select a file for which to import GM_config settings
 
-                    let inputElement = document.createElement('input');
-                    inputElement.type = 'file';
+            let inputElement = document.createElement("input");
+            inputElement.type = "file";
 
-                    inputElement.onchange = (event) => {
+            inputElement.onchange = (event) => {
+              // Getting a hold of the file reference
+              let file = event.target.files[0];
 
-                        // Getting a hold of the file reference
-                        let file = event.target.files[0]
+              // Setting up the reader
+              let reader = new FileReader();
+              reader.readAsText(file, "UTF-8");
 
-                        // Setting up the reader
-                        let reader = new FileReader()
-                        reader.readAsText(file,'UTF-8')
+              // Here we tell the reader what to do when it's done reading...
+              reader.onload = (readerEvent) => {
+                let textContent = readerEvent.target.result; // this is the content!
 
-                        // Here we tell the reader what to do when it's done reading...
-                        reader.onload = (readerEvent) => {
+                try {
+                  // Parse the content of the selected file, making sure it is valid JSON
+                  let quickieSettings = JSON.stringify(JSON.parse(textContent));
 
-                            let textContent = readerEvent.target.result // this is the content!
+                  GM_setValue("quiCKIE_config", quickieSettings);
 
-                            try {
-
-                                // Parse the content of the selected file, making sure it is valid JSON
-                                let quickieSettings = JSON.stringify(JSON.parse(textContent))
-
-                                GM_setValue('quiCKIE_config', quickieSettings)
-
-                                window.location.reload()
-
-                            } catch (error) {
-                                // The JSON parse has failed, so abort the import
-                                logger.error(error)
-                                window.alert(`🐰 quiCKIE\n\nThe imported settings file was not valid JSON\n\nThe settings were not imported`)
-                            }
-                       }
-
-                    }
-
-                    inputElement.click()
-
-                },
-            },
-            'settingsExport' : {
-                'label': 'Export Settings',
-                'type': 'button',
-                'size': 25,
-                'click': function() {
-                    // Export GM_Config settings to a file
-
-                    // Pretty-print the settings string to make it easier to read
-                    let jsonParsed = JSON.parse(GM_getValue('quiCKIE_config'))
-
-                    // convert preset-X-preset to preset-X-name (for v1.5)
-                    for (let i = 1; i <= presetCount; i++) {
-                        let nameValue = jsonParsed[`preset-${i}-preset`]
-                        jsonParsed[`preset-${i}-name`] = nameValue
-                    }
-
-                    let jsonString = JSON.stringify(jsonParsed, null, 4)
-
-                    // Save the quiCKIE settings to a local file
-                    saveToFile(jsonString, `quiCKIE-v${GM_info.script.version}-${new Date().toISOString().split('T')[0]}.json`)
-
-                },
-            },
-
-
-            // ----- qui -----
-            'quiURL': {
-                'label': '🔗 qui:',
-                'type': 'text',
-            },
-            'quiApiKey': {
-                'label': '🔑 ApiKey:',
-                'type': 'text',
-            },
-
-            // ----- qBitTorrent -----
-            'qBitTorrentURL': {
-                'label': '🔗 qBitTorrent:',
-                'type': 'text',
-            },
-            'qBitTorrentUsername': {
-                'label': '🧑 Username:',
-                'type': 'text',
-            },
-            'qBitTorrentPassword': {
-                'label': '🔑 Password:',
-                'type': 'text',
-            },
-
-            // ----- Transmission -----
-            'transmissionURL': {
-                'label': '🔗 Transmission:',
-                'type': 'text',
-            },
-            'transmissionUsername': {
-                'label': '🧑 Username:',
-                'type': 'text',
-            },
-            'transmissionPassword': {
-                'label': '🔑 Password:',
-                'type': 'text',
-            },
-
-            // ----- Deluge -----
-            'delugeURL': {
-                'label': '🔗 Deluge:',
-                'type': 'text',
-            },
-            'delugePassword': {
-                'label': '🔑 Password:',
-                'type': 'text',
-            },
-
-            // ----- ruTorrent -----
-            'ruTorrentURL': {
-                'label': '🔗 ruTorrent:',
-                'type': 'text',
-            },
-            'ruTorrentUsername': {
-                'label': '🧑 Username:',
-                'type': 'text',
-            },
-            'ruTorrentPassword': {
-                'label': '🔑 Password:',
-                'type': 'text',
-            },
-
-            'welcomeMessage': {
-                'type': 'hidden',
-                'default': 'show',
-            },
-        }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
-        'events': {
-            'open': function (doc) {
-                // Actions to take When GM_config.open() is called...
-
-                reloadWindow = false
-
-                let panelStyle = this.frame.style
-                panelStyle.backdropFilter = 'blur(9px)'
-                panelStyle.background = '#191d2aa3'
-                panelStyle.border = '1px solid #2C3E50'
-                panelStyle.borderRadius = '10px'
-                panelStyle.boxShadow = '0px 0px 15px #2C3E50'
-                panelStyle.color = '#ffffff'
-                panelStyle.height = 'auto'
-                panelStyle.inset = '50% auto auto 50%'
-                panelStyle.lineHeight = '22px'
-                panelStyle.margin = '0'
-                panelStyle.maxHeight = '95%'
-                panelStyle.padding = '0px 0px'
-                panelStyle.position = 'fixed'
-                panelStyle.transform = 'translate(-50%,-50%)'
-                panelStyle.width = '1650px'
-                panelStyle.overflowY = 'scroll'
-                panelStyle.touchAction = 'pan-x pan-y'
-
-                // ----------------------------------- TRACKERS TABLE -----------------------------------
-                // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
-
-                let table = document.createElement('table')
-                table.id = 'quiCKIE_config_tracker_table'
-                table.classList.add('quiCKIE_config_table')
-
-                let tcolg = document.createElement('colgroup')
-                tcolg.id = 'quiCKIE_config_tracker_table_colg'
-                tcolg.classList.add('quiCKIE_config_table_tcolg')
-                table.appendChild(tcolg)
-
-                let thead = document.createElement('thead')
-                thead.id = 'quiCKIE_config_tracker_table_thead'
-                thead.classList.add('quiCKIE_config_table_thead')
-                table.appendChild(thead)
-
-                let tbody = document.createElement('tbody')
-                tbody.id = 'quiCKIE_config_tracker_table_tbody'
-                tbody.classList.add('quiCKIE_config_table_tbody')
-                table.appendChild(tbody)
-
-                // Insert the <table> after the GM_config header
-                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', table)
-
-                // Generate the <col> (column) and <th> (table header) for each settings column
-                let headersRow = document.createElement('tr')
-                headersRow.classList.add('quiCKIE_config_table_thead_tr')
-
-
-                let tableHeaders = [...['tracker'], ...trackerFieldSuffixes]
-                for ( let columnHeader of tableHeaders ) {
-                    columnHeader = columnHeader.toLowerCase()
-
-                    let columnGroupElement = document.createElement('col')
-                    columnGroupElement.id = `quiCKIE_config_tracker_table_colg_col_${columnHeader}`
-                    columnGroupElement.classList.add(`quiCKIE_config_table_colg_col`)
-                    columnGroupElement.span = 1
-                    tcolg.appendChild(columnGroupElement)
-
-                    let headerElement = document.createElement('th')
-                    headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader}`
-                    headerElement.classList.add('quiCKIE_config_table_thead_th')
-                    headerElement.textContent = panelTextData.columnText[`${columnHeader}`]
-                    headerElement.setAttribute('title', panelTextData.columnTitles[`${columnHeader}`])
-                    headersRow.appendChild(headerElement)
+                  window.location.reload();
+                } catch (error) {
+                  // The JSON parse has failed, so abort the import
+                  logger.error(error);
+                  window.alert(
+                    `🐰 quiCKIE\n\nThe imported settings file was not valid JSON\n\nThe settings were not imported`,
+                  );
                 }
+              };
+            };
 
-                // Append the headers to the <thead> (tableHeader) element
-                thead.appendChild(headersRow)
+            inputElement.click();
+          },
+        },
+        settingsExport: {
+          label: "Export Settings",
+          type: "button",
+          size: 25,
+          click: function () {
+            // Export GM_Config settings to a file
 
-                for ( let panelDomain of allPrimaryDomains ) {
-                    // For each tracker, create 1 <tr> (tablerow). For each <tr>, create 1 <td> (tabledata) to contain the tracker's hyperlink. Create the <a> hyperlink then move the tracker's label into that <a> element.
+            // Pretty-print the settings string to make it easier to read
+            let jsonParsed = JSON.parse(GM_getValue("quiCKIE_config"));
 
-                    // 1 <tr> for this tracker, appended it to the <tbody> (tableBody)
-                    let tableRow = document.createElement('tr')
-                    tableRow.id = `quiCKIE_config_tracker_table_tr_${panelDomain}`
-                    tableRow.classList.add('quiCKIE_config_table_tbody_tr')
-                    tbody.appendChild(tableRow)
+            // convert preset-X-preset to preset-X-name (for v1.5)
+            for (let i = 1; i <= presetCount; i++) {
+              let nameValue = jsonParsed[`preset-${i}-preset`];
+              jsonParsed[`preset-${i}-name`] = nameValue;
+            }
 
-                    // 1 <td> to hold the trackerName for this tracker, appended it to the <tr>
-                    let labelData = document.createElement('td')
-                    labelData.classList.add('quiCKIE_config_table_td_label')
-                    tableRow.appendChild(labelData)
+            let jsonString = JSON.stringify(jsonParsed, null, 4);
 
-                    // The <a> element to hold the trackerHomepage, append it to the <td>
-                    let trackerHyperlinkElement = document.createElement('a')
-                    trackerHyperlinkElement.href = primaryDomainToHomepage[panelDomain]
-                    trackerHyperlinkElement.target = '_blank'
-                    labelData.appendChild(trackerHyperlinkElement)
+            // Save the quiCKIE settings to a local file
+            saveToFile(
+              jsonString,
+              `quiCKIE-v${GM_info.script.version}-${new Date().toISOString().split("T")[0]}.json`,
+            );
+          },
+        },
 
-                    // Move the trackerLabel field into the <a> hyperlink
-                    let trackerLabelElement = document.getElementById(`quiCKIE_config_${panelDomain}-category_field_label`)
-                    trackerLabelElement.removeAttribute('for')
-                    trackerLabelElement.classList.add('quiCKIE_config_field_tracker_label')
-                    trackerHyperlinkElement.appendChild(trackerLabelElement)
+        // ----- qui -----
+        quiURL: {
+          label: "🔗 qui:",
+          type: "text",
+        },
+        quiApiKey: {
+          label: "🔑 ApiKey:",
+          type: "text",
+        },
 
-                    // The field suffixes as specified in @trackerFieldGeneration
-                    for (let fieldSuffix of trackerFieldSuffixes) {
-                        // Create a <td> for each input field and append it to the torrents <tr>. Move the GM_config field into that <td>
+        // ----- qBitTorrent -----
+        qBitTorrentURL: {
+          label: "🔗 qBitTorrent:",
+          type: "text",
+        },
+        qBitTorrentUsername: {
+          label: "🧑 Username:",
+          type: "text",
+        },
+        qBitTorrentPassword: {
+          label: "🔑 Password:",
+          type: "text",
+        },
 
-                        // Create the <td> and append it to the torrents <tr>
-                        let dataElement = document.createElement('td')
-                        dataElement.classList.add('quiCKIE_config_table_tbody_td_field')
-                        dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`)
-                        tableRow.appendChild(dataElement)
+        // ----- Transmission -----
+        transmissionURL: {
+          label: "🔗 Transmission:",
+          type: "text",
+        },
+        transmissionUsername: {
+          label: "🧑 Username:",
+          type: "text",
+        },
+        transmissionPassword: {
+          label: "🔑 Password:",
+          type: "text",
+        },
 
-                        // Move the GM_Config field into the <td>
-                        let fieldElement = document.getElementById(`quiCKIE_config_field_${panelDomain}-${fieldSuffix}`)
-                        fieldElement.setAttribute('data-fieldtype', fieldSuffix)
-                        dataElement.appendChild(fieldElement)
+        // ----- Deluge -----
+        delugeURL: {
+          label: "🔗 Deluge:",
+          type: "text",
+        },
+        delugePassword: {
+          label: "🔑 Password:",
+          type: "text",
+        },
 
-                        // Clean-up: Remove the now empty GM_config <div> element
-                        document.getElementById(`quiCKIE_config_${panelDomain}-${fieldSuffix}_var`).remove()
+        // ----- ruTorrent -----
+        ruTorrentURL: {
+          label: "🔗 ruTorrent:",
+          type: "text",
+        },
+        ruTorrentUsername: {
+          label: "🧑 Username:",
+          type: "text",
+        },
+        ruTorrentPassword: {
+          label: "🔑 Password:",
+          type: "text",
+        },
 
-                    }
+        welcomeMessage: {
+          type: "hidden",
+          default: "show",
+        },
+      },
+      ...gmConfigTrackerFields,
+      ...gmConfigPresetsFields,
+    },
+    events: {
+      open: function (doc) {
+        // Actions to take When GM_config.open() is called...
 
-                }
+        reloadWindow = false;
 
+        let panelStyle = this.frame.style;
+        panelStyle.backdropFilter = "blur(9px)";
+        panelStyle.background = "#191d2aa3";
+        panelStyle.border = "1px solid #2C3E50";
+        panelStyle.borderRadius = "10px";
+        panelStyle.boxShadow = "0px 0px 15px #2C3E50";
+        panelStyle.color = "#ffffff";
+        panelStyle.height = "auto";
+        panelStyle.inset = "50% auto auto 50%";
+        panelStyle.lineHeight = "22px";
+        panelStyle.margin = "0";
+        panelStyle.maxHeight = "95%";
+        panelStyle.padding = "0px 0px";
+        panelStyle.position = "fixed";
+        panelStyle.transform = "translate(-50%,-50%)";
+        panelStyle.width = "1650px";
+        panelStyle.overflowY = "scroll";
+        panelStyle.touchAction = "pan-x pan-y";
 
-                // ----------------------------------- PRESETS TABLE -----------------------------------
-                if ( presetCount > 0 ) {
-                    // Convert the various preset <div> elements created by GM_config() into a <table> with columns/rows
-                    table = document.createElement('table')
-                    table.id = 'quiCKIE_config_preset_table'
-                    table.classList.add('quiCKIE_config_table')
+        // ----------------------------------- TRACKERS TABLE -----------------------------------
+        // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
 
-                    tcolg = document.createElement('colgroup')
-                    tcolg.id = 'quiCKIE_config_preset_table_colg'
-                    tcolg.classList.add('quiCKIE_config_table_tcolg')
+        let table = document.createElement("table");
+        table.id = "quiCKIE_config_tracker_table";
+        table.classList.add("quiCKIE_config_table");
 
-                    thead = document.createElement('thead')
-                    thead.id = 'quiCKIE_config_preset_table_thead'
-                    thead.classList.add('quiCKIE_config_table_thead')
+        let tcolg = document.createElement("colgroup");
+        tcolg.id = "quiCKIE_config_tracker_table_colg";
+        tcolg.classList.add("quiCKIE_config_table_tcolg");
+        table.appendChild(tcolg);
 
-                    tbody = document.createElement('tbody')
-                    tbody.id = 'quiCKIE_config_preset_table_tbody'
-                    tbody.classList.add('quiCKIE_config_table_tbody')
+        let thead = document.createElement("thead");
+        thead.id = "quiCKIE_config_tracker_table_thead";
+        thead.classList.add("quiCKIE_config_table_thead");
+        table.appendChild(thead);
 
-                    table.appendChild(tcolg)
-                    table.appendChild(thead)
-                    table.appendChild(tbody)
+        let tbody = document.createElement("tbody");
+        tbody.id = "quiCKIE_config_tracker_table_tbody";
+        tbody.classList.add("quiCKIE_config_table_tbody");
+        table.appendChild(tbody);
 
-                    // Insert the <table> after the tracker table
-                    document.getElementById('quiCKIE_config_tracker_table').insertAdjacentElement('afterend', table)
+        // Insert the <table> after the GM_config header
+        document
+          .getElementById("quiCKIE_config_header")
+          .insertAdjacentElement("afterend", table);
 
-                    // Create the "Presets" header element
-                    let presetsHeader = document.createElement('div')
-                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center; padding: 0px 0px 10px 0px;')
-                    presetsHeader.innerHTML = `
+        // Generate the <col> (column) and <th> (table header) for each settings column
+        let headersRow = document.createElement("tr");
+        headersRow.classList.add("quiCKIE_config_table_thead_tr");
+
+        let tableHeaders = [...["tracker"], ...trackerFieldSuffixes];
+        for (let columnHeader of tableHeaders) {
+          columnHeader = columnHeader.toLowerCase();
+
+          let columnGroupElement = document.createElement("col");
+          columnGroupElement.id = `quiCKIE_config_tracker_table_colg_col_${columnHeader}`;
+          columnGroupElement.classList.add(`quiCKIE_config_table_colg_col`);
+          columnGroupElement.span = 1;
+          tcolg.appendChild(columnGroupElement);
+
+          let headerElement = document.createElement("th");
+          headerElement.id = `quiCKIE_config_tracker_table_thead_th_${columnHeader}`;
+          headerElement.classList.add("quiCKIE_config_table_thead_th");
+          headerElement.textContent =
+            panelTextData.columnText[`${columnHeader}`];
+          headerElement.setAttribute(
+            "title",
+            panelTextData.columnTitles[`${columnHeader}`],
+          );
+          headersRow.appendChild(headerElement);
+        }
+
+        // Append the headers to the <thead> (tableHeader) element
+        thead.appendChild(headersRow);
+
+        for (let panelDomain of allPrimaryDomains) {
+          // For each tracker, create 1 <tr> (tablerow). For each <tr>, create 1 <td> (tabledata) to contain the tracker's hyperlink. Create the <a> hyperlink then move the tracker's label into that <a> element.
+
+          // 1 <tr> for this tracker, appended it to the <tbody> (tableBody)
+          let tableRow = document.createElement("tr");
+          tableRow.id = `quiCKIE_config_tracker_table_tr_${panelDomain}`;
+          tableRow.classList.add("quiCKIE_config_table_tbody_tr");
+          tbody.appendChild(tableRow);
+
+          // 1 <td> to hold the trackerName for this tracker, appended it to the <tr>
+          let labelData = document.createElement("td");
+          labelData.classList.add("quiCKIE_config_table_td_label");
+          tableRow.appendChild(labelData);
+
+          // The <a> element to hold the trackerHomepage, append it to the <td>
+          let trackerHyperlinkElement = document.createElement("a");
+          trackerHyperlinkElement.href = primaryDomainToHomepage[panelDomain];
+          trackerHyperlinkElement.target = "_blank";
+          labelData.appendChild(trackerHyperlinkElement);
+
+          // Move the trackerLabel field into the <a> hyperlink
+          let trackerLabelElement = document.getElementById(
+            `quiCKIE_config_${panelDomain}-category_field_label`,
+          );
+          trackerLabelElement.removeAttribute("for");
+          trackerLabelElement.classList.add(
+            "quiCKIE_config_field_tracker_label",
+          );
+          trackerHyperlinkElement.appendChild(trackerLabelElement);
+
+          // The field suffixes as specified in @trackerFieldGeneration
+          for (let fieldSuffix of trackerFieldSuffixes) {
+            // Create a <td> for each input field and append it to the torrents <tr>. Move the GM_config field into that <td>
+
+            // Create the <td> and append it to the torrents <tr>
+            let dataElement = document.createElement("td");
+            dataElement.classList.add("quiCKIE_config_table_tbody_td_field");
+            dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`);
+            tableRow.appendChild(dataElement);
+
+            // Move the GM_Config field into the <td>
+            let fieldElement = document.getElementById(
+              `quiCKIE_config_field_${panelDomain}-${fieldSuffix}`,
+            );
+            fieldElement.setAttribute("data-fieldtype", fieldSuffix);
+            dataElement.appendChild(fieldElement);
+
+            // Clean-up: Remove the now empty GM_config <div> element
+            document
+              .getElementById(
+                `quiCKIE_config_${panelDomain}-${fieldSuffix}_var`,
+              )
+              .remove();
+          }
+        }
+
+        // ----------------------------------- PRESETS TABLE -----------------------------------
+        if (presetCount > 0) {
+          // Convert the various preset <div> elements created by GM_config() into a <table> with columns/rows
+          table = document.createElement("table");
+          table.id = "quiCKIE_config_preset_table";
+          table.classList.add("quiCKIE_config_table");
+
+          tcolg = document.createElement("colgroup");
+          tcolg.id = "quiCKIE_config_preset_table_colg";
+          tcolg.classList.add("quiCKIE_config_table_tcolg");
+
+          thead = document.createElement("thead");
+          thead.id = "quiCKIE_config_preset_table_thead";
+          thead.classList.add("quiCKIE_config_table_thead");
+
+          tbody = document.createElement("tbody");
+          tbody.id = "quiCKIE_config_preset_table_tbody";
+          tbody.classList.add("quiCKIE_config_table_tbody");
+
+          table.appendChild(tcolg);
+          table.appendChild(thead);
+          table.appendChild(tbody);
+
+          // Insert the <table> after the tracker table
+          document
+            .getElementById("quiCKIE_config_tracker_table")
+            .insertAdjacentElement("afterend", table);
+
+          // Create the "Presets" header element
+          let presetsHeader = document.createElement("div");
+          presetsHeader.setAttribute(
+            "style",
+            "font-size: 20pt; text-align: center; padding: 0px 0px 10px 0px;",
+          );
+          presetsHeader.innerHTML = `
                 🚀
                 <span style="user-select: none; background: none; background-color: #FFFFFF; -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-filter: brightness(110%); filter: brightness(110%); text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); transition: all 0.3s; font-weight: bold; padding: 10px 0px 10px 0px">
                     <span href="${GM_info.script.homepage}" target="_blank" style="font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; color: #FFFFFF; text-decoration: none; background: none; line-height: 30px">Presets</span>
                 </span>
                 🚀
-                `
-
-                    // presetsHeader.setAttribute('style', "text-align: center; background: none; text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); padding: 10px 0px 10px 0px; font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; line-height: 30px")
-
-                    document.getElementById('quiCKIE_config_tracker_table').insertAdjacentElement('afterend', presetsHeader)
-
-                    // Generate <th> (table header) for each column
-                    headersRow = document.createElement('tr')
-                    headersRow.classList.add('quiCKIE_config_table_thead_tr')
-
-                    tableHeaders = [...presetFieldSuffixes]
-                    for ( let columnHeader of tableHeaders ) {
-                        columnHeader = columnHeader.toLowerCase()
-
-                        let columnGroupElement = document.createElement('col')
-                        columnGroupElement.id = `quiCKIE_config_preset_table_colg_col_${columnHeader}`
-                        columnGroupElement.classList.add(`quiCKIE_config_preset_table_colg_col`)
-                        columnGroupElement.span = 1
-                        tcolg.appendChild(columnGroupElement)
-
-                        let headerElement = document.createElement('th')
-                        headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader}`
-                        headerElement.classList.add('quiCKIE_config_preset_table_thead_th')
-                        headerElement.textContent = panelTextData.columnText[`${columnHeader}`]
-                        headerElement.setAttribute('title', panelTextData.columnTitles[`${columnHeader}`])
-
-                        headersRow.appendChild(headerElement)
-                    }
-
-                    // Append the headers to the <thead> (tableHeader) element
-                    thead.appendChild(headersRow)
-
-                    for ( let i = 1; i <= presetCount ; i++) {
-                        // For each preset, create 1 <tr> (tablerow). For each field of that preset, create 1 <td> (tabledata). Populate each <td> with 1 field from that preset.
-
-                        // 1 <tr> for this preset, appended to the <tbody> (tableBody)
-                        let tableRow = document.createElement('tr')
-                        tableRow.classList.add('quiCKIE_config_table_tbody_tr')
-                        tbody.appendChild(tableRow)
-
-
-                        // The field suffixes as specified in @presetFieldGeneration
-                        for (let fieldSuffix of presetFieldSuffixes) {
-                            // Create a <td> for each input field and move the GM_config field into it
-
-                            let dataElement = document.createElement('td')
-                            dataElement.classList.add('quiCKIE_config_table_tbody_td_field')
-                            dataElement.classList.add(`quiCKIE_config_table_td_${fieldSuffix}`)
-
-                            let fieldElement = document.getElementById(`quiCKIE_config_field_preset-${i}-${fieldSuffix}`)
-                            fieldElement.setAttribute('data-fieldtype', fieldSuffix)
-
-                            // Move the GM_Config field into the <td> and then the <td> into the <tr>
-                            dataElement.appendChild(fieldElement)
-                            tableRow.appendChild(dataElement)
-
-                            // Clean-up: Remove the now empty GM_config element
-                            document.getElementById(`quiCKIE_config_preset-${i}-${fieldSuffix}_var`).remove()
-
-                        }
-
-                    }
-
-                    // Create the list of selectable items that appears when typing to the presetTrackers field
-                    let trackerTitles = Object.entries(primaryDomainToTrackerName).sort().map (
-                        ([key, value]) => [value]
-
-                    )
-
-                    let datalistElement = document.createElement('datalist')
-                    datalistElement.id = 'presetTrackersList'
-
-                    // Append the list somewhere nearby, in this case into the presetTrackers column
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').appendChild(datalistElement)
-
-                    for ( let tracker of trackerTitles ) {
-                        let datalistItem = document.createElement('option')
-                        datalistItem.value = tracker
-                        datalistElement.appendChild(datalistItem)
-                    }
-
-                    let allPresetTrackersField = table.querySelectorAll('input[data-fieldtype="presetTrackers"]')
-
-                    for ( let presetField of allPresetTrackersField ) {
-                        // Associate the datalistElement with each presetTrackers input field
-                        presetField.setAttribute('list', 'presetTrackersList')
-                    }
-
-
-                }
-
-
-                // ----------------------------------- TIDY UP THE SETTINGS PANEL -----------------------------------
-
-                // Remove the tracker rows that should be hidden
-                for ( let trackerLabel of GM_config.get('hiddenTrackers').split(',') ) {
-                    trackerLabel = trackerLabel.toLowerCase().trim()
-                    let primaryDomain = trackerNameToPrimaryDomain[trackerLabel]
-                    let trackerRow = document.getElementById(`quiCKIE_config_tracker_table_tr_${primaryDomain}`)
-                    trackerRow ? trackerRow.remove() : null
-                }
-
-
-                // For each tracker, add the hideButton that will remove the table row and add the tracker to the hidden list
-                for ( let trackerLabelData of document.querySelectorAll('.quiCKIE_config_table_td_label') ) {
-                    let trackerRow = trackerLabelData.parentElement
-
-                    let hideButton = document.createElement('a')
-                    hideButton.textContent = '🙈 '
-                    hideButton.style.display = 'none'
-                    hideButton.style.cursor = 'pointer'
-                    hideButton.addEventListener('mouseover', () => { hideButton.style.textShadow = '0px 0px 1px black, 0 0 5px #B6D3E7' } )
-                    hideButton.addEventListener('mouseout', () => { hideButton.style.textShadow = 'none' } )
-
-                    hideButton.addEventListener('click', () => {
-                        // Add the selected tracker to the hiddenTrackers list
-                        let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
-                        let hiddenTrackers = hiddenTrackersField.value.split(',')
-                        hiddenTrackers.push(trackerLabelData.children[1].textContent)
-
-                        // Format the new list, sorting it alphabetically and removing surrounding whitespace
-                        let updatedList = []
-                        hiddenTrackers.forEach( tracker => {
-                            if ( tracker == '' ) { return }
-                            updatedList.push(tracker.trim())
-                        })
-
-                        updatedList.sort()
-                        hiddenTrackersField.value = updatedList.join(', ')
-
-                        trackerRow.remove()
-                    })
-
-                    trackerLabelData.addEventListener('mouseover', () => { hideButton.style.display = '' } )
-                    trackerLabelData.addEventListener('mouseout', () => { hideButton.style.display = 'none'} )
-
-
-                    trackerLabelData.insertBefore(hideButton, trackerLabelData.firstElementChild)
-
-                }
-
-                // Set the placeholder examples for the various input fields
-                try {
-                    document.getElementById('quiCKIE_config_field_quiURL').placeholder = 'http://localhost:7476/qui/instances/1'
-                    document.getElementById('quiCKIE_config_field_quiApiKey').placeholder = 'abc123'
-
-                    document.getElementById('quiCKIE_config_field_qBitTorrentURL').placeholder = 'http://localhost:8080'
-                    document.getElementById('quiCKIE_config_field_qBitTorrentUsername').placeholder = 'abc123'
-                    document.getElementById('quiCKIE_config_field_qBitTorrentPassword').placeholder = 'abc123'
-
-                    document.getElementById('quiCKIE_config_field_transmissionURL').placeholder = 'http://localhost:9091'
-                    document.getElementById('quiCKIE_config_field_transmissionUsername').placeholder = 'abc123'
-                    document.getElementById('quiCKIE_config_field_transmissionPassword').placeholder = 'abc123'
-
-                    document.getElementById('quiCKIE_config_field_delugeURL').placeholder = 'http://localhost:8112'
-                    document.getElementById('quiCKIE_config_field_delugePassword').placeholder = 'abc123'
-
-                    document.getElementById('quiCKIE_config_field_ruTorrentURL').placeholder = 'http://localhost:8080'
-                    document.getElementById('quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
-                    document.getElementById('quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
-
-                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-ratioLimit').placeholder = '8.50'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-seedTime').placeholder = '1440'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-dlLimit').placeholder = '10000'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-upLimit').placeholder = '5000'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-instance').placeholder = '2'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-paginationLoop').placeholder = '3000'
-
-                    document.getElementById('quiCKIE_config_field_gazellegames-savePath').placeholder = '/downloads/GazelleGames'
-                    document.getElementById('quiCKIE_config_field_gazellegames-category').placeholder = 'GazelleGames'
-                    document.getElementById('quiCKIE_config_field_gazellegames-tags').placeholder = 'games'
-                    document.getElementById('quiCKIE_config_field_gazellegames-ratioLimit').placeholder = '5.75'
-                    document.getElementById('quiCKIE_config_field_gazellegames-seedTime').placeholder = '10080'
-                    document.getElementById('quiCKIE_config_field_gazellegames-dlLimit').placeholder = '12000'
-                    document.getElementById('quiCKIE_config_field_gazellegames-upLimit').placeholder = '15000'
-                    document.getElementById('quiCKIE_config_field_gazellegames-instance').placeholder = '3'
-                    document.getElementById('quiCKIE_config_field_gazellegames-paginationLoop').placeholder = '2000'
-
-                    document.getElementById('quiCKIE_config_field_nyaa-savePath').placeholder = '/downloads/Nyaa'
-                    document.getElementById('quiCKIE_config_field_nyaa-category').placeholder = 'Nyaa'
-                    document.getElementById('quiCKIE_config_field_nyaa-tags').placeholder = 'anime, media, public'
-                    document.getElementById('quiCKIE_config_field_nyaa-ratioLimit').placeholder = '1.25'
-                    document.getElementById('quiCKIE_config_field_nyaa-seedTime').placeholder = '40320'
-                    document.getElementById('quiCKIE_config_field_nyaa-dlLimit').placeholder = '25000'
-                    document.getElementById('quiCKIE_config_field_nyaa-upLimit').placeholder = '5000'
-                    document.getElementById('quiCKIE_config_field_nyaa-instance').placeholder = '2'
-                    document.getElementById('quiCKIE_config_field_nyaa-paginationLoop').placeholder = '2000'
-
-                    document.getElementById('quiCKIE_config_field_secret-cinema-savePath').placeholder = '/downloads/Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-category').placeholder = 'Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-tags').placeholder = 'films, media, private'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-ratioLimit').placeholder = '3.25'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-dlLimit').placeholder = '18000'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-upLimit').placeholder = '7500'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-paginationLoop').placeholder = '5000'
-
-                } catch (error) {
-                    // Likely an error from the trackerRow having been hidden already
-                }
-
-                // Move global settings below the header
-                let settingsDivFirst = document.createElement('div')
-                settingsDivFirst.id = 'quiCKIE_settingsDivFirst'
-                settingsDivFirst.classList.add('quiCKIE_settingsDiv')
-                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', settingsDivFirst)
-
-                // --- Presets ---
-                let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
-                let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
-                presetCountLabel.classList.add('settingsDivLabel')
-                presetCountLabel.title = panelTextData.globalsTitles.presetCount
-                settingsDivFirst.appendChild(presetCountLabel)
-                settingsDivFirst.appendChild(presetCountField)
-
-                // --- Left-Click ---
-                let leftClickLabel = document.getElementById('quiCKIE_config_globalLeftClickAction_field_label')
-                let leftClickField = document.getElementById('quiCKIE_config_field_globalLeftClickAction')
-                leftClickLabel.classList.add('settingsDivLabel')
-                leftClickLabel.title = panelTextData.globalsTitles.globalLeftClickAction
-                settingsDivFirst.appendChild(leftClickLabel)
-                settingsDivFirst.appendChild(leftClickField)
-
-                // --- Middle-Click ---
-                let middleClickLabel = document.getElementById('quiCKIE_config_globalMiddleClickAction_field_label')
-                let middleClickField = document.getElementById('quiCKIE_config_field_globalMiddleClickAction')
-                middleClickLabel.classList.add('settingsDivLabel')
-                middleClickLabel.title = panelTextData.globalsTitles.globalMiddleClickAction
-                settingsDivFirst.appendChild(middleClickLabel)
-                settingsDivFirst.appendChild(middleClickField)
-
-                // --- Placement ---
-                let bunnyButtonPlacementLabel = document.getElementById('quiCKIE_config_bunnyButtonPlacement_field_label')
-                let bunnyButtonPlacementField = document.getElementById('quiCKIE_config_field_bunnyButtonPlacement')
-                bunnyButtonPlacementLabel.classList.add('settingsDivLabel')
-                bunnyButtonPlacementLabel.title = panelTextData.globalsTitles.bunnyButtonPlacement
-                settingsDivFirst.appendChild(bunnyButtonPlacementLabel)
-                settingsDivFirst.appendChild(bunnyButtonPlacementField)
-
-                // --- ForcedTorrentFile ---
-                let globalForcedTorrentFileLabel = document.getElementById('quiCKIE_config_globalForcedTorrentFile_field_label')
-                let globalForcedTorrentFileField = document.getElementById('quiCKIE_config_field_globalForcedTorrentFile')
-                globalForcedTorrentFileLabel.classList.add('settingsDivLabel')
-                globalForcedTorrentFileLabel.title = panelTextData.globalsTitles.globalForcedTorrentFile
-                settingsDivFirst.appendChild(globalForcedTorrentFileLabel)
-                settingsDivFirst.appendChild(globalForcedTorrentFileField)
-
-                // ------ SECOND ROW ------
-
-                let settingsDivSecond = document.createElement('div')
-                settingsDivSecond.classList.add('quiCKIE_settingsDiv')
-                settingsDivSecond.id = 'quiCKIE_settingsDivSecond'
-                settingsDivFirst.insertAdjacentElement('afterend', settingsDivSecond)
-
-                // --- Hidden Trackers ---
-                let hiddenTrackersLabel = document.getElementById('quiCKIE_config_hiddenTrackers_field_label')
-                let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
-                hiddenTrackersLabel.classList.add('settingsDivLabel')
-                hiddenTrackersLabel.title = panelTextData.globalsTitles.hiddenTrackers
-                settingsDivSecond.appendChild(hiddenTrackersLabel)
-                settingsDivSecond.appendChild(hiddenTrackersField)
-
-                // --- 3rd Party Delay ---
-                let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
-                let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
-                thirdPartyDelayLabel.classList.add('settingsDivLabel')
-                thirdPartyDelayLabel.title = panelTextData.globalsTitles.thirdPartyDelay
-                settingsDivSecond.appendChild(thirdPartyDelayLabel)
-                settingsDivSecond.appendChild(thirdPartyDelayField)
-
-                // --- TorrentClient ---
-                let torrentClientLabel = document.getElementById('quiCKIE_config_torrentClient_field_label')
-                let torrentClientField = document.getElementById('quiCKIE_config_field_torrentClient')
-                torrentClientLabel.classList.add('settingsDivLabel')
-                torrentClientLabel.title = panelTextData.globalsTitles.torrentClient
-                settingsDivSecond.appendChild(torrentClientLabel)
-                settingsDivSecond.appendChild(torrentClientField)
-
-                // --- quiURL ---
-                let quiURLLabel = document.getElementById('quiCKIE_config_quiURL_field_label')
-                let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
-                let quiURLTooltip = panelTextData.globalsTitles.quiURL
-                quiURLLabel.classList.add('settingsDivLabel')
-                quiURLLabel.title = quiURLTooltip
-                quiURLField.title = quiURLTooltip
-                quiURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(quiURLLabel)
-                settingsDivSecond.appendChild(quiURLField)
-
-                // --- quiApiKey ---
-                let quiApiKeyLabel = document.getElementById('quiCKIE_config_quiApiKey_field_label')
-                let quiApiKeyField = document.getElementById('quiCKIE_config_field_quiApiKey')
-                quiApiKeyLabel.classList.add('settingsDivLabel')
-                quiApiKeyLabel.title = panelTextData.globalsTitles.quiApiKey
-                quiApiKeyField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(quiApiKeyLabel)
-                settingsDivSecond.appendChild(quiApiKeyField)
-
-                // --- qBitTorrentURL ---
-                let qBitTorrentURLLabel = document.getElementById('quiCKIE_config_qBitTorrentURL_field_label')
-                let qBitTorrentURLField = document.getElementById('quiCKIE_config_field_qBitTorrentURL')
-                let qBitTorrentURLTooltip = panelTextData.globalsTitles.qBitTorrentURL
-                qBitTorrentURLLabel.classList.add('settingsDivLabel')
-                qBitTorrentURLLabel.title = qBitTorrentURLTooltip
-                qBitTorrentURLField.title = qBitTorrentURLTooltip
-                qBitTorrentURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(qBitTorrentURLLabel)
-                settingsDivSecond.appendChild(qBitTorrentURLField)
-
-                // --- qBitTorrentUsername ---
-                let qBitTorrentUsernameLabel = document.getElementById('quiCKIE_config_qBitTorrentUsername_field_label')
-                let qBitTorrentUsernameField = document.getElementById('quiCKIE_config_field_qBitTorrentUsername')
-                qBitTorrentUsernameLabel.classList.add('settingsDivLabel')
-                qBitTorrentUsernameLabel.title = panelTextData.globalsTitles.qBitTorrentUsername
-                qBitTorrentUsernameField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(qBitTorrentUsernameLabel)
-                settingsDivSecond.appendChild(qBitTorrentUsernameField)
-
-                // --- qBitTorrentPassword ---
-                let qBitTorrentPasswordLabel = document.getElementById('quiCKIE_config_qBitTorrentPassword_field_label')
-                let qBitTorrentPasswordField = document.getElementById('quiCKIE_config_field_qBitTorrentPassword')
-                qBitTorrentPasswordLabel.classList.add('settingsDivLabel')
-                qBitTorrentPasswordLabel.title = panelTextData.globalsTitles.qBitTorrentPassword
-                qBitTorrentPasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(qBitTorrentPasswordLabel)
-                settingsDivSecond.appendChild(qBitTorrentPasswordField)
-
-                // --- TransmissionURL ---
-                let transmissionURLLabel = document.getElementById('quiCKIE_config_transmissionURL_field_label')
-                let transmissionURLField = document.getElementById('quiCKIE_config_field_transmissionURL')
-                let transmissionURLTooltip = panelTextData.globalsTitles.transmissionURL
-                transmissionURLLabel.classList.add('settingsDivLabel')
-                transmissionURLLabel.title = transmissionURLTooltip
-                transmissionURLField.title = transmissionURLTooltip
-                transmissionURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionURLLabel)
-                settingsDivSecond.appendChild(transmissionURLField)
-
-                // --- TransmissionUsername ---
-                let transmissionUsernameLabel = document.getElementById('quiCKIE_config_transmissionUsername_field_label')
-                let transmissionUsernameField = document.getElementById('quiCKIE_config_field_transmissionUsername')
-                transmissionUsernameLabel.classList.add('settingsDivLabel')
-                transmissionUsernameLabel.title = panelTextData.globalsTitles.transmissionUsername
-                transmissionUsernameField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionUsernameLabel)
-                settingsDivSecond.appendChild(transmissionUsernameField)
-
-                // --- TransmissionPassword ---
-                let transmissionPasswordLabel = document.getElementById('quiCKIE_config_transmissionPassword_field_label')
-                let transmissionPasswordField = document.getElementById('quiCKIE_config_field_transmissionPassword')
-                transmissionPasswordLabel.classList.add('settingsDivLabel')
-                transmissionPasswordLabel.title = panelTextData.globalsTitles.transmissionPassword
-                transmissionPasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionPasswordLabel)
-                settingsDivSecond.appendChild(transmissionPasswordField)
-
-                // --- DelugeURL ---
-                let delugeURLLabel = document.getElementById('quiCKIE_config_delugeURL_field_label')
-                let delugeURLField = document.getElementById('quiCKIE_config_field_delugeURL')
-                let delugeURLTooltip = panelTextData.globalsTitles.delugeURL
-                delugeURLLabel.classList.add('settingsDivLabel')
-                delugeURLLabel.title = delugeURLTooltip
-                delugeURLField.title = delugeURLTooltip
-                delugeURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(delugeURLLabel)
-                settingsDivSecond.appendChild(delugeURLField)
-
-                // --- DelugePassword ---
-                let delugePasswordLabel = document.getElementById('quiCKIE_config_delugePassword_field_label')
-                let delugePasswordField = document.getElementById('quiCKIE_config_field_delugePassword')
-                delugePasswordLabel.classList.add('settingsDivLabel')
-                delugePasswordLabel.title = panelTextData.globalsTitles.delugePassword
-                delugePasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(delugePasswordLabel)
-                settingsDivSecond.appendChild(delugePasswordField)
-
-                // --- ruTorrentURL ---
-                let ruTorrentURLLabel = document.getElementById('quiCKIE_config_ruTorrentURL_field_label')
-                let ruTorrentURLField = document.getElementById('quiCKIE_config_field_ruTorrentURL')
-                let ruTorrentURLTooltip = panelTextData.globalsTitles.ruTorrentURL
-                ruTorrentURLLabel.classList.add('settingsDivLabel')
-                ruTorrentURLLabel.title = ruTorrentURLTooltip
-                ruTorrentURLField.title = ruTorrentURLTooltip
-                ruTorrentURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentURLLabel)
-                settingsDivSecond.appendChild(ruTorrentURLField)
-
-                // --- ruTorrentUsername ---
-                let ruTorrentUsernameLabel = document.getElementById('quiCKIE_config_ruTorrentUsername_field_label')
-                let ruTorrentUsernameField = document.getElementById('quiCKIE_config_field_ruTorrentUsername')
-                ruTorrentUsernameLabel.classList.add('settingsDivLabel')
-                ruTorrentUsernameLabel.title = panelTextData.globalsTitles.ruTorrentUsername
-                ruTorrentUsernameField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentUsernameLabel)
-                settingsDivSecond.appendChild(ruTorrentUsernameField)
-
-                // --- ruTorrentPassword ---
-                let ruTorrentPasswordLabel = document.getElementById('quiCKIE_config_ruTorrentPassword_field_label')
-                let ruTorrentPasswordField = document.getElementById('quiCKIE_config_field_ruTorrentPassword')
-                ruTorrentPasswordLabel.classList.add('settingsDivLabel')
-                ruTorrentPasswordLabel.title = panelTextData.globalsTitles.ruTorrentPassword
-                ruTorrentPasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentPasswordLabel)
-                settingsDivSecond.appendChild(ruTorrentPasswordField)
-
-                document.getElementById('quiCKIE_config_field_torrentClient').querySelector('[value="ruTorrent 🛠️"]').disabled = true
-                ruTorrentPasswordField.disabled = true
-                ruTorrentURLField.disabled = true
-                ruTorrentUsernameField.disabled = true
-
-                // Obfuscate the client credentials on blur
-                for ( let inputField of document.querySelectorAll('.quiCKIE_obfuscate') ) {
-                    inputField.type = 'password'
-                    inputField.addEventListener('focus', () => { inputField.type = 'text' })
-                    inputField.addEventListener('blur', () => { inputField.type = 'password' })
-
-                }
-
-                // Set 'int' and 'float' fields to blank values when appropriate
-                for ( let fieldName of ['ratioLimit', 'seedTime', 'upLimit', 'dlLimit', 'instance', 'paginationLoop'] ) {
-
-                    for ( let inputField of document.getElementById('quiCKIE_config').querySelectorAll(`input[data-fieldtype=${fieldName}`) ) {
-
-                            if ( fieldName == 'paginationLoop' ) {
-                                inputField.value < 500 ? inputField.value = '' : null
-                            } else if (fieldName == 'ratioLimit' || fieldName == 'seedTime' ) {
-                                inputField.value == 0 ? inputField.value = '' : null
-                            } else {
-                                inputField.value <= 0 ? inputField.value = '' : null
-                            }
-
-                    }
-                }
-
-                function torrentClientChange() {
-                    // The torernt client was changed, so disable the quiCKIE fields that no longer apply and hide the clientFields not belonging to this client
-
-                    // 1: Enable all previously disabled fields, 2: Disable fields not applicable to the selected client, 3: Hide client settings not applicable to the selected client
-
-                    let allClientFields = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
-                    let hideClientFields
-
-                    let allInputFields = document.querySelectorAll('input.quiCKIE_disabledField')
-                    for ( inputField of allInputFields ) {
-                        // Enable any disabled fields
-                        inputField.disabled = false
-                        inputField.classList.remove('quiCKIE_disabledField')
-                    }
-
-
-                    // The currently selected torrent client from the dropdown list
-                    let torrentClient = document.getElementById('quiCKIE_config_field_torrentClient').value
-
-                    if ( torrentClient == 'qui' ) {
-
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'qui' })
-
-                    } else if ( torrentClient == 'qBitTorrent' ) {
-
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'qBitTorrent' })
-
-                        for ( let inputField of document.querySelectorAll('input[data-fieldtype="instance"]') ) {
-                            inputField.disabled = true
-                            inputField.classList.add('quiCKIE_disabledField')
-                        }
-
-                    } else if ( torrentClient == 'Transmission' ) {
-
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'transmission' })
-
-                        let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
-                            }
-                        }
-
-                    } else if ( torrentClient == 'Deluge' ) {
-
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'deluge' })
-
-                        let fieldsToDisable = ['category', 'tags', 'ratioLimit', 'seedTime', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
-                            }
-                        }
-
-                    } else if ( torrentClient == 'ruTorrent' ) {
-                        // ruTorrent is selected
-
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'ruTorrent' })
-
-                        let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
-                            }
-                        }
-
-                    }
-
-                    for ( let clientFieldName of allClientFields ) {
-                        // Start by revealing all client fields
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = ''
-                        } catch (error) {}
-
-                    }
-
-                    for ( let clientFieldName of hideClientFields ) {
-                        // Hide client fields not applicable to the selected client
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = 'none'
-                        } catch (error) {}
-
-                    }
-                }
-
-                document.getElementById('quiCKIE_config_field_torrentClient').addEventListener('change', function() {
-                    torrentClientChange()
-                })
-
-                torrentClientChange()
-
-                // Create GitHub version element
-                let githubSVG = '<svg width="16" height="16" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_730_27136)"><path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="white"/></g><defs><clipPath id="clip0_730_27136"><rect width="98" height="96" fill="white"/></clipPath></defs></svg>'
-
-                let versionElement = document.createElement('a')
-                versionElement.classList = 'version_label reset'
-                versionElement.title = 'Source Code on GitHub'
-                versionElement.target = '_blank'
-                versionElement.href = `${GM_info.script.homepage}`
-                versionElement.innerHTML = `${githubSVG} Version ${GM_info.script.version}`
-
-                doc.getElementById('quiCKIE_config_buttons_holder').appendChild(versionElement)
-
-                // Adjust the Import\Export buttons
-                let exportButton = document.getElementById('quiCKIE_config_field_settingsExport')
-                exportButton.classList.add('saveclose_buttons')
-
-                let importButton = document.getElementById('quiCKIE_config_field_settingsImport')
-                importButton.classList.add('saveclose_buttons')
-
-                let buttonsHolderElement = document.getElementById('quiCKIE_config_buttons_holder')
-                buttonsHolderElement.appendChild(importButton)
-                buttonsHolderElement.appendChild(exportButton)
-
-                // Remove the now empty <div> elements
-                for ( let emptyElement of document.getElementById('quiCKIE_config').querySelectorAll('div.config_var:empty') ) {
-                    emptyElement.remove()
-                }
-
-                // Add success animation to save button
-                let saveButton = doc.getElementById('quiCKIE_config_saveBtn')
-                saveButton.addEventListener('click', () => {
-                    // When the save button is clicked, temporarily assign a css class to produce the animation
-                    saveButton.classList.add('success')
-                    setTimeout(() => saveButton.classList.remove('success'), 500)
-                })
-
-                if ( this.get('welcomeMessage') == 'show' ) {
-                    // Display this welcomeMessage when first opening the quiCKIE settings panel
-                    confirm("🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly")
-
-                    this.set('welcomeMessage', 'hide')
-
-                }
-
-            },
-            'save': function () {
-                // Actions to take when the 'Save' button is clicked
-                reloadWindow = true
-
-                // Clear cached data when settings are saved
-                GM_listValues().forEach(key => {
-                    if (key !== 'quiCKIE_config') {
-                        GM_setValue(key, null)
-                    }
-                })
-
-            },
-            'close': function () {
-                // Actions to take when the 'Close' button is clicked
-                if (reloadWindow) {
-                    if (this.frame) {
-                        window.location.reload()
-                    } else {
-                        setTimeout(() => {
-                            window.location.reload()
-                        }, 250)
-                    }
-                }
-            },
-            'reset': function () {
-                // Actions to take when the 'Reset' button is clicked
-                if (typeof resetToDefaults === 'function') {
-                    resetToDefaults()
-                }
+                `;
+
+          // presetsHeader.setAttribute('style', "text-align: center; background: none; text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); padding: 10px 0px 10px 0px; font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; line-height: 30px")
+
+          document
+            .getElementById("quiCKIE_config_tracker_table")
+            .insertAdjacentElement("afterend", presetsHeader);
+
+          // Generate <th> (table header) for each column
+          headersRow = document.createElement("tr");
+          headersRow.classList.add("quiCKIE_config_table_thead_tr");
+
+          tableHeaders = [...presetFieldSuffixes];
+          for (let columnHeader of tableHeaders) {
+            columnHeader = columnHeader.toLowerCase();
+
+            let columnGroupElement = document.createElement("col");
+            columnGroupElement.id = `quiCKIE_config_preset_table_colg_col_${columnHeader}`;
+            columnGroupElement.classList.add(
+              `quiCKIE_config_preset_table_colg_col`,
+            );
+            columnGroupElement.span = 1;
+            tcolg.appendChild(columnGroupElement);
+
+            let headerElement = document.createElement("th");
+            headerElement.id = `quiCKIE_config_preset_table_thead_th_${columnHeader}`;
+            headerElement.classList.add("quiCKIE_config_preset_table_thead_th");
+            headerElement.textContent =
+              panelTextData.columnText[`${columnHeader}`];
+            headerElement.setAttribute(
+              "title",
+              panelTextData.columnTitles[`${columnHeader}`],
+            );
+
+            headersRow.appendChild(headerElement);
+          }
+
+          // Append the headers to the <thead> (tableHeader) element
+          thead.appendChild(headersRow);
+
+          for (let i = 1; i <= presetCount; i++) {
+            // For each preset, create 1 <tr> (tablerow). For each field of that preset, create 1 <td> (tabledata). Populate each <td> with 1 field from that preset.
+
+            // 1 <tr> for this preset, appended to the <tbody> (tableBody)
+            let tableRow = document.createElement("tr");
+            tableRow.classList.add("quiCKIE_config_table_tbody_tr");
+            tbody.appendChild(tableRow);
+
+            // The field suffixes as specified in @presetFieldGeneration
+            for (let fieldSuffix of presetFieldSuffixes) {
+              // Create a <td> for each input field and move the GM_config field into it
+
+              let dataElement = document.createElement("td");
+              dataElement.classList.add("quiCKIE_config_table_tbody_td_field");
+              dataElement.classList.add(
+                `quiCKIE_config_table_td_${fieldSuffix}`,
+              );
+
+              let fieldElement = document.getElementById(
+                `quiCKIE_config_field_preset-${i}-${fieldSuffix}`,
+              );
+              fieldElement.setAttribute("data-fieldtype", fieldSuffix);
+
+              // Move the GM_Config field into the <td> and then the <td> into the <tr>
+              dataElement.appendChild(fieldElement);
+              tableRow.appendChild(dataElement);
+
+              // Clean-up: Remove the now empty GM_config element
+              document
+                .getElementById(`quiCKIE_config_preset-${i}-${fieldSuffix}_var`)
+                .remove();
             }
-        },
-        // The CSS to use for the menu, loaded through the @resource line
-        'css': GM_getResourceText('settingsPanelCSS')
-    })
+          }
 
-    // Register the settings panel to be opened from the UserScript manager dialouge
-    GM_registerMenuCommand('Settings', () => {
-        GM_config.open()
-    })
+          // Create the list of selectable items that appears when typing to the presetTrackers field
+          let trackerTitles = Object.entries(primaryDomainToTrackerName)
+            .sort()
+            .map(([key, value]) => [value]);
 
+          let datalistElement = document.createElement("datalist");
+          datalistElement.id = "presetTrackersList";
 
-    return [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
+          // Append the list somewhere nearby, in this case into the presetTrackers column
+          document
+            .getElementById(
+              "quiCKIE_config_preset_table_thead_th_presettrackers",
+            )
+            .appendChild(datalistElement);
 
+          for (let tracker of trackerTitles) {
+            let datalistItem = document.createElement("option");
+            datalistItem.value = tracker;
+            datalistElement.appendChild(datalistItem);
+          }
+
+          let allPresetTrackersField = table.querySelectorAll(
+            'input[data-fieldtype="presetTrackers"]',
+          );
+
+          for (let presetField of allPresetTrackersField) {
+            // Associate the datalistElement with each presetTrackers input field
+            presetField.setAttribute("list", "presetTrackersList");
+          }
+        }
+
+        // ----------------------------------- TIDY UP THE SETTINGS PANEL -----------------------------------
+
+        // Remove the tracker rows that should be hidden
+        for (let trackerLabel of GM_config.get("hiddenTrackers").split(",")) {
+          trackerLabel = trackerLabel.toLowerCase().trim();
+          let primaryDomain = trackerNameToPrimaryDomain[trackerLabel];
+          let trackerRow = document.getElementById(
+            `quiCKIE_config_tracker_table_tr_${primaryDomain}`,
+          );
+          trackerRow ? trackerRow.remove() : null;
+        }
+
+        // For each tracker, add the hideButton that will remove the table row and add the tracker to the hidden list
+        for (let trackerLabelData of document.querySelectorAll(
+          ".quiCKIE_config_table_td_label",
+        )) {
+          let trackerRow = trackerLabelData.parentElement;
+
+          let hideButton = document.createElement("a");
+          hideButton.textContent = "🙈 ";
+          hideButton.style.display = "none";
+          hideButton.style.cursor = "pointer";
+          hideButton.addEventListener("mouseover", () => {
+            hideButton.style.textShadow = "0px 0px 1px black, 0 0 5px #B6D3E7";
+          });
+          hideButton.addEventListener("mouseout", () => {
+            hideButton.style.textShadow = "none";
+          });
+
+          hideButton.addEventListener("click", () => {
+            // Add the selected tracker to the hiddenTrackers list
+            let hiddenTrackersField = document.getElementById(
+              "quiCKIE_config_field_hiddenTrackers",
+            );
+            let hiddenTrackers = hiddenTrackersField.value.split(",");
+            hiddenTrackers.push(trackerLabelData.children[1].textContent);
+
+            // Format the new list, sorting it alphabetically and removing surrounding whitespace
+            let updatedList = [];
+            hiddenTrackers.forEach((tracker) => {
+              if (tracker == "") {
+                return;
+              }
+              updatedList.push(tracker.trim());
+            });
+
+            updatedList.sort();
+            hiddenTrackersField.value = updatedList.join(", ");
+
+            trackerRow.remove();
+          });
+
+          trackerLabelData.addEventListener("mouseover", () => {
+            hideButton.style.display = "";
+          });
+          trackerLabelData.addEventListener("mouseout", () => {
+            hideButton.style.display = "none";
+          });
+
+          trackerLabelData.insertBefore(
+            hideButton,
+            trackerLabelData.firstElementChild,
+          );
+        }
+
+        // Set the placeholder examples for the various input fields
+        try {
+          document.getElementById("quiCKIE_config_field_quiURL").placeholder =
+            "http://localhost:7476/qui/instances/1";
+          document.getElementById(
+            "quiCKIE_config_field_quiApiKey",
+          ).placeholder = "abc123";
+
+          document.getElementById(
+            "quiCKIE_config_field_qBitTorrentURL",
+          ).placeholder = "http://localhost:8080";
+          document.getElementById(
+            "quiCKIE_config_field_qBitTorrentUsername",
+          ).placeholder = "abc123";
+          document.getElementById(
+            "quiCKIE_config_field_qBitTorrentPassword",
+          ).placeholder = "abc123";
+
+          document.getElementById(
+            "quiCKIE_config_field_transmissionURL",
+          ).placeholder = "http://localhost:9091";
+          document.getElementById(
+            "quiCKIE_config_field_transmissionUsername",
+          ).placeholder = "abc123";
+          document.getElementById(
+            "quiCKIE_config_field_transmissionPassword",
+          ).placeholder = "abc123";
+
+          document.getElementById(
+            "quiCKIE_config_field_delugeURL",
+          ).placeholder = "http://localhost:8112";
+          document.getElementById(
+            "quiCKIE_config_field_delugePassword",
+          ).placeholder = "abc123";
+
+          document.getElementById(
+            "quiCKIE_config_field_ruTorrentURL",
+          ).placeholder = "http://localhost:8080";
+          document.getElementById(
+            "quiCKIE_config_field_ruTorrentUsername",
+          ).placeholder = "abc123";
+          document.getElementById(
+            "quiCKIE_config_field_ruTorrentPassword",
+          ).placeholder = "abc123";
+
+          document.getElementById(
+            "quiCKIE_config_field_hiddenTrackers",
+          ).placeholder = "HDBits, Nyaa, Secret-Cinema";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-savePath",
+          ).placeholder = "/downloads/BroadcasTheNet";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-category",
+          ).placeholder = "BroadcasTheNet";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-tags",
+          ).placeholder = "series, media";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-ratioLimit",
+          ).placeholder = "8.50";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-seedTime",
+          ).placeholder = "1440";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-dlLimit",
+          ).placeholder = "10000";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-upLimit",
+          ).placeholder = "5000";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-instance",
+          ).placeholder = "2";
+          document.getElementById(
+            "quiCKIE_config_field_broadcasthe-paginationLoop",
+          ).placeholder = "3000";
+
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-savePath",
+          ).placeholder = "/downloads/GazelleGames";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-category",
+          ).placeholder = "GazelleGames";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-tags",
+          ).placeholder = "games";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-ratioLimit",
+          ).placeholder = "5.75";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-seedTime",
+          ).placeholder = "10080";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-dlLimit",
+          ).placeholder = "12000";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-upLimit",
+          ).placeholder = "15000";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-instance",
+          ).placeholder = "3";
+          document.getElementById(
+            "quiCKIE_config_field_gazellegames-paginationLoop",
+          ).placeholder = "2000";
+
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-savePath",
+          ).placeholder = "/downloads/Nyaa";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-category",
+          ).placeholder = "Nyaa";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-tags",
+          ).placeholder = "anime, media, public";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-ratioLimit",
+          ).placeholder = "1.25";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-seedTime",
+          ).placeholder = "40320";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-dlLimit",
+          ).placeholder = "25000";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-upLimit",
+          ).placeholder = "5000";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-instance",
+          ).placeholder = "2";
+          document.getElementById(
+            "quiCKIE_config_field_nyaa-paginationLoop",
+          ).placeholder = "2000";
+
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-savePath",
+          ).placeholder = "/downloads/Secret-Cinema";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-category",
+          ).placeholder = "Secret-Cinema";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-tags",
+          ).placeholder = "films, media, private";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-ratioLimit",
+          ).placeholder = "3.25";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-seedTime",
+          ).placeholder = "80640";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-dlLimit",
+          ).placeholder = "18000";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-upLimit",
+          ).placeholder = "7500";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-instance",
+          ).placeholder = "3";
+          document.getElementById(
+            "quiCKIE_config_field_secret-cinema-paginationLoop",
+          ).placeholder = "5000";
+        } catch (error) {
+          // Likely an error from the trackerRow having been hidden already
+        }
+
+        // Move global settings below the header
+        let settingsDivFirst = document.createElement("div");
+        settingsDivFirst.id = "quiCKIE_settingsDivFirst";
+        settingsDivFirst.classList.add("quiCKIE_settingsDiv");
+        document
+          .getElementById("quiCKIE_config_header")
+          .insertAdjacentElement("afterend", settingsDivFirst);
+
+        // --- Presets ---
+        let presetCountLabel = document.getElementById(
+          "quiCKIE_config_presetCount_field_label",
+        );
+        let presetCountField = document.getElementById(
+          "quiCKIE_config_field_presetCount",
+        );
+        presetCountLabel.classList.add("settingsDivLabel");
+        presetCountLabel.title = panelTextData.globalsTitles.presetCount;
+        settingsDivFirst.appendChild(presetCountLabel);
+        settingsDivFirst.appendChild(presetCountField);
+
+        // --- Left-Click ---
+        let leftClickLabel = document.getElementById(
+          "quiCKIE_config_globalLeftClickAction_field_label",
+        );
+        let leftClickField = document.getElementById(
+          "quiCKIE_config_field_globalLeftClickAction",
+        );
+        leftClickLabel.classList.add("settingsDivLabel");
+        leftClickLabel.title =
+          panelTextData.globalsTitles.globalLeftClickAction;
+        settingsDivFirst.appendChild(leftClickLabel);
+        settingsDivFirst.appendChild(leftClickField);
+
+        // --- Middle-Click ---
+        let middleClickLabel = document.getElementById(
+          "quiCKIE_config_globalMiddleClickAction_field_label",
+        );
+        let middleClickField = document.getElementById(
+          "quiCKIE_config_field_globalMiddleClickAction",
+        );
+        middleClickLabel.classList.add("settingsDivLabel");
+        middleClickLabel.title =
+          panelTextData.globalsTitles.globalMiddleClickAction;
+        settingsDivFirst.appendChild(middleClickLabel);
+        settingsDivFirst.appendChild(middleClickField);
+
+        // --- Placement ---
+        let bunnyButtonPlacementLabel = document.getElementById(
+          "quiCKIE_config_bunnyButtonPlacement_field_label",
+        );
+        let bunnyButtonPlacementField = document.getElementById(
+          "quiCKIE_config_field_bunnyButtonPlacement",
+        );
+        bunnyButtonPlacementLabel.classList.add("settingsDivLabel");
+        bunnyButtonPlacementLabel.title =
+          panelTextData.globalsTitles.bunnyButtonPlacement;
+        settingsDivFirst.appendChild(bunnyButtonPlacementLabel);
+        settingsDivFirst.appendChild(bunnyButtonPlacementField);
+
+        // --- ForcedTorrentFile ---
+        let globalForcedTorrentFileLabel = document.getElementById(
+          "quiCKIE_config_globalForcedTorrentFile_field_label",
+        );
+        let globalForcedTorrentFileField = document.getElementById(
+          "quiCKIE_config_field_globalForcedTorrentFile",
+        );
+        globalForcedTorrentFileLabel.classList.add("settingsDivLabel");
+        globalForcedTorrentFileLabel.title =
+          panelTextData.globalsTitles.globalForcedTorrentFile;
+        settingsDivFirst.appendChild(globalForcedTorrentFileLabel);
+        settingsDivFirst.appendChild(globalForcedTorrentFileField);
+
+        // ------ SECOND ROW ------
+
+        let settingsDivSecond = document.createElement("div");
+        settingsDivSecond.classList.add("quiCKIE_settingsDiv");
+        settingsDivSecond.id = "quiCKIE_settingsDivSecond";
+        settingsDivFirst.insertAdjacentElement("afterend", settingsDivSecond);
+
+        // --- Hidden Trackers ---
+        let hiddenTrackersLabel = document.getElementById(
+          "quiCKIE_config_hiddenTrackers_field_label",
+        );
+        let hiddenTrackersField = document.getElementById(
+          "quiCKIE_config_field_hiddenTrackers",
+        );
+        hiddenTrackersLabel.classList.add("settingsDivLabel");
+        hiddenTrackersLabel.title = panelTextData.globalsTitles.hiddenTrackers;
+        settingsDivSecond.appendChild(hiddenTrackersLabel);
+        settingsDivSecond.appendChild(hiddenTrackersField);
+
+        // --- 3rd Party Delay ---
+        let thirdPartyDelayLabel = document.getElementById(
+          "quiCKIE_config_thirdPartyDelay_field_label",
+        );
+        let thirdPartyDelayField = document.getElementById(
+          "quiCKIE_config_field_thirdPartyDelay",
+        );
+        thirdPartyDelayLabel.classList.add("settingsDivLabel");
+        thirdPartyDelayLabel.title =
+          panelTextData.globalsTitles.thirdPartyDelay;
+        settingsDivSecond.appendChild(thirdPartyDelayLabel);
+        settingsDivSecond.appendChild(thirdPartyDelayField);
+
+        // --- TorrentClient ---
+        let torrentClientLabel = document.getElementById(
+          "quiCKIE_config_torrentClient_field_label",
+        );
+        let torrentClientField = document.getElementById(
+          "quiCKIE_config_field_torrentClient",
+        );
+        torrentClientLabel.classList.add("settingsDivLabel");
+        torrentClientLabel.title = panelTextData.globalsTitles.torrentClient;
+        settingsDivSecond.appendChild(torrentClientLabel);
+        settingsDivSecond.appendChild(torrentClientField);
+
+        // --- quiURL ---
+        let quiURLLabel = document.getElementById(
+          "quiCKIE_config_quiURL_field_label",
+        );
+        let quiURLField = document.getElementById(
+          "quiCKIE_config_field_quiURL",
+        );
+        let quiURLTooltip = panelTextData.globalsTitles.quiURL;
+        quiURLLabel.classList.add("settingsDivLabel");
+        quiURLLabel.title = quiURLTooltip;
+        quiURLField.title = quiURLTooltip;
+        quiURLField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(quiURLLabel);
+        settingsDivSecond.appendChild(quiURLField);
+
+        // --- quiApiKey ---
+        let quiApiKeyLabel = document.getElementById(
+          "quiCKIE_config_quiApiKey_field_label",
+        );
+        let quiApiKeyField = document.getElementById(
+          "quiCKIE_config_field_quiApiKey",
+        );
+        quiApiKeyLabel.classList.add("settingsDivLabel");
+        quiApiKeyLabel.title = panelTextData.globalsTitles.quiApiKey;
+        quiApiKeyField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(quiApiKeyLabel);
+        settingsDivSecond.appendChild(quiApiKeyField);
+
+        // --- qBitTorrentURL ---
+        let qBitTorrentURLLabel = document.getElementById(
+          "quiCKIE_config_qBitTorrentURL_field_label",
+        );
+        let qBitTorrentURLField = document.getElementById(
+          "quiCKIE_config_field_qBitTorrentURL",
+        );
+        let qBitTorrentURLTooltip = panelTextData.globalsTitles.qBitTorrentURL;
+        qBitTorrentURLLabel.classList.add("settingsDivLabel");
+        qBitTorrentURLLabel.title = qBitTorrentURLTooltip;
+        qBitTorrentURLField.title = qBitTorrentURLTooltip;
+        qBitTorrentURLField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(qBitTorrentURLLabel);
+        settingsDivSecond.appendChild(qBitTorrentURLField);
+
+        // --- qBitTorrentUsername ---
+        let qBitTorrentUsernameLabel = document.getElementById(
+          "quiCKIE_config_qBitTorrentUsername_field_label",
+        );
+        let qBitTorrentUsernameField = document.getElementById(
+          "quiCKIE_config_field_qBitTorrentUsername",
+        );
+        qBitTorrentUsernameLabel.classList.add("settingsDivLabel");
+        qBitTorrentUsernameLabel.title =
+          panelTextData.globalsTitles.qBitTorrentUsername;
+        qBitTorrentUsernameField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(qBitTorrentUsernameLabel);
+        settingsDivSecond.appendChild(qBitTorrentUsernameField);
+
+        // --- qBitTorrentPassword ---
+        let qBitTorrentPasswordLabel = document.getElementById(
+          "quiCKIE_config_qBitTorrentPassword_field_label",
+        );
+        let qBitTorrentPasswordField = document.getElementById(
+          "quiCKIE_config_field_qBitTorrentPassword",
+        );
+        qBitTorrentPasswordLabel.classList.add("settingsDivLabel");
+        qBitTorrentPasswordLabel.title =
+          panelTextData.globalsTitles.qBitTorrentPassword;
+        qBitTorrentPasswordField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(qBitTorrentPasswordLabel);
+        settingsDivSecond.appendChild(qBitTorrentPasswordField);
+
+        // --- TransmissionURL ---
+        let transmissionURLLabel = document.getElementById(
+          "quiCKIE_config_transmissionURL_field_label",
+        );
+        let transmissionURLField = document.getElementById(
+          "quiCKIE_config_field_transmissionURL",
+        );
+        let transmissionURLTooltip =
+          panelTextData.globalsTitles.transmissionURL;
+        transmissionURLLabel.classList.add("settingsDivLabel");
+        transmissionURLLabel.title = transmissionURLTooltip;
+        transmissionURLField.title = transmissionURLTooltip;
+        transmissionURLField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(transmissionURLLabel);
+        settingsDivSecond.appendChild(transmissionURLField);
+
+        // --- TransmissionUsername ---
+        let transmissionUsernameLabel = document.getElementById(
+          "quiCKIE_config_transmissionUsername_field_label",
+        );
+        let transmissionUsernameField = document.getElementById(
+          "quiCKIE_config_field_transmissionUsername",
+        );
+        transmissionUsernameLabel.classList.add("settingsDivLabel");
+        transmissionUsernameLabel.title =
+          panelTextData.globalsTitles.transmissionUsername;
+        transmissionUsernameField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(transmissionUsernameLabel);
+        settingsDivSecond.appendChild(transmissionUsernameField);
+
+        // --- TransmissionPassword ---
+        let transmissionPasswordLabel = document.getElementById(
+          "quiCKIE_config_transmissionPassword_field_label",
+        );
+        let transmissionPasswordField = document.getElementById(
+          "quiCKIE_config_field_transmissionPassword",
+        );
+        transmissionPasswordLabel.classList.add("settingsDivLabel");
+        transmissionPasswordLabel.title =
+          panelTextData.globalsTitles.transmissionPassword;
+        transmissionPasswordField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(transmissionPasswordLabel);
+        settingsDivSecond.appendChild(transmissionPasswordField);
+
+        // --- DelugeURL ---
+        let delugeURLLabel = document.getElementById(
+          "quiCKIE_config_delugeURL_field_label",
+        );
+        let delugeURLField = document.getElementById(
+          "quiCKIE_config_field_delugeURL",
+        );
+        let delugeURLTooltip = panelTextData.globalsTitles.delugeURL;
+        delugeURLLabel.classList.add("settingsDivLabel");
+        delugeURLLabel.title = delugeURLTooltip;
+        delugeURLField.title = delugeURLTooltip;
+        delugeURLField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(delugeURLLabel);
+        settingsDivSecond.appendChild(delugeURLField);
+
+        // --- DelugePassword ---
+        let delugePasswordLabel = document.getElementById(
+          "quiCKIE_config_delugePassword_field_label",
+        );
+        let delugePasswordField = document.getElementById(
+          "quiCKIE_config_field_delugePassword",
+        );
+        delugePasswordLabel.classList.add("settingsDivLabel");
+        delugePasswordLabel.title = panelTextData.globalsTitles.delugePassword;
+        delugePasswordField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(delugePasswordLabel);
+        settingsDivSecond.appendChild(delugePasswordField);
+
+        // --- ruTorrentURL ---
+        let ruTorrentURLLabel = document.getElementById(
+          "quiCKIE_config_ruTorrentURL_field_label",
+        );
+        let ruTorrentURLField = document.getElementById(
+          "quiCKIE_config_field_ruTorrentURL",
+        );
+        let ruTorrentURLTooltip = panelTextData.globalsTitles.ruTorrentURL;
+        ruTorrentURLLabel.classList.add("settingsDivLabel");
+        ruTorrentURLLabel.title = ruTorrentURLTooltip;
+        ruTorrentURLField.title = ruTorrentURLTooltip;
+        ruTorrentURLField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(ruTorrentURLLabel);
+        settingsDivSecond.appendChild(ruTorrentURLField);
+
+        // --- ruTorrentUsername ---
+        let ruTorrentUsernameLabel = document.getElementById(
+          "quiCKIE_config_ruTorrentUsername_field_label",
+        );
+        let ruTorrentUsernameField = document.getElementById(
+          "quiCKIE_config_field_ruTorrentUsername",
+        );
+        ruTorrentUsernameLabel.classList.add("settingsDivLabel");
+        ruTorrentUsernameLabel.title =
+          panelTextData.globalsTitles.ruTorrentUsername;
+        ruTorrentUsernameField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(ruTorrentUsernameLabel);
+        settingsDivSecond.appendChild(ruTorrentUsernameField);
+
+        // --- ruTorrentPassword ---
+        let ruTorrentPasswordLabel = document.getElementById(
+          "quiCKIE_config_ruTorrentPassword_field_label",
+        );
+        let ruTorrentPasswordField = document.getElementById(
+          "quiCKIE_config_field_ruTorrentPassword",
+        );
+        ruTorrentPasswordLabel.classList.add("settingsDivLabel");
+        ruTorrentPasswordLabel.title =
+          panelTextData.globalsTitles.ruTorrentPassword;
+        ruTorrentPasswordField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(ruTorrentPasswordLabel);
+        settingsDivSecond.appendChild(ruTorrentPasswordField);
+
+        document
+          .getElementById("quiCKIE_config_field_torrentClient")
+          .querySelector('[value="ruTorrent 🛠️"]').disabled = true;
+        ruTorrentPasswordField.disabled = true;
+        ruTorrentURLField.disabled = true;
+        ruTorrentUsernameField.disabled = true;
+
+        // Obfuscate the client credentials on blur
+        for (let inputField of document.querySelectorAll(
+          ".quiCKIE_obfuscate",
+        )) {
+          inputField.type = "password";
+          inputField.addEventListener("focus", () => {
+            inputField.type = "text";
+          });
+          inputField.addEventListener("blur", () => {
+            inputField.type = "password";
+          });
+        }
+
+        // Set 'int' and 'float' fields to blank values when appropriate
+        for (let fieldName of [
+          "ratioLimit",
+          "seedTime",
+          "upLimit",
+          "dlLimit",
+          "instance",
+          "paginationLoop",
+        ]) {
+          for (let inputField of document
+            .getElementById("quiCKIE_config")
+            .querySelectorAll(`input[data-fieldtype=${fieldName}`)) {
+            if (fieldName == "paginationLoop") {
+              inputField.value < 500 ? (inputField.value = "") : null;
+            } else if (fieldName == "ratioLimit" || fieldName == "seedTime") {
+              inputField.value == 0 ? (inputField.value = "") : null;
+            } else {
+              inputField.value <= 0 ? (inputField.value = "") : null;
+            }
+          }
+        }
+
+        function torrentClientChange() {
+          // The torernt client was changed, so disable the quiCKIE fields that no longer apply and hide the clientFields not belonging to this client
+
+          // 1: Enable all previously disabled fields, 2: Disable fields not applicable to the selected client, 3: Hide client settings not applicable to the selected client
+
+          let allClientFields = [
+            "qui",
+            "qBitTorrent",
+            "transmission",
+            "deluge",
+            "ruTorrent",
+          ]; // An array of field names to be hidden
+          let hideClientFields;
+
+          let allInputFields = document.querySelectorAll(
+            "input.quiCKIE_disabledField",
+          );
+          for (inputField of allInputFields) {
+            // Enable any disabled fields
+            inputField.disabled = false;
+            inputField.classList.remove("quiCKIE_disabledField");
+          }
+
+          // The currently selected torrent client from the dropdown list
+          let torrentClient = document.getElementById(
+            "quiCKIE_config_field_torrentClient",
+          ).value;
+
+          if (torrentClient == "qui") {
+            hideClientFields = allClientFields.filter(function (item) {
+              return item != "qui";
+            });
+          } else if (torrentClient == "qBitTorrent") {
+            hideClientFields = allClientFields.filter(function (item) {
+              return item != "qBitTorrent";
+            });
+
+            for (let inputField of document.querySelectorAll(
+              'input[data-fieldtype="instance"]',
+            )) {
+              inputField.disabled = true;
+              inputField.classList.add("quiCKIE_disabledField");
+            }
+          } else if (torrentClient == "Transmission") {
+            hideClientFields = allClientFields.filter(function (item) {
+              return item != "transmission";
+            });
+
+            let fieldsToDisable = [
+              "category",
+              "ratioLimit",
+              "seedTime",
+              "dlLimit",
+              "upLimit",
+              "instance",
+              "subFolder",
+              "autoTMM",
+              "skipHash",
+            ];
+            for (field of fieldsToDisable) {
+              let allInputFields = document.querySelectorAll(
+                `input[data-fieldtype="${field}"]`,
+              );
+              for (inputField of allInputFields) {
+                inputField.disabled = true;
+                inputField.classList.add("quiCKIE_disabledField");
+              }
+            }
+          } else if (torrentClient == "Deluge") {
+            hideClientFields = allClientFields.filter(function (item) {
+              return item != "deluge";
+            });
+
+            let fieldsToDisable = [
+              "category",
+              "tags",
+              "ratioLimit",
+              "seedTime",
+              "instance",
+              "subFolder",
+              "autoTMM",
+              "skipHash",
+            ];
+            for (field of fieldsToDisable) {
+              let allInputFields = document.querySelectorAll(
+                `input[data-fieldtype="${field}"]`,
+              );
+              for (inputField of allInputFields) {
+                inputField.disabled = true;
+                inputField.classList.add("quiCKIE_disabledField");
+              }
+            }
+          } else if (torrentClient == "ruTorrent") {
+            // ruTorrent is selected
+
+            hideClientFields = allClientFields.filter(function (item) {
+              return item != "ruTorrent";
+            });
+
+            let fieldsToDisable = [
+              "category",
+              "ratioLimit",
+              "seedTime",
+              "dlLimit",
+              "upLimit",
+              "instance",
+              "subFolder",
+              "autoTMM",
+              "skipHash",
+            ];
+            for (field of fieldsToDisable) {
+              let allInputFields = document.querySelectorAll(
+                `input[data-fieldtype="${field}"]`,
+              );
+              for (inputField of allInputFields) {
+                inputField.disabled = true;
+                inputField.classList.add("quiCKIE_disabledField");
+              }
+            }
+          }
+
+          for (let clientFieldName of allClientFields) {
+            // Start by revealing all client fields
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}ApiKey_field_label`,
+              ).style.display = "";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}ApiKey`,
+              ).style.display = "";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}URL_field_label`,
+              ).style.display = "";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}URL`,
+              ).style.display = "";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}Username_field_label`,
+              ).style.display = "";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}Username`,
+              ).style.display = "";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}Password_field_label`,
+              ).style.display = "";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}Password`,
+              ).style.display = "";
+            } catch (error) {}
+          }
+
+          for (let clientFieldName of hideClientFields) {
+            // Hide client fields not applicable to the selected client
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}ApiKey_field_label`,
+              ).style.display = "none";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}ApiKey`,
+              ).style.display = "none";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}URL_field_label`,
+              ).style.display = "none";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}URL`,
+              ).style.display = "none";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}Username_field_label`,
+              ).style.display = "none";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}Username`,
+              ).style.display = "none";
+            } catch (error) {}
+
+            try {
+              document.getElementById(
+                `quiCKIE_config_${clientFieldName}Password_field_label`,
+              ).style.display = "none";
+              document.getElementById(
+                `quiCKIE_config_field_${clientFieldName}Password`,
+              ).style.display = "none";
+            } catch (error) {}
+          }
+        }
+
+        document
+          .getElementById("quiCKIE_config_field_torrentClient")
+          .addEventListener("change", function () {
+            torrentClientChange();
+          });
+
+        torrentClientChange();
+
+        // Create GitHub version element
+        let githubSVG =
+          '<svg width="16" height="16" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_730_27136)"><path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="white"/></g><defs><clipPath id="clip0_730_27136"><rect width="98" height="96" fill="white"/></clipPath></defs></svg>';
+
+        let versionElement = document.createElement("a");
+        versionElement.classList = "version_label reset";
+        versionElement.title = "Source Code on GitHub";
+        versionElement.target = "_blank";
+        versionElement.href = `${GM_info.script.homepage}`;
+        versionElement.innerHTML = `${githubSVG} Version ${GM_info.script.version}`;
+
+        doc
+          .getElementById("quiCKIE_config_buttons_holder")
+          .appendChild(versionElement);
+
+        // Adjust the Import\Export buttons
+        let exportButton = document.getElementById(
+          "quiCKIE_config_field_settingsExport",
+        );
+        exportButton.classList.add("saveclose_buttons");
+
+        let importButton = document.getElementById(
+          "quiCKIE_config_field_settingsImport",
+        );
+        importButton.classList.add("saveclose_buttons");
+
+        let buttonsHolderElement = document.getElementById(
+          "quiCKIE_config_buttons_holder",
+        );
+        buttonsHolderElement.appendChild(importButton);
+        buttonsHolderElement.appendChild(exportButton);
+
+        // Remove the now empty <div> elements
+        for (let emptyElement of document
+          .getElementById("quiCKIE_config")
+          .querySelectorAll("div.config_var:empty")) {
+          emptyElement.remove();
+        }
+
+        // Add success animation to save button
+        let saveButton = doc.getElementById("quiCKIE_config_saveBtn");
+        saveButton.addEventListener("click", () => {
+          // When the save button is clicked, temporarily assign a css class to produce the animation
+          saveButton.classList.add("success");
+          setTimeout(() => saveButton.classList.remove("success"), 500);
+        });
+
+        if (this.get("welcomeMessage") == "show") {
+          // Display this welcomeMessage when first opening the quiCKIE settings panel
+          confirm(
+            "🐰 Welcome to quiCKIE! 🐰\n\nMany of the trackers supported by quiCKIE were contributed by a member of that tracker. If there's a tracker that you'd like to see included, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for qui, with the other clients being added in at the tail-end of development.\n\nIf during your usage you encounter either a buggy feature, missing url, or broken\\dead tracker, open an issue on the quiCKIE GitHub page.\n\nEnjoy your quiCKIE, hover over the emojis for details, and finally a big shout-out to the people that have come together and kept this community thriving 🫶\n\n - Wirly",
+          );
+
+          this.set("welcomeMessage", "hide");
+        }
+      },
+      save: function () {
+        // Actions to take when the 'Save' button is clicked
+        reloadWindow = true;
+
+        // Clear cached data when settings are saved
+        GM_listValues().forEach((key) => {
+          if (key !== "quiCKIE_config") {
+            GM_setValue(key, null);
+          }
+        });
+      },
+      close: function () {
+        // Actions to take when the 'Close' button is clicked
+        if (reloadWindow) {
+          if (this.frame) {
+            window.location.reload();
+          } else {
+            setTimeout(() => {
+              window.location.reload();
+            }, 250);
+          }
+        }
+      },
+      reset: function () {
+        // Actions to take when the 'Reset' button is clicked
+        if (typeof resetToDefaults === "function") {
+          resetToDefaults();
+        }
+      },
+    },
+    // The CSS to use for the menu, loaded through the @resource line
+    css: GM_getResourceText("settingsPanelCSS"),
+  });
+
+  // Register the settings panel to be opened from the UserScript manager dialouge
+  GM_registerMenuCommand("Settings", () => {
+    GM_config.open();
+  });
+
+  return [
+    primaryDomain,
+    allPrimaryDomains,
+    allTrackerNames,
+    primaryDomainToTrackerName,
+    primaryDomainToHomepage,
+    trackerNameToPrimaryDomain,
+    presetCount,
+  ];
 }
-
 
 function getTrackerSettings(primaryDomain) {
-    // Define the main SETTINGS object and populate it with the current primaryDomain specific settings
+  // Define the main SETTINGS object and populate it with the current primaryDomain specific settings
 
-    // @trackerSettings
-    let SETTINGS = {
-        primaryDomain: primaryDomain,
-        forceTorrentFile: false,
-        firstTrackerHandlerScan: true,
-        firstThirdPartyScan: true,
+  // @trackerSettings
+  let SETTINGS = {
+    primaryDomain: primaryDomain,
+    forceTorrentFile: false,
+    firstTrackerHandlerScan: true,
+    firstThirdPartyScan: true,
 
-        // The global quiCKIE saved settings
-        bunnyButtonPlacement: GM_config.get('bunnyButtonPlacement'),
-        globalLeftClickAction: GM_config.get('globalLeftClickAction'),
-        globalMiddleClickAction: GM_config.get('globalMiddleClickAction'),
-        globalForcedTorrentFile: GM_config.get('globalForcedTorrentFile'),
-        thirdPartyDelay: GM_config.get('thirdPartyDelay'),
+    // The global quiCKIE saved settings
+    bunnyButtonPlacement: GM_config.get("bunnyButtonPlacement"),
+    globalLeftClickAction: GM_config.get("globalLeftClickAction"),
+    globalMiddleClickAction: GM_config.get("globalMiddleClickAction"),
+    globalForcedTorrentFile: GM_config.get("globalForcedTorrentFile"),
+    thirdPartyDelay: GM_config.get("thirdPartyDelay"),
 
-        torrentClient: {
-            'client': GM_config.get('torrentClient'),
+    torrentClient: {
+      client: GM_config.get("torrentClient"),
 
-            'quiURL': GM_config.get('quiURL'),
-            'quiApiKey': GM_config.get('quiApiKey'),
+      quiURL: GM_config.get("quiURL"),
+      quiApiKey: GM_config.get("quiApiKey"),
 
-            'qBitTorrentURL': GM_config.get('qBitTorrentURL'),
-            'qBitTorrentUsername': GM_config.get('qBitTorrentUsername'),
-            'qBitTorrentPassword': GM_config.get('qBitTorrentPassword'),
+      qBitTorrentURL: GM_config.get("qBitTorrentURL"),
+      qBitTorrentUsername: GM_config.get("qBitTorrentUsername"),
+      qBitTorrentPassword: GM_config.get("qBitTorrentPassword"),
 
-            'transmissionURL': GM_config.get('transmissionURL'),
-            'transmissionUsername': GM_config.get('transmissionUsername'),
-            'transmissionPassword': GM_config.get('transmissionPassword'),
+      transmissionURL: GM_config.get("transmissionURL"),
+      transmissionUsername: GM_config.get("transmissionUsername"),
+      transmissionPassword: GM_config.get("transmissionPassword"),
 
-            'delugeURL': GM_config.get('delugeURL'),
-            'delugePassword': GM_config.get('delugePassword'),
+      delugeURL: GM_config.get("delugeURL"),
+      delugePassword: GM_config.get("delugePassword"),
 
-            'ruTorrentURL': GM_config.get('ruTorrentURL'),
-            'ruTorrentUsername': GM_config.get('ruTorrentUsername'),
-            'ruTorrentPassword': GM_config.get('ruTorrentPassword'),
-        },
+      ruTorrentURL: GM_config.get("ruTorrentURL"),
+      ruTorrentUsername: GM_config.get("ruTorrentUsername"),
+      ruTorrentPassword: GM_config.get("ruTorrentPassword"),
+    },
 
-        // The saved settings of the current tracker
-        category: GM_config.get(`${primaryDomain}-category`),
-        savePath: GM_config.get(`${primaryDomain}-savePath`),
-        tags: GM_config.get(`${primaryDomain}-tags`),
-        ratioLimit: GM_config.get(`${primaryDomain}-ratioLimit`),
-        seedTime: GM_config.get(`${primaryDomain}-seedTime`),
-        dlLimit: GM_config.get(`${primaryDomain}-dlLimit`),
-        upLimit: GM_config.get(`${primaryDomain}-upLimit`),
-        instance: GM_config.get(`${primaryDomain}-instance`),
-        paginationLoop: GM_config.get(`${primaryDomain}-paginationLoop`),
-        leftClick: GM_config.get(`${primaryDomain}-leftClick`),
-        thirdPartyScan: GM_config.get(`${primaryDomain}-thirdPartyScan`),
-        hideDL: GM_config.get(`${primaryDomain}-hideDL`),
-        startPaused: GM_config.get(`${primaryDomain}-startPaused`),
-        subFolder: GM_config.get(`${primaryDomain}-subFolder`),
-        seqPieces: GM_config.get(`${primaryDomain}-seqPieces`),
-        autoTMM: GM_config.get(`${primaryDomain}-autoTMM`),
-        skipHash: GM_config.get(`${primaryDomain}-skipHash`),
+    // The saved settings of the current tracker
+    category: GM_config.get(`${primaryDomain}-category`),
+    savePath: GM_config.get(`${primaryDomain}-savePath`),
+    tags: GM_config.get(`${primaryDomain}-tags`),
+    ratioLimit: GM_config.get(`${primaryDomain}-ratioLimit`),
+    seedTime: GM_config.get(`${primaryDomain}-seedTime`),
+    dlLimit: GM_config.get(`${primaryDomain}-dlLimit`),
+    upLimit: GM_config.get(`${primaryDomain}-upLimit`),
+    instance: GM_config.get(`${primaryDomain}-instance`),
+    paginationLoop: GM_config.get(`${primaryDomain}-paginationLoop`),
+    leftClick: GM_config.get(`${primaryDomain}-leftClick`),
+    thirdPartyScan: GM_config.get(`${primaryDomain}-thirdPartyScan`),
+    hideDL: GM_config.get(`${primaryDomain}-hideDL`),
+    startPaused: GM_config.get(`${primaryDomain}-startPaused`),
+    subFolder: GM_config.get(`${primaryDomain}-subFolder`),
+    seqPieces: GM_config.get(`${primaryDomain}-seqPieces`),
+    autoTMM: GM_config.get(`${primaryDomain}-autoTMM`),
+    skipHash: GM_config.get(`${primaryDomain}-skipHash`),
+  };
 
-    }
+  // GM_config() saves what should be blank int/float fields as 0, which qbitTorrent interprets problematically, so change 0 to ''
+  SETTINGS.ratioLimit == 0 ? (SETTINGS.ratioLimit = "") : null;
+  SETTINGS.seedTime == 0 ? (SETTINGS.seedTime = "") : null;
+  SETTINGS.dlLimit <= 0 ? (SETTINGS.dlLimit = "") : null;
+  SETTINGS.upLimit <= 0 ? (SETTINGS.upLimit = "") : null;
+  SETTINGS.instance <= 0 ? (SETTINGS.instance = "") : null;
+  SETTINGS.paginationLoop < 500 ? (SETTINGS.paginationLoop = "") : null;
 
-    // GM_config() saves what should be blank int/float fields as 0, which qbitTorrent interprets problematically, so change 0 to ''
-    SETTINGS.ratioLimit == 0 ? SETTINGS.ratioLimit = '' : null
-    SETTINGS.seedTime == 0 ? SETTINGS.seedTime = '' : null
-    SETTINGS.dlLimit <= 0 ? SETTINGS.dlLimit = '' : null
-    SETTINGS.upLimit <= 0 ? SETTINGS.upLimit = '' : null
-    SETTINGS.instance <= 0 ? SETTINGS.instance = '' : null
-    SETTINGS.paginationLoop < 500 ? SETTINGS.paginationLoop = '' : null
-
-    return SETTINGS
-
+  return SETTINGS;
 }
 
-
 function createPresetItems(primaryDomains) {
-    // For all the primaryDomains (array), generate and return a object who's properties equal the presetMenu items applicable to that primaryDomain
+  // For all the primaryDomains (array), generate and return a object who's properties equal the presetMenu items applicable to that primaryDomain
 
-    defaultItems = {
-        'send': {
-            content: '☁️ Send',
-            events: {
-                'click': function(event) {
-                    // This menuItem was clicked, so use basic settings to add the torrent
+  defaultItems = {
+    send: {
+      content: "☁️ Send",
+      events: {
+        click: function (event) {
+          // This menuItem was clicked, so use basic settings to add the torrent
 
-                    let bunnyButtonId = this.dataset.targetid
-                    let bunnyButton = document.getElementById(bunnyButtonId)
+          let bunnyButtonId = this.dataset.targetid;
+          let bunnyButton = document.getElementById(bunnyButtonId);
 
-                    let startPaused = false
-                    if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
-                        // Shift-Ctrl-Click: Add the torrent in a paused state
-                        startPaused = true
-                    }
+          let startPaused = false;
+          if (event.shiftKey && event.ctrlKey && event.button == 0) {
+            // Shift-Ctrl-Click: Add the torrent in a paused state
+            startPaused = true;
+          }
 
-
-                    addTorrent({
-                        torrentURL: bunnyButton.dataset.torrenturl,
-                        torrentClient: SETTINGS.torrentClient,
-                        bunnyButtonId: bunnyButtonId,
-                        startPaused: startPaused,
-                    })
-
-                },
-                'mouseover': function(event) {
-                    this.title = `☁️ Send the torrent to ${SETTINGS.torrentClient.client} with no custom settings`
-                }
-            }
+          addTorrent({
+            torrentURL: bunnyButton.dataset.torrenturl,
+            torrentClient: SETTINGS.torrentClient,
+            bunnyButtonId: bunnyButtonId,
+            startPaused: startPaused,
+          });
         },
-
-        'sendPaused': {
-            content: '☁️ Send Paused',
-            events: {
-                'click': function(event) {
-                    // This menuItem was clicked, so use basic settings to add the torrent, but in a paused state
-
-                    let bunnyButtonId = this.dataset.targetid
-                    let bunnyButton = document.getElementById(bunnyButtonId)
-
-                    addTorrent({
-                        torrentURL: bunnyButton.dataset.torrenturl,
-                        torrentClient: SETTINGS.torrentClient,
-                        bunnyButtonId: bunnyButtonId,
-                        startPaused: true,
-                    })
-
-                },
-                'mouseover': function(event) {
-                    this.title = `☁️ Send the torrent to ${SETTINGS.torrentClient.client} with only StartPaused enabled`
-                }
-            }
+        mouseover: function (event) {
+          this.title = `☁️ Send the torrent to ${SETTINGS.torrentClient.client} with no custom settings`;
         },
+      },
+    },
 
-        'settings': {
-            content: '🛠️ Settings',
-            events: {
-                'click': function(event) {
-                    // This menuItem was clicked, so open the quiCKIE settings panel
-                    GM_config.open()
-                },
-                'mouseover': function(event) {
-                    this.title = `🛠️ Open the quiCKIE Settings Panel`
-                }
-            }
+    sendPaused: {
+      content: "☁️ Send Paused",
+      events: {
+        click: function (event) {
+          // This menuItem was clicked, so use basic settings to add the torrent, but in a paused state
+
+          let bunnyButtonId = this.dataset.targetid;
+          let bunnyButton = document.getElementById(bunnyButtonId);
+
+          addTorrent({
+            torrentURL: bunnyButton.dataset.torrenturl,
+            torrentClient: SETTINGS.torrentClient,
+            bunnyButtonId: bunnyButtonId,
+            startPaused: true,
+          });
         },
-
-        'leftClickAll': {
-            content: '🐰 Left-Click All',
-            events: {
-                'click': function(event) {
-                    // Simulate a left-click on every bunnyButton of the page
-
-                    let leftClickAction
-                    SETTINGS.leftClick == 'Global' ? leftClickAction = SETTINGS.globalLeftClickAction : leftClickAction = SETTINGS.leftClick
-
-                    let confirmation = confirm(`🐰 quiCKIE 🐰\n\n You have selected the '🐰 Left-Click All' action\n\nAre you sure you want to Left-Click every BunnyButton on the page?\n\nLeft-Click Action: ${leftClickAction}`)
-
-                    if ( confirmation == false ) {
-                        // The user has chosen to abort the Left-Click All
-                        return
-                    }
-
-                    let allBunnyButtons = document.querySelectorAll('a.quickie_bunnyButton')
-
-                    let delay = 0
-
-                    for ( let bunnyButton of allBunnyButtons ) {
-
-                        // Add the 'leftClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
-                        bunnyButton.classList.add('leftClickAllTriggered')
-
-                        setTimeout(() => {
-                            // After the delay, trigger a 'mouseup' event on this bunnyButton
-                            let clickEvent = new Event('mouseup', { bubbles: true, cancelable: true });
-                            bunnyButton.dispatchEvent(clickEvent);
-
-                            bunnyButton.classList.remove('leftClickAllTriggered')
-
-                        }, delay)
-
-                        delay += 50
-                    }
-
-                },
-                'mouseover': function(event) {
-                    this.title = '🐰 Perform a Left-Click on every BunnyButton of the page'
-                }
-            }
+        mouseover: function (event) {
+          this.title = `☁️ Send the torrent to ${SETTINGS.torrentClient.client} with only StartPaused enabled`;
         },
+      },
+    },
 
-        'middleClickAll': {
-            content: '🐰 Middle-Click All',
-            events: {
-                'click': function(event) {
-                    // Simulate a left-click on every bunnyButton of the page
-
-                    let confirmation = confirm(`🐰 quiCKIE 🐰\n\n You have selected the '🐰 Middle-Click All' action\n\nAre you sure you want to Middle-Click every BunnyButton on the page?\n\nMiddle-Click Action: ${SETTINGS.globalMiddleClickAction}`)
-
-                    if ( confirmation == false ) {
-                        // The user has chosen to abort the Middle-Click All
-                        return
-                    }
-
-                    let allBunnyButtons = document.querySelectorAll('a.quickie_bunnyButton')
-
-                    let delay = 0
-
-                    for ( let bunnyButton of allBunnyButtons ) {
-
-                        // Add the 'middleClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
-                        bunnyButton.classList.add('middleClickAllTriggered')
-
-                        setTimeout(() => {
-                            // After the delay, trigger a 'mouseup' event on this bunnyButton
-                            let clickEvent = new Event('mouseup', { bubbles: true, cancelable: true })
-                            bunnyButton.dispatchEvent(clickEvent)
-
-                            bunnyButton.classList.remove('middleClickAllTriggered')
-
-                        }, delay)
-
-                        delay += 50
-                    }
-
-                },
-                'mouseover': function(event) {
-                    this.title = '🐰 Perform a Middle-Click on every BunnyButton of the page'
-                }
-            }
+    settings: {
+      content: "🛠️ Settings",
+      events: {
+        click: function (event) {
+          // This menuItem was clicked, so open the quiCKIE settings panel
+          GM_config.open();
         },
-
-        'client': {
-            content: `🖥️ ${SETTINGS.torrentClient.client}`,
-            events: {
-                'click': function(event) {
-                    // This menuItem was clicked, so open the webUI of the active torrent client
-
-                    if ( SETTINGS.torrentClient.client == 'qui') {
-                        window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
-                    } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
-                        window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
-                    } else if ( SETTINGS.torrentClient.client == 'Transmission') {
-                        window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
-                    } else if ( SETTINGS.torrentClient.client == 'Deluge') {
-                        window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
-                    } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
-                        window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
-                    }
-
-                },
-                'mouseover': function(event) {
-                    this.title = `🖥️ Open the ${SETTINGS.torrentClient.client} Web Interface`
-                }
-            }
+        mouseover: function (event) {
+          this.title = `🛠️ Open the quiCKIE Settings Panel`;
         },
+      },
+    },
 
-        'torrentfile' : {
-            content: '💾 TorrentFile',
-            events: {
-                'click': function(event) {
-                    // This menuItem was clicked, so simulate a click of the torrentURL\magnetLink to download\open the .torrent file
+    leftClickAll: {
+      content: "🐰 Left-Click All",
+      events: {
+        click: function (event) {
+          // Simulate a left-click on every bunnyButton of the page
 
-                    let bunnyButtonId = this.dataset.targetid
-                    let bunnyButton = document.getElementById(bunnyButtonId)
+          let leftClickAction;
+          SETTINGS.leftClick == "Global"
+            ? (leftClickAction = SETTINGS.globalLeftClickAction)
+            : (leftClickAction = SETTINGS.leftClick);
 
-                    let fileElement = document.createElement('a')
-                    fileElement.href = bunnyButton.dataset.torrenturl
+          let confirmation = confirm(
+            `🐰 quiCKIE 🐰\n\n You have selected the '🐰 Left-Click All' action\n\nAre you sure you want to Left-Click every BunnyButton on the page?\n\nLeft-Click Action: ${leftClickAction}`,
+          );
 
-                    document.body.appendChild(fileElement)
-                    fileElement.click()
-                    document.body.removeChild(fileElement)
-                    fileElement.remove()
-                    replaceEmojis(bunnyButton, '💾')
+          if (confirmation == false) {
+            // The user has chosen to abort the Left-Click All
+            return;
+          }
 
-                },
-                'mouseover': function(event) {
-                    this.title = `💾 Download the .torrent file\n\nℹ️ BunnyButtons based on MagnetLinks will instead open the MagnetLink`
-                }
-            }
+          let allBunnyButtons = document.querySelectorAll(
+            "a.quickie_bunnyButton",
+          );
+
+          let delay = 0;
+
+          for (let bunnyButton of allBunnyButtons) {
+            // Add the 'leftClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
+            bunnyButton.classList.add("leftClickAllTriggered");
+
+            setTimeout(() => {
+              // After the delay, trigger a 'mouseup' event on this bunnyButton
+              let clickEvent = new Event("mouseup", {
+                bubbles: true,
+                cancelable: true,
+              });
+              bunnyButton.dispatchEvent(clickEvent);
+
+              bunnyButton.classList.remove("leftClickAllTriggered");
+            }, delay);
+
+            delay += 50;
+          }
         },
-    }
+        mouseover: function (event) {
+          this.title =
+            "🐰 Perform a Left-Click on every BunnyButton of the page";
+        },
+      },
+    },
 
-    let allPresetItems = {}
+    middleClickAll: {
+      content: "🐰 Middle-Click All",
+      events: {
+        click: function (event) {
+          // Simulate a left-click on every bunnyButton of the page
 
-    for ( let primaryDomain of primaryDomains ) {
-        // For each primaryDomain, determine the presets that apply to that tracker and add them to the object
-        let menuItems = []
-        for ( let i=1; i <= presetCount; i++ ) {
-            // for each preset, create a menuItem object to put in the right-click presets-menu
-            let presetName = GM_config.get(`preset-${i}-preset`)
-            // let presetName = GM_config.get(`preset-${i}-name`)
-            let presetTrackersList = GM_config.get(`preset-${i}-presetTrackers`).toLowerCase()
+          let confirmation = confirm(
+            `🐰 quiCKIE 🐰\n\n You have selected the '🐰 Middle-Click All' action\n\nAre you sure you want to Middle-Click every BunnyButton on the page?\n\nMiddle-Click Action: ${SETTINGS.globalMiddleClickAction}`,
+          );
 
-            if ( presetName == '' || presetTrackersList == '') {
-                // A empty preset name or no specified trackers, so don't add this item to the presets-menu
-                continue
-            }
+          if (confirmation == false) {
+            // The user has chosen to abort the Middle-Click All
+            return;
+          }
 
-            // Check if the list of trackers in the presetTrackers field contains a match against the settings panel label of this tracker
-            let settingsPanelLabel = primaryDomainToTrackerName[primaryDomain].toLowerCase()
-            if ( !presetTrackersList.match(/\*/) && !presetTrackersList.match(settingsPanelLabel) ) {
-                // Neither a wildcard nor a matching tracker label, so don't add this item to the presets-menu
-                continue
-            }
+          let allBunnyButtons = document.querySelectorAll(
+            "a.quickie_bunnyButton",
+          );
 
-            if ( presetName.match(/^leftclickall$/i) ){
-                // This preset item should perform a Left-Click action on EVERY bunnyButton on the page
+          let delay = 0;
 
-                var presetItem = defaultItems['leftClickAll']
+          for (let bunnyButton of allBunnyButtons) {
+            // Add the 'middleClickAllTriggered' class to this bunnyButton, which will be used to identify this 'mouseup' event
+            bunnyButton.classList.add("middleClickAllTriggered");
 
-            } else if ( presetName.match(/^middleclickall$/i) ){
-                // This preset item should perform a Middle-Click action on EVERY bunnyButton on the page
+            setTimeout(() => {
+              // After the delay, trigger a 'mouseup' event on this bunnyButton
+              let clickEvent = new Event("mouseup", {
+                bubbles: true,
+                cancelable: true,
+              });
+              bunnyButton.dispatchEvent(clickEvent);
 
-                var presetItem = defaultItems['middleClickAll']
+              bunnyButton.classList.remove("middleClickAllTriggered");
+            }, delay);
 
-            } else if ( presetName.match(/^send$/i) ) {
-                // This preset item should send the torrent to the client no custom settings
+            delay += 50;
+          }
+        },
+        mouseover: function (event) {
+          this.title =
+            "🐰 Perform a Middle-Click on every BunnyButton of the page";
+        },
+      },
+    },
 
-                var presetItem = defaultItems['send']
+    client: {
+      content: `🖥️ ${SETTINGS.torrentClient.client}`,
+      events: {
+        click: function (event) {
+          // This menuItem was clicked, so open the webUI of the active torrent client
 
-            } else if ( presetName.match(/^sendpaused$/i) ) {
-                // This preset item should send the torrent to the client no custom settings, except for startPaused = true
+          if (SETTINGS.torrentClient.client == "qui") {
+            window.open(SETTINGS.torrentClient.quiURL, "_blank").focus();
+          } else if (SETTINGS.torrentClient.client == "qBitTorrent") {
+            window
+              .open(SETTINGS.torrentClient.qBitTorrentURL, "_blank")
+              .focus();
+          } else if (SETTINGS.torrentClient.client == "Transmission") {
+            window
+              .open(SETTINGS.torrentClient.transmissionURL, "_blank")
+              .focus();
+          } else if (SETTINGS.torrentClient.client == "Deluge") {
+            window.open(SETTINGS.torrentClient.delugeURL, "_blank").focus();
+          } else if (SETTINGS.torrentClient.client == "ruTorrent") {
+            window.open(SETTINGS.torrentClient.ruTorrentURL, "_blank").focus();
+          }
+        },
+        mouseover: function (event) {
+          this.title = `🖥️ Open the ${SETTINGS.torrentClient.client} Web Interface`;
+        },
+      },
+    },
 
-                var presetItem = defaultItems['sendPaused']
+    torrentfile: {
+      content: "💾 TorrentFile",
+      events: {
+        click: function (event) {
+          // This menuItem was clicked, so simulate a click of the torrentURL\magnetLink to download\open the .torrent file
 
-            } else if ( presetName.match(/^settings$/i) ) {
-                // This preset item should open the quiCKIE Settings panel
+          let bunnyButtonId = this.dataset.targetid;
+          let bunnyButton = document.getElementById(bunnyButtonId);
 
-                var presetItem = defaultItems['settings']
+          let fileElement = document.createElement("a");
+          fileElement.href = bunnyButton.dataset.torrenturl;
 
-            } else if ( presetName.match(/^client$/i) ) {
-                // This preset item should open a tab to the torrent client
+          document.body.appendChild(fileElement);
+          fileElement.click();
+          document.body.removeChild(fileElement);
+          fileElement.remove();
+          replaceEmojis(bunnyButton, "💾");
+        },
+        mouseover: function (event) {
+          this.title = `💾 Download the .torrent file\n\nℹ️ BunnyButtons based on MagnetLinks will instead open the MagnetLink`;
+        },
+      },
+    },
+  };
 
-                var presetItem = defaultItems['client']
+  let allPresetItems = {};
 
-            } else if ( presetName.match(/^torrentfile$/i) ) {
-                // This preset item should open the torrentURL
+  for (let primaryDomain of primaryDomains) {
+    // For each primaryDomain, determine the presets that apply to that tracker and add them to the object
+    let menuItems = [];
+    for (let i = 1; i <= presetCount; i++) {
+      // for each preset, create a menuItem object to put in the right-click presets-menu
+      let presetName = GM_config.get(`preset-${i}-preset`);
+      // let presetName = GM_config.get(`preset-${i}-name`)
+      let presetTrackersList = GM_config.get(
+        `preset-${i}-presetTrackers`,
+      ).toLowerCase();
 
-                var presetItem = defaultItems['torrentfile']
+      if (presetName == "" || presetTrackersList == "") {
+        // A empty preset name or no specified trackers, so don't add this item to the presets-menu
+        continue;
+      }
 
-            } else if ( presetName.match(/^[-=\.\s]+$/) ) {
-                // This preset item is a menu separator, so create a menuItem that does nothing when clicked
+      // Check if the list of trackers in the presetTrackers field contains a match against the settings panel label of this tracker
+      let settingsPanelLabel =
+        primaryDomainToTrackerName[primaryDomain].toLowerCase();
+      if (
+        !presetTrackersList.match(/\*/) &&
+        !presetTrackersList.match(settingsPanelLabel)
+      ) {
+        // Neither a wildcard nor a matching tracker label, so don't add this item to the presets-menu
+        continue;
+      }
 
-                let dividerText = presetName
+      if (presetName.match(/^leftclickall$/i)) {
+        // This preset item should perform a Left-Click action on EVERY bunnyButton on the page
 
-                // Replace - = . with their respective symbols
-                if ( presetName.includes('-') ) {
-                    dividerText = presetName.replaceAll(/./g, '─')
-                } else if ( presetName.includes('=') ) {
-                    dividerText = presetName.replaceAll(/./g, '═')
-                } else if ( presetName.includes('.') ) {
-                    dividerText = presetName.replaceAll(/./g, '·')
-                }
+        var presetItem = defaultItems["leftClickAll"];
+      } else if (presetName.match(/^middleclickall$/i)) {
+        // This preset item should perform a Middle-Click action on EVERY bunnyButton on the page
 
-                var presetItem = {
-                    content: dividerText,
-                    divider: 'true',
-                }
+        var presetItem = defaultItems["middleClickAll"];
+      } else if (presetName.match(/^send$/i)) {
+        // This preset item should send the torrent to the client no custom settings
 
-            } else {
-                // For this preset, create a menuItem entry to be clickable in the presets-menu
-                let presetSettings = {
-                    category: GM_config.get(`preset-${i}-category`),
-                    savePath: GM_config.get(`preset-${i}-savePath`),
-                    tags: GM_config.get(`preset-${i}-tags`),
-                    ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
-                    seedTime: GM_config.get(`preset-${i}-seedTime`),
-                    dlLimit: GM_config.get(`preset-${i}-dlLimit`),
-                    upLimit: GM_config.get(`preset-${i}-upLimit`),
-                    instance: GM_config.get(`preset-${i}-instance`),
-                    startPaused: GM_config.get(`preset-${i}-startPaused`),
-                    subFolder: GM_config.get(`preset-${i}-subFolder`),
-                    seqPieces: GM_config.get(`preset-${i}-seqPieces`),
-                    autoTMM: GM_config.get(`preset-${i}-autoTMM`),
-                    skipHash: GM_config.get(`preset-${i}-skipHash`),
-                }
+        var presetItem = defaultItems["send"];
+      } else if (presetName.match(/^sendpaused$/i)) {
+        // This preset item should send the torrent to the client no custom settings, except for startPaused = true
 
-                if ( presetSettings.ratioLimit == 0 ) { presetSettings.ratioLimit = '' }
-                if ( presetSettings.seedTime == 0 ) { presetSettings.seedTime = '' }
-                if ( presetSettings.dlLimit == 0 ) { presetSettings.dlLimit = '' }
-                if ( presetSettings.upLimit == 0 ) { presetSettings.upLimit = '' }
-                if ( presetSettings.instance == 0 ) { presetSettings.instance = '' }
+        var presetItem = defaultItems["sendPaused"];
+      } else if (presetName.match(/^settings$/i)) {
+        // This preset item should open the quiCKIE Settings panel
 
-                var presetItem = {
-                    content: presetName,
-                    events: {
-                        'click': function(event) {
-                            // This menuItem was clicked, so use the selected preset to add the torrent
+        var presetItem = defaultItems["settings"];
+      } else if (presetName.match(/^client$/i)) {
+        // This preset item should open a tab to the torrent client
 
-                            // The bunnyButtonId, which was set as a data set as a dataset attribute when the bunnyButton was right-clicked
-                            let bunnyButtonId = this.dataset.targetid
-                            let bunnyButton = document.getElementById(bunnyButtonId)
+        var presetItem = defaultItems["client"];
+      } else if (presetName.match(/^torrentfile$/i)) {
+        // This preset item should open the torrentURL
 
-                            let torrentURL = bunnyButton.dataset.torrenturl
+        var presetItem = defaultItems["torrentfile"];
+      } else if (presetName.match(/^[-=\.\s]+$/)) {
+        // This preset item is a menu separator, so create a menuItem that does nothing when clicked
 
-                            let startPaused = presetSettings.startPaused
-                            if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
-                                // Shift-Ctrl-Click: Add the torrent in a paused state
-                                startPaused = true
-                            }
+        let dividerText = presetName;
 
-                            addTorrent({
-                                torrentURL: torrentURL,
-                                torrentClient: SETTINGS.torrentClient,
-                                bunnyButtonId: bunnyButtonId,
+        // Replace - = . with their respective symbols
+        if (presetName.includes("-")) {
+          dividerText = presetName.replaceAll(/./g, "─");
+        } else if (presetName.includes("=")) {
+          dividerText = presetName.replaceAll(/./g, "═");
+        } else if (presetName.includes(".")) {
+          dividerText = presetName.replaceAll(/./g, "·");
+        }
 
-                                instance: presetSettings.instance,
-                                category: presetSettings.category,
-                                savePath: presetSettings.savePath,
-                                tags: presetSettings.tags,
-                                ratioLimit: presetSettings.ratioLimit,
-                                seedTime: presetSettings.seedTime,
-                                dlLimit: presetSettings.dlLimit,
-                                upLimit: presetSettings.upLimit,
-                                startPaused: startPaused,
-                                subFolder: presetSettings.subFolder,
-                                seqPieces: presetSettings.seqPieces,
-                                autoTMM: presetSettings.autoTMM,
-                                skipHash: presetSettings.skipHash})
+        var presetItem = {
+          content: dividerText,
+          divider: "true",
+        };
+      } else {
+        // For this preset, create a menuItem entry to be clickable in the presets-menu
+        let presetSettings = {
+          category: GM_config.get(`preset-${i}-category`),
+          savePath: GM_config.get(`preset-${i}-savePath`),
+          tags: GM_config.get(`preset-${i}-tags`),
+          ratioLimit: GM_config.get(`preset-${i}-ratioLimit`),
+          seedTime: GM_config.get(`preset-${i}-seedTime`),
+          dlLimit: GM_config.get(`preset-${i}-dlLimit`),
+          upLimit: GM_config.get(`preset-${i}-upLimit`),
+          instance: GM_config.get(`preset-${i}-instance`),
+          startPaused: GM_config.get(`preset-${i}-startPaused`),
+          subFolder: GM_config.get(`preset-${i}-subFolder`),
+          seqPieces: GM_config.get(`preset-${i}-seqPieces`),
+          autoTMM: GM_config.get(`preset-${i}-autoTMM`),
+          skipHash: GM_config.get(`preset-${i}-skipHash`),
+        };
 
-                        },
-                        'mouseover': function(event) {
-                            let bunnyButtonId = this.dataset.targetid
-                            let bunnyButton = document.getElementById(bunnyButtonId)
+        if (presetSettings.ratioLimit == 0) {
+          presetSettings.ratioLimit = "";
+        }
+        if (presetSettings.seedTime == 0) {
+          presetSettings.seedTime = "";
+        }
+        if (presetSettings.dlLimit == 0) {
+          presetSettings.dlLimit = "";
+        }
+        if (presetSettings.upLimit == 0) {
+          presetSettings.upLimit = "";
+        }
+        if (presetSettings.instance == 0) {
+          presetSettings.instance = "";
+        }
 
-                            this.title = ` ─── 🚀 ${presetName} 🚀 ───
+        var presetItem = {
+          content: presetName,
+          events: {
+            click: function (event) {
+              // This menuItem was clicked, so use the selected preset to add the torrent
+
+              // The bunnyButtonId, which was set as a data set as a dataset attribute when the bunnyButton was right-clicked
+              let bunnyButtonId = this.dataset.targetid;
+              let bunnyButton = document.getElementById(bunnyButtonId);
+
+              let torrentURL = bunnyButton.dataset.torrenturl;
+
+              let startPaused = presetSettings.startPaused;
+              if (event.shiftKey && event.ctrlKey && event.button == 0) {
+                // Shift-Ctrl-Click: Add the torrent in a paused state
+                startPaused = true;
+              }
+
+              addTorrent({
+                torrentURL: torrentURL,
+                torrentClient: SETTINGS.torrentClient,
+                bunnyButtonId: bunnyButtonId,
+
+                instance: presetSettings.instance,
+                category: presetSettings.category,
+                savePath: presetSettings.savePath,
+                tags: presetSettings.tags,
+                ratioLimit: presetSettings.ratioLimit,
+                seedTime: presetSettings.seedTime,
+                dlLimit: presetSettings.dlLimit,
+                upLimit: presetSettings.upLimit,
+                startPaused: startPaused,
+                subFolder: presetSettings.subFolder,
+                seqPieces: presetSettings.seqPieces,
+                autoTMM: presetSettings.autoTMM,
+                skipHash: presetSettings.skipHash,
+              });
+            },
+            mouseover: function (event) {
+              let bunnyButtonId = this.dataset.targetid;
+              let bunnyButton = document.getElementById(bunnyButtonId);
+
+              this.title = ` ─── 🚀 ${presetName} 🚀 ───
 🗃️ = ${presetSettings.category}
 💾 = ${presetSettings.savePath}
 🏷️ = ${presetSettings.tags}
@@ -3467,561 +3935,662 @@ function createPresetItems(primaryDomains) {
 🛡️ = ${presetSettings.skipHash}
 
 🖥️ ${SETTINGS.torrentClient.client}
-🔗 ${bunnyButton.dataset.torrenturl}`
-                        }
-                    }
-                }
-            }
+🔗 ${bunnyButton.dataset.torrenturl}`;
+            },
+          },
+        };
+      }
 
-            menuItems.push(presetItem)
-
-        }
-
-        if ( menuItems.length == 0 ) {
-            // No presets were detected for this tracker, so let the user know and provide some default options
-
-            menuItems = [
-                {
-                    content: '🚀 No Presets for this Tracker 🚀',
-                    events: {
-                        'mouseover': function(event) {
-                            // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
-                            this.setAttribute('style', 'box-shadow: none !important; background-color: transparent !important')
-                        },
-                    }
-                },
-                defaultItems['settings'],
-                defaultItems['torrentfile'],
-                defaultItems['client'],
-                defaultItems['send'],
-            ]
-
-        }
-
-        allPresetItems[primaryDomain] = menuItems
-
+      menuItems.push(presetItem);
     }
 
-    return allPresetItems
+    if (menuItems.length == 0) {
+      // No presets were detected for this tracker, so let the user know and provide some default options
 
+      menuItems = [
+        {
+          content: "🚀 No Presets for this Tracker 🚀",
+          events: {
+            mouseover: function (event) {
+              // this.parentElement.setAttribute('style', 'background: none !important; background-color: transparent !important')
+              this.setAttribute(
+                "style",
+                "box-shadow: none !important; background-color: transparent !important",
+              );
+            },
+          },
+        },
+        defaultItems["settings"],
+        defaultItems["torrentfile"],
+        defaultItems["client"],
+        defaultItems["send"],
+      ];
+    }
+
+    allPresetItems[primaryDomain] = menuItems;
+  }
+
+  return allPresetItems;
 }
 
-let presetsMenuCSS = GM_getResourceText('presetsMenuCSS')
-GM_addStyle(presetsMenuCSS)
+let presetsMenuCSS = GM_getResourceText("presetsMenuCSS");
+GM_addStyle(presetsMenuCSS);
 function attachPresetsMenu(targetSelector, primaryDomain = primaryDomain) {
-    // For the targetSelector elements, use the provided primaryDomain to append the appropriate menu items from the global presetMenuItems object
+  // For the targetSelector elements, use the provided primaryDomain to append the appropriate menu items from the global presetMenuItems object
 
-    const presetsMenu = new ContextMenu({
-        // targetSelector == CSS Selector
-        target: targetSelector,
-        // An array of objects to display in the presets-menu
-        menuItems: presetMenuItems[primaryDomain]
-    })
+  const presetsMenu = new ContextMenu({
+    // targetSelector == CSS Selector
+    target: targetSelector,
+    // An array of objects to display in the presets-menu
+    menuItems: presetMenuItems[primaryDomain],
+  });
 
-    // init() will stack a 'contextmenu' eventlistener on elements, so don't call it more than once per bunnyButton
-    presetsMenu.init()
-
+  // init() will stack a 'contextmenu' eventlistener on elements, so don't call it more than once per bunnyButton
+  presetsMenu.init();
 }
-
 
 // @quickieTrackerHandler
 function quickieTrackerHandler({
-    // A universal tracker handler that uses the provided arguments to generate bunnyButtons for all the queried downloadElements
+  // A universal tracker handler that uses the provided arguments to generate bunnyButtons for all the queried downloadElements
 
-    downloadElementsSelector,
-    bunnyButtonFontSize = 'inherit',
-    bunnyButtonText = ' 🐰 ' ,
-    bunnyButtonParentPlacement = false,
-    downloadElementHideParentElementGap = false,
-    elementsSeparator = 'automatic',
-    bunnyButtonAddStyles = '',
-    bunnyButtonAddClasses = [],
-    seedingStatusSelector = null,
-    snatchedStatusSelector = null,
-    freeleechStatusSelector = null,
-    featuredStatusSelector = null,
-    afterBunnyButtonCreation = false,
-    enablePaginationLooping = false,
-    queryFromElement = document,
-    downloadElementsTorrentURLAttribute = 'href',
-    forceTorrentFile = false,
-    bunnyButtonAttachPresetsMenu = true,
-
+  downloadElementsSelector,
+  bunnyButtonFontSize = "inherit",
+  bunnyButtonText = " 🐰 ",
+  bunnyButtonParentPlacement = false,
+  downloadElementHideParentElementGap = false,
+  elementsSeparator = "automatic",
+  bunnyButtonAddStyles = "",
+  bunnyButtonAddClasses = [],
+  seedingStatusSelector = null,
+  snatchedStatusSelector = null,
+  freeleechStatusSelector = null,
+  featuredStatusSelector = null,
+  afterBunnyButtonCreation = false,
+  enablePaginationLooping = false,
+  queryFromElement = document,
+  downloadElementsTorrentURLAttribute = "href",
+  forceTorrentFile = false,
+  bunnyButtonAttachPresetsMenu = true,
 }) {
-    // Using the provided arguments, generate bunnyButtons for matching elements on this page
+  // Using the provided arguments, generate bunnyButtons for matching elements on this page
 
-    logger.info('quickieTrackerHandler Settings')
-    logger.log(arguments[0])
+  logger.info("quickieTrackerHandler Settings");
+  logger.log(arguments[0]);
 
-    // If the .torrent file should be forced to download through the browser
-    forceTorrentFile == true ? SETTINGS.forceTorrentFile = true : null
+  // If the .torrent file should be forced to download through the browser
+  forceTorrentFile == true ? (SETTINGS.forceTorrentFile = true) : null;
 
-    // The global setting for where to place the bunnyButton relative to the downloadElement
-    let bunnyButtonPlacement
-    SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButtonPlacement = 'afterend' : bunnyButtonPlacement = 'beforebegin'
+  // The global setting for where to place the bunnyButton relative to the downloadElement
+  let bunnyButtonPlacement;
+  SETTINGS.bunnyButtonPlacement == "After"
+    ? (bunnyButtonPlacement = "afterend")
+    : (bunnyButtonPlacement = "beforebegin");
 
-    // If pagination looping should be enforced on this page
-    enablePaginationLooping == true ? SETTINGS.paginationLoop = 750 : null
+  // If pagination looping should be enforced on this page
+  enablePaginationLooping == true ? (SETTINGS.paginationLoop = 750) : null;
 
-    // Determine if there is a reason to log the bunnyButtons so that they can be referenced after the query loop
-    let logElements = false
-    if ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null || typeof afterBunnyButtonCreation === 'function' ) {
-        logElements = true
-    }
+  // Determine if there is a reason to log the bunnyButtons so that they can be referenced after the query loop
+  let logElements = false;
+  if (
+    seedingStatusSelector != null ||
+    snatchedStatusSelector != null ||
+    freeleechStatusSelector != null ||
+    typeof afterBunnyButtonCreation === "function"
+  ) {
+    logElements = true;
+  }
 
-    function bunnyButtonGeneration(delay) {
-        // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
+  function bunnyButtonGeneration(delay) {
+    // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
 
-        try {
+    try {
+      setTimeout(() => {
+        // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
+        let allDownloadElements = queryFromElement.querySelectorAll(
+          `${downloadElementsSelector}:not([data-quickie_done="true"])`,
+        );
 
-            setTimeout(() => {
-                // Using the provided CSS selector, get an array of all the downloadElements that have not yet been processed
-                let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_done="true"])`)
+        logger.info("allDownloadElements");
+        logger.log(allDownloadElements);
 
-                logger.info('allDownloadElements')
-                logger.log(allDownloadElements)
+        // There is a function to be performed after the bunnyButtons are created, so populate a object to store the elements
+        logElements == true
+          ? (loggedElements = {
+              bunnyButtons: [],
+              downloadElements: [],
+              pairedElements: [],
+            })
+          : null;
 
-                // There is a function to be performed after the bunnyButtons are created, so populate a object to store the elements
-                logElements == true ? loggedElements = { bunnyButtons: [], downloadElements: [] , pairedElements: [] } : null
+        if (allDownloadElements.length >= 1) {
+          // The query returned results that have not yet been processed, so generate a bunnyButton for each downloadElement
 
-                if ( allDownloadElements.length >= 1 ) {
-                    // The query returned results that have not yet been processed, so generate a bunnyButton for each downloadElement
+          // The separator used between the DL button and the BunnyButton
+          elementsSeparator == "automatic"
+            ? (elementsSeparator = getPageSeparator(allDownloadElements[0]))
+            : null;
 
-                    // The separator used between the DL button and the BunnyButton
-                    elementsSeparator == 'automatic' ? elementsSeparator = getPageSeparator(allDownloadElements[0]) : null
+          // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
+          for (let downloadElement of allDownloadElements) {
+            // Use the supplied attribute (which should be a torrentURL) to create a bunnyButton for this downloadElement
+            let bunnyButton = createBunnyButton({
+              torrentURL: downloadElement[downloadElementsTorrentURLAttribute],
+              fontSize: bunnyButtonFontSize,
+              buttonText: bunnyButtonText,
+              torrentSettings: SETTINGS,
+              addButtonStyles: bunnyButtonAddStyles,
+              addButtonClasses: bunnyButtonAddClasses,
+            });
 
-                    // Process each downloadElement in the list one at a time, generating a bunnyButton for each and then inserting it after the downloadElement
-                    for (let downloadElement of allDownloadElements) {
+            let placementElement;
+            bunnyButtonParentPlacement == true
+              ? (placementElement = downloadElement.parentElement)
+              : (placementElement = downloadElement);
 
-                        // Use the supplied attribute (which should be a torrentURL) to create a bunnyButton for this downloadElement
-                        let bunnyButton = createBunnyButton({ torrentURL: downloadElement[downloadElementsTorrentURLAttribute], fontSize: bunnyButtonFontSize, buttonText: bunnyButtonText, torrentSettings: SETTINGS, addButtonStyles: bunnyButtonAddStyles, addButtonClasses: bunnyButtonAddClasses })
+            // Insert the bunnyButton after the placementElement
+            placementElement.insertAdjacentElement(
+              bunnyButtonPlacement,
+              bunnyButton,
+            );
 
-                        let placementElement
-                        bunnyButtonParentPlacement == true ? placementElement = downloadElement.parentElement : placementElement = downloadElement
+            if (SETTINGS.hideDL == true) {
+              // Hide the DL button and therefore don't insert a separator
 
-                        // Insert the bunnyButton after the placementElement
-                        placementElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
+              //
+              if (
+                downloadElementHideParentElementGap == true &&
+                bunnyButtonParentPlacement == true
+              ) {
+                downloadElement.parentElement.style.display = "none";
+              } else {
+                downloadElement.style.display = "none";
+              }
+            } else {
+              // Insert the separator between the placementElement and the bunnyButton
+              elementsSeparator == false
+                ? null
+                : placementElement.insertAdjacentText(
+                    bunnyButtonPlacement,
+                    elementsSeparator,
+                  );
+            }
 
-                        if ( SETTINGS.hideDL == true ) {
-                            // Hide the DL button and therefore don't insert a separator
+            // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
+            downloadElement.setAttribute("data-quickie_done", "true");
 
-                            //
-                            if ( downloadElementHideParentElementGap == true && bunnyButtonParentPlacement == true ) {
-                                downloadElement.parentElement.style.display = 'none'
-                            } else {
-                                downloadElement.style.display = 'none'
-                            }
+            // Store the processed elements in the object to be passed to the afterBunnyButtonCreation() function
+            if (logElements == true) {
+              loggedElements["bunnyButtons"].push(bunnyButton);
+              loggedElements["downloadElements"].push(downloadElement);
+              loggedElements["pairedElements"].push({
+                bunnyButton: bunnyButton,
+                downloadElement: downloadElement,
+              });
+            }
+          }
 
-                        } else {
-                            // Insert the separator between the placementElement and the bunnyButton
-                            elementsSeparator == false ? null : placementElement.insertAdjacentText(bunnyButtonPlacement, elementsSeparator)
-                        }
+          // After the bunnyButtons have been generated, call the function that will attach to them the right-click presetsMenu
+          bunnyButtonAttachPresetsMenu == true
+            ? attachPresetsMenu(
+                "a.quickie_newBunnyButton",
+                SETTINGS.primaryDomain,
+              )
+            : null;
+        } else {
+          // The downloadElements query returned no results
 
-                        // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
-                        downloadElement.setAttribute('data-quickie_done', 'true')
+          if (
+            SETTINGS.firstTrackerHandlerScan &&
+            !["myanonamouse"].includes(primaryDomain)
+          ) {
+            // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
 
-                        // Store the processed elements in the object to be passed to the afterBunnyButtonCreation() function
-                        if ( logElements == true ) {
-                            loggedElements['bunnyButtons'].push(bunnyButton)
-                            loggedElements['downloadElements'].push(downloadElement)
-                            loggedElements['pairedElements'].push({ bunnyButton: bunnyButton, downloadElement: downloadElement })
-                        }
-
-                    }
-
-                    // After the bunnyButtons have been generated, call the function that will attach to them the right-click presetsMenu
-                    bunnyButtonAttachPresetsMenu == true ? attachPresetsMenu('a.quickie_newBunnyButton', SETTINGS.primaryDomain) : null
-
-                } else {
-                    // The downloadElements query returned no results
-
-                    if ( SETTINGS.firstTrackerHandlerScan && !['myanonamouse'].includes(primaryDomain) ) {
-                        // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
-
-                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
-                    }
-
-                }
-
-                SETTINGS.firstTrackerHandlerScan = false
-
-                if ( typeof afterBunnyButtonCreation === 'function' && loggedElements['bunnyButtons'].length > 0 ) {
-                    // A function was provided and there are newly created bunnyButtons, so run the function
-                    afterBunnyButtonCreation(loggedElements)
-                }
-
-                if ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null && loggedElements['bunnyButtons'].length > 0 ) {
-                    // A torrent status selector was provided and there are newly created bunnyButtons, so check the selector(s) for truthy
-
-                    for ( let pairedElements of loggedElements.pairedElements ) {
-
-                        let downloadElement = pairedElements.downloadElement
-                        let bunnyButton = pairedElements.bunnyButton
-
-                        try {
-
-                            if ( eval(`${seedingStatusSelector}`) && bunnyButton.dataset.emojospecified != 'true' ) {
-                                // A seedingStatusSelector was matched and an emoji has not already been specified for this bunnyButton
-                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
-                                continue
-
-                            }
-
-                        } catch (error) {
-                            // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            logger.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe seedingStatusSelector returned an error.\n\nIf you are reading this message and the 🌱 is present on the bunnyButtons that are indeed seeding, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the seeding torrents are not displaying the 🌱, it is most likely that either the seedingStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`)
-                        }
-
-                        try {
-
-                            if ( eval(`${snatchedStatusSelector}`) && bunnyButton.dataset.emojospecified != 'true' ) {
-                                // A snatchedStatusSelector was matched and an emoji has not already been specified for this bunnyButton
-                                bunnyButtonTorrentStatus(bunnyButton, 'snatched')
-                                continue
-                            }
-
-                        } catch (error) {
-                            // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            logger.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe snatchedStatusSelector returned an error.\n\nIf you are reading this message and the 🍁 is present on the bunnyButtons that are indeed snatched, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the snatched torrents are not displaying the 🍁, it is most likely that either the snatchedStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`)
-                        }
-
-                        try {
-
-                            if ( eval(`${featuredStatusSelector}`) && bunnyButton.dataset.emojospecified != 'true' ) {
-                                // A featuredStatusSelector was matched and an emoji has not already been specified for this bunnyButton
-                                bunnyButtonTorrentStatus(bunnyButton, 'featured')
-                                continue
-                            }
-
-                        } catch (error) {
-                            // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            logger.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe featuredStatusSelector returned an error.\n\nIf you are reading this message and the 📢 present on the bunnyButtons that are indeed featured, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the featured torrents are not displaying the 📢, it is most likely that either the featuredStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfeaturedStatusSelector: ${featuredStatusSelector}\n\nError:${error}\n\n`)
-                        }
-
-                        try {
-
-                            if ( eval(`${freeleechStatusSelector}`) && bunnyButton.dataset.emojospecified != 'true' ) {
-                                // A freeleechStatusSelector was matched and an emoji has not already been specified for this bunnyButton
-                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
-                                continue
-                            }
-
-                        } catch (error) {
-                            // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
-                            logger.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe freeleechStatusSelector returned an error.\n\nIf you are reading this message and the 💎 is present on the bunnyButtons that are indeed freeleech, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the freeleech torrents are not displaying the 💎, it is most likely that either the freeleechStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`)
-                        }
-                    }
-                }
-
-                if ( SETTINGS.paginationLoop >= 500 ) {
-                    // The paginationLoop timer has been set, so quiCKIE will continuosly scan the page for new downloadElements
-                    bunnyButtonGeneration(SETTINGS.paginationLoop)
-                }
-
-            }, delay )
-
-        } catch (error) {
-            logger.error(error)
+            console.error(
+              `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`,
+            );
+          }
         }
 
+        SETTINGS.firstTrackerHandlerScan = false;
+
+        if (
+          typeof afterBunnyButtonCreation === "function" &&
+          loggedElements["bunnyButtons"].length > 0
+        ) {
+          // A function was provided and there are newly created bunnyButtons, so run the function
+          afterBunnyButtonCreation(loggedElements);
+        }
+
+        if (
+          seedingStatusSelector != null ||
+          snatchedStatusSelector != null ||
+          (freeleechStatusSelector != null &&
+            loggedElements["bunnyButtons"].length > 0)
+        ) {
+          // A torrent status selector was provided and there are newly created bunnyButtons, so check the selector(s) for truthy
+
+          for (let pairedElements of loggedElements.pairedElements) {
+            let downloadElement = pairedElements.downloadElement;
+            let bunnyButton = pairedElements.bunnyButton;
+
+            try {
+              if (
+                eval(`${seedingStatusSelector}`) &&
+                bunnyButton.dataset.emojospecified != "true"
+              ) {
+                // A seedingStatusSelector was matched and an emoji has not already been specified for this bunnyButton
+                bunnyButtonTorrentStatus(bunnyButton, "seeding");
+                continue;
+              }
+            } catch (error) {
+              // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
+              logger.log(
+                `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe seedingStatusSelector returned an error.\n\nIf you are reading this message and the 🌱 is present on the bunnyButtons that are indeed seeding, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the seeding torrents are not displaying the 🌱, it is most likely that either the seedingStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nseedingStatusSelector: ${seedingStatusSelector}\n\nError:${error}\n\n`,
+              );
+            }
+
+            try {
+              if (
+                eval(`${snatchedStatusSelector}`) &&
+                bunnyButton.dataset.emojospecified != "true"
+              ) {
+                // A snatchedStatusSelector was matched and an emoji has not already been specified for this bunnyButton
+                bunnyButtonTorrentStatus(bunnyButton, "snatched");
+                continue;
+              }
+            } catch (error) {
+              // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
+              logger.log(
+                `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe snatchedStatusSelector returned an error.\n\nIf you are reading this message and the 🍁 is present on the bunnyButtons that are indeed snatched, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the snatched torrents are not displaying the 🍁, it is most likely that either the snatchedStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nsnatchedStatusSelector: ${snatchedStatusSelector}\n\nError:${error}\n\n`,
+              );
+            }
+
+            try {
+              if (
+                eval(`${featuredStatusSelector}`) &&
+                bunnyButton.dataset.emojospecified != "true"
+              ) {
+                // A featuredStatusSelector was matched and an emoji has not already been specified for this bunnyButton
+                bunnyButtonTorrentStatus(bunnyButton, "featured");
+                continue;
+              }
+            } catch (error) {
+              // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
+              logger.log(
+                `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe featuredStatusSelector returned an error.\n\nIf you are reading this message and the 📢 present on the bunnyButtons that are indeed featured, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the featured torrents are not displaying the 📢, it is most likely that either the featuredStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfeaturedStatusSelector: ${featuredStatusSelector}\n\nError:${error}\n\n`,
+              );
+            }
+
+            try {
+              if (
+                eval(`${freeleechStatusSelector}`) &&
+                bunnyButton.dataset.emojospecified != "true"
+              ) {
+                // A freeleechStatusSelector was matched and an emoji has not already been specified for this bunnyButton
+                bunnyButtonTorrentStatus(bunnyButton, "freeleech");
+                continue;
+              }
+            } catch (error) {
+              // There was en error, likely due to either impossible method chaining for this downloadElement (signifying 'false') or invalid JavaScript
+              logger.log(
+                `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe freeleechStatusSelector returned an error.\n\nIf you are reading this message and the 💎 is present on the bunnyButtons that are indeed freeleech, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the freeleech torrents are not displaying the 💎, it is most likely that either the freeleechStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`,
+              );
+            }
+          }
+        }
+
+        if (SETTINGS.paginationLoop >= 500) {
+          // The paginationLoop timer has been set, so quiCKIE will continuosly scan the page for new downloadElements
+          bunnyButtonGeneration(SETTINGS.paginationLoop);
+        }
+      }, delay);
+    } catch (error) {
+      logger.error(error);
     }
+  }
 
-    bunnyButtonGeneration(0)
-
+  bunnyButtonGeneration(0);
 }
-
 
 // @unit3dTrackerHandler
 function unit3dTrackerHandler(downloadElementsSelector) {
-    // A tracker handler designed to support trackers running on the UNIT3D framework
-    // ! This function is based on the HTML layout of 'Oldtoons' and is not WirlyWirly guaranteed for other UNIT3D sites
+  // A tracker handler designed to support trackers running on the UNIT3D framework
+  // ! This function is based on the HTML layout of 'Oldtoons' and is not WirlyWirly guaranteed for other UNIT3D sites
 
-    // Mutable settings dependent on the current page
-    let bunnyButtonAddStyles = ''
-    let bunnyButtonPlacement
-    let bunnyButtonText = ' 🐰 '
-    let queryFromElement = document
-    let torrentDetailsPage = false
+  // Mutable settings dependent on the current page
+  let bunnyButtonAddStyles = "";
+  let bunnyButtonPlacement;
+  let bunnyButtonText = " 🐰 ";
+  let queryFromElement = document;
+  let torrentDetailsPage = false;
 
-    if ( pagePath.match(/\/torrents\/\d+/) ) {
-        // The torrents details page, so change the style of the only BunnyButton
-        torrentDetailsPage = true
+  if (pagePath.match(/\/torrents\/\d+/)) {
+    // The torrents details page, so change the style of the only BunnyButton
+    torrentDetailsPage = true;
 
-        // Give the bunnyButton a bar appearance, to fit in better with the other buttons
-        bunnyButtonText = '🐰 quiCKIE'
-        bunnyButtonAddStyles = `
+    // Give the bunnyButton a bar appearance, to fit in better with the other buttons
+    bunnyButtonText = "🐰 quiCKIE";
+    bunnyButtonAddStyles = `
         background: #153245;
         border-radius: 999px;
         border: #B6D3E7 solid 1px;
         color: #B6D3E7;
         font-weight: bold;
         padding: 1.5%;
-        width: 98%;`
+        width: 98%;`;
+  } else if (
+    pagePath.match(/(\/?|\/torrents[^/]*)$/) &&
+    SETTINGS.paginationLoop < 500
+  ) {
+    // The search parge or homepage, both of which require a MutationObserver
 
-    } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
-        // The search parge or homepage, both of which require a MutationObserver
+    let observer = new MutationObserver(function (mutations) {
+      // Functionality to run when changes are detected to the target element
 
-        let observer = new MutationObserver( function(mutations) {
-            // Functionality to run when changes are detected to the target element
+      try {
+        bunnyButtonGeneration(0);
+      } catch (error) {
+        logger.debug(error);
+      }
+    });
+
+    let target, config; // The target element and configurations that will be used by the MutationObserver
+
+    if (pagePath.match(/(\/torrents[^/]*)$/)) {
+      // The search page, query for a valid target element to observe
+      queryFromElement = document.querySelector("div.page__torrents");
+
+      // Preferred: A <script> element who's attribute changes with every search\page
+      target = document.querySelector("div.page__torrents > script[nonce]");
+      config = { attributes: true };
+
+      // Backup: The torrent <section> (table) and its entire subtree
+      if (target == null) {
+        target = document.querySelector("section.torrent-search__results");
+        config = { childList: true, subtree: true };
+      }
+    } else {
+      // The homepage, query for a valid target element to observe
+      target = document.querySelector(
+        "section.panelV2.blocks__top-torrents div.data-table-wrapper tbody",
+      );
+      config = { childList: true };
+    }
+
+    if (target != null) {
+      // Yes, there is a valid target to observe for mutations
+      observer.observe(target, config);
+    } else {
+      // No, there is not a valid target to observe for mutations, so fallback to time-based paginationLooping
+      queryFromElement = document;
+      SETTINGS.paginationLoop = 500;
+    }
+  }
+
+  function bunnyButtonGeneration(delay) {
+    // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
+
+    setTimeout(() => {
+      let allDownloadElements = queryFromElement.querySelectorAll(
+        `${downloadElementsSelector}:not([data-quickie_done="true"])`,
+      );
+
+      if (allDownloadElements.length >= 1) {
+        SETTINGS.bunnyButtonPlacement == "After"
+          ? (bunnyButtonPlacement = "afterend")
+          : (bunnyButtonPlacement = "beforebegin");
+
+        for (let downloadElement of allDownloadElements) {
+          // For each downloadElement, generate and insert a bunnyButton
+
+          let bunnyButton = createBunnyButton({
+            torrentURL: downloadElement.href,
+            buttonText: bunnyButtonText,
+            torrentSettings: SETTINGS,
+            addButtonStyles: bunnyButtonAddStyles,
+          });
+
+          if (torrentDetailsPage == true) {
+            // This is the torrentDetails page, which only lists 1 torrent at a time
+
+            // Place BunnyButton into it's own <li>
+            let clonedParent = downloadElement.parentElement.cloneNode();
+            clonedParent.appendChild(bunnyButton);
+            downloadElement.parentElement.insertAdjacentElement(
+              bunnyButtonPlacement,
+              clonedParent,
+            );
+
+            // Hide the <li> parentElement to avoid a empty gap
+            SETTINGS.hideDL == true
+              ? (downloadElement.parentElement.style.display = "none")
+              : null;
+
+            if (
+              document.querySelector(
+                "li.torrent__seeders.torrent-activity-indicator--seeding",
+              ) != null
+            ) {
+              // The seedingStatusSelector was matched
+              bunnyButtonTorrentStatus(bunnyButton, "seeding");
+            } else if (
+              document.querySelector(
+                "li.torrent__completed.torrent-activity-indicator--completed",
+              ) != null
+            ) {
+              // The snatchedStatusSelector was matched
+              bunnyButton(bunnyButton, "snatched");
+            } else if (
+              document.querySelector(
+                "span.torrent-icons i.torrent-icons__featured",
+              ) != null
+            ) {
+              // This is a featured (+ freeleech) torrent
+              bunnyButtonTorrentStatus(bunnyButton, "featuredFreeleech");
+            } else if (
+              document.querySelector(
+                "span.torrent-icons i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, span.torrent-icons i.fa.fa-globe",
+              ) != null
+            ) {
+              // The freeleechStatusSelector was matched: Star, Calendar, Globe
+              bunnyButtonTorrentStatus(bunnyButton, "freeleech");
+            }
+          } else {
+            // This is NOT the torrent details page, so it likely uses one of the three views: List, Cards, or Grouped
+
+            downloadElement.insertAdjacentElement(
+              bunnyButtonPlacement,
+              bunnyButton,
+            );
+
+            if (downloadElement.closest("td.torrent-search--list__buttons")) {
+              // This is a List view
+
+              bunnyButton.style.display = "inline-grid";
+              bunnyButton.style.fontSize = "110%";
+              bunnyButton.style.padding = "10px";
+            } else if (downloadElement.closest("article.torrent-card")) {
+              // This is a Cards view
+
+              bunnyButton.style.display = "inline-grid";
+              bunnyButton.style.fontSize = "135%";
+              bunnyButton.style.padding = "10px";
+            } else if (
+              downloadElement.closest("td.torrent-search--grouped__download")
+            ) {
+              // This is a Grouped view
+
+              if (window.screen.availWidth > 900) {
+                // The screen is wide enough to accomadate another <td> for this bunnyButton
+
+                let clonedParent = downloadElement.parentElement.cloneNode();
+                clonedParent.appendChild(bunnyButton);
+                downloadElement.parentElement.insertAdjacentElement(
+                  bunnyButtonPlacement,
+                  clonedParent,
+                );
+
+                // Hide the <td> parentElement to avoid a empty gap
+                SETTINGS.hideDL == true
+                  ? (downloadElement.parentElement.style.display = "none")
+                  : null;
+              }
+
+              bunnyButton.style.padding = "4px";
+            } else if (downloadElement.closest("td.user-bookmarks__actions")) {
+              // This is the Bookmarks view, move bunnyButton into it's own <li>
+
+              let clonedParent = downloadElement.parentElement.cloneNode();
+              clonedParent.appendChild(bunnyButton);
+              downloadElement.parentElement.insertAdjacentElement(
+                bunnyButtonPlacement,
+                clonedParent,
+              );
+
+              bunnyButton.style.padding = "4px";
+
+              // Hide the <li> parentElement to avoid a empty gap
+              SETTINGS.hideDL == true
+                ? (downloadElement.parentElement.style.display = "none")
+                : null;
+            }
 
             try {
-                bunnyButtonGeneration(0)
+              // TorrentStatus check: Table | Grouped
+
+              if (
+                downloadElement
+                  .closest("tr")
+                  .querySelector("td.torrent-activity-indicator--seeding") !=
+                null
+              ) {
+                // This is a Seeding torrent
+                bunnyButtonTorrentStatus(bunnyButton, "seeding");
+              } else if (
+                downloadElement
+                  .closest("tr")
+                  .querySelector("td.torrent-activity-indicator--completed") !=
+                null
+              ) {
+                // This is a Snatched torrent
+                bunnyButtonTorrentStatus(bunnyButton, "snatched");
+              } else if (
+                downloadElement
+                  .closest("tr")
+                  .querySelector("i.torrent-icons__featured") != null
+              ) {
+                // This is a Featured torrent
+                bunnyButtonTorrentStatus(bunnyButton, "featuredFreeleech");
+              } else if (
+                downloadElement
+                  .closest("tr")
+                  .querySelector(
+                    "i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, i.fa.fa-globe",
+                  ) != null
+              ) {
+                // This is a Freeleech torrent [Star, CalendarStar, GlobalFreeleech]
+                bunnyButtonTorrentStatus(bunnyButton, "freeleech");
+              }
             } catch (error) {
-                logger.debug(error)
+              // An error occured, most likely the page view-type is not a table and therefore the 'tr' is not available
+              logger.debug(error);
             }
 
-        })
+            try {
+              // TorrentStatus check: Cards
 
-        let target, config // The target element and configurations that will be used by the MutationObserver
-
-        if ( pagePath.match(/(\/torrents[^/]*)$/) ) {
-            // The search page, query for a valid target element to observe
-            queryFromElement = document.querySelector('div.page__torrents')
-
-            // Preferred: A <script> element who's attribute changes with every search\page
-            target = document.querySelector('div.page__torrents > script[nonce]')
-            config = { attributes: true }
-
-            // Backup: The torrent <section> (table) and its entire subtree
-            if ( target == null ) {
-                target = document.querySelector('section.torrent-search__results')
-                config = { childList: true, subtree: true }
+              if (
+                downloadElement
+                  .closest("article")
+                  .querySelector(".torrent-activity-indicator--seeding") != null
+              ) {
+                // This is a Seeding torrent
+                bunnyButtonTorrentStatus(bunnyButton, "seeding");
+              }
+            } catch (error) {
+              // An error occured, most likely the page view-type does not have <article> elements and therefore the 'article.torrent-card' is not available
+              logger.debug(error);
             }
+          }
 
-        } else {
-            // The homepage, query for a valid target element to observe
-            target = document.querySelector('section.panelV2.blocks__top-torrents div.data-table-wrapper tbody')
-            config = { childList: true }
+          // Hide the downloadElement, as specified by the current tracker settings
+          SETTINGS.hideDL == true
+            ? (downloadElement.style.display = "none")
+            : null;
 
+          // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
+          downloadElement.setAttribute("data-quickie_done", "true");
         }
 
-        if ( target != null ) {
-            // Yes, there is a valid target to observe for mutations
-            observer.observe(target, config)
-
-        } else {
-            // No, there is not a valid target to observe for mutations, so fallback to time-based paginationLooping
-            queryFromElement = document
-            SETTINGS.paginationLoop = 500
+        attachPresetsMenu("a.quickie_newBunnyButton", SETTINGS.primaryDomain);
+      } else {
+        if (SETTINGS.firstTrackerHandlerScan) {
+          console.error(
+            `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`,
+          );
         }
+      }
 
-    }
+      SETTINGS.firstTrackerHandlerScan = false;
 
+      if (SETTINGS.paginationLoop >= 500) {
+        // The tracker handler will continuosly scan the page for new downloadElements
+        bunnyButtonGeneration(SETTINGS.paginationLoop);
+      }
+    }, delay);
+  }
 
-    function bunnyButtonGeneration(delay) {
-        // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
-
-        setTimeout(() => {
-
-            let allDownloadElements = queryFromElement.querySelectorAll(`${downloadElementsSelector}:not([data-quickie_done="true"])`)
-
-            if ( allDownloadElements.length >= 1 ) {
-
-                SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButtonPlacement = 'afterend' : bunnyButtonPlacement = 'beforebegin'
-
-                for (let downloadElement of allDownloadElements) {
-                    // For each downloadElement, generate and insert a bunnyButton
-
-                    let bunnyButton = createBunnyButton({ torrentURL: downloadElement.href, buttonText: bunnyButtonText, torrentSettings: SETTINGS, addButtonStyles: bunnyButtonAddStyles })
-
-                    if ( torrentDetailsPage == true ) {
-                        // This is the torrentDetails page, which only lists 1 torrent at a time
-
-                        // Place BunnyButton into it's own <li>
-                        let clonedParent = downloadElement.parentElement.cloneNode()
-                        clonedParent.appendChild(bunnyButton)
-                        downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, clonedParent)
-
-                        // Hide the <li> parentElement to avoid a empty gap
-                        SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
-
-                        if ( document.querySelector('li.torrent__seeders.torrent-activity-indicator--seeding') != null ) {
-                            // The seedingStatusSelector was matched
-                            bunnyButtonTorrentStatus(bunnyButton, 'seeding')
-
-                        } else if ( document.querySelector('li.torrent__completed.torrent-activity-indicator--completed') != null ) {
-                            // The snatchedStatusSelector was matched
-                            bunnyButton(bunnyButton, 'snatched')
-
-                        } else if ( document.querySelector('span.torrent-icons i.torrent-icons__featured') != null ) {
-                            // This is a featured (+ freeleech) torrent
-                            bunnyButtonTorrentStatus(bunnyButton, 'featuredFreeleech')
-
-                        } else if ( document.querySelector('span.torrent-icons i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, span.torrent-icons i.fa.fa-globe') != null ) {
-                            // The freeleechStatusSelector was matched: Star, Calendar, Globe
-                            bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
-
-                        }
-
-                    } else {
-                        // This is NOT the torrent details page, so it likely uses one of the three views: List, Cards, or Grouped
-
-                        downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
-
-                        if ( downloadElement.closest('td.torrent-search--list__buttons') ) {
-                            // This is a List view
-
-                            bunnyButton.style.display = 'inline-grid'
-                            bunnyButton.style.fontSize = '110%'
-                            bunnyButton.style.padding = '10px'
-
-
-                        } else if ( downloadElement.closest('article.torrent-card') ) {
-                            // This is a Cards view
-
-                            bunnyButton.style.display = 'inline-grid'
-                            bunnyButton.style.fontSize = '135%'
-                            bunnyButton.style.padding = '10px'
-
-                        } else if ( downloadElement.closest('td.torrent-search--grouped__download') ) {
-                            // This is a Grouped view
-
-                            if ( window.screen.availWidth > 900 ) {
-                                // The screen is wide enough to accomadate another <td> for this bunnyButton
-
-                                let clonedParent = downloadElement.parentElement.cloneNode()
-                                clonedParent.appendChild(bunnyButton)
-                                downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, clonedParent)
-
-                                // Hide the <td> parentElement to avoid a empty gap
-                                SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
-
-                            }
-
-                            bunnyButton.style.padding = '4px'
-
-                        } else if ( downloadElement.closest('td.user-bookmarks__actions') ) {
-                            // This is the Bookmarks view, move bunnyButton into it's own <li>
-
-                            let clonedParent = downloadElement.parentElement.cloneNode()
-                            clonedParent.appendChild(bunnyButton)
-                            downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, clonedParent)
-
-                            bunnyButton.style.padding = '4px'
-
-                            // Hide the <li> parentElement to avoid a empty gap
-                            SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
-
-                        }
-
-                        try {
-                            // TorrentStatus check: Table | Grouped
-
-                            if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
-                                // This is a Seeding torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
-
-                            } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
-                                // This is a Snatched torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'snatched')
-
-                            } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__featured') != null ) {
-                                // This is a Featured torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'featuredFreeleech')
-
-                            } else if ( downloadElement.closest('tr').querySelector('i.torrent-icons__freeleech.fa-star, i.torrent-icons__freeleech.fa-calendar-star, i.fa.fa-globe') != null ) {
-                                // This is a Freeleech torrent [Star, CalendarStar, GlobalFreeleech]
-                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
-
-                            }
-
-                        } catch (error) {
-                            // An error occured, most likely the page view-type is not a table and therefore the 'tr' is not available
-                            logger.debug(error)
-                        }
-
-                        try {
-                            // TorrentStatus check: Cards
-
-                            if ( downloadElement.closest('article').querySelector('.torrent-activity-indicator--seeding') != null ) {
-                                // This is a Seeding torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
-                            }
-
-                        } catch (error) {
-                            // An error occured, most likely the page view-type does not have <article> elements and therefore the 'article.torrent-card' is not available
-                            logger.debug(error)
-                        }
-
-                    }
-
-                    // Hide the downloadElement, as specified by the current tracker settings
-                    SETTINGS.hideDL == true ? downloadElement.style.display = 'none' : null
-
-                    // Mark this downloadElement as having already been processed by assigning it a unique attribute, which will prevent it from being queried in any future loops\Mutations
-                    downloadElement.setAttribute('data-quickie_done', 'true')
-
-                }
-
-                attachPresetsMenu('a.quickie_newBunnyButton', SETTINGS.primaryDomain)
-
-            } else {
-
-                if ( SETTINGS.firstTrackerHandlerScan ) {
-                    console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
-                }
-
-
-            }
-
-            SETTINGS.firstTrackerHandlerScan = false
-
-            if ( SETTINGS.paginationLoop >= 500 ) {
-                // The tracker handler will continuosly scan the page for new downloadElements
-                bunnyButtonGeneration(SETTINGS.paginationLoop)
-            }
-
-        }, delay )
-
-    }
-
-    bunnyButtonGeneration(0)
-
+  bunnyButtonGeneration(0);
 }
-
 
 // The CSS style to make bunnyButtons glow on mouseover
 GM_addStyle(`a.quickie_bunnyButton:hover {
     text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
-}`)
+}`);
 
 function createBunnyButton({
-    // Create the bunnyButton that will be displayed on the site
-    torrentURL,
-    fontSize = 'inherit',
-    buttonText = ' 🐰 ',
-    torrentSettings = SETTINGS,
-    addButtonStyles = '',
-    addButtonClasses = [],
+  // Create the bunnyButton that will be displayed on the site
+  torrentURL,
+  fontSize = "inherit",
+  buttonText = " 🐰 ",
+  torrentSettings = SETTINGS,
+  addButtonStyles = "",
+  addButtonClasses = [],
 }) {
+  let bunnyButton = document.createElement("a");
+  bunnyButton.classList.add("quickie_bunnyButton");
+  bunnyButton.classList.add("quickie_newBunnyButton");
+  bunnyButton.href = "javascript:undefined";
+  bunnyButton.textContent = buttonText;
 
-    let bunnyButton = document.createElement('a')
-    bunnyButton.classList.add('quickie_bunnyButton')
-    bunnyButton.classList.add('quickie_newBunnyButton')
-    bunnyButton.href = 'javascript:undefined'
-    bunnyButton.textContent = buttonText
+  // Indicate that this torrentURL will also Freeleech a torrent
+  if (torrentURL.match(/(&usetoken=1|&fl)/)) {
+    bunnyButton.textContent = bunnyButton.textContent.replace(/🐰/g, "💸");
+    bunnyButton.setAttribute("data-emojospecified", "true");
+  }
 
-    // Indicate that this torrentURL will also Freeleech a torrent
-    if ( torrentURL.match(/(&usetoken=1|&fl)/) ) {
-        bunnyButton.textContent = bunnyButton.textContent.replace(/🐰/g, '💸')
-        bunnyButton.setAttribute('data-emojospecified', 'true')
-    }
+  bunnyButton.setAttribute(
+    "style",
+    `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none;${addButtonStyles}`,
+  );
 
-    bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none;${addButtonStyles}`)
+  bunnyButton.setAttribute("data-torrenturl", torrentURL);
 
-    bunnyButton.setAttribute('data-torrenturl', torrentURL)
+  addButtonClasses.length > 0
+    ? addButtonClasses.forEach((classItem) =>
+        bunnyButton.classList.add(classItem),
+      )
+    : null;
 
-    addButtonClasses.length > 0 ? addButtonClasses.forEach(classItem => bunnyButton.classList.add(classItem) ) : null
-
-    bunnyButton.title = ` ─── 🌎 ${primaryDomainToTrackerName[`${torrentSettings.primaryDomain}`]} 🌎 ───
+  bunnyButton.title = ` ─── 🌎 ${primaryDomainToTrackerName[`${torrentSettings.primaryDomain}`]} 🌎 ───
  🗃️ = ${torrentSettings.category}
  💾 = ${torrentSettings.savePath}
  🏷️ = ${torrentSettings.tags}
- ⚖️ = ${torrentSettings.ratioLimit > 0 ? torrentSettings.ratioLimit : ''}
- 🌱 = ${torrentSettings.seedTime > 0 ? torrentSettings.seedTime : ''}
- ⬇️ = ${torrentSettings.dlLimit > 0 ? torrentSettings.dlLimit : ''}
+ ⚖️ = ${torrentSettings.ratioLimit > 0 ? torrentSettings.ratioLimit : ""}
+ 🌱 = ${torrentSettings.seedTime > 0 ? torrentSettings.seedTime : ""}
+ ⬇️ = ${torrentSettings.dlLimit > 0 ? torrentSettings.dlLimit : ""}
  ⬆️ = ${torrentSettings.upLimit}
- 🎯 = ${torrentSettings.instance > 0 ? torrentSettings.instance : ''}
+ 🎯 = ${torrentSettings.instance > 0 ? torrentSettings.instance : ""}
  ⏸️ = ${torrentSettings.startPaused}
  📁 = ${torrentSettings.subFolder}
  🧩 = ${torrentSettings.seqPieces}
@@ -4029,1306 +4598,1416 @@ function createBunnyButton({
  🛡️ = ${torrentSettings.skipHash}
 
 🖥️ ${SETTINGS.torrentClient.client}
-🔗 ${bunnyButton.dataset.torrenturl}`
+🔗 ${bunnyButton.dataset.torrenturl}`;
 
-    bunnyButton.addEventListener('mouseup', function(event) {
-        // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
+  bunnyButton.addEventListener("mouseup", function (event) {
+    // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
 
-        if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
-            // Shift-Ctrl-Click: Add the torrent in a paused state
+    if (event.shiftKey && event.ctrlKey && event.button == 0) {
+      // Shift-Ctrl-Click: Add the torrent in a paused state
 
-            // Remember the startPaused setting before changing it
-            let pausedSetting = torrentSettings.startPaused
+      // Remember the startPaused setting before changing it
+      let pausedSetting = torrentSettings.startPaused;
 
-            torrentSettings.startPaused = true
-            bunnyButtonClickedActions(this, torrentSettings, 'Tracker')
+      torrentSettings.startPaused = true;
+      bunnyButtonClickedActions(this, torrentSettings, "Tracker");
 
-            // Restore the startPaused setting to what it was
-            torrentSettings.startPaused = pausedSetting
+      // Restore the startPaused setting to what it was
+      torrentSettings.startPaused = pausedSetting;
+    } else if (event.shiftKey && event.button == 0) {
+      // Shift-Click: Open the quiCKIE settings panel
 
-        } else if ( event.shiftKey && event.button == 0 ) {
-            // Shift-Click: Open the quiCKIE settings panel
+      GM_config.open();
+    } else if (
+      (event.ctrlKey && event.button == 0) ||
+      (event.altKey && event.button == 0)
+    ) {
+      // Ctrl-Click \ Cmd-Click: Open the torrentClient in a new tab
 
-            GM_config.open()
+      bunnyButtonClickedActions(this, torrentSettings, "Client");
+    } else if (
+      event.button == 1 ||
+      this.classList.contains("middleClickAllTriggered")
+    ) {
+      // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
 
-        } else if ( event.ctrlKey && event.button == 0 || event.altKey && event.button == 0) {
-            // Ctrl-Click \ Cmd-Click: Open the torrentClient in a new tab
+      bunnyButtonClickedActions(
+        this,
+        torrentSettings,
+        "globalMiddleClickAction",
+      );
+    } else if (
+      event.button == 0 ||
+      this.classList.contains("leftClickAllTriggered")
+    ) {
+      // Left-Click: If the tracker setting is 'Global', perform the globalLeftClickAction, otherwise do the specified action
 
-            bunnyButtonClickedActions(this, torrentSettings, 'Client')
+      if (SETTINGS.leftClick == "Global") {
+        // Do what is saved by SETTINGS.globalLeftClickAction
+        bunnyButtonClickedActions(
+          this,
+          torrentSettings,
+          "globalLeftClickAction",
+        );
+      } else {
+        // This tracker is using a specified leftClick action
+        bunnyButtonClickedActions(this, torrentSettings, SETTINGS.leftClick);
+      }
+    }
+  });
 
-        } else if ( event.button == 1 || this.classList.contains('middleClickAllTriggered')) {
-            // Middle-Click: Do what is saved by SETTINGS.globalMiddleClickAction
-
-            bunnyButtonClickedActions(this, torrentSettings, 'globalMiddleClickAction')
-
-        } else if ( event.button == 0 || this.classList.contains('leftClickAllTriggered') ) {
-            // Left-Click: If the tracker setting is 'Global', perform the globalLeftClickAction, otherwise do the specified action
-
-            if ( SETTINGS.leftClick == 'Global' ) {
-                // Do what is saved by SETTINGS.globalLeftClickAction
-                bunnyButtonClickedActions(this, torrentSettings, 'globalLeftClickAction')
-            } else {
-                // This tracker is using a specified leftClick action
-                bunnyButtonClickedActions(this, torrentSettings, SETTINGS.leftClick)
-            }
-        }
-
-    })
-
-    return bunnyButton
-
+  return bunnyButton;
 }
-
 
 function getPageSeparator(downloadElement, manualSeparator = false) {
-    // Determine if the nextSibling element is a separator, and if so return the value
+  // Determine if the nextSibling element is a separator, and if so return the value
 
+  let separatorText = " ";
 
-    let separatorText = ' '
-
-    if ( manualSeparator ) {
-        // A particular separator has been provided
-        separatorText = manualSeparator
-
-    } else {
-
-        try {
-
-            let siblingElement = downloadElement.nextSibling
-
-            // A sibling element doesn't exist, so try using the parentElement.nextSibling
-            siblingElement == null ? siblingElement = downloadElement.parentElement.nextSibling : null
-
-            if ( siblingElement.nodeType == 3 && siblingElement.nodeName == '#text' && siblingElement.textContent.match(/[\]\)]/) ){
-                // Separator is a bracket type, so insert a | between elements
-               separatorText = ' | '
-
-            } else if ( siblingElement.nodeType == 3 && siblingElement.nodeName == '#text' && !siblingElement.textContent.match(/[\[\]\(\)]/) ){
-               separatorText = siblingElement.textContent
-            }
-
-        } catch (error) {
-        }
-
-    }
-
-    return separatorText
-
-}
-
-
-function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) {
-    // Determine what action to take depending on the mouse button settings
-
-    let buttonAction = settingsValue
-
-    if ( buttonAction.match(/^global/) ) {
-        // From the SETTINGS object, get the global action that matches this settingsValue
-        buttonAction = SETTINGS[`${settingsValue}`]
-    }
-
-    if ( buttonAction == 'Tracker' ) {
-        // Add the torrentURL to the tracker using the tracker settings
-
-        let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
-        bunnyButton.id = bunnyButtonId
-
-        addTorrent({
-            torrentURL: bunnyButton.dataset.torrenturl,
-            torrentClient: SETTINGS.torrentClient,
-            bunnyButtonId: bunnyButtonId,
-
-            instance: torrentSettings.instance,
-            category: torrentSettings.category,
-            savePath: torrentSettings.savePath,
-            tags: torrentSettings.tags,
-            ratioLimit: torrentSettings.ratioLimit,
-            seedTime: torrentSettings.seedTime,
-            dlLimit: torrentSettings.dlLimit,
-            upLimit: torrentSettings.upLimit,
-            startPaused: torrentSettings.startPaused,
-            subFolder: torrentSettings.subFolder,
-            seqPieces: torrentSettings.seqPieces,
-            autoTMM: torrentSettings.autoTMM,
-            skipHash: torrentSettings.skipHash})
-
-    } else if ( buttonAction == 'TorrentFile' ) {
-        // Download the .torrent file using the torrentURL
-
-        replaceEmojis(bunnyButton, '💾')
-
-        let fileElement = document.createElement('a')
-        fileElement.href = bunnyButton.dataset.torrenturl
-
-        document.body.appendChild(fileElement)
-        fileElement.click()
-        document.body.removeChild(fileElement)
-
-    } else if ( buttonAction == 'Presets' ) {
-        // Simultate a right-click to open the presets-menu
-
-        // *** NOT WORKING ***
-
-        let rightClickEvent = new MouseEvent('contextmenu', {
-            button: 2, // The right mouse button
-            bubbles: true,
-            cancelable: true,
-            // view: window,
-
-        })
-
-        bunnyButton.dispatchEvent(rightClickEvent)
-
-    } else if ( buttonAction == 'Settings') {
-        // Open the quiCKIE Settings Panel
-
-        GM_config.open()
-
-    } else if ( buttonAction == 'Client') {
-        // Open the clientURL in a new tab
-
-        if ( SETTINGS.torrentClient.client == 'qui') {
-            window.open(SETTINGS.torrentClient.quiURL, '_blank').focus()
-        } else if ( SETTINGS.torrentClient.client == 'qBitTorrent') {
-            window.open(SETTINGS.torrentClient.qBitTorrentURL, '_blank').focus()
-        } else if ( SETTINGS.torrentClient.client == 'Transmission') {
-            window.open(SETTINGS.torrentClient.transmissionURL, '_blank').focus()
-        } else if ( SETTINGS.torrentClient.client == 'Deluge') {
-            window.open(SETTINGS.torrentClient.delugeURL, '_blank').focus()
-        } else if ( SETTINGS.torrentClient.client == 'ruTorrent') {
-            window.open(SETTINGS.torrentClient.ruTorrentURL, '_blank').focus()
-        }
-
-    } else if ( buttonAction == 'Nothing') {
-        // Do nothing, a null button
-
-        null
-
-    }
-
-}
-
-
-function replaceEmojis(targetElement, newEmoji) {
-    // Replace the emojis of the targetElement with the newEmoji
-
-    targetElement.textContent = targetElement.textContent.replace(emojiRegex, newEmoji)
-
-}
-
-function bunnyButtonTorrentStatus(bunnyButton, torrentStatus) {
-    // Update the provided bunnyButton to reflect the specified torrentStatus
-
-    if ( torrentStatus == 'seeding' ) {
-        replaceEmojis(bunnyButton, '🌱')
-        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
-
-    } else if ( torrentStatus == 'snatched' ) {
-        replaceEmojis(bunnyButton, '🍁')
-        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Snatched\n🔗')
-
-    } else if ( torrentStatus == 'featured' ) {
-        replaceEmojis(bunnyButton, '📢')
-        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n\n🖥️')
-
-    } else if ( torrentStatus == 'featuredFreeleech' ) {
-        replaceEmojis(bunnyButton, '📢')
-        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n💎 Freeleech 💎\n\n🖥️')
-
-    } else if ( torrentStatus == 'freeleech' ) {
-        replaceEmojis(bunnyButton, '💎')
-        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n🖥️')
-
-    } else if ( torrentStatus == 'default' ) {
-        replaceEmojis(bunnyButton, '🐰')
-
-    }
-
-}
-
-
-function addTorrent({
-    // Using the provided parameters, create a object containing all the info needed to POST a new torrent to the client, then pass that object to the appropriate POST function depending on if the torrentURL has authentication
-    torrentURL,
-    torrentClient,
-    bunnyButtonId,
-
-    instance = '',
-    category = '',
-    savePath = '',
-    tags = '',
-    ratioLimit = '',
-    seedTime = '',
-    dlLimit = '',
-    upLimit = '',
-    startPaused = false,
-    subFolder = false,
-    seqPieces = false,
-    autoTMM = false,
-    skipHash = false}) {
-
-    // ----- POST object -----
-    let postData = {
-        // The object containing the data to be passed to the appropriate clientPOST function
-        torrentClient: torrentClient.client,
-        torrentURL: torrentURL,
-        bunnyButtonId: bunnyButtonId,
-        formData: null,
-
-        // These null placeholders will be filled in depending on the currently selected torrent client
-        qui: {
-            url: null,
-            apiKey: null,
-        },
-        qBitTorrent: {
-            url: null,
-            username: null,
-            password: null
-        },
-        transmission: {
-            url: null,
-            username: null,
-            password: null
-        },
-        deluge: {
-            url: null,
-            password: null
-        },
-        ruTorrent: {
-            url: null,
-            username: null,
-            password: null
-        },
-
-    }
-
-    // Signify the start of addTorrent by changing the emoji of the clicked on BunnyButton
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-    replaceEmojis(bunnyButton, '🕓')
-
-    if ( postData.torrentClient == 'qui' ) {
-        // ----------------------------------- qui -----------------------------------
-
-        if ( torrentClient.quiURL == '' || torrentClient.quiApiKey == '' ) {
-            // No quiURL has been provided, alert the user and return
-            replaceEmojis(bunnyButton, '❌')
-            window.alert('❌ quiCKIE ❌\n\nA quiURL and ApiKey are required\n\nShift-Click the BunnyButton to open the setting panel')
-            return
-        }
-
-        try {
-            // quiURL Example: http://localhost:7476/qui/instances/1
-            let quiURLCaptures = torrentClient.quiURL.match(/^(https?:\/\/.+)\/(instances\/\d+)/) // [1] == domain, [2] == instance
-            postData.qui.url = `${quiURLCaptures[1]}/api/${quiURLCaptures[2]}/torrents`
-
-        } catch (error) {
-            // Failed to parse quiURL for the API endpoint
-            replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved quiURL\n\nℹ️ Check your quiURL for typos, making sure it is in the expected format and that it starts with the appropriate http(s) protocol\n\nHover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`)
-            return
-        }
-
-        // ----- Check for qui Target Instance -----
-        if ( instance != '' && instance > 0 ) {
-            // SETTINGS.instance: Update the apiURL to point to the specified instance id
-            postData.qui.url = postData.qui.url.replace(/\/instances\/\d+/, `\/instances\/${instance}`)
-        }
-
-        postData.qui.apiKey = torrentClient.quiApiKey
-
-    } else if ( postData.torrentClient == 'qBitTorrent' ) {
-        // ----------------------------------- qBitTorrent -----------------------------------
-
-        if ( torrentClient.qBitTorrentURL == '' || torrentClient.qBitTorrentUsername == '' || torrentClient.qBitTorrentPassword == '' ) {
-            // Missing qBitTorrent credentials, alert the user and abort
-            replaceEmojis(bunnyButton, '❌')
-            window.alert('❌ quiCKIE ❌\n\nA qBitTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
-            return
-        }
-
-        try {
-            // qBitTorrent Example: http://localhost:8080
-            postData.qBitTorrent.url = torrentClient.qBitTorrentURL.match(/^(https?:\/\/.+?)\/?$/)[1]
-        } catch (error) {
-            replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved qBitTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the qBitTorrentURL emoji for examples\n\nqBitTorrentURL: ${torrentClient.qBitTorrentURL}`)
-            return
-        }
-
-        postData.qBitTorrent.username = torrentClient.qBitTorrentUsername
-        postData.qBitTorrent.password = torrentClient.qBitTorrentPassword
-
-    } else if ( postData.torrentClient == 'Transmission' ) {
-        // ----------------------------------- Transmission -----------------------------------
-
-        if ( torrentClient.transmissionURL == '' || torrentClient.transmissionUsername == '' || torrentClient.transmissionPassword == '' ) {
-            // Missing Transmission credentials, alert the user and abort
-            replaceEmojis(bunnyButton, '❌')
-            window.alert('❌ quiCKIE ❌\n\nA transmissionURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
-            return
-        }
-
-
-        try {
-            // TransmissionURL Example: http://localhost:9091 | http://localhost:9091/custom/rpc
-            postData.transmission.url = torrentClient.transmissionURL.match(/^(https?:\/\/.+?)\/?$/)[1]
-        } catch (error) {
-            replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved transmissionURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the transmissionURL emoji for examples\n\ntransmissionURL: ${torrentClient.transmissionURL}`)
-            return
-        }
-
-        postData.transmission.username = torrentClient.transmissionUsername
-        postData.transmission.password = torrentClient.transmissionPassword
-
-    } else if ( postData.torrentClient == 'Deluge' ) {
-        // ----------------------------------- Deluge -----------------------------------
-
-        if ( torrentClient.delugeURL == '' || torrentClient.delugePassword == '' ) {
-            // Missing Deluge credentials, alert the user and abort
-            replaceEmojis(bunnyButton, '❌')
-            window.alert('❌ quiCKIE ❌\n\nA delugeURL and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
-            return
-        }
-
-        try {
-            // Deluge Example: http://localhost:8112
-            postData.deluge.url = torrentClient.delugeURL.match(/^(https?:\/\/.+?)\/?$/)[1]
-        } catch (error) {
-            replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved delgueURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the delgueURL emoji for examples\n\ndelugeURL: ${torrentClient.delgueURL}`)
-            return
-        }
-
-        postData.deluge.password = torrentClient.delugePassword
-
-    } else if ( postData.torrentClient == 'ruTorrent' ) {
-        // ----------------------------------- ruTorrent -----------------------------------
-
-        if ( torrentClient.ruTorrentURL == '' || torrentClient.ruTorrentUsername == '' || torrentClient.ruTorrentPassword == '' ) {
-            // Missing ruTorrent credentials, alert the user and abort
-            replaceEmojis(bunnyButton, '❌')
-            window.alert('❌ quiCKIE ❌\n\nA ruTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel')
-            return
-        }
-
-
-        try {
-            // ruTorrent Example: http://localhost:8080
-            postData.ruTorrent.url = torrentClient.ruTorrentURL.match(/^(https?:\/\/.+?)\/?$/)[1]
-        } catch (error) {
-            replaceEmojis(bunnyButton, '❌')
-            window.alert(`❌ quiCKIE ❌\n\nFailed to parse the saved ruTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the ruTorrentURL emoji for examples\n\nruTorrentURL: ${torrentClient.ruTorrentURL}`)
-            return
-        }
-        postData.ruTorrent.username = torrentClient.ruTorrentUsername
-        postData.ruTorrent.password = torrentClient.ruTorrentPassword
-
-    }
-
-    // ----- POST Form Data -----
-    // The form data that will store all the torrent settings
-
-    let form = new FormData()
-    form.append('urls', torrentURL)
-
-    // ----- Check for Optional Form Data -----
-
-    if ( category != '' ) {
-        // SETTINGS.category: The category for which to apply to this torrent
-        form.append('category', category)
-    }
-
-    if ( savePath != '' ) {
-        // SETTINGS.savePath: The absolute path for where to save this torrent (Writable\Accessible by the torrent client)
-        form.append('savepath', savePath)
-    }
-
-    if ( tags != '' ) {
-        // SETTINGS.tags: A comma separated list of tags for which to apply to this torrent
-        form.append('tags', tags)
-    }
-
-    if ( ratioLimit > 0 ) {
-        // A ratio limit of 0 will stop the torrent after downloading, so take preventative action
-        form.append('ratioLimit', ratioLimit)
-    } else if ( ratioLimit <= -1 ) {
-        // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
-        form.append('ratioLimit', 0)
-    }
-
-    if ( seedTime > 0 ) {
-        // A seedtime of 0 will stop the torrent after downloading, so take preventative action
-        form.append('seedingTimeLimit', seedTime)
-    } else if ( seedTime <= -1 ) {
-        // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
-        form.append('seedingTimeLimit', 0)
-    }
-
-    if ( dlLimit > 0 ) {
-        // SETTINGS.dlLimit
-        form.append('dlLimit', dlLimit)
-    }
-
-    if ( upLimit > 0 ) {
-        // SETTINGS.upLimit
-        form.append('upLimit', upLimit)
-    }
-
-    if ( startPaused == true ) {
-        // SETTINGS.startPaused: Add torrents in a paused state, so they do not automatically begin downloading
-        form.append('paused', startPaused)
-    }
-
-    if ( subFolder == true ) {
-        // SETTINGS.subFolder: Save single-file downloads into their own sub-folder
-        form.append('contentLayout', 'Subfolder')
-    }
-
-    if ( seqPieces == true ) {
-        // SETTINGS.seqPieces: Allow for playback while downloading by enabling "Sequential Piece Downloading" & "First\Last Piece Priority"
-        form.append('sequentialDownload', true)
-        form.append('firstLastPiecePrio', true)
-    }
-
-    if ( autoTMM == true ) {
-        // SETTINGS.autoTMM: Enable Auto Torrent Management for these torrents
-        form.append('autoTMM', true)
-    }
-
-    if ( skipHash == true ) {
-        // SETTINGS.skipHash: Skip the initial hash check that is invoked when adding a new torrent
-        form.append('skip_checking', true)
-    }
-
-    postData.formData = form
-
-    // ----- torrentURL Authentication -----
-    let torrentURLAuthentication = false
-
-    if ( postData.torrentURL.match(/magnet:\?xt=urn:btih:/) ) {
-        // magnetLink: This torrentURL is a magnetLink, so must be sent directly to the client as it does not support .torrent downloading
-        torrentURLAuthentication = true
-    } else if ( postData.torrentURL.match(/(auth=|authkey=|passkey=)/) && SETTINGS.globalForcedTorrentFile == false && SETTINGS.forceTorrentFile == false ) {
-        // Authenticated: This torrentURL is authenticated and no setting is specifying that it must be downloaded through the browser, so POST directly to the client
-        torrentURLAuthentication = true
-    }
-
-    if ( torrentURLAuthentication ) {
-        // The torrentURL is a magnetLink or has authentication so POST directly to the client
-
-        if ( postData.torrentClient == 'qui' ) {
-            // Add torrentURL to qui
-            quiPOST(postData)
-        } else if ( postData.torrentClient == 'qBitTorrent' ) {
-            // Add torrentURL to qBitTorrent
-            qBitTorrentPOST(postData)
-        } else if ( postData.torrentClient == 'Transmission' ) {
-            // Add torrentURL to Transmission
-            transmissionPOST(postData)
-        } else if ( postData.torrentClient == 'Deluge' ) {
-            // Add torrentURL to Deluge
-            delugePOST(postData)
-        } else if ( postData.torrentClient == 'ruTorrent' ) {
-            // Add torrentURL to ruTorrent
-            ruTorrentPOST(postData)
-        }
-
-    } else {
-        // The torrentURL has not authentication or a setting has specified it be downloaded through the browser before being sent to the client
-        getFileBlob(postData)
-
-    }
-
-}
-
-
-async function getFileBlob(postData) {
-    // Download a file blob with the provided URL and then call the appropriate POST function
-
-    // Signify the start of getFileBlob by changing the emoji of the clicked on BunnyButton
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-    replaceEmojis(bunnyButton, '🧲')
-
-    let fileURL = postData.torrentURL
-
-    let results = GM_xmlhttpRequest({
-        method: 'get',
-        url: fileURL,
-        responseType: 'blob',
-        onload: function(response) {
-            // ----- File Downloaded -----
-            let blobData = response.response
-
-            if ( !blobData.type.match(/application\/x-bittorrent/i) ) {
-                // The downloaded file is NOT a .torrent type, abort the POST
-                replaceEmojis(bunnyButton, '❌')
-
-                console.log(response)
-
-                window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file\n\nAborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nResponse Status Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
-                return
-
-            } else {
-                // The downloaded file is a valid .torrent type, so POST it to the client
-
-                postData.formData.append('torrent', blobData)
-
-                replaceEmojis(bunnyButton, '🕓')
-
-                if ( postData.torrentClient == 'qui' ) {
-                    // Add torrentURL to qui
-                    quiPOST(postData)
-                } else if ( postData.torrentClient == 'qBitTorrent' ) {
-                    // Add torrentURL to qBitTorrent
-                    qBitTorrentPOST(postData)
-                } else if ( postData.torrentClient == 'Transmission' ) {
-                    // Add torrentURL to Transmission
-                    transmissionPOST(postData)
-                } else if ( postData.torrentClient == 'Deluge' ) {
-                    // Add torrentURL to Deluge
-                    delugePOST(postData)
-                } else if ( postData.torrentClient == 'ruTorrent' ) {
-                    // Add torrentURL to ruTorrent
-                    ruTorrentPOST(postData)
-                }
-            }
-
-        },
-        onerror: function(response) {
-            // There was an error getting the .torrent file
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}. Make sure the server is online and the torrentURL is a valid http link and NOT a magnet link\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
-
-        },
-        ontimeout: function(response) {
-            // The connection timed out
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThe connection timed out when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
-
-        }
-    })
-
-}
-
-
-async function quiPOST(postData) {
-    // Using the properties of the paramater object, send a POST to qui
-
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-
-    GM_xmlhttpRequest({
-        // Use the internal GM function to prevent source-origin errors
-        method: 'POST',
-        url: postData.qui.url,
-        data: postData.formData,
-        headers: {
-            'X-API-Key': postData.qui.apiKey,
-        },
-        onload: function(response) {
-            // ----- Actions to take after the request has completed -----
-
-            if (response.status == 201) {
-                // Success: The torrent has been added to qui
-
-                replaceEmojis(bunnyButton, '✔️')
-
-            } else {
-                // Failed: The torrent was NOT added to qui, log the response and display an alert...
-                console.log(response)
-
-                replaceEmojis(bunnyButton, '❌')
-
-                if (response.status == 401) {
-                    // Unauthorized
-                    window.alert(`❌ quiCKIE ❌\n\nqui was reached but then failed authorization\n\nℹ️ This usually means a bad ApiKey, check it for typos and make sure it's still valid\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nApiKey: ${postData.quiApiKey}\n\nThe full response has been printed in the console`)
-                } else {
-                    window.alert(`❌ quiCKIE ❌\n\nqui was reached but then failed to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe full response has been printed in the console`)
-                }
-
-            }
-
-        },
-        onerror: function(response) {
-            // There was an error making the POST
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error when connecting to qui\n\nℹ️ This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same instance url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
-
-        },
-        ontimeout: function(response) {
-            // The connection timed out
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to qui timed out\n\nℹ️ Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`)
-
-        }
-    })
-
-}
-
-
-async function qBitTorrentPOST(postData) {
-    // First send a POST to login and then on success send another POST to add a torrent
-
-    // qBitTorrent expects a different name for these fields
-    postData.formData.get('paused') ? postData.formData.append('stopped', true) : null
-
-    // qBitTorrent expects bytes, so convert these KB values to bytes
-    postData.formData.get('dlLimit') > 0 ? postData.formData.set('dlLimit', Number(postData.formData.get('dlLimit')) * 1024) : null
-    postData.formData.get('upLimit') > 0 ? postData.formData.set('upLimit', Number(postData.formData.get('upLimit')) * 1024) : null
-
-
-    // Signify the start of qBitTorrentPost by changing the emoji of the clicked on BunnyButton
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-    replaceEmojis(bunnyButton, '🧑')
-
-    GM_xmlhttpRequest({
-        // First, send a POST to login to qBittorrent
-        method: 'POST',
-        url: `${postData.qBitTorrent.url}/api/v2/auth/login`,
-        headers: {
-            'Referer': postData.qBitTorrent.url,
-        },
-        data: new URLSearchParams({
-            'username': postData.qBitTorrent.username,
-            'password': postData.qBitTorrent.password,
-        }),
-        onload: function(response) {
-            // The login POST has been sent and returned, check the response before proceeding...
-
-            if ( response.responseText == 'Ok.' ) {
-                // Succesfully logged into qBitTorrent, ready to send another POST to add a new torrent
-
-                replaceEmojis(bunnyButton, '🕓')
-                GM_xmlhttpRequest({
-                    // Use the internal GM function to prevent source-origin errors
-                    method: 'POST',
-                    url: `${postData.qBitTorrent.url}/api/v2/torrents/add`,
-                    data: postData.formData,
-                    onload: function(response) {
-                        // ----- Actions to take after the torrent POST has completed -----
-
-                        if (response.status == 200) {
-                            // Success: The torrent has been added to qBitTorrent
-
-                            replaceEmojis(bunnyButton, '✔️')
-
-                        } else {
-                            // Failed: The torrent was NOT added to qBitTorrent, log the response and display an alert...
-                            console.log(response)
-
-                            replaceEmojis(bunnyButton, '❌')
-
-                            window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-                        }
-
-                    },
-                    onerror: function(response) {
-                        // There was an error making the POST
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-                    },
-                    ontimeout: function(response) {
-                        // The connection timed out
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-                    }
-                })
-
-            } else if ( response.responseText == 'Fails.' ) {
-                // Failed to login to qBitTorrent
-                console.log(response)
-                replaceEmojis(bunnyButton, '❌')
-
-                window.alert(`❌ quiCKIE ❌\n\nqBitTorrent was reached, but the login attempt failed\n\nℹ️ Check your username\\password for typos\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-            }
-
-        },
-        onerror: function(response) {
-            // There was an error logging in
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to qBitTorrent to attempt the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-        },
-        ontimeout: function(response) {
-            // The connection timed out
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to qBitTorrent timed out when attempting the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`)
-
-        }
-    })
-
-}
-
-
-async function transmissionPOST(postData) {
-    // First send a POST to login and then on success send another POST to add a torrent
-
-    let labels
-    postData.formData.get('tags') ? labels = postData.formData.get('tags').split(',') : null
-
-    let transmissionData = {
-        method: 'torrent-add',
-        arguments: {
-            'download-dir': postData.formData.get('savepath'),
-            labels: labels,
-            paused: postData.formData.get('paused'),
-            'sequential-download': postData.formData.get('sequentialDownload'),
-        },
-    }
-
-    if ( postData.formData.get('torrent') ) {
-        // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Transmission
-
-        let base64String = await base64encode(postData.formData.get('torrent'))
-
-        transmissionData.arguments.metainfo = base64String
-        transmissionData = JSON.stringify(transmissionData)
-
-    } else {
-        // torrentURL|magnetLink: POST using the provided URL
-        transmissionData.arguments.filename = postData.torrentURL
-        transmissionData = JSON.stringify(transmissionData)
-    }
-
-
-    // If the user provided a full rpc url use it, otherwise append the default
-    postData.transmission.url.match(/\/rpc$/) ? null : postData.transmission.url = `${postData.transmission.url}/transmission/rpc`
-
-    // Signify the start of transmissionPOST by changing the emoji of the clicked on BunnyButton
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-    replaceEmojis(bunnyButton, '🧑')
-
-    GM_xmlhttpRequest({
-        // First, send a POST to login to Transmission
-        method: 'POST',
-        url: `${postData.transmission.url}`,
-        headers: {
-            Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
-        },
-        onload: function(response) {
-            // The login POST has been sent and returned, check the response before proceeding...
-
-            let transmissionSessionId = ''
-            try {
-                transmissionSessionId = response.responseText.match(/X-Transmission-Session-Id: (\w+)/)[1]
-            } catch (error) {
-
-            }
-
-            if ( transmissionSessionId != '') {
-                // Succesfully logged into Transmission, send another POST to add the new torrent
-
-                replaceEmojis(bunnyButton, '🕓')
-                GM_xmlhttpRequest({
-                    // Use the internal GM function to prevent source-origin errors
-                    method: 'POST',
-                    url: `${postData.transmission.url}`,
-                    headers: {
-                        Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
-                        'X-Transmission-Session-Id': transmissionSessionId,
-                    },
-                    data: transmissionData,
-                    onload: function(response) {
-                        // ----- Actions to take after the torrent POST has completed -----
-
-                        let postResponse = JSON.parse(response.responseText)
-
-                        if ( postResponse.result == 'success' ) {
-                            // Success: The torrent has been added to Transmission
-
-                            replaceEmojis(bunnyButton, '✔️')
-
-                        } else {
-                            // Failed: The torrent was NOT added to Transmission, log the response and display an alert...
-                            console.log(response)
-
-                            replaceEmojis(bunnyButton, '❌')
-
-                            window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-                        }
-
-                    },
-                    onerror: function(response) {
-                        // There was an error making the POST
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-                    },
-                    ontimeout: function(response) {
-                        // The connection timed out
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nTransmission was reached and logged into, but the connection timedout when trying to POSt the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-                    }
-                })
-
-            } else {
-                // Failed to login to Transmission
-
-                console.log(response)
-                replaceEmojis(bunnyButton, '❌')
-
-                window.alert(`❌ quiCKIE ❌\n\nTransmission was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-            }
-
-        },
-        onerror: function(response) {
-            // There was an error logging in
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Transmission to attempt the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-        },
-        ontimeout: function(response) {
-            // The connection timed out
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to Transmission timed out when attempting the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`)
-
-        }
-    })
-
-}
-
-
-async function delugePOST(postData) {
-    // First send a POST to login to Deluge, then send another POST to add the torrent to Deluge
-    // Supports magnet links and file blobs, but not authenticated torrentURLs, which need to firse be download with getFileBlob()
-
-    let torrentOptions = {
-        'download_location': postData.formData.get('savepath'),
-        'max_upload_speed': Number(postData.formData.get('upLimit')),
-        'max_download_speed': Number(postData.formData.get('dlLimit')),
-        'add_paused': postData.formData.get('paused'),
-        'sequential_downloads': postData.formData.get('sequentialDownload'),
-        'prioritize_first_last_pieces': postData.formData.get('firstLastPiecePrio'),
-    }
-
-    let delugeData = {
-        method: '',
-        params: [],
-    }
-
-    if ( postData.formData.get('torrent') != null ) {
-        // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Deluge
-
-        let base64String = await base64encode(postData.formData.get('torrent'))
-
-        delugeData.method = 'core.add_torrent_file'
-        delugeData.params.push('quiCKIE.torrent')
-        delugeData.params.push(base64String)
-        delugeData.params.push(torrentOptions)
-
-    } else if ( postData.torrentURL.match(/magnet:\?xt=urn/) ) {
-        // magnetLink: POST the torrentURL as a magnet link
-        delugeData.method = 'core.add_torrent_magnet'
-        delugeData.params.push(postData.torrentURL)
-        delugeData.params.push(torrentOptions)
-
-    } else {
-        // torrentURL: torrentURL can not be sent directly, it must first be downloaded as a blob
-        getFileBlob(postData)
-        return
-    }
-
-    // Signify the start of delugePOST by changing the emoji of the clicked on BunnyButton
-    let bunnyButton = document.getElementById(postData.bunnyButtonId)
-    replaceEmojis(bunnyButton, '🧑')
-
-    GM_xmlhttpRequest({
-        // First, send a POST to login to Deluge
-        method: 'POST',
-        url: `${postData.deluge.url}/json`,
-        headers: { 'content-type': 'application/json' },
-        data: JSON.stringify({
-            id: 0,
-            method: 'auth.login',
-            params: [postData.deluge.password],
-        }),
-        onload: function(response) {
-            // ---------- Logged into Deluge ----------
-            // The login POST has been sent and returned, check the response before proceeding...
-
-            let delugeSessionId = ''
-
-            try {
-                delugeSessionId = response.responseHeaders.match(/_session_id=(\w+)/)[1]
-            } catch (error) {
-                // Did not get a cookie when trying to login, so the login failed
-            }
-
-            if ( delugeSessionId != '') {
-                // Succesfully logged into Deluge, send another POST to add the .torrent blob or magnet link
-
-                replaceEmojis(bunnyButton, '🕓')
-                GM_xmlhttpRequest({
-                    // Use the internal GM function to prevent source-origin errors
-                    method: 'POST',
-                    url: `${postData.deluge.url}/json`,
-                    referer: postData.deluge.url,
-                    headers: { 'Content-Type': 'application/json' },
-                    data: JSON.stringify({
-                        id: 0,
-                        method: delugeData.method,
-                        params: delugeData.params,
-                    }),
-                    onload: function(response) {
-                        // ----- Actions to take after the request has completed -----
-
-                        let postResponse = JSON.parse(response.responseText)
-
-                        if ( postResponse.result != null || response.responseText.match(/Torrent already in session/) ) {
-                            // ---------- The torrent has been added to Deluge ----------
-
-                            if ( response.responseText.match(/Torrent already in session/) ) {
-                                console.log(`According to the Deluge response, this torrent can not be added because it already exists in your session\n\nℹ️ If the torrent is not listed in the WebUi, it may be lingering in the daemon session\n\ntorrentURL: ${postData.torrentURL}`)
-                            }
-
-                            replaceEmojis(bunnyButton, '✔️')
-
-
-                        } else {
-                            // Failed: The torrent POST was sent to the server but NOT added to Deluge, log the response and display an alert...
-                            console.log(response)
-
-                            replaceEmojis(bunnyButton, '❌')
-
-                            window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but then failed when trying to add the torrent.\n\nℹ️ This usually means that the WebUi is not connected to the daemon, check the Connection Manager in the WebUi\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-                        }
-                    },
-                    onerror: function(response) {
-                        // There was an error in the torrent add POST
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelgueURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-
-                    },
-                    ontimeout: function(response) {
-                        // The connection timed out
-                        console.log(response)
-                        replaceEmojis(bunnyButton, '❌')
-
-                        window.alert(`❌ quiCKIE ❌\n\nDeluge was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-
-                    }
-                })
-
-            } else {
-                // Failed to login to Deluge
-                console.log(response)
-                replaceEmojis(bunnyButton, '❌')
-
-                window.alert(`❌ quiCKIE ❌\n\nDeluge was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-
-            }
-
-        },
-        onerror: function(response) {
-            // There was an error logging in
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThere was an error connecting to Deluge to attempt the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-
-        },
-        ontimeout: function(response) {
-            // The connection timed out
-            console.log(response)
-            replaceEmojis(bunnyButton, '❌')
-
-            window.alert(`❌ quiCKIE ❌\n\nThe connection to Deluge timed out when attempting the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`)
-
-        }
-    })
-
-}
-
-
-async function ruTorrentPOST(postData) {
-    // *** TO-DO ***
-    // ruTorrent confuses me, it seems there's different ways to login (either using an http form or through the api) and I'm not sure about the procs\cons of each approach... From a brief glance, the torrent POST requires base64 like transmissionPOST()
-
-}
-
-
-// @thirdPartyIntegrations
-function scanForThirdPartyTorrentURLS(delay) {
-    // Check for elements that have the unique 'data-quickie_torrenturl' attribute designating them as integrated thirdParty torrentURLs for which to generate a BunnyButton. This process will loop every 5000ms.
-
-    // Check if the user has enabled tracker-specific settings for thirdParty DL elements
-    let thirdPartyTrackerSpecificSettings = false
-    SETTINGS.thirdPartyScan == 'On + 🌎' ? thirdPartyTrackerSpecificSettings = true : null
-
-    setTimeout(() => {
-
-        // The query that will locate all the elements containing the `data-quickie_torrenturl` attribute
-        let allThirdPartyDownloadElements = document.querySelectorAll('[data-quickie_torrenturl]')
-
-        if ( allThirdPartyDownloadElements.length > 0 ) {
-
-            // The first bunnyButton on the page, which will be used as a base from where to pull a separator and CSS styles
-            let existingBB = document.querySelector('a.quickie_bunnyButton:not(a.quickie_thirdParty)')
-
-            for ( let downloadElement of allThirdPartyDownloadElements ) {
-                // For each thirdPartyElement, create a BunnyButton using the elements 'data-quickie_torrenturl' attribute
-
-                let bunnyButtonText = ' 🤝 '
-
-                let torrentSettings = {
-                    // The default tracker settings that will be used by this bunnyButton
-                    primaryDomain: primaryDomain,
-                    category: SETTINGS.category,
-                    savePath: SETTINGS.savePath,
-                    tags: SETTINGS.tags,
-                    ratioLimit: SETTINGS.ratioLimit,
-                    seedTime: SETTINGS.seedTime,
-                    dlLimit: SETTINGS.dlLimit,
-                    upLimit: SETTINGS.upLimit,
-                    instance: SETTINGS.instance,
-                    startPaused: SETTINGS.startPaused,
-                    subFolder: SETTINGS.subFolder,
-                    seqPieces: SETTINGS.seqPieces,
-                    autoTMM: SETTINGS.autoTMM,
-                    skipHash: SETTINGS.skipHash,
-                }
-
-                // The user has enabled 'On + 🌎', so get the tracker-appropriate torrent settings that will be used for this bunnyButton
-                if ( thirdPartyTrackerSpecificSettings == true ) {
-
-                    if ( SETTINGS.firstThirdPartyScan == true ) {
-                        // This being the first scan, update the global presetMenuItems object so that it includes a property for not only the current tracker, but properties for ALL trackers
-                        presetMenuItems = createPresetItems(allPrimaryDomains)
-                        SETTINGS.firstThirdPartyScan = false
-                    }
-
-                    // [quickie_tracker] : Check if the thirdParty element has specified from which tracker the bunnyButton should get its settings
-                    if ( downloadElement.dataset.quickie_tracker != undefined ) {
-
-                        let thirdPartyTracker = downloadElement.dataset.quickie_tracker.toLowerCase()
-
-                        if ( Object.keys(trackerNameToPrimaryDomain).includes(thirdPartyTracker) || allPrimaryDomains.includes(thirdPartyTracker) ) {
-                            // The [quickie_tracker] is valid as either a quiCKIE supported trackerName or primaryDomain
-
-                            let thirdPartyDomain = trackerNameToPrimaryDomain[thirdPartyTracker] ?? thirdPartyTracker
-
-                            // Indicate this DL button is using thirdParty tracker settings by changing the displayed emoji
-                            bunnyButtonText = ' 🌎 '
-
-                            // Get and update the torrentSettings with those appropriate of the thirdPartyDomain
-                            torrentSettings.primaryDomain = thirdPartyDomain
-                            torrentSettings.category = GM_config.get(`${thirdPartyDomain}-category`)
-                            torrentSettings.savePath = GM_config.get(`${thirdPartyDomain}-savePath`)
-                            torrentSettings.tags = GM_config.get(`${thirdPartyDomain}-tags`)
-                            torrentSettings.ratioLimit = GM_config.get(`${thirdPartyDomain}-ratioLimit`)
-                            torrentSettings.seedTime = GM_config.get(`${thirdPartyDomain}-seedTime`)
-                            torrentSettings.dlLimit = GM_config.get(`${thirdPartyDomain}-dlLimit`)
-                            torrentSettings.upLimit = GM_config.get(`${thirdPartyDomain}-upLimit`)
-                            torrentSettings.instance = GM_config.get(`${thirdPartyDomain}-instance`)
-                            torrentSettings.startPaused = GM_config.get(`${thirdPartyDomain}-startPaused`)
-                            torrentSettings.subFolder = GM_config.get(`${thirdPartyDomain}-subFolder`)
-                            torrentSettings.seqPieces = GM_config.get(`${thirdPartyDomain}-seqPieces`)
-                            torrentSettings.autoTMM = GM_config.get(`${thirdPartyDomain}-autoTMM`)
-                            torrentSettings.skipHash = GM_config.get(`${thirdPartyDomain}-skipHash`)
-
-                            // Empty problematic integer values before they cause unexpected results in the torrent client
-                            torrentSettings.ratioLimit == 0 ? torrentSettings.ratioLimit = '' : null
-                            torrentSettings.seedTime == 0 ? torrentSettings.seedTime = '' : null
-                            torrentSettings.dlLimit <= 0 ? torrentSettings.dlLimit = '' : null
-                            torrentSettings.upLimit <= 0 ? torrentSettings.upLimit = '' : null
-                            torrentSettings.instance <= 0 ? torrentSettings.instance = '' : null
-
-                        }
-                    }
-
-                }
-
-                // [quickie_forcetorrentfile] : Check if the thirdParty element has specified that the torrentURL be downloaded through the browser instead of being determined by quiCKIE
-                downloadElement.dataset.quickie_forcetorrentfile == 'true' ? SETTINGS.forceTorrentFile = true : null
-
-                // Determine the current separator used by an existing bunnyButton
-                let separatorNode
-                SETTINGS.bunnyButtonPlacement == 'After' ? separatorNode = existingBB.previousSibling : separatorNode = existingBB.nextSibling
-
-                let separatorText
-                if ( separatorNode == null ) {
-                    separatorText == ' '
-                } else {
-                    separatorNode.nodeType != 3 ? separatorText = ' ' : separatorText = separatorNode.textContent
-                }
-
-                // [quickie_separator] : Check if the thirdParty element has specified a specific separator to use between itself and the bunnyButton
-                downloadElement.dataset.quickie_separator ? separatorText = downloadElement.dataset.quickie_separator : null
-
-                // Create a bunnyButton using the unique 'quickie_torrenturl' attribute of the thirdParty element
-                let bunnyButton = createBunnyButton({torrentURL: downloadElement.dataset.quickie_torrenturl, buttonText: bunnyButtonText, torrentSettings: torrentSettings})
-
-                // Apply the CSS styles used by the existingBB
-                bunnyButton.style = existingBB.style.cssText
-                bunnyButton.classList.add('quickie_thirdParty')
-
-                // Append the bunnyButton relative to the thirdParty element
-                let bunnyButtonPlacement
-                SETTINGS.bunnyButtonPlacement == 'After' ? bunnyButtonPlacement = 'afterend' : bunnyButtonPlacement = 'beforebegin'
-                downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
-                downloadElement.insertAdjacentText(bunnyButtonPlacement, separatorText)
-
-                // Remove the attribute that would match it as a thirdParty element in future loops
-                downloadElement.removeAttribute('data-quickie_torrenturl')
-
-                if ( thirdPartyTrackerSpecificSettings == true ) {
-                    // Append the presets-menu to the newly created bunnyButton, which must be done per bunnyButton to make sure it receives the tracker-appropriate menuItems
-                    attachPresetsMenu('a.quickie_newBunnyButton', torrentSettings.primaryDomain)
-                }
-
-            }
-
-            if ( thirdPartyTrackerSpecificSettings == false ) {
-                // Append the presets-menu to all the newly created bunnyButtons at once, since they'll all be receiving the same menuItems
-                attachPresetsMenu('a.quickie_newBunnyButton', SETTINGS.primaryDomain)
-            }
-
-        }
-
-        // Repeat this function after 5000ms
-        scanForThirdPartyTorrentURLS(5000)
-
-    }, delay)
-
-}
-
-
-// =================================== HELPER FUNCTIONS ======================================
-
-
-function waitForElement(cssTarget, observeTarget = document.body, observeSubTree = true) {
-    // Wait until the cssTarget exists within the observeTarget and then resolve the promise
-    // Source: https://stackoverflow.com/a/61511955
-
-    return new Promise( function(resolve) {
-
-        if ( observeTarget.querySelector(cssTarget) ) {
-            // The cssTarget already exists within the observeTarget, so immediately resolve the promise
-            return resolve(observeTarget.querySelector(cssTarget))
-        }
-
-        const observer = new MutationObserver( mutations => {
-            // The actions to take when there are new mutations to the observeTarget
-
-            if ( observeTarget.querySelector(cssTarget) ) {
-                // The cssTarget has been found within the observeTarget
-                observer.disconnect()
-                resolve(observeTarget.querySelector(cssTarget))
-            }
-        })
-
-        // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
-        try {
-            observer.observe(observeTarget, { childList: true, subtree: observeSubTree })
-        } catch (error) {
-            // console.log(error)
-        }
-
-    })
-
-}
-
-
-function base64encode(inputData) {
-    // Encode the inputData (blob, string, etc) to a base64 string
-
-    return new Promise( function(resolve) {
-
-        const reader = new FileReader()
-        reader.onloadend = function() {
-            // After the file has been read\loaded, clean the base64 string and resolve the promise
-            resolve(reader.result.replace(/^data:.+;base64,/, ''))
-        }
-
-        reader.readAsDataURL(inputData)
-    })
-
-}
-
-
-function saveToFile(fileData, filename) {
-    // Save the provided fileData to a local file
-
-    mimeTypes = {
-        // The different MIME types this function is setup to handle
-        // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
-
-        'json': 'application/json;charset=utf-8;',
-        'text': 'text/plain;charset=utf-8;',
-        'txt': 'text/plain;charset=utf-8;',
-        'torrent': 'application/x-bittorrent',
-
-    }
-
-    let filetype
-
+  if (manualSeparator) {
+    // A particular separator has been provided
+    separatorText = manualSeparator;
+  } else {
     try {
-        // Parse the provided filename to determine the filetype
-        filetype = filename.match(/.*\.(\w+)$/)[1]
+      let siblingElement = downloadElement.nextSibling;
 
-    } catch {
-        // No file extension was provided, so assume it to be a text type
-        filetype = 'text'
+      // A sibling element doesn't exist, so try using the parentElement.nextSibling
+      siblingElement == null
+        ? (siblingElement = downloadElement.parentElement.nextSibling)
+        : null;
 
-    }
+      if (
+        siblingElement.nodeType == 3 &&
+        siblingElement.nodeName == "#text" &&
+        siblingElement.textContent.match(/[\]\)]/)
+      ) {
+        // Separator is a bracket type, so insert a | between elements
+        separatorText = " | ";
+      } else if (
+        siblingElement.nodeType == 3 &&
+        siblingElement.nodeName == "#text" &&
+        !siblingElement.textContent.match(/[\[\]\(\)]/)
+      ) {
+        separatorText = siblingElement.textContent;
+      }
+    } catch (error) {}
+  }
 
-    let blobType
+  return separatorText;
+}
 
-    if ( Object.keys(mimeTypes).includes(filetype) ) {
-        // The filetype has a registered mime type
-        blobType = mimeTypes[filetype]
+function bunnyButtonClickedActions(
+  bunnyButton,
+  torrentSettings,
+  settingsValue,
+) {
+  // Determine what action to take depending on the mouse button settings
 
-    } else {
-        // The filetype is not registerd, so assume it to be a text type
-        blobType = 'text/plain;charset=utf-8;'
-    }
+  let buttonAction = settingsValue;
 
-    // Create the blob object that will contain the data to be written
-    let blobData = new Blob([fileData], { type: blobType });
-    let fileURL = URL.createObjectURL(blobData);
+  if (buttonAction.match(/^global/)) {
+    // From the SETTINGS object, get the global action that matches this settingsValue
+    buttonAction = SETTINGS[`${settingsValue}`];
+  }
 
-    // Create the HTML element that will be automatically clicked on to download the file
+  if (buttonAction == "Tracker") {
+    // Add the torrentURL to the tracker using the tracker settings
+
+    let bunnyButtonId = `quiCKIE_bb_${Date.now()}`;
+    bunnyButton.id = bunnyButtonId;
+
+    addTorrent({
+      torrentURL: bunnyButton.dataset.torrenturl,
+      torrentClient: SETTINGS.torrentClient,
+      bunnyButtonId: bunnyButtonId,
+
+      instance: torrentSettings.instance,
+      category: torrentSettings.category,
+      savePath: torrentSettings.savePath,
+      tags: torrentSettings.tags,
+      ratioLimit: torrentSettings.ratioLimit,
+      seedTime: torrentSettings.seedTime,
+      dlLimit: torrentSettings.dlLimit,
+      upLimit: torrentSettings.upLimit,
+      startPaused: torrentSettings.startPaused,
+      subFolder: torrentSettings.subFolder,
+      seqPieces: torrentSettings.seqPieces,
+      autoTMM: torrentSettings.autoTMM,
+      skipHash: torrentSettings.skipHash,
+    });
+  } else if (buttonAction == "TorrentFile") {
+    // Download the .torrent file using the torrentURL
+
+    replaceEmojis(bunnyButton, "💾");
+
     let fileElement = document.createElement("a");
-    fileElement.href = fileURL;
-    fileElement.download = filename;
+    fileElement.href = bunnyButton.dataset.torrenturl;
 
     document.body.appendChild(fileElement);
     fileElement.click();
     document.body.removeChild(fileElement);
+  } else if (buttonAction == "Presets") {
+    // Simultate a right-click to open the presets-menu
 
-    URL.revokeObjectURL(fileURL);
+    // *** NOT WORKING ***
 
+    let rightClickEvent = new MouseEvent("contextmenu", {
+      button: 2, // The right mouse button
+      bubbles: true,
+      cancelable: true,
+      // view: window,
+    });
+
+    bunnyButton.dispatchEvent(rightClickEvent);
+  } else if (buttonAction == "Settings") {
+    // Open the quiCKIE Settings Panel
+
+    GM_config.open();
+  } else if (buttonAction == "Client") {
+    // Open the clientURL in a new tab
+
+    if (SETTINGS.torrentClient.client == "qui") {
+      window.open(SETTINGS.torrentClient.quiURL, "_blank").focus();
+    } else if (SETTINGS.torrentClient.client == "qBitTorrent") {
+      window.open(SETTINGS.torrentClient.qBitTorrentURL, "_blank").focus();
+    } else if (SETTINGS.torrentClient.client == "Transmission") {
+      window.open(SETTINGS.torrentClient.transmissionURL, "_blank").focus();
+    } else if (SETTINGS.torrentClient.client == "Deluge") {
+      window.open(SETTINGS.torrentClient.delugeURL, "_blank").focus();
+    } else if (SETTINGS.torrentClient.client == "ruTorrent") {
+      window.open(SETTINGS.torrentClient.ruTorrentURL, "_blank").focus();
+    }
+  } else if (buttonAction == "Nothing") {
+    // Do nothing, a null button
+
+    null;
+  }
+}
+
+function replaceEmojis(targetElement, newEmoji) {
+  // Replace the emojis of the targetElement with the newEmoji
+
+  targetElement.textContent = targetElement.textContent.replace(
+    emojiRegex,
+    newEmoji,
+  );
+}
+
+function bunnyButtonTorrentStatus(bunnyButton, torrentStatus) {
+  // Update the provided bunnyButton to reflect the specified torrentStatus
+
+  if (torrentStatus == "seeding") {
+    replaceEmojis(bunnyButton, "🌱");
+    bunnyButton.title = bunnyButton.title.replace(/🔗/, "🌱 Seeding\n🔗");
+  } else if (torrentStatus == "snatched") {
+    replaceEmojis(bunnyButton, "🍁");
+    bunnyButton.title = bunnyButton.title.replace(/🔗/, "🍁 Snatched\n🔗");
+  } else if (torrentStatus == "featured") {
+    replaceEmojis(bunnyButton, "📢");
+    bunnyButton.title = bunnyButton.title.replace(/🖥️/, "📢 Featured 📢\n\n🖥️");
+  } else if (torrentStatus == "featuredFreeleech") {
+    replaceEmojis(bunnyButton, "📢");
+    bunnyButton.title = bunnyButton.title.replace(
+      /🖥️/,
+      "📢 Featured 📢\n💎 Freeleech 💎\n\n🖥️",
+    );
+  } else if (torrentStatus == "freeleech") {
+    replaceEmojis(bunnyButton, "💎");
+    bunnyButton.title = bunnyButton.title.replace(
+      /🖥️/,
+      "💎 Freeleech 💎\n\n🖥️",
+    );
+  } else if (torrentStatus == "default") {
+    replaceEmojis(bunnyButton, "🐰");
+  }
+}
+
+function addTorrent({
+  // Using the provided parameters, create a object containing all the info needed to POST a new torrent to the client, then pass that object to the appropriate POST function depending on if the torrentURL has authentication
+  torrentURL,
+  torrentClient,
+  bunnyButtonId,
+
+  instance = "",
+  category = "",
+  savePath = "",
+  tags = "",
+  ratioLimit = "",
+  seedTime = "",
+  dlLimit = "",
+  upLimit = "",
+  startPaused = false,
+  subFolder = false,
+  seqPieces = false,
+  autoTMM = false,
+  skipHash = false,
+}) {
+  // ----- POST object -----
+  let postData = {
+    // The object containing the data to be passed to the appropriate clientPOST function
+    torrentClient: torrentClient.client,
+    torrentURL: torrentURL,
+    bunnyButtonId: bunnyButtonId,
+    formData: null,
+
+    // These null placeholders will be filled in depending on the currently selected torrent client
+    qui: {
+      url: null,
+      apiKey: null,
+    },
+    qBitTorrent: {
+      url: null,
+      username: null,
+      password: null,
+    },
+    transmission: {
+      url: null,
+      username: null,
+      password: null,
+    },
+    deluge: {
+      url: null,
+      password: null,
+    },
+    ruTorrent: {
+      url: null,
+      username: null,
+      password: null,
+    },
+  };
+
+  // Signify the start of addTorrent by changing the emoji of the clicked on BunnyButton
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+  replaceEmojis(bunnyButton, "🕓");
+
+  if (postData.torrentClient == "qui") {
+    // ----------------------------------- qui -----------------------------------
+
+    if (torrentClient.quiURL == "" || torrentClient.quiApiKey == "") {
+      // No quiURL has been provided, alert the user and return
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        "❌ quiCKIE ❌\n\nA quiURL and ApiKey are required\n\nShift-Click the BunnyButton to open the setting panel",
+      );
+      return;
+    }
+
+    try {
+      // quiURL Example: http://localhost:7476/qui/instances/1
+      let quiURLCaptures = torrentClient.quiURL.match(
+        /^(https?:\/\/.+)\/(instances\/\d+)/,
+      ); // [1] == domain, [2] == instance
+      postData.qui.url = `${quiURLCaptures[1]}/api/${quiURLCaptures[2]}/torrents`;
+    } catch (error) {
+      // Failed to parse quiURL for the API endpoint
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        `❌ quiCKIE ❌\n\nFailed to parse the saved quiURL\n\nℹ️ Check your quiURL for typos, making sure it is in the expected format and that it starts with the appropriate http(s) protocol\n\nHover the quiURL emoji for examples\n\nquiURL: ${torrentClient.quiURL}`,
+      );
+      return;
+    }
+
+    // ----- Check for qui Target Instance -----
+    if (instance != "" && instance > 0) {
+      // SETTINGS.instance: Update the apiURL to point to the specified instance id
+      postData.qui.url = postData.qui.url.replace(
+        /\/instances\/\d+/,
+        `\/instances\/${instance}`,
+      );
+    }
+
+    postData.qui.apiKey = torrentClient.quiApiKey;
+  } else if (postData.torrentClient == "qBitTorrent") {
+    // ----------------------------------- qBitTorrent -----------------------------------
+
+    if (
+      torrentClient.qBitTorrentURL == "" ||
+      torrentClient.qBitTorrentUsername == "" ||
+      torrentClient.qBitTorrentPassword == ""
+    ) {
+      // Missing qBitTorrent credentials, alert the user and abort
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        "❌ quiCKIE ❌\n\nA qBitTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
+      );
+      return;
+    }
+
+    try {
+      // qBitTorrent Example: http://localhost:8080
+      postData.qBitTorrent.url = torrentClient.qBitTorrentURL.match(
+        /^(https?:\/\/.+?)\/?$/,
+      )[1];
+    } catch (error) {
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        `❌ quiCKIE ❌\n\nFailed to parse the saved qBitTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the qBitTorrentURL emoji for examples\n\nqBitTorrentURL: ${torrentClient.qBitTorrentURL}`,
+      );
+      return;
+    }
+
+    postData.qBitTorrent.username = torrentClient.qBitTorrentUsername;
+    postData.qBitTorrent.password = torrentClient.qBitTorrentPassword;
+  } else if (postData.torrentClient == "Transmission") {
+    // ----------------------------------- Transmission -----------------------------------
+
+    if (
+      torrentClient.transmissionURL == "" ||
+      torrentClient.transmissionUsername == "" ||
+      torrentClient.transmissionPassword == ""
+    ) {
+      // Missing Transmission credentials, alert the user and abort
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        "❌ quiCKIE ❌\n\nA transmissionURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
+      );
+      return;
+    }
+
+    try {
+      // TransmissionURL Example: http://localhost:9091 | http://localhost:9091/custom/rpc
+      postData.transmission.url = torrentClient.transmissionURL.match(
+        /^(https?:\/\/.+?)\/?$/,
+      )[1];
+    } catch (error) {
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        `❌ quiCKIE ❌\n\nFailed to parse the saved transmissionURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the transmissionURL emoji for examples\n\ntransmissionURL: ${torrentClient.transmissionURL}`,
+      );
+      return;
+    }
+
+    postData.transmission.username = torrentClient.transmissionUsername;
+    postData.transmission.password = torrentClient.transmissionPassword;
+  } else if (postData.torrentClient == "Deluge") {
+    // ----------------------------------- Deluge -----------------------------------
+
+    if (torrentClient.delugeURL == "" || torrentClient.delugePassword == "") {
+      // Missing Deluge credentials, alert the user and abort
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        "❌ quiCKIE ❌\n\nA delugeURL and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
+      );
+      return;
+    }
+
+    try {
+      // Deluge Example: http://localhost:8112
+      postData.deluge.url = torrentClient.delugeURL.match(
+        /^(https?:\/\/.+?)\/?$/,
+      )[1];
+    } catch (error) {
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        `❌ quiCKIE ❌\n\nFailed to parse the saved delgueURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the delgueURL emoji for examples\n\ndelugeURL: ${torrentClient.delgueURL}`,
+      );
+      return;
+    }
+
+    postData.deluge.password = torrentClient.delugePassword;
+  } else if (postData.torrentClient == "ruTorrent") {
+    // ----------------------------------- ruTorrent -----------------------------------
+
+    if (
+      torrentClient.ruTorrentURL == "" ||
+      torrentClient.ruTorrentUsername == "" ||
+      torrentClient.ruTorrentPassword == ""
+    ) {
+      // Missing ruTorrent credentials, alert the user and abort
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        "❌ quiCKIE ❌\n\nA ruTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
+      );
+      return;
+    }
+
+    try {
+      // ruTorrent Example: http://localhost:8080
+      postData.ruTorrent.url = torrentClient.ruTorrentURL.match(
+        /^(https?:\/\/.+?)\/?$/,
+      )[1];
+    } catch (error) {
+      replaceEmojis(bunnyButton, "❌");
+      window.alert(
+        `❌ quiCKIE ❌\n\nFailed to parse the saved ruTorrentURL\n\nℹ️ The URL must start with the appropriate http(s) protocol\n\nHover the ruTorrentURL emoji for examples\n\nruTorrentURL: ${torrentClient.ruTorrentURL}`,
+      );
+      return;
+    }
+    postData.ruTorrent.username = torrentClient.ruTorrentUsername;
+    postData.ruTorrent.password = torrentClient.ruTorrentPassword;
+  }
+
+  // ----- POST Form Data -----
+  // The form data that will store all the torrent settings
+
+  let form = new FormData();
+  form.append("urls", torrentURL);
+
+  // ----- Check for Optional Form Data -----
+
+  if (category != "") {
+    // SETTINGS.category: The category for which to apply to this torrent
+    form.append("category", category);
+  }
+
+  if (savePath != "") {
+    // SETTINGS.savePath: The absolute path for where to save this torrent (Writable\Accessible by the torrent client)
+    form.append("savepath", savePath);
+  }
+
+  if (tags != "") {
+    // SETTINGS.tags: A comma separated list of tags for which to apply to this torrent
+    form.append("tags", tags);
+  }
+
+  if (ratioLimit > 0) {
+    // A ratio limit of 0 will stop the torrent after downloading, so take preventative action
+    form.append("ratioLimit", ratioLimit);
+  } else if (ratioLimit <= -1) {
+    // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
+    form.append("ratioLimit", 0);
+  }
+
+  if (seedTime > 0) {
+    // A seedtime of 0 will stop the torrent after downloading, so take preventative action
+    form.append("seedingTimeLimit", seedTime);
+  } else if (seedTime <= -1) {
+    // SETTINGS.seedTime: If specified -1, stop the torrent upon download completion
+    form.append("seedingTimeLimit", 0);
+  }
+
+  if (dlLimit > 0) {
+    // SETTINGS.dlLimit
+    form.append("dlLimit", dlLimit);
+  }
+
+  if (upLimit > 0) {
+    // SETTINGS.upLimit
+    form.append("upLimit", upLimit);
+  }
+
+  if (startPaused == true) {
+    // SETTINGS.startPaused: Add torrents in a paused state, so they do not automatically begin downloading
+    form.append("paused", startPaused);
+  }
+
+  if (subFolder == true) {
+    // SETTINGS.subFolder: Save single-file downloads into their own sub-folder
+    form.append("contentLayout", "Subfolder");
+  }
+
+  if (seqPieces == true) {
+    // SETTINGS.seqPieces: Allow for playback while downloading by enabling "Sequential Piece Downloading" & "First\Last Piece Priority"
+    form.append("sequentialDownload", true);
+    form.append("firstLastPiecePrio", true);
+  }
+
+  if (autoTMM == true) {
+    // SETTINGS.autoTMM: Enable Auto Torrent Management for these torrents
+    form.append("autoTMM", true);
+  }
+
+  if (skipHash == true) {
+    // SETTINGS.skipHash: Skip the initial hash check that is invoked when adding a new torrent
+    form.append("skip_checking", true);
+  }
+
+  postData.formData = form;
+
+  // ----- torrentURL Authentication -----
+  let torrentURLAuthentication = false;
+
+  if (postData.torrentURL.match(/magnet:\?xt=urn:btih:/)) {
+    // magnetLink: This torrentURL is a magnetLink, so must be sent directly to the client as it does not support .torrent downloading
+    torrentURLAuthentication = true;
+  } else if (
+    postData.torrentURL.match(/(auth=|authkey=|passkey=)/) &&
+    SETTINGS.globalForcedTorrentFile == false &&
+    SETTINGS.forceTorrentFile == false
+  ) {
+    // Authenticated: This torrentURL is authenticated and no setting is specifying that it must be downloaded through the browser, so POST directly to the client
+    torrentURLAuthentication = true;
+  }
+
+  if (torrentURLAuthentication) {
+    // The torrentURL is a magnetLink or has authentication so POST directly to the client
+
+    if (postData.torrentClient == "qui") {
+      // Add torrentURL to qui
+      quiPOST(postData);
+    } else if (postData.torrentClient == "qBitTorrent") {
+      // Add torrentURL to qBitTorrent
+      qBitTorrentPOST(postData);
+    } else if (postData.torrentClient == "Transmission") {
+      // Add torrentURL to Transmission
+      transmissionPOST(postData);
+    } else if (postData.torrentClient == "Deluge") {
+      // Add torrentURL to Deluge
+      delugePOST(postData);
+    } else if (postData.torrentClient == "ruTorrent") {
+      // Add torrentURL to ruTorrent
+      ruTorrentPOST(postData);
+    }
+  } else {
+    // The torrentURL has not authentication or a setting has specified it be downloaded through the browser before being sent to the client
+    getFileBlob(postData);
+  }
+}
+
+async function getFileBlob(postData) {
+  // Download a file blob with the provided URL and then call the appropriate POST function
+
+  // Signify the start of getFileBlob by changing the emoji of the clicked on BunnyButton
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+  replaceEmojis(bunnyButton, "🧲");
+
+  let fileURL = postData.torrentURL;
+
+  let results = GM_xmlhttpRequest({
+    method: "get",
+    url: fileURL,
+    responseType: "blob",
+    onload: function (response) {
+      // ----- File Downloaded -----
+      let blobData = response.response;
+
+      if (!blobData.type.match(/application\/x-bittorrent/i)) {
+        // The downloaded file is NOT a .torrent type, abort the POST
+        replaceEmojis(bunnyButton, "❌");
+
+        console.log(response);
+
+        window.alert(
+          `❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file\n\nAborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nResponse Status Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`,
+        );
+        return;
+      } else {
+        // The downloaded file is a valid .torrent type, so POST it to the client
+
+        postData.formData.append("torrent", blobData);
+
+        replaceEmojis(bunnyButton, "🕓");
+
+        if (postData.torrentClient == "qui") {
+          // Add torrentURL to qui
+          quiPOST(postData);
+        } else if (postData.torrentClient == "qBitTorrent") {
+          // Add torrentURL to qBitTorrent
+          qBitTorrentPOST(postData);
+        } else if (postData.torrentClient == "Transmission") {
+          // Add torrentURL to Transmission
+          transmissionPOST(postData);
+        } else if (postData.torrentClient == "Deluge") {
+          // Add torrentURL to Deluge
+          delugePOST(postData);
+        } else if (postData.torrentClient == "ruTorrent") {
+          // Add torrentURL to ruTorrent
+          ruTorrentPOST(postData);
+        }
+      }
+    },
+    onerror: function (response) {
+      // There was an error getting the .torrent file
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThere was an error when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}. Make sure the server is online and the torrentURL is a valid http link and NOT a magnet link\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+    ontimeout: function (response) {
+      // The connection timed out
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThe connection timed out when attempting to download the .torrent file that would then be sent to ${postData.torrentClient}\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+  });
+}
+
+async function quiPOST(postData) {
+  // Using the properties of the paramater object, send a POST to qui
+
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+
+  GM_xmlhttpRequest({
+    // Use the internal GM function to prevent source-origin errors
+    method: "POST",
+    url: postData.qui.url,
+    data: postData.formData,
+    headers: {
+      "X-API-Key": postData.qui.apiKey,
+    },
+    onload: function (response) {
+      // ----- Actions to take after the request has completed -----
+
+      if (response.status == 201) {
+        // Success: The torrent has been added to qui
+
+        replaceEmojis(bunnyButton, "✔️");
+      } else {
+        // Failed: The torrent was NOT added to qui, log the response and display an alert...
+        console.log(response);
+
+        replaceEmojis(bunnyButton, "❌");
+
+        if (response.status == 401) {
+          // Unauthorized
+          window.alert(
+            `❌ quiCKIE ❌\n\nqui was reached but then failed authorization\n\nℹ️ This usually means a bad ApiKey, check it for typos and make sure it's still valid\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nApiKey: ${postData.quiApiKey}\n\nThe full response has been printed in the console`,
+          );
+        } else {
+          window.alert(
+            `❌ quiCKIE ❌\n\nqui was reached but then failed to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nThe full response has been printed in the console`,
+          );
+        }
+      }
+    },
+    onerror: function (response) {
+      // There was an error making the POST
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThere was an error when connecting to qui\n\nℹ️ This is usually caused by qui not running or a bad quiURL. Check the service is running and the quiURL for typos, usually it's the same instance url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+    ontimeout: function (response) {
+      // The connection timed out
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThe connection to qui timed out\n\nℹ️ Check the service is running and the quiURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nquiURL: ${SETTINGS.torrentClient.quiURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+  });
+}
+
+async function qBitTorrentPOST(postData) {
+  // First send a POST to login and then on success send another POST to add a torrent
+
+  // qBitTorrent expects a different name for these fields
+  postData.formData.get("paused")
+    ? postData.formData.append("stopped", true)
+    : null;
+
+  // qBitTorrent expects bytes, so convert these KB values to bytes
+  postData.formData.get("dlLimit") > 0
+    ? postData.formData.set(
+        "dlLimit",
+        Number(postData.formData.get("dlLimit")) * 1024,
+      )
+    : null;
+  postData.formData.get("upLimit") > 0
+    ? postData.formData.set(
+        "upLimit",
+        Number(postData.formData.get("upLimit")) * 1024,
+      )
+    : null;
+
+  // Signify the start of qBitTorrentPost by changing the emoji of the clicked on BunnyButton
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+  replaceEmojis(bunnyButton, "🧑");
+
+  GM_xmlhttpRequest({
+    // First, send a POST to login to qBittorrent
+    method: "POST",
+    url: `${postData.qBitTorrent.url}/api/v2/auth/login`,
+    headers: {
+      Referer: postData.qBitTorrent.url,
+    },
+    data: new URLSearchParams({
+      username: postData.qBitTorrent.username,
+      password: postData.qBitTorrent.password,
+    }),
+    onload: function (response) {
+      // The login POST has been sent and returned, check the response before proceeding...
+
+      if (response.responseText == "") {
+        // Succesfully logged into qBitTorrent, ready to send another POST to add a new torrent
+
+        replaceEmojis(bunnyButton, "🕓");
+        GM_xmlhttpRequest({
+          // Use the internal GM function to prevent source-origin errors
+          method: "POST",
+          url: `${postData.qBitTorrent.url}/api/v2/torrents/add`,
+          data: postData.formData,
+          onload: function (response) {
+            // ----- Actions to take after the torrent POST has completed -----
+
+            if (response.status == 202) {
+              // Success: The torrent has been added to qBitTorrent
+
+              replaceEmojis(bunnyButton, "✔️");
+            } else {
+              // Failed: The torrent was NOT added to qBitTorrent, log the response and display an alert...
+              console.log(response);
+
+              replaceEmojis(bunnyButton, "❌");
+
+              window.alert(
+                `❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+              );
+            }
+          },
+          onerror: function (response) {
+            // There was an error making the POST
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+          ontimeout: function (response) {
+            // The connection timed out
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nqBitTorrent was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+        });
+      } else if (response.responseText == "Fails.") {
+        // Failed to login to qBitTorrent
+        console.log(response);
+        replaceEmojis(bunnyButton, "❌");
+
+        window.alert(
+          `❌ quiCKIE ❌\n\nqBitTorrent was reached, but the login attempt failed\n\nℹ️ Check your username\\password for typos\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+        );
+      }
+    },
+    onerror: function (response) {
+      // There was an error logging in
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThere was an error connecting to qBitTorrent to attempt the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+    ontimeout: function (response) {
+      // The connection timed out
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThe connection to qBitTorrent timed out when attempting the login\n\nℹ️ Check the service is running and the qBitTorrentURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\nqBitTorrentURL: ${SETTINGS.torrentClient.qBitTorrentURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+  });
+}
+
+async function transmissionPOST(postData) {
+  // First send a POST to login and then on success send another POST to add a torrent
+
+  let labels;
+  postData.formData.get("tags")
+    ? (labels = postData.formData.get("tags").split(","))
+    : null;
+
+  let transmissionData = {
+    method: "torrent-add",
+    arguments: {
+      "download-dir": postData.formData.get("savepath"),
+      labels: labels,
+      paused: postData.formData.get("paused"),
+      "sequential-download": postData.formData.get("sequentialDownload"),
+    },
+  };
+
+  if (postData.formData.get("torrent")) {
+    // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Transmission
+
+    let base64String = await base64encode(postData.formData.get("torrent"));
+
+    transmissionData.arguments.metainfo = base64String;
+    transmissionData = JSON.stringify(transmissionData);
+  } else {
+    // torrentURL|magnetLink: POST using the provided URL
+    transmissionData.arguments.filename = postData.torrentURL;
+    transmissionData = JSON.stringify(transmissionData);
+  }
+
+  // If the user provided a full rpc url use it, otherwise append the default
+  postData.transmission.url.match(/\/rpc$/)
+    ? null
+    : (postData.transmission.url = `${postData.transmission.url}/transmission/rpc`);
+
+  // Signify the start of transmissionPOST by changing the emoji of the clicked on BunnyButton
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+  replaceEmojis(bunnyButton, "🧑");
+
+  GM_xmlhttpRequest({
+    // First, send a POST to login to Transmission
+    method: "POST",
+    url: `${postData.transmission.url}`,
+    headers: {
+      Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
+    },
+    onload: function (response) {
+      // The login POST has been sent and returned, check the response before proceeding...
+
+      let transmissionSessionId = "";
+      try {
+        transmissionSessionId = response.responseText.match(
+          /X-Transmission-Session-Id: (\w+)/,
+        )[1];
+      } catch (error) {}
+
+      if (transmissionSessionId != "") {
+        // Succesfully logged into Transmission, send another POST to add the new torrent
+
+        replaceEmojis(bunnyButton, "🕓");
+        GM_xmlhttpRequest({
+          // Use the internal GM function to prevent source-origin errors
+          method: "POST",
+          url: `${postData.transmission.url}`,
+          headers: {
+            Authorization: `Basic ${btoa(`${postData.transmission.username}:${postData.transmission.password}`)}`,
+            "X-Transmission-Session-Id": transmissionSessionId,
+          },
+          data: transmissionData,
+          onload: function (response) {
+            // ----- Actions to take after the torrent POST has completed -----
+
+            let postResponse = JSON.parse(response.responseText);
+
+            if (postResponse.result == "success") {
+              // Success: The torrent has been added to Transmission
+
+              replaceEmojis(bunnyButton, "✔️");
+            } else {
+              // Failed: The torrent was NOT added to Transmission, log the response and display an alert...
+              console.log(response);
+
+              replaceEmojis(bunnyButton, "❌");
+
+              window.alert(
+                `❌ quiCKIE ❌\n\nTransmission was reached and logged into, but then failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+              );
+            }
+          },
+          onerror: function (response) {
+            // There was an error making the POST
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nTransmission was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+          ontimeout: function (response) {
+            // The connection timed out
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nTransmission was reached and logged into, but the connection timedout when trying to POSt the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+        });
+      } else {
+        // Failed to login to Transmission
+
+        console.log(response);
+        replaceEmojis(bunnyButton, "❌");
+
+        window.alert(
+          `❌ quiCKIE ❌\n\nTransmission was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+        );
+      }
+    },
+    onerror: function (response) {
+      // There was an error logging in
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThere was an error connecting to Transmission to attempt the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+    ontimeout: function (response) {
+      // The connection timed out
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThe connection to Transmission timed out when attempting the login\n\nℹ️ Check the service is running and the transmissionURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ntransmissionURL: ${SETTINGS.torrentClient.transmissionURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+  });
+}
+
+async function delugePOST(postData) {
+  // First send a POST to login to Deluge, then send another POST to add the torrent to Deluge
+  // Supports magnet links and file blobs, but not authenticated torrentURLs, which need to firse be download with getFileBlob()
+
+  let torrentOptions = {
+    download_location: postData.formData.get("savepath"),
+    max_upload_speed: Number(postData.formData.get("upLimit")),
+    max_download_speed: Number(postData.formData.get("dlLimit")),
+    add_paused: postData.formData.get("paused"),
+    sequential_downloads: postData.formData.get("sequentialDownload"),
+    prioritize_first_last_pieces: postData.formData.get("firstLastPiecePrio"),
+  };
+
+  let delugeData = {
+    method: "",
+    params: [],
+  };
+
+  if (postData.formData.get("torrent") != null) {
+    // fileBlob: POST using the available .torrent blob, but first convert it to base64 as required by Deluge
+
+    let base64String = await base64encode(postData.formData.get("torrent"));
+
+    delugeData.method = "core.add_torrent_file";
+    delugeData.params.push("quiCKIE.torrent");
+    delugeData.params.push(base64String);
+    delugeData.params.push(torrentOptions);
+  } else if (postData.torrentURL.match(/magnet:\?xt=urn/)) {
+    // magnetLink: POST the torrentURL as a magnet link
+    delugeData.method = "core.add_torrent_magnet";
+    delugeData.params.push(postData.torrentURL);
+    delugeData.params.push(torrentOptions);
+  } else {
+    // torrentURL: torrentURL can not be sent directly, it must first be downloaded as a blob
+    getFileBlob(postData);
+    return;
+  }
+
+  // Signify the start of delugePOST by changing the emoji of the clicked on BunnyButton
+  let bunnyButton = document.getElementById(postData.bunnyButtonId);
+  replaceEmojis(bunnyButton, "🧑");
+
+  GM_xmlhttpRequest({
+    // First, send a POST to login to Deluge
+    method: "POST",
+    url: `${postData.deluge.url}/json`,
+    headers: { "content-type": "application/json" },
+    data: JSON.stringify({
+      id: 0,
+      method: "auth.login",
+      params: [postData.deluge.password],
+    }),
+    onload: function (response) {
+      // ---------- Logged into Deluge ----------
+      // The login POST has been sent and returned, check the response before proceeding...
+
+      let delugeSessionId = "";
+
+      try {
+        delugeSessionId =
+          response.responseHeaders.match(/_session_id=(\w+)/)[1];
+      } catch (error) {
+        // Did not get a cookie when trying to login, so the login failed
+      }
+
+      if (delugeSessionId != "") {
+        // Succesfully logged into Deluge, send another POST to add the .torrent blob or magnet link
+
+        replaceEmojis(bunnyButton, "🕓");
+        GM_xmlhttpRequest({
+          // Use the internal GM function to prevent source-origin errors
+          method: "POST",
+          url: `${postData.deluge.url}/json`,
+          referer: postData.deluge.url,
+          headers: { "Content-Type": "application/json" },
+          data: JSON.stringify({
+            id: 0,
+            method: delugeData.method,
+            params: delugeData.params,
+          }),
+          onload: function (response) {
+            // ----- Actions to take after the request has completed -----
+
+            let postResponse = JSON.parse(response.responseText);
+
+            if (
+              postResponse.result != null ||
+              response.responseText.match(/Torrent already in session/)
+            ) {
+              // ---------- The torrent has been added to Deluge ----------
+
+              if (response.responseText.match(/Torrent already in session/)) {
+                console.log(
+                  `According to the Deluge response, this torrent can not be added because it already exists in your session\n\nℹ️ If the torrent is not listed in the WebUi, it may be lingering in the daemon session\n\ntorrentURL: ${postData.torrentURL}`,
+                );
+              }
+
+              replaceEmojis(bunnyButton, "✔️");
+            } else {
+              // Failed: The torrent POST was sent to the server but NOT added to Deluge, log the response and display an alert...
+              console.log(response);
+
+              replaceEmojis(bunnyButton, "❌");
+
+              window.alert(
+                `❌ quiCKIE ❌\n\nDeluge was reached and logged into, but then failed when trying to add the torrent.\n\nℹ️ This usually means that the WebUi is not connected to the daemon, check the Connection Manager in the WebUi\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+              );
+            }
+          },
+          onerror: function (response) {
+            // There was an error in the torrent add POST
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nDeluge was reached and logged into, but there was an error when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelgueURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+          ontimeout: function (response) {
+            // The connection timed out
+            console.log(response);
+            replaceEmojis(bunnyButton, "❌");
+
+            window.alert(
+              `❌ quiCKIE ❌\n\nDeluge was reached and logged into, but the connection timedout when trying to POST the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+            );
+          },
+        });
+      } else {
+        // Failed to login to Deluge
+        console.log(response);
+        replaceEmojis(bunnyButton, "❌");
+
+        window.alert(
+          `❌ quiCKIE ❌\n\nDeluge was reached, but the login attempt failed\n\nℹ️ Check your Username\\Password for typos.\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+        );
+      }
+    },
+    onerror: function (response) {
+      // There was an error logging in
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThere was an error connecting to Deluge to attempt the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+    ontimeout: function (response) {
+      // The connection timed out
+      console.log(response);
+      replaceEmojis(bunnyButton, "❌");
+
+      window.alert(
+        `❌ quiCKIE ❌\n\nThe connection to Deluge timed out when attempting the login\n\nℹ️ Check the service is running and the delugeURL for typos, usually it's the same url you can copy-paste from your browser\n\nStatus Code: ${response.status}\n\ndelugeURL: ${SETTINGS.torrentClient.delugeURL}\n\nThe full response has been printed in the console`,
+      );
+    },
+  });
+}
+
+async function ruTorrentPOST(postData) {
+  // *** TO-DO ***
+  // ruTorrent confuses me, it seems there's different ways to login (either using an http form or through the api) and I'm not sure about the procs\cons of each approach... From a brief glance, the torrent POST requires base64 like transmissionPOST()
+}
+
+// @thirdPartyIntegrations
+function scanForThirdPartyTorrentURLS(delay) {
+  // Check for elements that have the unique 'data-quickie_torrenturl' attribute designating them as integrated thirdParty torrentURLs for which to generate a BunnyButton. This process will loop every 5000ms.
+
+  // Check if the user has enabled tracker-specific settings for thirdParty DL elements
+  let thirdPartyTrackerSpecificSettings = false;
+  SETTINGS.thirdPartyScan == "On + 🌎"
+    ? (thirdPartyTrackerSpecificSettings = true)
+    : null;
+
+  setTimeout(() => {
+    // The query that will locate all the elements containing the `data-quickie_torrenturl` attribute
+    let allThirdPartyDownloadElements = document.querySelectorAll(
+      "[data-quickie_torrenturl]",
+    );
+
+    if (allThirdPartyDownloadElements.length > 0) {
+      // The first bunnyButton on the page, which will be used as a base from where to pull a separator and CSS styles
+      let existingBB = document.querySelector(
+        "a.quickie_bunnyButton:not(a.quickie_thirdParty)",
+      );
+
+      for (let downloadElement of allThirdPartyDownloadElements) {
+        // For each thirdPartyElement, create a BunnyButton using the elements 'data-quickie_torrenturl' attribute
+
+        let bunnyButtonText = " 🤝 ";
+
+        let torrentSettings = {
+          // The default tracker settings that will be used by this bunnyButton
+          primaryDomain: primaryDomain,
+          category: SETTINGS.category,
+          savePath: SETTINGS.savePath,
+          tags: SETTINGS.tags,
+          ratioLimit: SETTINGS.ratioLimit,
+          seedTime: SETTINGS.seedTime,
+          dlLimit: SETTINGS.dlLimit,
+          upLimit: SETTINGS.upLimit,
+          instance: SETTINGS.instance,
+          startPaused: SETTINGS.startPaused,
+          subFolder: SETTINGS.subFolder,
+          seqPieces: SETTINGS.seqPieces,
+          autoTMM: SETTINGS.autoTMM,
+          skipHash: SETTINGS.skipHash,
+        };
+
+        // The user has enabled 'On + 🌎', so get the tracker-appropriate torrent settings that will be used for this bunnyButton
+        if (thirdPartyTrackerSpecificSettings == true) {
+          if (SETTINGS.firstThirdPartyScan == true) {
+            // This being the first scan, update the global presetMenuItems object so that it includes a property for not only the current tracker, but properties for ALL trackers
+            presetMenuItems = createPresetItems(allPrimaryDomains);
+            SETTINGS.firstThirdPartyScan = false;
+          }
+
+          // [quickie_tracker] : Check if the thirdParty element has specified from which tracker the bunnyButton should get its settings
+          if (downloadElement.dataset.quickie_tracker != undefined) {
+            let thirdPartyTracker =
+              downloadElement.dataset.quickie_tracker.toLowerCase();
+
+            if (
+              Object.keys(trackerNameToPrimaryDomain).includes(
+                thirdPartyTracker,
+              ) ||
+              allPrimaryDomains.includes(thirdPartyTracker)
+            ) {
+              // The [quickie_tracker] is valid as either a quiCKIE supported trackerName or primaryDomain
+
+              let thirdPartyDomain =
+                trackerNameToPrimaryDomain[thirdPartyTracker] ??
+                thirdPartyTracker;
+
+              // Indicate this DL button is using thirdParty tracker settings by changing the displayed emoji
+              bunnyButtonText = " 🌎 ";
+
+              // Get and update the torrentSettings with those appropriate of the thirdPartyDomain
+              torrentSettings.primaryDomain = thirdPartyDomain;
+              torrentSettings.category = GM_config.get(
+                `${thirdPartyDomain}-category`,
+              );
+              torrentSettings.savePath = GM_config.get(
+                `${thirdPartyDomain}-savePath`,
+              );
+              torrentSettings.tags = GM_config.get(`${thirdPartyDomain}-tags`);
+              torrentSettings.ratioLimit = GM_config.get(
+                `${thirdPartyDomain}-ratioLimit`,
+              );
+              torrentSettings.seedTime = GM_config.get(
+                `${thirdPartyDomain}-seedTime`,
+              );
+              torrentSettings.dlLimit = GM_config.get(
+                `${thirdPartyDomain}-dlLimit`,
+              );
+              torrentSettings.upLimit = GM_config.get(
+                `${thirdPartyDomain}-upLimit`,
+              );
+              torrentSettings.instance = GM_config.get(
+                `${thirdPartyDomain}-instance`,
+              );
+              torrentSettings.startPaused = GM_config.get(
+                `${thirdPartyDomain}-startPaused`,
+              );
+              torrentSettings.subFolder = GM_config.get(
+                `${thirdPartyDomain}-subFolder`,
+              );
+              torrentSettings.seqPieces = GM_config.get(
+                `${thirdPartyDomain}-seqPieces`,
+              );
+              torrentSettings.autoTMM = GM_config.get(
+                `${thirdPartyDomain}-autoTMM`,
+              );
+              torrentSettings.skipHash = GM_config.get(
+                `${thirdPartyDomain}-skipHash`,
+              );
+
+              // Empty problematic integer values before they cause unexpected results in the torrent client
+              torrentSettings.ratioLimit == 0
+                ? (torrentSettings.ratioLimit = "")
+                : null;
+              torrentSettings.seedTime == 0
+                ? (torrentSettings.seedTime = "")
+                : null;
+              torrentSettings.dlLimit <= 0
+                ? (torrentSettings.dlLimit = "")
+                : null;
+              torrentSettings.upLimit <= 0
+                ? (torrentSettings.upLimit = "")
+                : null;
+              torrentSettings.instance <= 0
+                ? (torrentSettings.instance = "")
+                : null;
+            }
+          }
+        }
+
+        // [quickie_forcetorrentfile] : Check if the thirdParty element has specified that the torrentURL be downloaded through the browser instead of being determined by quiCKIE
+        downloadElement.dataset.quickie_forcetorrentfile == "true"
+          ? (SETTINGS.forceTorrentFile = true)
+          : null;
+
+        // Determine the current separator used by an existing bunnyButton
+        let separatorNode;
+        SETTINGS.bunnyButtonPlacement == "After"
+          ? (separatorNode = existingBB.previousSibling)
+          : (separatorNode = existingBB.nextSibling);
+
+        let separatorText;
+        if (separatorNode == null) {
+          separatorText == " ";
+        } else {
+          separatorNode.nodeType != 3
+            ? (separatorText = " ")
+            : (separatorText = separatorNode.textContent);
+        }
+
+        // [quickie_separator] : Check if the thirdParty element has specified a specific separator to use between itself and the bunnyButton
+        downloadElement.dataset.quickie_separator
+          ? (separatorText = downloadElement.dataset.quickie_separator)
+          : null;
+
+        // Create a bunnyButton using the unique 'quickie_torrenturl' attribute of the thirdParty element
+        let bunnyButton = createBunnyButton({
+          torrentURL: downloadElement.dataset.quickie_torrenturl,
+          buttonText: bunnyButtonText,
+          torrentSettings: torrentSettings,
+        });
+
+        // Apply the CSS styles used by the existingBB
+        bunnyButton.style = existingBB.style.cssText;
+        bunnyButton.classList.add("quickie_thirdParty");
+
+        // Append the bunnyButton relative to the thirdParty element
+        let bunnyButtonPlacement;
+        SETTINGS.bunnyButtonPlacement == "After"
+          ? (bunnyButtonPlacement = "afterend")
+          : (bunnyButtonPlacement = "beforebegin");
+        downloadElement.insertAdjacentElement(
+          bunnyButtonPlacement,
+          bunnyButton,
+        );
+        downloadElement.insertAdjacentText(bunnyButtonPlacement, separatorText);
+
+        // Remove the attribute that would match it as a thirdParty element in future loops
+        downloadElement.removeAttribute("data-quickie_torrenturl");
+
+        if (thirdPartyTrackerSpecificSettings == true) {
+          // Append the presets-menu to the newly created bunnyButton, which must be done per bunnyButton to make sure it receives the tracker-appropriate menuItems
+          attachPresetsMenu(
+            "a.quickie_newBunnyButton",
+            torrentSettings.primaryDomain,
+          );
+        }
+      }
+
+      if (thirdPartyTrackerSpecificSettings == false) {
+        // Append the presets-menu to all the newly created bunnyButtons at once, since they'll all be receiving the same menuItems
+        attachPresetsMenu("a.quickie_newBunnyButton", SETTINGS.primaryDomain);
+      }
+    }
+
+    // Repeat this function after 5000ms
+    scanForThirdPartyTorrentURLS(5000);
+  }, delay);
+}
+
+// =================================== HELPER FUNCTIONS ======================================
+
+function waitForElement(
+  cssTarget,
+  observeTarget = document.body,
+  observeSubTree = true,
+) {
+  // Wait until the cssTarget exists within the observeTarget and then resolve the promise
+  // Source: https://stackoverflow.com/a/61511955
+
+  return new Promise(function (resolve) {
+    if (observeTarget.querySelector(cssTarget)) {
+      // The cssTarget already exists within the observeTarget, so immediately resolve the promise
+      return resolve(observeTarget.querySelector(cssTarget));
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      // The actions to take when there are new mutations to the observeTarget
+
+      if (observeTarget.querySelector(cssTarget)) {
+        // The cssTarget has been found within the observeTarget
+        observer.disconnect();
+        resolve(observeTarget.querySelector(cssTarget));
+      }
+    });
+
+    // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+    try {
+      observer.observe(observeTarget, {
+        childList: true,
+        subtree: observeSubTree,
+      });
+    } catch (error) {
+      // console.log(error)
+    }
+  });
+}
+
+function base64encode(inputData) {
+  // Encode the inputData (blob, string, etc) to a base64 string
+
+  return new Promise(function (resolve) {
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      // After the file has been read\loaded, clean the base64 string and resolve the promise
+      resolve(reader.result.replace(/^data:.+;base64,/, ""));
+    };
+
+    reader.readAsDataURL(inputData);
+  });
+}
+
+function saveToFile(fileData, filename) {
+  // Save the provided fileData to a local file
+
+  mimeTypes = {
+    // The different MIME types this function is setup to handle
+    // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
+
+    json: "application/json;charset=utf-8;",
+    text: "text/plain;charset=utf-8;",
+    txt: "text/plain;charset=utf-8;",
+    torrent: "application/x-bittorrent",
+  };
+
+  let filetype;
+
+  try {
+    // Parse the provided filename to determine the filetype
+    filetype = filename.match(/.*\.(\w+)$/)[1];
+  } catch {
+    // No file extension was provided, so assume it to be a text type
+    filetype = "text";
+  }
+
+  let blobType;
+
+  if (Object.keys(mimeTypes).includes(filetype)) {
+    // The filetype has a registered mime type
+    blobType = mimeTypes[filetype];
+  } else {
+    // The filetype is not registerd, so assume it to be a text type
+    blobType = "text/plain;charset=utf-8;";
+  }
+
+  // Create the blob object that will contain the data to be written
+  let blobData = new Blob([fileData], { type: blobType });
+  let fileURL = URL.createObjectURL(blobData);
+
+  // Create the HTML element that will be automatically clicked on to download the file
+  let fileElement = document.createElement("a");
+  fileElement.href = fileURL;
+  fileElement.download = filename;
+
+  document.body.appendChild(fileElement);
+  fileElement.click();
+  document.body.removeChild(fileElement);
+
+  URL.revokeObjectURL(fileURL);
 }
