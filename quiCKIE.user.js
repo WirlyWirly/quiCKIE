@@ -1984,7 +1984,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     globalsTitles: {
       torrentClient:
         "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
-      presetCount:
+      presetCount. Choose either this or username/password:
         "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
       globalLeftClickAction:
         "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
@@ -2010,6 +2010,8 @@ function createGMConfigSettingsPanel(trackerDomain) {
         "─── 🔑 Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface",
       qBitTorrentPassword:
         "─── 🔑 Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface",
+      qBitTorrentAPIKey:
+        "─── 🔑 API Key 🔑 ───\n\nThe api key generated in WebUI settings. Choose either this or username/password",
 
       transmissionURL:
         "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091\n\nℹ️ If Transmission is not using the default rpc, then specify the complete rpc url\n\nExample: http://localhost:9091/your/custom/rpc",
@@ -2265,6 +2267,10 @@ function createGMConfigSettingsPanel(trackerDomain) {
         qBitTorrentPassword: {
           label: "🔑 Password:",
           type: "text",
+        },
+        qBitTorrentApiKey: {
+          label: "🔑 Password:",
+          type: "text"
         },
 
         // ----- Transmission -----
@@ -3010,6 +3016,20 @@ function createGMConfigSettingsPanel(trackerDomain) {
         settingsDivSecond.appendChild(qBitTorrentPasswordLabel);
         settingsDivSecond.appendChild(qBitTorrentPasswordField);
 
+        // --- qBitTorrentAPIKey ---
+        let qBitTorrentAPIKeyLabel = document.getElementById(
+          "quiCKIE_config_field_qBitTorrentAPIKey_field_label",
+        );
+        let qBitTorrentAPIKeyField = document.getElementById(
+          "quiCKIE_config_field_qBitTorrentAPIKey",
+        );
+        qBitTorrentAPIKeyLabel.classList.add("settingsDivLabel");
+        qbitTorrentAPIKeyLabel.title =
+          panelTextData.globalsTitles.qBitTorrentAPIKey;
+        qBitTorrentAPIKeyField.classList.add("quiCKIE_obfuscate");
+        settingsDivSecond.appendChild(qBitTorrentAPIKeyLabel);
+        settingsDivSecond.appendChild(qBitTorrentAPIKeyField);
+
         // --- TransmissionURL ---
         let transmissionURLLabel = document.getElementById(
           "quiCKIE_config_transmissionURL_field_label",
@@ -3507,6 +3527,7 @@ function getTrackerSettings(primaryDomain) {
       qBitTorrentURL: GM_config.get("qBitTorrentURL"),
       qBitTorrentUsername: GM_config.get("qBitTorrentUsername"),
       qBitTorrentPassword: GM_config.get("qBitTorrentPassword"),
+      qBitTorrentApiKey: GM_config.get("qBitTorrentApiKey"),
 
       transmissionURL: GM_config.get("transmissionURL"),
       transmissionUsername: GM_config.get("transmissionUsername"),
@@ -4859,6 +4880,7 @@ function addTorrent({
       url: null,
       username: null,
       password: null,
+      apiKey: null,
     },
     transmission: {
       url: null,
@@ -4919,16 +4941,21 @@ function addTorrent({
     postData.qui.apiKey = torrentClient.quiApiKey;
   } else if (postData.torrentClient == "qBitTorrent") {
     // ----------------------------------- qBitTorrent -----------------------------------
+    
+    const hasApiKey = 
+      torrentClient.qBitTorrentURL !== "" &&
+      torrentClient.qBitTorrentApiKey !== "";
 
-    if (
-      torrentClient.qBitTorrentURL == "" ||
-      torrentClient.qBitTorrentUsername == "" ||
-      torrentClient.qBitTorrentPassword == ""
-    ) {
+    const hasUserPass =
+      torrentClient.qBitTorrentURL !== "" &&
+      torrentClient.qBitTorrentUsername !== "" &&
+      torrentClient.qBitTorrentPassword !== "";
+
+    if (!hasApiKey && !hasUserPsas) {
       // Missing qBitTorrent credentials, alert the user and abort
       replaceEmojis(bunnyButton, "❌");
       window.alert(
-        "❌ quiCKIE ❌\n\nA qBitTorrentURL, Username, and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
+        "❌ quiCKIE ❌\n\nA qBitTorrentURL and either an API Key or a Username and Password are required\n\nShift-Click the BunnyButton to open the setting panel",
       );
       return;
     }
@@ -4946,8 +4973,14 @@ function addTorrent({
       return;
     }
 
-    postData.qBitTorrent.username = torrentClient.qBitTorrentUsername;
-    postData.qBitTorrent.password = torrentClient.qBitTorrentPassword;
+    if (!hasApiKey && hasUserPass) {
+      postData.qBitTorrent.username = torrentClient.qBitTorrentUsername;
+      postData.qBitTorrent.password = torrentClient.qBitTorrentPassword;
+    }
+
+    if (hasApiKey && !hasUserPass) {
+      postData.qBitTorrent.apiKey = torrentClient.qBitTorrentApiKey;
+    }
   } else if (postData.torrentClient == "Transmission") {
     // ----------------------------------- Transmission -----------------------------------
 
@@ -5312,6 +5345,53 @@ async function qBitTorrentPOST(postData) {
   let bunnyButton = document.getElementById(postData.bunnyButtonId);
   replaceEmojis(bunnyButton, "🧑");
 
+ // API Key Support
+ const hasApiKey = postData.qBitTorrent.apiKey;
+  if (hasApiKey) {
+    GM_xmlhttpRequest({
+      method: "POST",
+      url: `${postData.qBitTorrent.url}/api/v2/torrents/add`,
+      headers: {
+        Referer: postData.qBitTorrent.url,
+        Authorization: `Bearer ${postData.qBitTorrent.apiKey}`,
+      },
+      data: postData.formData,
+
+      onload: function (response) {
+        if (response.status == 202) {
+          replaceEmojis(bunnyButton, "✔️");
+        } else {
+          
+          console.log(response);
+          replaceEmojis(bunnyButton, "❌");
+
+          window.alert(
+            `❌ quiCKIE ❌\n\nqBitTorrent Api key request failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${postData.qBitTorrent.url}\n\nThe full response has been printed in the console`,
+          );
+        }
+      },
+
+      onerror: function (response) {
+        console.log(response);
+        replaceEmojis(bunnyButton, "❌");
+
+        window.alert(
+          `❌ quiCKIE ❌\n\nqBitTorrent Api key request failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${postData.qBitTorrent.url}\n\nThe full response has been printed in the console`,
+        );
+        ontimeout: function (response) {
+          // The connection timed out
+          console.log(response);
+          replaceEmojis(bunnyButton, "❌");
+          window.alert(
+            `❌ quiCKIE ❌\n\nqBitTorrent Api key request failed when trying to add the torrent\n\nStatus Code: ${response.status}\n\n${response.responseText}\n\nqBitTorrentURL: ${postData.qBitTorrent.url}\n\nThe full response has been printed in the console`,
+          );
+        }
+      }
+    });
+    return;
+  } 
+
+  // Legacy User/Pass
   GM_xmlhttpRequest({
     // First, send a POST to login to qBittorrent
     method: "POST",
