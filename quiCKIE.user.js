@@ -1317,7 +1317,7 @@ if ( primaryDomain == 'animebytes' ) {
     // Browse | Collages | Details | Top10
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        downloadElementsSelector: 'a[href*="torrents.php?action=download&id="]',
         bunnyButtonFontSize: "140%",
     }
 
