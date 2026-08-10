@@ -219,6 +219,9 @@
 // @match   https://retro-movies.club/playlists/*
 // @match   https://retro-movies.club/torrents*
 
+// @match   https://retrotoon.world/browse.php
+// @match   https://retrotoon.world/details.php?id=*
+
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
 // @match   https://secret-cinema.pw/top10.php*
@@ -548,6 +551,12 @@ const settingsPanelTrackers = [
         trackerName: 'RetroMoviesClub', // @LilithOfTheValley
         homepageURL: 'https://retro-movies.club',
         primaryDomain: 'retro-movies',
+    },
+
+    {
+        trackerName: 'RetroToonWorld',
+        homepageURL: 'https://retrotoon.world',
+        primaryDomain: 'retrotoon',
     },
 
     {
@@ -1615,6 +1624,27 @@ if ( primaryDomain == 'animebytes' ) {
     // Browse | Details | Homepage | Playlists | Similar
 
     unit3dTrackerHandler('a[href^="https://retro-movies.club/torrents/download/"]')
+
+} else if ( primaryDomain == 'retrotoon' ) {
+    // ----------------------------------- RetroToonWorld -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+
+        // Just the emoji
+        bunnyButtonText: '🐰',
+        bunnyButtonFontSize: '14px',
+        elementsSeparator: ' | ', // Adds a clean pipe between the link and the button
+
+        // Basic spacing and alignment
+        bunnyButtonAddStyles: `
+            text-decoration: none;
+            vertical-align: baseline;
+        `,
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
