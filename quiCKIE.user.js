@@ -194,6 +194,11 @@
 
 // @match   https://passthepopcorn.me/torrents.php?id=*
 
+// @match   https://phoenixproject.app/bookmarks.php*
+// @match   https://phoenixproject.app/collages.php?id=*
+// @match   https://phoenixproject.app/top10.php*
+// @match   https://phoenixproject.app/torrents.php*
+
 // @match   https://portugas.org/
 // @match   https://portugas.org/*/bookmarks
 // @match   https://portugas.org/playlists/*
@@ -519,6 +524,12 @@ const settingsPanelTrackers = [
         primaryDomain: 'passthepopcorn',
     },
 
+    {
+        trackerName: 'Phoenix Project', // @SirWall
+        homepageURL: 'https://phoenixproject.app',
+        primaryDomain: 'phoenixproject',
+    },
+    
     {
         trackerName: 'Portugas', // @Phreaker
         homepageURL: 'https://portugas.org',
@@ -1516,6 +1527,19 @@ if ( primaryDomain == 'animebytes' ) {
         seedingStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Seeding"]')`,
         snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link[title="Downloaded"]')`,
         freeleechStatusSelector: `downloadElement.closest('td').querySelector('a.torrent-info-link .torrent-info__download-modifier--free')`
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'phoenixproject' ) {
+    // ----------------------------------- Phoenix Project -----------------------------------
+    // Browse | Collages
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        seedingStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_seeding')",
+        snatchedStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_snatched')",
+        freeleechStatusSelector: "downloadElement.closest('td').querySelector('strong.tl_free')"
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
