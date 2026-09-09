@@ -67,6 +67,11 @@
 // @match   https://bitporn.eu/playlists/*
 // @match   https://bitporn.eu/torrents*
 
+// @match   https://blutopia.cc/
+// @match   https://blutopia.cc/*/bookmarks*
+// @match   https://blutopia.cc/playlists/*
+// @match   https://blutopia.cc/torrents*
+
 // @match   https://broadcasthe.net/collages.php?id=*
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
@@ -357,6 +362,12 @@ const settingsPanelTrackers = [
         trackerName: 'BitPorn',
         homepageURL: 'https://bitporn.eu',
         primaryDomain: 'bitporn',
+    },
+
+    {
+        trackerName: 'Blutopia', //@SirWall
+        homepageURL: 'https://blutopia.cc',
+        primaryDomain: 'blutopia',
     },
 
     {
@@ -868,6 +879,12 @@ if ( primaryDomain == 'animebytes' ) {
     // Browse | Details
 
     unit3dTrackerHandler('a[href^="https://bitporn.eu/torrents/download/"]')
+
+} else if ( primaryDomain == 'blutopia' ) {
+    // ----------------------------------- Blutopia -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'broadcasthe' ) {
     // ----------------------------------- BroadcasTheNet -----------------------------------
