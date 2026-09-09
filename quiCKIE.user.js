@@ -34,6 +34,11 @@
 // @match   https://animebytes.tv/series.php?id=*
 // @match   https://animebytes.tv/torrents*
 
+// @match   https://animeworld.cx/
+// @match   https://animeworld.cx/*/bookmarks*
+// @match   https://animeworld.cx/playlists/*
+// @match   https://animeworld.cx/torrents*
+
 // @match   https://animez.to/
 // @match   https://animez.to/torrents*
 // @match   https://animez.to/torrent-bookmarks*
@@ -243,6 +248,11 @@
 // @match   https://secret-cinema.pw/top10.php*
 // @match   https://secret-cinema.pw/torrents.php*
 
+// @match   https://seedpool.org/
+// @match   https://seedpool.org/*/bookmarks*
+// @match   https://seedpool.org/playlists/*
+// @match   https://seedpool.org/torrents*
+
 // @match   https://sportscult.org/index.php?page=torrents*
 // @match   https://sportscult.org/index.php?page=torrent-details*
 
@@ -327,6 +337,12 @@ const settingsPanelTrackers = [
         primaryDomain: 'animebytes',
     },
 
+    {
+        trackerName: 'AnimeWorld', // @SirWall
+        homepageURL: 'https://animeworld.cx',
+        primaryDomain: 'animeworld',
+    },
+    
     {
         trackerName: 'AnimeZ', // @holy-elbow
         homepageURL: 'https://animez.to',
@@ -601,6 +617,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Seedpool', // @SirWall
+        homepageURL: 'https://seedpool.org',
+        primaryDomain: 'seedpool',
+    },
+
+    {
         trackerName: 'SportsCult', // @steventrux
         homepageURL: 'https://sportscult.org',
         primaryDomain: 'sportscult',
@@ -766,6 +788,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'animeworld' ) {
+    // ----------------------------------- AnimeWorld -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'animez' ) {
     // --------------------------------- AnimeZ ------------------------------------
@@ -1746,6 +1774,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'seedpool' ) {
+    // ----------------------------------- Seedpool -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'sportscult' ) {
     // ----------------------------------- SportsCult -----------------------------------
