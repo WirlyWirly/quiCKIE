@@ -233,6 +233,11 @@
 // @match   https://retrotoon.world/browse.php
 // @match   https://retrotoon.world/details.php?id=*
 
+// @match   https://rocket-hd.cc/
+// @match   https://rocket-hd.cc/*/bookmarks*
+// @match   https://rocket-hd.cc/playlists/*
+// @match   https://rocket-hd.cc/torrents*
+
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
 // @match   https://secret-cinema.pw/top10.php*
@@ -581,6 +586,12 @@ const settingsPanelTrackers = [
         trackerName: 'RetroToonWorld', // @flows
         homepageURL: 'https://retrotoon.world',
         primaryDomain: 'retrotoon',
+    },
+
+    {
+        trackerName: 'RocketHD', // @SirWall
+        homepageURL: 'https://rocket-hd.cc',
+        primaryDomain: 'rocket-hd',
     },
 
     {
@@ -1719,6 +1730,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'rocket-hd' ) {
+    // ----------------------------------- RocketHD -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
