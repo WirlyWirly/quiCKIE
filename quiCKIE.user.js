@@ -1206,7 +1206,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href*="download.php?id="]',
         bunnyButtonFontSize: '15px',
         featuredStatusSelector: "downloadElement.closest('div.torrentrow').querySelector('img[alt=\"Sticky\"]')",
-        freeleechStatusSelector: "downloadElement.closest('div.torrentrow').querySelector('img[alt=\"FreeLeech\"]')",
+        freeleechStatusSelector: "downloadElement.closest('div.torrentrow, tr').querySelector('img[alt=\"FreeLeech\" i]')",
     }
 
     // This is a details page, so apply styling to the only bunnyButton
@@ -4004,7 +4004,12 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                             // This is a featured (+ freeleech) torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'featuredFreeleech')
 
-                        } else if ( document.querySelector("i.torrent-icons__freeleech[title^='100%'], span.torrent-icons__freeleech[title^='100%'], i.torrent-icons__freeleech.fa-calendar-star, i.fa-globe") != null ) {
+                        } else if ( document.querySelector(
+                          `:is(i, span).torrent-icons__freeleech[title*="100%"],
+                          :is(i, span).torrent-icons__freeleech[title*="Global freeleech"],
+                          :is(i, span).torrent-icons__freeleech[title*="Special Freeleech"],
+                          i.torrent-icons__freeleech.fa-calendar-star,
+                          i.fa-globe`) != null ) {
                             // The freeleechStatusSelector was matched: Star, Calendar, Globe
                             bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
