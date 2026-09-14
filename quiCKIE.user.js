@@ -48,6 +48,8 @@
 // @match   https://avistaz.to/
 // @match   https://avistaz.to/*/bookmark*
 // @match   https://avistaz.to/torrent*
+// @match   https://avistaz.to/movie/*
+// @match   https://avistaz.to/tv/*
 
 // @match   https://bakabt.me/torrent/*
 
