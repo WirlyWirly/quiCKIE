@@ -653,7 +653,7 @@ const settingsPanelTrackers = [
 
     {
         trackerName: 'Upload.cx', // @verinikat
-        homepageURL: 'https://upload.cx/',
+        homepageURL: 'https://upload.cx',
         primaryDomain: 'upload.cx',
     },
 
