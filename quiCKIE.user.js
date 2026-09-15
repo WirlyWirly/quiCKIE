@@ -263,6 +263,11 @@
 
 // @match   https://tv-vault.me/torrents.php?id=*
 
+// @match   https://upload.cx/
+// @match   https://upload.cx/*/bookmarks
+// @match   https://upload.cx/playlists/*
+// @match   https://upload.cx/torrents*
+
 // ----------------------------------- Permissions --------------------------------------
 
 // @grant   GM_addStyle
@@ -644,6 +649,12 @@ const settingsPanelTrackers = [
         trackerName: 'TV-Vault',
         homepageURL: 'https://tv-vault.me',
         primaryDomain: 'tv-vault',
+    },
+
+    {
+        trackerName: 'Upload.cx', // @verinikat
+        homepageURL: 'https://upload.cx/',
+        primaryDomain: 'upload.cx',
     },
 
 ]
@@ -1821,6 +1832,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'upload.cx' ) {
+    // ----------------------------------- Upload.cx -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else {
     // ----------------------------------- NONE -----------------------------------
