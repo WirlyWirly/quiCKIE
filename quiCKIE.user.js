@@ -86,6 +86,8 @@
 // @match   https://cinemaz.to/
 // @match   https://cinemaz.to/*/bookmark*
 // @match   https://cinemaz.to/torrent/*
+// @match   https://cinemaz.to/movie/*
+// @match   https://cinemaz.to/tv/*
 
 // @match   https://clearjav.com/
 // @match   https://clearjav.com/*/bookmarks*
@@ -972,11 +974,25 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- CinemaZ -----------------------------------
     // Details
 
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
-    }
+    if ( pageURL.match(/cinemaz\.to\/(movie|tv)\/\d/) ) {
+        // The movie and tv show details pages
 
-    quickieTrackerHandler(trackerHandlingOptions)
+        let trackerHandlingOptions = {
+            downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
+            enablePaginationLooping: true,
+        }
+
+        quickieTrackerHandler(trackerHandlingOptions)
+
+    } else {
+
+        let trackerHandlingOptions = {
+            downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
+            enablePaginationLooping: false,
+        }
+
+        quickieTrackerHandler(trackerHandlingOptions)
+    }
 
 } else if ( primaryDomain == 'clearjav' ) {
     // ----------------------------------- ClearJAV -----------------------------------
