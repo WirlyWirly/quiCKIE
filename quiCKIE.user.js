@@ -201,6 +201,12 @@
 // @match   https://oldtoons.world/playlists/*
 // @match   https://oldtoons.world/torrents*
 
+// @match   https://onlyencodes.cc/
+// @match   https://onlyencodes.cc/*/bookmarks
+// @match   https://onlyencodes.cc/playlists/*
+// @match   https://onlyencodes.cc/torrents*
+
+
 // @match   https://orpheus.network/artist.php?id=*
 // @match   https://orpheus.network/bookmarks.php*
 // @match   https://orpheus.network/collages.php?id=*
@@ -554,6 +560,12 @@ const settingsPanelTrackers = [
         trackerName: 'Oldtoons',
         homepageURL: 'https://oldtoons.world',
         primaryDomain: 'oldtoons',
+    },
+
+    {
+        trackerName: 'OnlyEncodes',
+        homepageURL: 'https://onlyencodes.cc',
+        primaryDomain: 'onlyencodes',
     },
 
     {
@@ -1606,6 +1618,12 @@ if ( primaryDomain == 'animebytes' ) {
     // Browse | Details | Homepage | Playlists | Similar
 
     unit3dTrackerHandler('a[href^="https://oldtoons.world/torrents/download/"]')
+
+} else if ( primaryDomain == 'onlyencodes' ) {
+    // ----------------------------------- OnlyEncodes -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://onlyencodes.cc/torrents/download/"]')
 
 } else if ( primaryDomain == 'orpheus' ) {
     // ----------------------------------- Orpheus -----------------------------------
