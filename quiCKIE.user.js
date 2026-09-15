@@ -1835,9 +1835,9 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'uploadcx' ) {
     // ----------------------------------- Uploadcx -----------------------------------
-    // Bookmarks | Browse | Details | Playlists
+    // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href*="https://upload.cx/torrents/download"]')
+    unit3dTrackerHandler('a[href^="https://upload.cx/torrents/download/"]')
 
 } else {
     // ----------------------------------- NONE -----------------------------------
