@@ -51,7 +51,6 @@
 // @match   https://avistaz.to/movie/*
 // @match   https://avistaz.to/tv/*
 // @match   https://avistaz.to/profile/*/history*
-// @match   https://avistaz.to/stat/torrents*
 
 // @match   https://bakabt.me/torrent/*
 
@@ -839,7 +838,7 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'avistaz' ) {
     // ----------------------------------- AvistaZ -----------------------------------
-    // Details | Browse | Movie | TV | History | Torrent Statistics
+    // Details | Browse | Movie | TV | History
 
     if ( pageURL.match(/avistaz\.to\/(movie|tv)\/\d/) ) {
         // The movie and tv show details pages
