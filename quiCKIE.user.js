@@ -1837,7 +1837,7 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Uploadcx -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    unit3dTrackerHandler('a[href*="https://upload.cx/torrents/download"]')
 
 } else {
     // ----------------------------------- NONE -----------------------------------
