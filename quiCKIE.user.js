@@ -403,7 +403,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'Cinematik', // @fercats99
+        trackerName: 'Cinematik', // @verinikat
         homepageURL: 'https://cinematik.net',
         primaryDomain: 'cinematik',
     },
