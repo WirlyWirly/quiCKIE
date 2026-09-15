@@ -253,6 +253,10 @@
 // @match   https://seedpool.org/playlists/*
 // @match   https://seedpool.org/torrents*
 
+// @match   https://simurg.world/
+// @match   https://simurg.world/torrents.php*
+// @match   https://simurg.world/top10.php*
+
 // @match   https://sportscult.org/index.php?page=torrents*
 // @match   https://sportscult.org/index.php?page=torrent-details*
 
@@ -620,6 +624,12 @@ const settingsPanelTrackers = [
         trackerName: 'Seedpool', // @SirWall
         homepageURL: 'https://seedpool.org',
         primaryDomain: 'seedpool',
+    },
+
+    {
+        trackerName: 'Simurg', // @verinikat
+        homepageURL: 'https://simurg.world',
+        primaryDomain: 'simurg',
     },
 
     {
@@ -1772,6 +1782,17 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Playlists
 
     unit3dTrackerHandler('a[href*="/download"]')
+
+} else if ( primaryDomain == 'simurg' ) {
+    // ----------------------------------- Simurg -----------------------------------
+    // Publication | Search | Top10
+    // Note: Tracker is new, so on-page seeding detection isn't implememnted yet. There are no FL torrents currently on Simurg. Re-visit this as site develops further.
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]'
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'sportscult' ) {
     // ----------------------------------- SportsCult -----------------------------------
