@@ -86,6 +86,7 @@
 // @match   https://cinemaz.to/torrent/*
 // @match   https://cinemaz.to/movie/*
 // @match   https://cinemaz.to/tv/*
+// @match   https://cinemaz.to/profile/*/history*
 
 // @match   https://clearjav.com/
 // @match   https://clearjav.com/*/bookmarks*
@@ -956,7 +957,7 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'cinemaz' ) {
     // ----------------------------------- CinemaZ -----------------------------------
-    // Details
+    // Details | Browse | Movie | TV | History
 
     if ( pageURL.match(/cinemaz\.to\/(movie|tv)\/\d/) ) {
         // The movie and tv show details pages
