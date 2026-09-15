@@ -653,7 +653,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'Unwalled',
+        trackerName: 'Unwalled', // @verinikat
         homepageURL: 'https://unwalled.cc',
         primaryDomain: 'unwalled',
     },
