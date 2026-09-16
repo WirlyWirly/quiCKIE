@@ -563,7 +563,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'OnlyEncodes',
+        trackerName: 'OnlyEncodes', // @verinikat
         homepageURL: 'https://onlyencodes.cc',
         primaryDomain: 'onlyencodes',
     },
