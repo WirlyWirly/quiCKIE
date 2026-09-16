@@ -141,6 +141,11 @@
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
 
+// @match   https://infinityhd.net/
+// @match   https://infinityhd.net/*/bookmarks*
+// @match   https://infinityhd.net/playlists/*
+// @match   https://infinityhd.net/torrents*
+
 // @include   /^https://iptorrents\.\w+/details.php?id=.*/
 // @include   /^https://iptorrents\.\w+/t.*/
 // @include   /^https://iptorrents\.\w+/torrent.php?id=.*/
@@ -324,7 +329,6 @@ const settingsPanelTrackers = [
         primaryDomain: 'aither',
     },
 
-
     {
         trackerName: 'AlphaRatio',
         homepageURL: 'https://alpharatio.cc',
@@ -470,6 +474,12 @@ const settingsPanelTrackers = [
         trackerName: 'HDBits',
         homepageURL: 'https://hdbits.org',
         primaryDomain: 'hdbits',
+    },
+
+    {
+        trackerName: 'InfinityHD',
+        homepageURL: 'https://infinityhd.net',
+        primaryDomain: 'infinityhd',
     },
 
     {
@@ -1343,6 +1353,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'infinityhd' ) {
+    // ----------------------------------- InfinityHD -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'iptorrents' ) {
     // ----------------------------------- IP-Torrents -----------------------------------
