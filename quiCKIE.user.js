@@ -654,7 +654,7 @@ const settingsPanelTrackers = [
     {
         trackerName: 'Uploadcx', // @verinikat
         homepageURL: 'https://upload.cx',
-        primaryDomain: 'uploadcx',
+        primaryDomain: 'upload',
     },
 
 ]
@@ -1833,7 +1833,7 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
-} else if ( primaryDomain == 'uploadcx' ) {
+} else if ( primaryDomain == 'upload' ) {
     // ----------------------------------- Uploadcx -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
