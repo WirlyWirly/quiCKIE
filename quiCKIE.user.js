@@ -91,6 +91,11 @@
 // @match   https://clearjav.com/playlists/*
 // @match   https://clearjav.com/torrents*
 
+// @match   https://darkpeers.org/
+// @match   https://darkpeers.org/*/bookmarks*
+// @match   https://darkpeers.org/playlists/*
+// @match   https://darkpeers.org/torrents*
+
 // @match   https://www.deepbassnine.com/artist.php?id=*
 // @match   https://www.deepbassnine.com/collages.php?id=*
 // @match   https://www.deepbassnine.com/torrents.php*
@@ -407,6 +412,12 @@ const settingsPanelTrackers = [
         trackerName: 'ClearJAV', // @holy-elbow
         homepageURL: 'https://clearjav.com',
         primaryDomain: 'clearjav',
+    },
+
+    {
+        trackerName: 'DarkPeers', // @verinikat
+        homepageURL: 'https://darkpeers.org',
+        primaryDomain: 'darkpeers',
     },
 
     {
@@ -967,6 +978,12 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Movies| Playlists
 
     unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]')
+
+} else if ( primaryDomain == 'darkpeers' ) {
+    // ----------------------------------- DarkPeers -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
