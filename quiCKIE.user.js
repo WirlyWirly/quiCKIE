@@ -526,7 +526,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'MalayaBits', // @holy-elbow
+        trackerName: 'MalayaBits', // @verinikat
         homepageURL: 'https://malayabits.cc',
         primaryDomain: 'malayabits',
     },
