@@ -362,7 +362,7 @@ const settingsPanelTrackers = [
     {
         trackerName: 'AsianCinema', // @verinikat
         homepageURL: 'https://eiga.moi',
-        primaryDomain: 'asiancinema',
+        primaryDomain: 'eiga',
     },
 
     {
@@ -842,7 +842,7 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
-} else if ( primaryDomain == 'asiancinema' ) {
+} else if ( primaryDomain == 'eiga' ) {
     // ----------------------------------- AsianCinema -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
