@@ -45,6 +45,11 @@
 
 // @match   https://anthelion.me/torrents.php*
 
+// @match   https://eiga.moi/
+// @match   https://eiga.moi/*/bookmarks*
+// @match   https://eiga.moi/playlists/*
+// @match   https://eiga.moi/torrents*
+
 // @match   https://avistaz.to/
 // @match   https://avistaz.to/*/bookmark*
 // @match   https://avistaz.to/torrent*
@@ -324,7 +329,6 @@ const settingsPanelTrackers = [
         primaryDomain: 'aither',
     },
 
-
     {
         trackerName: 'AlphaRatio',
         homepageURL: 'https://alpharatio.cc',
@@ -353,6 +357,12 @@ const settingsPanelTrackers = [
         trackerName: 'Anthelion', // @malefis
         homepageURL: 'https://anthelion.me',
         primaryDomain: 'anthelion',
+    },
+
+    {
+        trackerName: 'AsianCinema', // @verinikat
+        homepageURL: 'https://eiga.moi',
+        primaryDomain: 'asiancinema',
     },
 
     {
@@ -832,6 +842,11 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'asiancinema' ) {
+    // ----------------------------------- AsianCinema -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'avistaz' ) {
     // ----------------------------------- AvistaZ -----------------------------------
