@@ -477,7 +477,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'InfinityHD',
+        trackerName: 'InfinityHD', // @verinikat
         homepageURL: 'https://infinityhd.net',
         primaryDomain: 'infinityhd',
     },
