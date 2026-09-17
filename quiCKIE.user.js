@@ -67,6 +67,14 @@
 // @match   https://beyond-hd.me/torrents*
 // @match   https://beyond-hd.me/torrents/seed*
 // @match   https://beyond-hd.me/watchlist*
+// @match   https://beyond-hd.me/uploads*
+// @match   https://beyond-hd.me/downloads*
+// @match   https://beyond-hd.me/history*
+// @match   https://beyond-hd.me/unsatisfieds*
+// @match   https://beyond-hd.me/seeding*
+// @match   https://beyond-hd.me/leeching*
+// @match   https://beyond-hd.me/freeleech*
+// @match   https://beyond-hd.me/raindrops*
 
 // @match   https://bibliotik.me/collections/*
 // @match   https://bibliotik.me/notifications/torrents*
@@ -4184,10 +4192,11 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         } else if ( document.querySelector(
                           `:is(i, span).torrent-icons__freeleech[title*="100%"],
-                          :is(i, span).torrent-icons__freeleech[title*="Global freeleech"],
-                          :is(i, span).torrent-icons__freeleech[title*="Special Freeleech"],
+                          :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                          :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
                           i.torrent-icons__freeleech.fa-calendar-star,
-                          i.fa-globe`) != null ) {
+                          i.fa-globe,
+                          i.fas.fa-peace`) != null ) {
                             // This is a Freeleech torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
@@ -4265,10 +4274,11 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                             } else if ( downloadElement.closest('tr').querySelector(
                               `:is(i, span).torrent-icons__freeleech[title*="100%"],
-                              :is(i, span).torrent-icons__freeleech[title*="Global freeleech"],
-                              :is(i, span).torrent-icons__freeleech[title*="Special Freeleech"],
+                              :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                              :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
                               i.torrent-icons__freeleech.fa-calendar-star,
-                              i.fa-globe`) != null ) {
+                              i.fa-globe,
+                              i.fas.fa-peace`) != null ) {
                                 // This is a Freeleech torrent
                                 bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
