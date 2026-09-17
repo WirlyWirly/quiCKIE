@@ -235,6 +235,11 @@
 // @match   https://reelflix.cc/playlists/*
 // @match   https://reelflix.cc/torrents*
 
+// @match   https://retro-movies.club/
+// @match   https://retro-movies.club/*/bookmarks
+// @match   https://retro-movies.club/playlists/*
+// @match   https://retro-movies.club/torrents*
+
 // @match   https://retrotoon.world/browse.php
 // @match   https://retrotoon.world/details.php?id=*
 
