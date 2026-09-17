@@ -11,27 +11,27 @@
 
 This [UserScript](https://openuserjs.org/about/Userscript-Beginners-HOWTO) will integrate **BunnyButtons 🐰** alongside a trackers regular download buttons. When clicked, the corresponding torrent will be added directly to your torrent client using your custom settings.
 
-quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)**, **desktop**\\**mobile** devices, and **50+** different trackers. In addition, this is a **non-destructive** UserScript, which ensures quiCKIE to be friendly\compatible with other UserScripts and default browser functions.
+quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)**, **desktop**\\**mobile** devices, and **65+** different trackers. In addition, this is a **non-destructive** UserScript, which ensures quiCKIE to be friendly\compatible with other UserScripts and default browser functions.
 
 If a tracker that you have access to is not listed, check the quiCKIE WiKi for a simple **3-step guide** on how it can be added, no programming experience required: **[Adding a New Tracker](https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker)**
 
-The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton or from the menu of your UserScript Manager, which is the dialogue on your toolbar that lists the currently active UserScripts.
+The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton or from the menu of your UserScript Manager, which is the dialog on your toolbar that lists the active UserScripts.
 
-Only the **clientURL** and **credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for details about what each field does and how it may be filled in.
+Only the **clientURL** and **credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for a tooltip about what each field does and how it may be filled in.
 
 <br>
 
 > **Left-Click \ Mobile Tap**: Add torrent to client with settings for the current tracker<br>
 > **Right-Click \ Mobile Long-press**: Add torrent to client with settings from the selected preset<br>
-> **Shift-Click**: Open quiCKIE settings panel<br>
 > **Middle-Click**: Open torrent client in a new tab<br>
 >
-> **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
+> **Shift-Click**: Open quiCKIE settings panel<br>
 > **Ctrl-Click**: Open torrent client in a new tab<br>
+> **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 >
 > **BunnyButton Emojiography***<br>
 > 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + TrackerSettings<br>
-> 🧲 Downloading .torrent file | 🧑 Client Login | 🕓 Adding Torrent | ✔️ Success | ❌ Failure
+> 🧲 Downloading .torrent file | 🧑 Client Login | 🕓 Adding Torrent | ✔️ Success | ❌ Failure | ℹ️ Console Message
 >
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>

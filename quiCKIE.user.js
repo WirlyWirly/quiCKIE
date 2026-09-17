@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.49.4
+// @version     1.49.5
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally for qui, later extended to support more torrent clients
@@ -45,9 +45,18 @@
 
 // @match   https://anthelion.me/torrents.php*
 
+//          AsianCinema
+// @match   https://eiga.moi/
+// @match   https://eiga.moi/*/bookmarks*
+// @match   https://eiga.moi/playlists/*
+// @match   https://eiga.moi/torrents*
+
 // @match   https://avistaz.to/
 // @match   https://avistaz.to/*/bookmark*
 // @match   https://avistaz.to/torrent*
+// @match   https://avistaz.to/movie/*
+// @match   https://avistaz.to/tv/*
+// @match   https://avistaz.to/profile/*/history*
 
 // @match   https://bakabt.me/torrent/*
 
@@ -81,15 +90,33 @@
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
 
+// @match   https://cinematik.net/
+// @match   https://cinematik.net/*/bookmarks
+// @match   https://cinematik.net/playlists/*
+// @match   https://cinematik.net/torrents*
+
 // @match   https://cinemaz.to/
 // @match   https://cinemaz.to/*/bookmark*
 // @match   https://cinemaz.to/torrent/*
+// @match   https://cinemaz.to/movie/*
+// @match   https://cinemaz.to/tv/*
+// @match   https://cinemaz.to/profile/*/history*
 
 // @match   https://clearjav.com/
 // @match   https://clearjav.com/*/bookmarks*
 // @match   https://clearjav.com/movies/*
 // @match   https://clearjav.com/playlists/*
 // @match   https://clearjav.com/torrents*
+
+// @match   https://concertos.live/
+// @match   https://concertos.live/*/bookmarks*
+// @match   https://concertos.live/playlists/*
+// @match   https://concertos.live/torrents*
+
+// @match   https://darkpeers.org/
+// @match   https://darkpeers.org/*/bookmarks*
+// @match   https://darkpeers.org/playlists/*
+// @match   https://darkpeers.org/torrents*
 
 // @match   https://www.deepbassnine.com/artist.php?id=*
 // @match   https://www.deepbassnine.com/collages.php?id=*
@@ -140,6 +167,11 @@
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
+
+// @match   https://infinityhd.net/
+// @match   https://infinityhd.net/*/bookmarks*
+// @match   https://infinityhd.net/playlists/*
+// @match   https://infinityhd.net/torrents*
 
 // @include   /^https://iptorrents\.\w+/details.php?id=.*/
 // @include   /^https://iptorrents\.\w+/t.*/
@@ -206,6 +238,11 @@
 // @match   https://oldtoons.world/playlists/*
 // @match   https://oldtoons.world/torrents*
 
+// @match   https://onlyencodes.cc/
+// @match   https://onlyencodes.cc/*/bookmarks
+// @match   https://onlyencodes.cc/playlists/*
+// @match   https://onlyencodes.cc/torrents*
+
 // @match   https://orpheus.network/artist.php?id=*
 // @match   https://orpheus.network/bookmarks.php*
 // @match   https://orpheus.network/collages.php?id=*
@@ -235,6 +272,11 @@
 // @match   https://redacted.sh/torrents.php*
 // @match   https://redacted.sh/userhistory.php?action=subscribed_collages
 
+// @match   https://reelflix.cc/
+// @match   https://reelflix.cc/*/bookmarks
+// @match   https://reelflix.cc/playlists/*
+// @match   https://reelflix.cc/torrents*
+
 // @match   https://retro-movies.club/
 // @match   https://retro-movies.club/*/bookmarks
 // @match   https://retro-movies.club/playlists/*
@@ -258,6 +300,10 @@
 // @match   https://seedpool.org/playlists/*
 // @match   https://seedpool.org/torrents*
 
+// @match   https://simurg.world/
+// @match   https://simurg.world/torrents.php*
+// @match   https://simurg.world/top10.php*
+
 // @match   https://sportscult.org/index.php?page=torrents*
 // @match   https://sportscult.org/index.php?page=torrent-details*
 
@@ -267,6 +313,16 @@
 // @match   https://www.torrentleech.org/torrent*
 
 // @match   https://tv-vault.me/torrents.php?id=*
+
+// @match   https://unwalled.cc/
+// @match   https://unwalled.cc/*/bookmarks
+// @match   https://unwalled.cc/playlists/*
+// @match   https://unwalled.cc/torrents*
+
+// @match   https://upload.cx/
+// @match   https://upload.cx/*/bookmarks
+// @match   https://upload.cx/playlists/*
+// @match   https://upload.cx/torrents*
 
 // ----------------------------------- Permissions --------------------------------------
 
@@ -329,7 +385,6 @@ const settingsPanelTrackers = [
         primaryDomain: 'aither',
     },
 
-
     {
         trackerName: 'AlphaRatio',
         homepageURL: 'https://alpharatio.cc',
@@ -361,7 +416,13 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'AvistaZ', // @fercats99
+        trackerName: 'AsianCinema', // @verinikat
+        homepageURL: 'https://eiga.moi',
+        primaryDomain: 'eiga',
+    },
+
+    {
+        trackerName: 'AvistaZ', // @fercats99 + @verinikat
         homepageURL: 'https://avistaz.to',
         primaryDomain: 'avistaz',
     },
@@ -403,7 +464,13 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'CinemaZ', // @fercats99
+        trackerName: 'Cinematik', // @verinikat
+        homepageURL: 'https://cinematik.net',
+        primaryDomain: 'cinematik',
+    },
+
+    {
+        trackerName: 'CinemaZ', // @fercats99 + @verinikat
         homepageURL: 'https://cinemaz.to',
         primaryDomain: 'cinemaz',
     },
@@ -412,6 +479,18 @@ const settingsPanelTrackers = [
         trackerName: 'ClearJAV', // @holy-elbow
         homepageURL: 'https://clearjav.com',
         primaryDomain: 'clearjav',
+    },
+
+    {
+        trackerName: 'Concertos', // @verinikat
+        homepageURL: 'https://concertos.live',
+        primaryDomain: 'concertos',
+    },
+  
+    {
+        trackerName: 'DarkPeers', // @verinikat
+        homepageURL: 'https://darkpeers.org',
+        primaryDomain: 'darkpeers',
     },
 
     {
@@ -441,7 +520,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'ExoticaZ', // @fercats99 > @holy-elbow
+        trackerName: 'ExoticaZ', // @fercats99 + @holy-elbow
         homepageURL: 'https://exoticaz.to',
         primaryDomain: 'exoticaz',
     },
@@ -475,6 +554,12 @@ const settingsPanelTrackers = [
         trackerName: 'HDBits',
         homepageURL: 'https://hdbits.org',
         primaryDomain: 'hdbits',
+    },
+
+    {
+        trackerName: 'InfinityHD', // @verinikat
+        homepageURL: 'https://infinityhd.net',
+        primaryDomain: 'infinityhd',
     },
 
     {
@@ -568,6 +653,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'OnlyEncodes', // @verinikat
+        homepageURL: 'https://onlyencodes.cc',
+        primaryDomain: 'onlyencodes',
+    },
+
+    {
         trackerName: 'Orpheus',
         homepageURL: 'https://orpheus.network',
         primaryDomain: 'orpheus',
@@ -604,6 +695,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'ReelFliX', // @verinikat
+        homepageURL: 'https://reelflix.cc',
+        primaryDomain: 'reelflix',
+    },
+
+    {
         trackerName: 'RetroMoviesClub', // @LilithOfTheValley
         homepageURL: 'https://retro-movies.club',
         primaryDomain: 'retro-movies',
@@ -634,6 +731,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Simurg', // @verinikat
+        homepageURL: 'https://simurg.world',
+        primaryDomain: 'simurg',
+    },
+
+    {
         trackerName: 'SportsCult', // @steventrux
         homepageURL: 'https://sportscult.org',
         primaryDomain: 'sportscult',
@@ -657,6 +760,18 @@ const settingsPanelTrackers = [
         primaryDomain: 'tv-vault',
     },
 
+    {
+        trackerName: 'Unwalled', // @verinikat
+        homepageURL: 'https://unwalled.cc',
+        primaryDomain: 'unwalled',
+    },
+
+    {
+        trackerName: 'UploadCX', // @verinikat
+        homepageURL: 'https://upload.cx',
+        primaryDomain: 'upload',
+    },
+  
 ]
 
 
@@ -664,7 +779,7 @@ const settingsPanelTrackers = [
 
 // The domain of the current site, which MUST be registerd to one of the trackers in the settingsPanelTrackers array
 // Example: https://broadcasthe.net/ --> broadcasthe
-let trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
+const trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2].toLowerCase()
 
 // A simple logger, which will only console log messages when it has been enabled above
 let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'quiCKIE'})
@@ -672,12 +787,12 @@ let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'qui
 // Everything related to the GM_config library, which is used for saving and creating the settings panel: https://github.com/sizzlemctwizzle/GM_config
 let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
 
-// Retrieve the settings and presetMenuItems that are relevant to the current tracker
-let SETTINGS = getTrackerSettings(primaryDomain)
+// For the current tracker, populate the SETTINGS object and determine which presetMenuItems apply
+let SETTINGS = populateSettingsObject(primaryDomain)
 let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
-const emojiRegex = new RegExp('🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|💾|🧀', 'g')
+const emojiRegex = new RegExp('🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|ℹ️|💾|🧀', 'g')
 
 // The full URL and Path of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
 const pageURL = document.URL
@@ -843,14 +958,22 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'eiga' ) {
+    // ----------------------------------- AsianCinema -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
 
 } else if ( primaryDomain == 'avistaz' ) {
     // ----------------------------------- AvistaZ -----------------------------------
-    // Details
+    // Details | Browse | Movie | TV | History
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://avistaz.to/download/torrent/"]',
     }
+
+    // Movie and TV Shows details page
+    pageURL.match(/\/(movie|tv)\/\d+/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -963,13 +1086,22 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'cinematik' ) {
+    // ----------------------------------- Cinematik -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
+
 } else if ( primaryDomain == 'cinemaz' ) {
     // ----------------------------------- CinemaZ -----------------------------------
-    // Details
+    // Details | Browse | Movie | TV | History
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
     }
+
+    // Movie and TV Shows details page
+    pageURL.match(/\/(movie|tv)\/\d+/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -979,6 +1111,18 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]')
 
+} else if ( primaryDomain == 'concertos' ) {
+    // ----------------------------------- Concertos -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
+
+} else if ( primaryDomain == 'darkpeers' ) {
+    // ----------------------------------- DarkPeers -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
+  
 } else if ( primaryDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
     // Album | Artist | Browse
@@ -1355,6 +1499,12 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'infinityhd' ) {
+    // ----------------------------------- InfinityHD -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
+
 } else if ( primaryDomain == 'iptorrents' ) {
     // ----------------------------------- IP-Torrents -----------------------------------
     // Browse | Details
@@ -1421,7 +1571,6 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
-
 
 } else if ( primaryDomain == 'karagarga' ) {
     // ----------------------------------- Karagarga -----------------------------------
@@ -1624,6 +1773,12 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler('a[href^="https://oldtoons.world/torrents/download/"]')
 
+} else if ( primaryDomain == 'onlyencodes' ) {
+    // ----------------------------------- OnlyEncodes -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://onlyencodes.cc/torrents/download/"]')
+
 } else if ( primaryDomain == 'orpheus' ) {
     // ----------------------------------- Orpheus -----------------------------------
     // Album | Artist | Browse | Collages
@@ -1741,6 +1896,12 @@ if ( primaryDomain == 'animebytes' ) {
 
     }
 
+} else if ( primaryDomain == 'reelflix' ) {
+    // ----------------------------------- ReelFliX -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://reelflix.cc/torrents/download/"]')
+
 } else if ( primaryDomain == 'retro-movies' ) {
     // ----------------------------------- RetroMoviesClub -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
@@ -1789,6 +1950,17 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Playlists
 
     unit3dTrackerHandler('a[href*="/download"]')
+
+} else if ( primaryDomain == 'simurg' ) {
+    // ----------------------------------- Simurg -----------------------------------
+    // Publication | Search | Top10
+    // Note: Tracker is new, so on-page seeding detection isn't implememnted yet. There are no FL torrents currently on Simurg. Re-visit this as site develops further.
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]'
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'sportscult' ) {
     // ----------------------------------- SportsCult -----------------------------------
@@ -1839,6 +2011,19 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'unwalled' ) {
+    // ----------------------------------- Unwalled -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href*="/download"]')
+
+
+} else if ( primaryDomain == 'upload' ) {
+    // ----------------------------------- UploadCX -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    unit3dTrackerHandler('a[href^="https://upload.cx/torrents/download/"]')
+  
 } else {
     // ----------------------------------- NONE -----------------------------------
 
@@ -2085,31 +2270,31 @@ function createGMConfigSettingsPanel(trackerDomain) {
         // The data that will be used as the '.textContent' and '.title' in the settings panel's elements. The key names are the '.toLowerCase()' of the items in the trackerFieldSuffixes array and the items in the presetFieldSuffixes array.
 
         'globalsTitles': {
-            'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\nNot all clients will support all the available quiCKIE settings\n\nquiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
             'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
-            'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\nℹ️ Affects all trackers that have the '🖱️' setting set to 'Global'",
+            'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\n🔹 Affects all trackers that have the '🖱️' setting set to 'Global'",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
-            'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\nℹ️ This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
-            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\nHover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\nℹ️ This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
-            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\nℹ️ By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\nℹ️ Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
+            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\n🔹 By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\n🔹 Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
+            'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\n🔹 Hover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\n🔹 This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
+            'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\n🔹 This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
+            'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\n🔹 Not all clients will support all the available quiCKIE settings\n\n🔹 quiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
 
 
-            'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\nThis is usually the same URL you can copy-paste from your browser\n\nℹ️ Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\nExample: http://localhost:7476/qui/instances/1\n\n────────────────\n\nSeedbox\\Swizzin users might try...\n\nhttps://username:password@seedboxDomain.com/qui/instances/1",
-            'quiApiKey': '─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created by qui\n\nFrom the qui interface, you can generate a ApiKey by going to...\n\nSettings > API Keys > Create API Key',
+            'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n🔹 Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\n✏️ Example: http://localhost:7476/qui/instances/1\n\n🔹 Seedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1",
+            'quiApiKey': "─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created by qui\n\n🔹 From the qui interface, you can generate an ApiKey by going to 'Settings > API Keys > Create API Key'",
 
-            'qBitTorrentURL': "─── 🔗 qBitTorrentURL 🔗 ───\n\nThe full URL to a running qBitTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
+            'qBitTorrentURL': "─── 🔗 qBitTorrentURL 🔗 ───\n\nThe full URL to a running qBitTorrent service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:8080",
             'qBitTorrentUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into qBitTorrent through the web interface',
             'qBitTorrentPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into qBitTorrent through the web interface',
 
-            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:9091\n\nℹ️ If Transmission is not using the default rpc, then specify the complete rpc url\n\nExample: http://localhost:9091/your/custom/rpc",
+            'transmissionURL': "─── 🔗 TransmissionURL 🔗 ───\n\nThe full URL to a running Transmission service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:9091\n\n🔹 If Transmission is not using the default rpc, then specify the complete rpc url\n\n✏️ Example: http://localhost:9091/your/custom/rpc",
             'transmissionUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into Transmission through the web interface',
             'transmissionPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into Transmission through the web interface',
 
-            'delugeURL': "─── 🔗 DelugeURL 🔗 ───\n\nThe full URL to a running Deluge service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8112",
+            'delugeURL': "─── 🔗 DelugeURL 🔗 ───\n\nThe full URL to a running Deluge service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:8112",
             'delugePassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into Deluge through the web interface',
 
-            'ruTorrentURL': "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\nThis is usually the same URL you can copy-paste from your browser\n\nExample: http://localhost:8080",
+            'ruTorrentURL': "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:8080",
             'ruTorrentUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into ruTorrent through the web interface',
             'ruTorrentPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into ruTorrent through the web interface',
         },
@@ -2141,26 +2326,25 @@ function createGMConfigSettingsPanel(trackerDomain) {
         },
 
         'columnTitles': {
-            'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\nClicking a name below will open a new tab to the tracker's homepage\n\nℹ️ Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n⭐ quiCKIE currently supports ${allPrimaryDomains.length} trackers!`,
-
-            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nPresets without a name will NOT be displayed\n\n🎪 Special Entries: Naming your preset after one of these items will display a special menu entry...\nSettings, TorrentFile, Client, LeftClickAll, MiddleClickAll, Send, SendPaused\n\nUsing one of these characters will create a divider...\n. - = [space]\n\nℹ️ Hovering over a entry in the presets menu will provide a tooltip of the preset's settings",
-            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nUse the name (case-insensitive) displayed in the '🌎 Tracker' column\n\nPresets without any trackers listed will NOT be displayed\n\nℹ️ Use the * wildcard to display this preset on ALL trackers\n\nExample:  HDBits, secret-cinema, NYAA",
+            'tracker': `─── 🌎 Tracker 🌎 ───\n\nThe tracker (site) for which this row of settings will be applied to\n\n🔹 Hovering over a BunnyButton will provide a tooltip of the current tracker settings\n\n🔹 Clicking a name below will open a new tab to the tracker's homepage\n\n⭐ quiCKIE currently supports ${allPrimaryDomains.length} trackers!`,
+            'preset': "─── 🚀 Name 🚀 ───\n\nThe name that will be displayed in the presets menu (right-click)\n\nℹ️ Presets without a name will NOT be displayed\n\n🔹 Using one of these characters will create a divider...\n. - = [space]\n\n🔹 Hovering over a entry in the presets menu will provide a tooltip of the preset's settings\n\n🔹 🎪 Special: Give your preset one of these names to display a built-in menu entry...\nSettings, TorrentFile, Client, LeftClickAll, MiddleClickAll, Send, SendPaused",
+            'presettrackers': "─── 👀 Preset Trackers 👀 ───\n\nA comma seperated list of trackers on which to display this preset\n\nℹ️ Presets without any trackers listed will NOT be displayed\n\n🔹 Use the name (case-insensitive) displayed in the '🌎 Tracker' column\n\n🔹 Use the * wildcard to display this preset on ALL trackers\n\n✏️ Example:  HDBits, secret-cinema, NYAA",
 
             'category': '─── 🗃️ Category 🗃️ ───\n\nSpecify the category to apply to these these torrents',
-            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\nℹ️ Specifying a save path implicitly disables ATMM (Auto Torrent Management Mode)\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
-            'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\nExample:  Media, Movies, Private',
-            'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete',
-            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\nℹ️ Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
+            'savepath': '─── 💾 Save Path 💾 ───\n\nSpecify the full-path for where to save these torrents\n\n🔹 Specifying a save path implicitly disables ATMM (Auto Torrent Management Mode)\n\n⚠️ The path MUST be accessible and writable by the torrent client itself, otherwise it will use the default save path',
+            'tags': '─── 🏷️ Tags 🏷️ ───\n\nA comma seperated list of tags to apply to these torrents (case-sensitive)\n\n✏️ Example:  Media, Movies, Private',
+            'ratiolimit': '─── ⚖️ Ratio Limit ⚖️ ───\n\nStop the torrents when they have seeded to the specified ratio limit\n\n🔹 Use -1 to stop the torrents immediately after downloading is complete',
+            'seedtime': '─── 🌱 Seed Time 🌱 ───\n\nStop the torrents when they have seeded the specified number of minutes\n\n🔹 Use -1 to stop the torrents immediately after downloading is complete\n\n⚠️ A clients reported seedtime and a trackers recorded seedtime are not always equal. Use caution to avoid Hit-and-Runs.',
             'dllimit': '─── ⬇️ Download Limit ⬇️ ───\n\nThe speed limit in KB/s to apply when downloading these torrents',
             'uplimit': '─── ⬆️ Upload Limit ⬆️ ───\n\nThe speed limit in KB/s to apply when uploading\\seeding these torrents',
-            'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nLeave this field blank to use the global instance saved as the quiURL\n\nℹ️ This does NOT support a full url, only a qui instance ID number',
-            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\nThis is useful for sites with pagination, which is when the browser does not do a full refresh between pages\\searches. Since the page is not actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\nℹ️ For officially supported trackers, pagination should hopefully already be handled and thus make this setting unnecessary\n\n⚠️ You should NOT enable this setting unless you are on a site that actually has pagination and it isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
-            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\nDevelopers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\nℹ️ On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
-            'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\nℹ️ The 'Global' option will use the setting specified above",
-            'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\nThis will NOT apply to any DL buttons from third-party UserScripts\n\nℹ️ Hiding is not the same as removing. The button will still be there, it will just have a css style of 'display: none' applied making it hidden and unclickable. This may result in weird gaps\\results on some pages",
-            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\nUseful for when you want to give yourself a chance to pick which files of the torrent should be downloaded\n\nℹ️ Performing a 'Shift-Ctrl-Click' on a BunnyButton or Preset will enforce Start Paused for that torrent",
-            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\nℹ️ This has no affect on torrents that are already in their own folder\n\nExample: audiobookFile.m4b --> audiobookFile/audiobookFile.m4b',
-            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\nℹ️ Downloading torrent pieces sequentially allows for playback while downloading\n\n⚠️ This may impact download speeds',
+            'instance': '─── 🎯 Target Instance 🎯 ───\n\nSpecify a particular qui instance ID for where to send these torrents\n\nℹ️ This does NOT support a full url, only a qui instance ID number\n\n🔹 Leave this field blank to use the global instance saved as the quiURL',
+            'paginationloop': "─── 🔁 Pagination Loop 🔁 ───\n\nSpecify a time in milliseconds to repeatedly scan the page for new download buttons\n\n🔹 This is useful for sites with pagination, which is when the browser does not do a full refresh between pages\\searches. Since the page is not actually refreshing, your UserScripts won't be triggered and you'll end up without BunnyButtons for the new DL buttons\n\n🔹 For officially supported trackers, pagination should hopefully already be handled and thus make this setting unnecessary\n\n⚠️ You should NOT enable this setting unless you are on a site that actually has pagination and it isn't already handled by quiCKIE\n\n⚠️ Setting this too low can impact your browser, so the recommended time is +2000ms while the minimum is 500ms",
+            'thirdpartyscan': "─── 🤝 3rd Party Integrations 🤝 ───\n\nScan for third-party DL (Download) buttons with quiCKIE integration\n\n🔹 Developers of third-party UserScript may add quiCKIE integration to their UserScript. Enabling this setting will allow quiCKIE to check for such integrations.\n\n🔹 On + 🌎: Allow third-party UserScripts to specify for which quiCKIE supported tracker their BunnyButtons should pull tracker settings from. If a tracker is not specified by the third-party UserScript, the settings for the current tracker will be used\n\n⚠️ You should NOT enable this feature unless you have installed a trusted UserScript that actually has quiCKIE integration",
+            'leftclick' : "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nSpecify what action should be taken when the BunnyButton is left-clicked on a PC or tapped on a mobile\n\n🔹 The 'Global' option will use the setting specified above",
+            'hidedl': "─── 🙈 Hide Download Button 🙈 ───\n\nHide the trackers download button from view\n\n🔹 Hiding is not the same as removing. The button will be invisible\\unclickable using CSS. This may result in weird gaps\\results on some pages\n\n🔹 This will NOT apply to any DL buttons from third-party UserScripts",
+            'startpaused': "─── ⏸️ Start Paused ⏸️ ───\n\nPause torrents when they are added so that they do not automatically begin downloading\n\n🔹 Performing a 'Shift-Ctrl-Click' on a BunnyButton or Preset will enforce Start Paused for that torrent\n\n🔹 Useful for when you want to give yourself a chance to pick which files of the torrent should be downloaded",
+            'subfolder': '─── 📁 SubFolder 📁 ───\n\nFor single-file torrents, create a subfolder where the file will be saved into\n\n🔹 This has no affect on torrents that are already in their own folder\n\n✏️ Example: audiobookFile.m4b --> audiobookFile/audiobookFile.m4b',
+            'seqpieces': '─── 🧩 Sequential Piece Download 🧩 ───\n\nDownload torrent pieces sequentially\n\n🔹 Downloading torrent pieces sequentially allows for playback while downloading\n\n⚠️ This may impact download speeds',
             'autotmm': "─── 🤖 Auto Torrent Management 🤖 ───\n\nFor these torrents, enable Auto Torrent Management\n\n⚠️ This will download the torrent to a folder based on the '🗃️ Category', ignoring whatever is specified in the '💾 Save Path'",
             'skiphash': '─── 🛡️ Skip Hash Check 🛡️ ───\n\nWhen Adding torrents, skip the initial hash check\n\n⚠️ Hash checks are used to verify file integrity and prevent corrupted data, although this check may take a long time with larger torrents. Know what you are doing before enabling this.',
 
@@ -3195,8 +3379,8 @@ function createGMConfigSettingsPanel(trackerDomain) {
 }
 
 
-function getTrackerSettings(primaryDomain) {
-    // Define the main SETTINGS object and populate it with the current primaryDomain specific settings
+function populateSettingsObject(primaryDomain) {
+    // Create the main SETTINGS object and populate it with the current primaryDomain specific settings
 
     // @trackerSettings
     let SETTINGS = {
@@ -4823,9 +5007,15 @@ async function quiPOST(postData) {
             // ----- Actions to take after the request has completed -----
 
             if (response.status == 201) {
-                // Success: The torrent has been added to qui
+                // Success: The torrent has been added to qui or is already listed
 
                 replaceEmojis(bunnyButton, '✔️')
+
+            } else if ( response.status == 500 && response.responseText.match(/conflicts detected/) ) {
+                // Duplicate: The torrent already exists in this qui instance
+                console.log('ℹ️ quiCKIE: The torrent that would be added to qui already exists, so nothing happened')
+
+                replaceEmojis(bunnyButton, 'ℹ️')
 
             } else {
                 // Failed: The torrent was NOT added to qui, log the response and display an alert...
