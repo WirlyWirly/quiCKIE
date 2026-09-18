@@ -217,7 +217,7 @@
 // @match   https://luminarr.me/playlists/*
 // @match   https://luminarr.me/torrents*
 
-// @match   https://malayabits.cc
+// @match   https://malayabits.cc/
 // @match   https://malayabits.cc/*/bookmarks
 // @match   https://malayabits.cc/playlists/*
 // @match   https://malayabits.cc/torrents*
@@ -1917,18 +1917,10 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="download.php?id="]',
-
-        // Just the emoji
-        bunnyButtonText: '🐰',
-        bunnyButtonFontSize: '14px',
-        elementsSeparator: ' | ', // Adds a clean pipe between the link and the button
-
-        // Basic spacing and alignment
-        bunnyButtonAddStyles: `
-            text-decoration: none;
-            vertical-align: baseline;
-        `,
     }
+
+    // pageURL.match(/(torrents-search)/) ? trackerHandlingOptions.enablePaginationLooping = true : null
+    // pageURL.match(/^https:\/\/jptvts\.us\/?$/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
