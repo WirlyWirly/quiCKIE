@@ -193,6 +193,10 @@
 // @match   https://jpopsuki.eu/top10.php*
 // @match   https://jpopsuki.eu/torrents.php*
 
+// @match   https://jptvts.us
+// @match   https://jptvts.us/torrents-details.php?id=*
+// @match   https://jptvts.us/torrents-search.php*
+
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
 
@@ -571,6 +575,12 @@ const settingsPanelTrackers = [
         trackerName: 'JPopsuki', // @tartuffe
         homepageURL: 'https://jpopsuki.eu',
         primaryDomain: 'jpopsuki',
+    },
+
+    {
+        trackerName: 'JPTVTS', // @verinikat
+        homepageURL: 'https://jptvts.us',
+        primaryDomain: 'jptvts',
     },
 
     {
@@ -1555,6 +1565,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'jptvts' ) {
+    // ----------------------------------- JPTVTS -----------------------------------
+    // 
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="jptvts.us/download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
