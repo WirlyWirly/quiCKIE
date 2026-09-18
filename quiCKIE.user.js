@@ -287,8 +287,8 @@
 // @match   https://reelflix.cc/torrents*
 
 // @match   https://retroflix.net/browse
-// @match   https://retroflix.net/browse/t/*
 // @match   https://retroflix.net/browse?*
+// @match   https://retroflix.net/browse/t/*
 
 // @match   https://retro-movies.club/
 // @match   https://retro-movies.club/*/bookmarks
@@ -1916,11 +1916,8 @@ if ( primaryDomain == 'animebytes' ) {
     // Browse | Details | Bookmarks
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="download.php?id="]',
+        downloadElementsSelector: 'a[href*="download.php?id="]',
     }
-
-    // pageURL.match(/(torrents-search)/) ? trackerHandlingOptions.enablePaginationLooping = true : null
-    // pageURL.match(/^https:\/\/jptvts\.us\/?$/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
