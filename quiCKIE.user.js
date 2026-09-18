@@ -1899,6 +1899,17 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="download.php?id="]',
+
+        // Just the emoji
+        bunnyButtonText: '🐰',
+        bunnyButtonFontSize: '14px',
+        elementsSeparator: ' | ', // Adds a clean pipe between the link and the button
+
+        // Basic spacing and alignment
+        bunnyButtonAddStyles: `
+            text-decoration: none;
+            vertical-align: baseline;
+        `,
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
