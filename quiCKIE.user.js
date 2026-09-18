@@ -4,7 +4,7 @@
 
 // @name        qui - quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.49.5
+// @version     1.49.6
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Orignally for qui, later extended to support more torrent clients
@@ -67,6 +67,14 @@
 // @match   https://beyond-hd.me/torrents*
 // @match   https://beyond-hd.me/torrents/seed*
 // @match   https://beyond-hd.me/watchlist*
+// @match   https://beyond-hd.me/uploads*
+// @match   https://beyond-hd.me/downloads*
+// @match   https://beyond-hd.me/history*
+// @match   https://beyond-hd.me/unsatisfieds*
+// @match   https://beyond-hd.me/seeding*
+// @match   https://beyond-hd.me/leeching*
+// @match   https://beyond-hd.me/freeleech*
+// @match   https://beyond-hd.me/raindrops*
 
 // @match   https://bibliotik.me/collections/*
 // @match   https://bibliotik.me/notifications/torrents*
@@ -365,19 +373,9 @@ const verboseConsoleLogging = false
 
 // =================================== SETTINGS PANEL TRACKERS ======================================
 
-// @quickieSettingsPanelTrackers
-// Each entry below will be appear as a tracker in the quiCKIE settings panel
+// @settingsPanelTrackers
+// Each entry below will be appear as a tracker row in the quiCKIE settings panel
 const settingsPanelTrackers = [
-
-    // Each tracker requires 3 things; A TitleCase name, the homepage URL, and the primaryDomain of the tracker
-
-    // Here are examples of identifying the domain of a tracker...
-    //  https://broadcasthe.net/ --> broadcasthe
-    //  https://www.myanonamouse.net/ --> myanonamouse
-    //  https://sukebei.nyaa.si/ --> nyaa
-
-    // ℹ️ If the tracker has more than one domain that it can be accessed from (common for public trackers), you may also include the 'otherDomains' property, which should consist of an array (list) of different domains. This will make it so that these domains all share the same tracker settings from within the quiCKIE settings panel.
-    // otherDomains: ['domain1', 'domain2', 'domain3'],
 
     {
         trackerName: 'Aither', // @holy-elbow
@@ -2041,6 +2039,7 @@ if ( SETTINGS.thirdPartyScan != 'Off' ) {
     SETTINGS.thirdPartyDelay < 100 ? SETTINGS.thirdPartyDelay = 200 : null
     scanForThirdPartyTorrentURLS(SETTINGS.thirdPartyDelay)
 }
+
 
 // =================================== SCRIPT FUNCTIONS ======================================
 
@@ -4198,12 +4197,13 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                             // This is a Featured torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'featured')
 
-                        } else if ( document.querySelector(
-                          `:is(i, span).torrent-icons__freeleech[title*="100%"],
-                          :is(i, span).torrent-icons__freeleech[title*="Global freeleech"],
-                          :is(i, span).torrent-icons__freeleech[title*="Special Freeleech"],
-                          i.torrent-icons__freeleech.fa-calendar-star,
-                          i.fa-globe`) != null ) {
+                        } else if ( document.querySelector(`
+                            :is(i, span).torrent-icons__freeleech[title*="100%"],
+                            :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                            :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
+                            i.torrent-icons__freeleech.fa-calendar-star,
+                            i.fa-globe,
+                            i.fas.fa-peace`) != null ) {
                             // This is a Freeleech torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
@@ -4214,32 +4214,23 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
 
-                        // Determine what viewType is active and apply appropriate bunnyButton styling
-                        let viewType 
-                        if ( downloadElement.closest('td.torrent-search--list__buttons') ) {
+                        // Apply appropriate bunnyButton styling for this view type
+                        if ( downloadElement.closest('tr[class*="torrent-search--list"], div[class*="torrent-search--list"]') ) {
                             // The 'List' view is active
-
-                            viewType = 'list'
 
                             bunnyButton.style.display = 'inline-grid'
                             bunnyButton.style.fontSize = '110%'
                             bunnyButton.style.padding = '10px'
 
-
-                        } else if ( downloadElement.closest('article :is(.torrent-card, .tc-card)') ) {
+                        } else if ( downloadElement.closest('article :is(.torrent-card, .tc-card), div[class*="torrent-search--cards"]') || document.URL.match(/view=card/) ) {
                             // The 'Cards' view is active
-
-                            viewType = 'cards'
 
                             bunnyButton.style.display = 'inline-grid'
                             bunnyButton.style.fontSize = '135%'
                             bunnyButton.style.padding = '10px'
 
-
-                        } else if ( downloadElement.closest('td.torrent-search--grouped__download') ) {
+                        } else if ( downloadElement.closest('td[class*="torrent-search--grouped"], div[class*="torrent-search--grouped"]') || document.URL.match(/view=group/) ) {
                             // This is the Grouped view
-
-                            viewType = 'grouped'
 
                             if ( window.screen.availWidth > 900 ) {
                                 // The screen is wide enough to accomadate another <td> for this bunnyButton
@@ -4255,10 +4246,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                             bunnyButton.style.padding = '4px'
 
-                        } else if ( downloadElement.closest('td.user-bookmarks__actions') ) {
+                        } else if ( downloadElement.closest('td.user-bookmarks__actions') || document.URL.match(/\/bookmarks/) ) {
                             // The 'Bookmarks' view is active
-
-                            viewType = 'bookmarks'
 
                             // Move bunnyButton into it's own <li>
                             let clonedParent = downloadElement.parentElement.cloneNode()
@@ -4272,53 +4261,54 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
                         }
 
-                        // Try for TorrentStatus based on the current viewType
-                        if ( viewType.match(/list|grouped/) ) {
 
-                            try {
+                        // TorrentStatus: Try for Seeding\Snatched\Featured\Freeleech status of the current downloadElement
 
-                                if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
-                                    // This is a Seeding torrent
-                                    bunnyButtonTorrentStatus(bunnyButton, 'seeding')
+                        try {
+                            // View types: List | Grouped
 
-                                } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
-                                    // This is a Snatched torrent
-                                    bunnyButtonTorrentStatus(bunnyButton, 'snatched')
+                            if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
+                                // This is a Seeding torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                                } else if ( downloadElement.closest('tr').querySelector(':is(i, span).torrent-icons__featured') != null ) {
-                                    // This is a Featured torrent
-                                    bunnyButtonTorrentStatus(bunnyButton, 'featured')
+                            } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
+                                // This is a Snatched torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'snatched')
 
-                                } else if ( downloadElement.closest('tr').querySelector(
-                                  `:is(i, span).torrent-icons__freeleech[title*="100%"],
-                                  :is(i, span).torrent-icons__freeleech[title*="Global freeleech"],
-                                  :is(i, span).torrent-icons__freeleech[title*="Special Freeleech"],
-                                  i.torrent-icons__freeleech.fa-calendar-star,
-                                  i.fa-globe`) != null ) {
-                                    // This is a Freeleech torrent
-                                    bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
+                            } else if ( downloadElement.closest('tr').querySelector(':is(i, span).torrent-icons__featured') != null ) {
+                                // This is a Featured torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'featured')
 
-                                }
+                            } else if ( downloadElement.closest('tr').querySelector(
+                              `:is(i, span).torrent-icons__freeleech[title*="100%"],
+                              :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                              :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
+                              i.torrent-icons__freeleech.fa-calendar-star,
+                              i.fa-globe,
+                              i.fas.fa-peace`) != null ) {
+                                // This is a Freeleech torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
-                            } catch (error) {
-                                // An error occured, most likely 'downloadElement.closest()' was not found and so '.querySelector()' could not be chained
-                                logger.debug(error)
                             }
 
-                        } else if ( viewType == 'cards' ) {
+                        } catch (error) {
+                            // An error occured, most likely 'downloadElement.closest('tr')' was not found and so '.querySelector()' could not be chained
+                            logger.debug(error)
+                        }
 
-                            try {
 
-                                if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector('.torrent-activity-indicator--seeding') != null ) {
-                                    // This is a Seeding torrent
-                                    bunnyButtonTorrentStatus(bunnyButton, 'seeding')
-                                }
-     
-                            } catch (error) {
-                                // An error occured, most likely 'downloadElement.closest()' was not found and so '.querySelector()' could not be chained
-                                logger.debug(error)
+                        try {
+
+                            // View types: Cards
+
+                            if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector('.torrent-activity-indicator--seeding') != null ) {
+                                // This is a Seeding torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
                             }
-
+ 
+                        } catch (error) {
+                            // An error occured, most likely "downloadElement.closest('article :is()')" was not found and so '.querySelector()' could not be chained
+                            logger.debug(error)
                         }
 
                     }
@@ -5007,13 +4997,13 @@ async function quiPOST(postData) {
             // ----- Actions to take after the request has completed -----
 
             if (response.status == 201) {
-                // Success: The torrent has been added to qui or is already listed
+                // Success: The torrent has been added to qui
 
                 replaceEmojis(bunnyButton, '✔️')
 
             } else if ( response.status == 500 && response.responseText.match(/conflicts detected/) ) {
                 // Duplicate: The torrent already exists in this qui instance
-                console.log('ℹ️ quiCKIE: The torrent that would be added to qui already exists, so nothing happened')
+                console.log(`---------- ℹ️ quiCKIE ℹ️ ----------\n\nThe torrent that would be added to quiCKIE already exists, so nothing happened\n\n${postData.torrentURL}`)
 
                 replaceEmojis(bunnyButton, 'ℹ️')
 
