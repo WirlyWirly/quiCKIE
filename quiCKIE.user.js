@@ -175,6 +175,7 @@
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
+// @match   https://hdbits.org/show.php?id=*
 
 // @match   https://infinityhd.net/
 // @match   https://infinityhd.net/*/bookmarks*
