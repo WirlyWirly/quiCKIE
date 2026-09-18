@@ -175,6 +175,7 @@
 // @match   https://hdbits.org/browse.php*
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
+// @match   https://hdbits.org/show.php?id=*
 
 // @match   https://infinityhd.net/
 // @match   https://infinityhd.net/*/bookmarks*
@@ -219,6 +220,11 @@
 // @match   https://luminarr.me/*/bookmarks
 // @match   https://luminarr.me/playlists/*
 // @match   https://luminarr.me/torrents*
+
+// @match   https://malayabits.cc
+// @match   https://malayabits.cc/*/bookmarks
+// @match   https://malayabits.cc/playlists/*
+// @match   https://malayabits.cc/torrents*
 
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
@@ -611,6 +617,12 @@ const settingsPanelTrackers = [
         trackerName: 'Luminarr', // @holy-elbow
         homepageURL: 'https://lumniarr.me',
         primaryDomain: 'luminarr',
+    },
+
+    {
+        trackerName: 'MalayaBits', // @verinikat
+        homepageURL: 'https://malayabits.cc',
+        primaryDomain: 'malayabits',
     },
 
     {
@@ -1622,6 +1634,12 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Playlists
 
     unit3dTrackerHandler('a[href^="https://luminarr.me/torrents/download"]')
+
+} else if ( primaryDomain == 'malayabits' ) {
+    // ----------------------------------- MalayaBits -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    unit3dTrackerHandler('a[href^="https://malayabits.cc/torrents/download"]')
 
 } else if ( primaryDomain == 'materialize' ) {
     // ----------------------------------- Materialize -----------------------------------
