@@ -193,7 +193,7 @@
 // @match   https://jpopsuki.eu/top10.php*
 // @match   https://jpopsuki.eu/torrents.php*
 
-// @match   https://jptvts.us
+// @match   https://jptvts.us/
 // @match   https://jptvts.us/torrents-details.php?id=*
 // @match   https://jptvts.us/torrents-search.php*
 
@@ -1571,11 +1571,14 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'jptvts' ) {
     // ----------------------------------- JPTVTS -----------------------------------
-    // 
+    // Main | Search | Details
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="jptvts.us/download.php?id="]',
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
+
+    pageURL.match(/(torrents-search)/) ? trackerHandlingOptions.enablePaginationLooping = true : null
+    pageURL.match(/^https:\/\/jptvts\.us\/?$/) ? trackerHandlingOptions.enablePaginationLooping = true : null
 
     quickieTrackerHandler(trackerHandlingOptions)
 
