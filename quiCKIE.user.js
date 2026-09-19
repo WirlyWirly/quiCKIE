@@ -98,6 +98,11 @@
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
 
+// @match   https://canal-street.org/torrents.php*
+// @match   https://canal-street.org/top10.php*
+// @match   https://canal-street.org/artist.php*
+// @match   https://canal-street.org/bookmarks.php*
+
 // @match   https://cinematik.net/
 // @match   https://cinematik.net/*/bookmarks
 // @match   https://cinematik.net/playlists/*
@@ -468,6 +473,12 @@ const settingsPanelTrackers = [
         trackerName: 'BroadcasTheNet',
         homepageURL: 'https://broadcasthe.net',
         primaryDomain: 'broadcasthe',
+    },
+
+    {
+        trackerName: 'CanalStreet', // @verinikat
+        homepageURL: 'https://canal-street.org',
+        primaryDomain: 'canal-street',
     },
 
     {
@@ -1101,6 +1112,16 @@ if ( primaryDomain == 'animebytes' ) {
             padding: 2px 2px 2px 2px;
             vertical-align: unset;`
 
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'canal-street' ) {
+    // ----------------------------------- CanalStreet -----------------------------------
+    // Browse | Artist (Play) | Production (Location and Year) | Seeding | Bookmarks
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
