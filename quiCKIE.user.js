@@ -604,7 +604,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'Krabby Patty', // @verinikat
+        trackerName: 'KrabbyPatty', // @verinikat
         homepageURL: 'https://crabpt.vip',
         primaryDomain: 'crabpt',
     },
@@ -1625,7 +1625,7 @@ if ( primaryDomain == 'animebytes' ) {
     quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'crabpt' ) {
-    // ----------------------------------- Krabby Patty -----------------------------------
+    // ----------------------------------- KrabbyPatty -----------------------------------
     // Browse | Details | Special
 
     let trackerHandlingOptions = {
