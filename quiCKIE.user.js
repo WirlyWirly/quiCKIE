@@ -474,7 +474,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'BTSCHOOL',
+        trackerName: 'BTSCHOOL', // @verinikat
         homepageURL: 'https://pt.btschool.club',
         primaryDomain: 'btschool',
     },
