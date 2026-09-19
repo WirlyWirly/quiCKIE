@@ -201,8 +201,9 @@
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
 
-// @match   https://crabpt.vip/torrents.php?*
-// @match   https://crabpt.vip/details.php
+// @match   https://crabpt.vip/torrents.php*
+// @match   https://crabpt.vip/details.php*
+// @match   https://crabpt.vip/special.php*
 
 // @match   https://kufirc.com/bookmarks.php*
 // @match   https://kufirc.com/collages.php*
@@ -1625,7 +1626,7 @@ if ( primaryDomain == 'animebytes' ) {
 
 } else if ( primaryDomain == 'crabpt' ) {
     // ----------------------------------- Krabby Patty -----------------------------------
-    // Browse | Details
+    // Browse | Details | Special
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="download.php?id="]',
