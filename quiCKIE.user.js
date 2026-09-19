@@ -98,8 +98,14 @@
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
 
+//          BTSCHOOL
 // @match   https://pt.btschool.club/details.php*
 // @match   https://pt.btschool.club/torrents.php*
+
+// @match   https://canal-street.org/torrents.php*
+// @match   https://canal-street.org/top10.php*
+// @match   https://canal-street.org/artist.php*
+// @match   https://canal-street.org/bookmarks.php*
 
 // @match   https://cinematik.net/
 // @match   https://cinematik.net/*/bookmarks
@@ -169,6 +175,8 @@
 // @match   https://gazellegames.net/torrents.php*
 // @match   https://gazellegames.net/bookmarks.php*
 
+// @match   https://greatposterwall.com/torrents.php*
+
 // @match   https://www.happyfappy.net/collage/*
 // @match   https://www.happyfappy.net/top10.php*
 // @match   https://www.happyfappy.net/torrents.php*
@@ -179,6 +187,10 @@
 // @match   https://hdbits.org/details.php?id=*
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/show.php?id=*
+
+// @match   https://hhanclub.net/torrents.php*
+// @match   https://hhanclub.net/details.php*
+// @match   https://hhanclub.net/rescue.php*
 
 // @match   https://infinityhd.net/
 // @match   https://infinityhd.net/*/bookmarks*
@@ -203,6 +215,10 @@
 
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
+
+// @match   https://crabpt.vip/torrents.php*
+// @match   https://crabpt.vip/details.php*
+// @match   https://crabpt.vip/special.php*
 
 // @match   https://kufirc.com/bookmarks.php*
 // @match   https://kufirc.com/collages.php*
@@ -478,6 +494,12 @@ const settingsPanelTrackers = [
         homepageURL: 'https://pt.btschool.club',
         primaryDomain: 'btschool',
     },
+  
+    {
+        trackerName: 'CanalStreet', // @verinikat
+        homepageURL: 'https://canal-street.org',
+        primaryDomain: 'canal-street',
+    },
 
     {
         trackerName: 'Cinematik', // @verinikat
@@ -561,6 +583,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'GreatPosterWall', // @verinikat
+        homepageURL: 'https://greatposterwall.com',
+        primaryDomain: 'greatposterwall',
+    },
+
+    {
         trackerName: 'HappyFappy', // @empUser
         homepageURL: 'https://www.happyfappy.org',
         primaryDomain: 'happyfappy',
@@ -570,6 +598,12 @@ const settingsPanelTrackers = [
         trackerName: 'HDBits',
         homepageURL: 'https://hdbits.org',
         primaryDomain: 'hdbits',
+    },
+
+    {
+        trackerName: 'HHClub', // @verinikat
+        homepageURL: 'https://hhanclub.net',
+        primaryDomain: 'hhanclub',
     },
 
     {
@@ -606,6 +640,12 @@ const settingsPanelTrackers = [
         trackerName: 'Karagarga', // @fercats99
         homepageURL: 'https://karagarga.in',
         primaryDomain: 'karagarga',
+    },
+
+    {
+        trackerName: 'KrabbyPatty', // @verinikat
+        homepageURL: 'https://crabpt.vip',
+        primaryDomain: 'crabpt',
     },
 
     {
@@ -1121,6 +1161,16 @@ if ( primaryDomain == 'animebytes' ) {
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="download.php?id="]',
     }
+    
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'canal-street' ) {
+    // ----------------------------------- CanalStreet -----------------------------------
+    // Browse | Artist (Play) | Production (Location and Year) | Seeding | Bookmarks
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    }
 
     quickieTrackerHandler(trackerHandlingOptions)
 
@@ -1435,6 +1485,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'greatposterwall' ) {
+    // ----------------------------------- GreatPosterWall -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'happyfappy' ) {
     // ----------------------------------- HappyFappy -----------------------------------
     // Browse | Collages | Details | Top10
@@ -1537,6 +1597,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'hhanclub' ) {
+    // ----------------------------------- HHCLUB -----------------------------------
+    // Browse | Details | Rescues
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'infinityhd' ) {
     // ----------------------------------- InfinityHD -----------------------------------
     // Bookmarks | Browse | Details | Playlists
@@ -1629,6 +1699,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="/down.php/"]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'crabpt' ) {
+    // ----------------------------------- KrabbyPatty -----------------------------------
+    // Browse | Details | Special
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
