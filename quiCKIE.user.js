@@ -201,6 +201,10 @@
 // @match   https://karagarga.in/details.php*
 // @match   https://karagarga.in/browse.php*
 
+// @match   https://crabpt.vip/torrents.php*
+// @match   https://crabpt.vip/details.php*
+// @match   https://crabpt.vip/special.php*
+
 // @match   https://kufirc.com/bookmarks.php*
 // @match   https://kufirc.com/collages.php*
 // @match   https://kufirc.com/top10.php*
@@ -597,6 +601,12 @@ const settingsPanelTrackers = [
         trackerName: 'Karagarga', // @fercats99
         homepageURL: 'https://karagarga.in',
         primaryDomain: 'karagarga',
+    },
+
+    {
+        trackerName: 'Krabby Patty', // @verinikat
+        homepageURL: 'https://crabpt.vip',
+        primaryDomain: 'crabpt',
     },
 
     {
@@ -1610,6 +1620,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="/down.php/"]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'crabpt' ) {
+    // ----------------------------------- Krabby Patty -----------------------------------
+    // Browse | Details | Special
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
