@@ -98,6 +98,9 @@
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
 
+// @match   https://pt.btschool.club/details.php*
+// @match   https://pt.btschool.club/torrents.php*
+
 // @match   https://cinematik.net/
 // @match   https://cinematik.net/*/bookmarks
 // @match   https://cinematik.net/playlists/*
@@ -468,6 +471,12 @@ const settingsPanelTrackers = [
         trackerName: 'BroadcasTheNet',
         homepageURL: 'https://broadcasthe.net',
         primaryDomain: 'broadcasthe',
+    },
+
+    {
+        trackerName: 'BTSCHOOL',
+        homepageURL: 'https://pt.btschool.club',
+        primaryDomain: 'btschool',
     },
 
     {
@@ -1101,6 +1110,16 @@ if ( primaryDomain == 'animebytes' ) {
             padding: 2px 2px 2px 2px;
             vertical-align: unset;`
 
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'btschool' ) {
+    // ----------------------------------- BTSCHOOL -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
