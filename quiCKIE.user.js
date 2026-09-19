@@ -1430,22 +1430,6 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
-        freeleechStatusSelector: "downloadElement.closest('td').querySelector('a.tl_free')",
-    }
-
-    if ( pageURL.match(/torrents\.php(?!\?id=\d+)/) ) {
-        // This is a search page
-
-        trackerHandlingOptions.bunnyButtonText = '🐰'
-        trackerHandlingOptions.bunnyButtonAddStyles = `
-            background: #153245;
-            border-radius: 3px;
-            border: #B6D3E7 solid 1px;
-            color: #B6D3E7;
-            font-size: 80%;
-            padding: 2px 2px 2px 2px;
-            vertical-align: unset;`
-
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
