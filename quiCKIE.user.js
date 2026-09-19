@@ -166,6 +166,8 @@
 // @match   https://gazellegames.net/torrents.php*
 // @match   https://gazellegames.net/bookmarks.php*
 
+// @match   https://greatposterwall.com/torrents.php*
+
 // @match   https://www.happyfappy.net/collage/*
 // @match   https://www.happyfappy.net/top10.php*
 // @match   https://www.happyfappy.net/torrents.php*
@@ -549,6 +551,12 @@ const settingsPanelTrackers = [
         trackerName: 'GazelleGames',
         homepageURL: 'https://gazellegames.net',
         primaryDomain: 'gazellegames',
+    },
+
+    {
+        trackerName: 'GreatPosterWall', // @verinikat
+        homepageURL: 'https://greatposterwall.com',
+        primaryDomain: 'greatposterwall',
     },
 
     {
@@ -1412,6 +1420,32 @@ if ( primaryDomain == 'animebytes' ) {
         seedingStatusSelector: "downloadElement.closest('td').querySelector('#color_seeding')",
         snatchedStatusSelector: "downloadElement.closest('td').querySelector('#color_snatched')",
         freeleechStatusSelector: "downloadElement.closest('td').querySelector('.freeleech_label, .personal_freeleech_label')",
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'greatposterwall' ) {
+    // ----------------------------------- GreatPosterWall -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+        freeleechStatusSelector: "downloadElement.closest('td').querySelector('a.tl_free')",
+    }
+
+    if ( pageURL.match(/torrents\.php(?!\?id=\d+)/) ) {
+        // This is a search page
+
+        trackerHandlingOptions.bunnyButtonText = '🐰'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            background: #153245;
+            border-radius: 3px;
+            border: #B6D3E7 solid 1px;
+            color: #B6D3E7;
+            font-size: 80%;
+            padding: 2px 2px 2px 2px;
+            vertical-align: unset;`
+
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
