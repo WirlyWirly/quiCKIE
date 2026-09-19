@@ -177,6 +177,10 @@
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/show.php?id=*
 
+// @match   https://hhanclub.net/torrents.php*
+// @match   https://hhanclub.net/details.php*
+// @match   https://hhanclub.net/rescue.php*
+
 // @match   https://infinityhd.net/
 // @match   https://infinityhd.net/*/bookmarks*
 // @match   https://infinityhd.net/playlists/*
@@ -561,6 +565,12 @@ const settingsPanelTrackers = [
         trackerName: 'HDBits',
         homepageURL: 'https://hdbits.org',
         primaryDomain: 'hdbits',
+    },
+
+    {
+        trackerName: 'HHClub', // @verinikat
+        homepageURL: 'https://hhanclub.net',
+        primaryDomain: 'hhanclub',
     },
 
     {
@@ -1514,6 +1524,16 @@ if ( primaryDomain == 'animebytes' ) {
             vertical-align: unset;
         `
 
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'hhanclub' ) {
+    // ----------------------------------- HHCLUB -----------------------------------
+    // Browse | Details | Rescues
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
