@@ -210,6 +210,10 @@
 // @match   https://www.happyfappy.net/top10.php*
 // @match   https://www.happyfappy.net/torrents.php*
 // @match   https://www.happyfappy.net/user.php?id=*
+// 
+//          Hawke.Uno
+// @match   https://hawke.uno/torrents*
+// @match   https://hawke.uno/users/*/hub/torrents/*
 
 //          HDBits
 // @match   https://hdbits.org/bookmarks*
@@ -662,6 +666,12 @@ const settingsPanelTrackers = [
         trackerName: 'HappyFappy', // @empUser
         homepageURL: 'https://www.happyfappy.org',
         primaryDomain: 'happyfappy',
+    },
+
+    {
+        trackerName: 'Hawke-Uno', // @SirWall
+        homepageURL: 'https://www.hawke.uno',
+        primaryDomain: 'hawke',
     },
 
     {
@@ -1631,6 +1641,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'hawke' ) {
+    // ----------------------------------- Hawke.Uno -----------------------------------
+    // Browse | Details
+
+    unit3dTrackerHandler('a[href^="https://hawke.uno/torrents/download/"]')
 
 } else if ( primaryDomain == 'hdbits' ) {
     // ----------------------------------- HDBits -----------------------------------
