@@ -971,7 +971,7 @@ if ( primaryDomain == 'animebytes' ) {
         // - - - - - - - - - PRESENTATION - - - - - - - - -
         // Options to assist with the visual presentation\styling of bunnyButtons
 
-        // The text that will be displayed by EVERY bunnyButton, useful for removing the surrounding whitespace included with the default setting, or when performing advanced styling
+        // The text that will be displayed by EVERY bunnyButton, useful for removing the surrounding whitespace included with the default setting or when performing advanced styling
         bunnyButtonText: ' 🐰 ', // Default = ' 🐰 ' || Options = Any string
 
         // The font-size of EVERY bunnyButton, useful for re-sizing them to better fit the page
@@ -999,12 +999,13 @@ if ( primaryDomain == 'animebytes' ) {
 
 
         // - - - - - - - - - EMOJIOGRAPHY - - - - - - - - -
-        // Options that allow you to add "Emojiography" support to a tracker by providing a string representing a JavaScript comparison. If that check completes successfully and is 'true', it indicates a torrent is seeding\snatched\freeleech and as a result will have its bunnyButton emoji updated to reflect this
+        // Options that allow you to add "Emojiography" support to a tracker. This is done by providing a JavaScript conditional that will search for a certain element on the page. If that element is found it indicates the torrent has the status of seeding\snatched\featured\freeleech.
 
-        // The string may start with 'downloadElement' (representing a DL button) then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to locate a 'targetElement' (which refers to a element in the HTML indicating the torrent has a certain status). If the targetElement is found, the check is considered to be 'true'
+        // Typically, the conditional string will start with 'downloadElement' (representing a DL button) then be followed by a chain of '.closest()' and\or '.querySelector()' methods in order to hone-in on the 'targetElement', which is the element in the HTML indicating the torrent has a certain status. If the targetElement is found, the conditional resloves as 'true' and the bunnyButton emoji will be updated accordingly.
+
         // See the AnimeBytes\BroadcasTheNet\Empornium\Orpheus\PassThePopcorn\Redacted blocks for examples
-        // ℹ️ Tip: If the targetElement has a unique .textContent but not attributes, one option is to perform a `targetElement.textContent.match(/regex/)`. If the regex match is found, the check is considered to be 'true' (see the MyAnonaMouse\Redacted block for examples)
-        // ℹ️ Tip: When inspecting the page from your browser, right-click the DL button HTML element and select the 'Use in Console' option. This will create a variable in your console that you can use to test your chaining. Once you have a working chain that to locate the target element, you can use it for these options.
+        // ℹ️ Tip: When inspecting the page from your browser, right-click the DL button HTML element and select the 'Use in Console' option. This will create a variable in your console that you can use to test your chaining. Once you have a working chain that to locate the targetElement, you can use it for these options.
+        // ℹ️ Tip: If the targetElement has a unique .textContent, one option is to perform a `targetElement.textContent.match(/regex/)`. If the regex match is found, the check is considered to be 'true' (see the MyAnonaMouse\Redacted block for examples)
 
         // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'seeding', so the bunnyButton emoji will be changed to '🌱'
         seedingStatusSelector: null, // Default = null || Options = 'downloadElement...'
@@ -1012,11 +1013,11 @@ if ( primaryDomain == 'animebytes' ) {
         // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'snatched', so the bunnyButton emoji will be changed to '🍁'
         snatchedStatusSelector: `downloadElement.closest('td').querySelector('a.snatched-torrent')`, // Default = null || Options = 'downloadElement...'
 
-        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎'
-        freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
-
         // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'featured', so the bunnyButton emoji will be changed to '📢'
         featuredStatusSelector: null, // Default = null || Options = 'downloadElement...'
+
+        // A string representing a JavaScript comparison, that if 'true' indicates a torrent has the status of 'freeleech', so the bunnyButton emoji will be changed to '💎'
+        freeleechStatusSelector: `downloadElement.closest('td').querySelector('img[alt^="Freeleech"]')`, // Default = null || Options = 'downloadElement...'
 
 
         // - - - - - - - - - PAGINATION - - - - - - - - -
@@ -1051,7 +1052,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Aither -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'alpharatio' ) {
     // ----------------------------------- AlphaRatio -----------------------------------
@@ -1067,7 +1072,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- AnimeWorld -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'animez' ) {
     // --------------------------------- AnimeZ ------------------------------------
@@ -1110,7 +1119,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- AsianCinema -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'avistaz' ) {
     // ----------------------------------- AvistaZ -----------------------------------
@@ -1163,7 +1176,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Beyond-HD -----------------------------------
     // Browse | Details | Homepage | Library
 
-    unit3dTrackerHandler('a[href^="https://beyond-hd.me/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://beyond-hd.me/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'bibliotik' ) {
     // ----------------------------------- Bibliotik -----------------------------------
@@ -1200,13 +1217,21 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- BitPorn -----------------------------------
     // Browse | Details
 
-    unit3dTrackerHandler('a[href^="https://bitporn.eu/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://bitporn.eu/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'blutopia' ) {
     // ----------------------------------- Blutopia -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'broadcasthe' ) {
     // ----------------------------------- BroadcasTheNet -----------------------------------
@@ -1259,7 +1284,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Cinematik -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'cinemaz' ) {
     // ----------------------------------- CinemaZ -----------------------------------
@@ -1278,19 +1307,31 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- ClearJAV -----------------------------------
     // Bookmarks | Browse | Details | Movies| Playlists
 
-    unit3dTrackerHandler('a[href^="https://clearjav.com/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://clearjav.com/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'concertos' ) {
     // ----------------------------------- Concertos -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'darkpeers' ) {
     // ----------------------------------- DarkPeers -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
   
 } else if ( primaryDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
@@ -1647,7 +1688,30 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Hawke-uno -----------------------------------
     // Browse | Details
 
-    unit3dTrackerHandler('a[href^="https://hawke.uno/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://hawke.uno/torrents/download/"]:not([class*="ds-macro-row__name-specs"])'
+    }
+
+    if ( pagePath.match(/\/torrents\/\d+/) ) {
+        // This is a details page, so apply styling to the only bunnyButton
+
+        trackerHandlingOptions.detailsPageParentPlacement = false
+
+        trackerHandlingOptions.bunnyButtonText = ' 🐰 '
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--ds-surface, #0c1829);
+            padding: 4px 6px;
+            font-size: 11px!important;
+            font-weight: bold;
+            border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
+            color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
+
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'hdbits' ) {
     // ----------------------------------- HDBits -----------------------------------
@@ -1698,7 +1762,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- InfinityHD -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'iptorrents' ) {
     // ----------------------------------- IP-Torrents -----------------------------------
@@ -1755,7 +1823,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- ItaTorrents -----------------------------------
     // Browse | Details
 
-    unit3dTrackerHandler('a[href*="/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'jpopsuki' ) {
     // ----------------------------------- JpopSuki -----------------------------------
@@ -1817,25 +1889,41 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Lat-Team -----------------------------------
     // Bookmarks | Browse | Details | Homepage | Playlists
 
-    unit3dTrackerHandler('a[href^="https://lat-team.com/torrents/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://lat-team.com/torrents/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'lst' ) {
     // ----------------------------------- LST -----------------------------------
     // Bookmarks | Browse | Details | Homepage | Playlists | MediaHub
 
-    unit3dTrackerHandler('a[href^="https://lst.gg/torrents/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://lst.gg/torrents/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'luminarr' ) {
     // ----------------------------------- Luminarr -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href^="https://luminarr.me/torrents/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://luminarr.me/torrents/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'malayabits' ) {
     // ----------------------------------- MalayaBits -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href^="https://malayabits.cc/torrents/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://malayabits.cc/torrents/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'materialize' ) {
     // ----------------------------------- Materialize -----------------------------------
@@ -1989,13 +2077,48 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- OldToons -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href^="https://oldtoons.world/torrents/download/"]')
+    let trackerHandlingOptions = {
+
+        // ------------------------- REQUIRED -------------------------
+
+        // A valid CSS selector that is unique to ONLY the download elements (download buttons) on the page
+        downloadElementsSelector: 'a[href^="https://oldtoons.world/torrents/download/"]',
+
+        // --------------------------OPTIONAL -------------------------
+        // The following properties are all optional and can be applied on a per-tracker basis or when appropriate to do so depending on the page of the tracker
+
+        // ℹ️ Tip: To apply options on a per-page basis, use an 'if' statement to determine the current page based on the pageURL. From there, you can apply the options relevant to that page (See the BroadCasTheNet\Empornium\IP-Torrents\MyAnonaMouse\Nyaa blocks for examples)
+
+        // - - - - - - - - - PRESENTATION - - - - - - - - -
+
+        // The text that will be displayed by EVERY bunnyButton, useful for removing the surrounding whitespace included with the default setting or when performing advanced styling
+        bunnyButtonText: 'automatic', // Default = 'automatic' || Options = Any string
+
+        // The font-size of EVERY bunnyButton, useful for re-sizing them to better fit the page
+        bunnyButtonfontSize: 'automatic', // Default = 'automatic' || Options = Any percentile | A valid 'font-size' css value
+
+        // Additional CSS style properties that will be applied to EVERY bunnyButton, useful for advanced styling (see the BakabT\HDBits\MyAnonaMouse\Nyaa blocks for examples)
+        bunnyButtonAddStyles: 'automatic', // Default = 'automatic' || Options = A string containing css style properties
+
+        // Additional class names that will be applied to EVERY bunnyButton, useful for advanced styling
+        bunnyButtonAddClasses: [], // Default = [] || Options = An array of strings
+
+        // On the torrent details page, place the bunnyButton alongside the parentElement, which usually makes it so the bunnyButton is in the same row as the downloadElement
+        detailsPageParentPlacement: true, // Default = true || Options = true | false
+
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'onlyencodes' ) {
     // ----------------------------------- OnlyEncodes -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href^="https://onlyencodes.cc/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://onlyencodes.cc/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'orpheus' ) {
     // ----------------------------------- Orpheus -----------------------------------
@@ -2040,7 +2163,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Portugas -----------------------------------
     // Browse | Album | Artist
 
-    unit3dTrackerHandler('a[href^="https://portugas.org/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://portugas.org/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'privatehd' ) {
     // ----------------------------------- PrivateHD -----------------------------------
@@ -2118,7 +2245,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- ReelFliX -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href^="https://reelflix.cc/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://reelflix.cc/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'retroflix' ) {
     // ----------------------------------- Retroflix -----------------------------------
@@ -2134,7 +2265,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- RetroMoviesClub -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href^="https://retro-movies.club/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://retro-movies.club/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'retrotoon' ) {
     // ----------------------------------- RetroToonWorld -----------------------------------
@@ -2161,7 +2296,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- RocketHD -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'secret-cinema' ) {
     // ----------------------------------- Secret-Cinema -----------------------------------
@@ -2177,7 +2316,11 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Seedpool -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'simurg' ) {
     // ----------------------------------- Simurg -----------------------------------
@@ -2243,14 +2386,22 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- Unwalled -----------------------------------
     // Bookmarks | Browse | Details | Playlists
 
-    unit3dTrackerHandler('a[href*="/download"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 
 } else if ( primaryDomain == 'upload' ) {
     // ----------------------------------- UploadCX -----------------------------------
     // Browse | Details | Homepage | Playlists | Similar
 
-    unit3dTrackerHandler('a[href^="https://upload.cx/torrents/download/"]')
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://upload.cx/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
   
 } else {
     // ----------------------------------- NONE -----------------------------------
@@ -4311,46 +4462,48 @@ function quickieTrackerHandler({
 
 
 // @unit3dTrackerHandler
-function unit3dTrackerHandler(downloadElementsSelector) {
+function unit3dTrackerHandler({
     // A tracker handler designed to support trackers running on the UNIT3D framework
     // ! This function is based on the HTML layout of 'Oldtoons' and is not WirlyWirly guaranteed for other UNIT3D sites
 
-    // Mutable settings dependent on the current page
-    let bunnyButtonAddStyles = ''
-    let bunnyButtonText = ' 🐰 '
+    downloadElementsSelector,
+    bunnyButtonText = 'automatic',
+    bunnyButtonFontSize = 'automatic',
+    bunnyButtonAddStyles = 'automatic',
+    bunnyButtonAddClasses = [],
+    detailsPageParentPlacement = true,
+    
+    // seedingStatusSelector = null,
+    // snatchedStatusSelector = null,
+    // freeleechStatusSelector = null,
+    // featuredStatusSelector = null,
+    // queryFromElement = document,
 
+}) {
+    
+    // Mutable settings dependent on the current page
     let torrentDetailsPage = false
-    let queryFromElement = document
     let bunnyButtonPlacement
+    let queryFromElement = document
 
     if ( pagePath.match(/\/torrents\/\d+/) ) {
         // The torrents details page, so change the style of the only BunnyButton
 
         torrentDetailsPage = true
-        bunnyButtonText = '🐰 quiCKIE'
 
-        // Give the bunnyButton a bar appearance, to fit in better with the other buttons
-        bunnyButtonAddStyles = `
-        background: #153245;
-        border-radius: 999px;
-        border: #B6D3E7 solid 1px;
-        color: #B6D3E7;
-        font-weight: bold;
-        padding: 1.5%;
-        width: 98%;`
-        
-        if ( primaryDomain == 'hawke' ) {
-            bunnyButtonAddStyles = `
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--ds-surface, #0c1829);
-            padding: 4px 6px;
-            font-size: 11px!important;
+        // The default text to be displayed by the bunnyButton on the details page
+        bunnyButtonText == 'automatic' ? bunnyButtonText = '🐰 quiCKIE' : null
+
+        // The default styling used by the bunnyButton on the details page
+        bunnyButtonAddStyles == 'automatic' ? bunnyButtonAddStyles = `
+            background: #153245;
+            border-radius: 999px;
+            border: #B6D3E7 solid 1px;
+            color: #B6D3E7;
             font-weight: bold;
-            border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
-            color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
-        }
+            padding: 1.5%;
+            width: 98%;` : null
+        
 
     } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
         // The search parge or homepage, both of which require a MutationObserver
@@ -4401,6 +4554,11 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
     }
 
+    // Set the default values to use when no over-rides have been specified
+    bunnyButtonText == 'automatic' ? bunnyButtonText = ' 🐰 ' : null
+    bunnyButtonAddStyles == 'automatic' ? bunnyButtonAddStyles = '' : null
+    bunnyButtonFontSize == 'automatic' ? bunnyButtonFontSize = 'inherit' : null
+
 
     function bunnyButtonGeneration(delay) {
         // For all downloadElements queried by the downloadElementsSelector, create a accompanying bunnyButton according to the trackerHandlerOptions and user SETTINGS
@@ -4416,18 +4574,22 @@ function unit3dTrackerHandler(downloadElementsSelector) {
                 for (let downloadElement of allDownloadElements) {
                     // For each downloadElement, generate and insert a bunnyButton
 
-                    let bunnyButton = createBunnyButton({ torrentURL: downloadElement.href, buttonText: bunnyButtonText, torrentSettings: SETTINGS, addButtonStyles: bunnyButtonAddStyles })
+                    let bunnyButton = createBunnyButton({ torrentURL: downloadElement.href, fontSize: bunnyButtonFontSize, buttonText: bunnyButtonText, torrentSettings: SETTINGS, addButtonStyles: bunnyButtonAddStyles, addButtonClasses: bunnyButtonAddClasses })
 
                     if ( torrentDetailsPage == true ) {
                         // This is the torrentDetails page, which only lists 1 torrent at a time
 
-                        // Place BunnyButton into it's own <li>
-                        let clonedParent = downloadElement.parentElement.cloneNode()
-                        clonedParent.appendChild(bunnyButton)
-                        downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, clonedParent)
+                        if ( detailsPageParentPlacement == true ) {
+                            // Place BunnyButton into it's own <li> alongside the parentElement, which usually keeps it in the same row as the downloadElement
 
-                        // Hide the <li> parentElement to avoid a empty gap
-                        SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
+                            let clonedParent = downloadElement.parentElement.cloneNode()
+                            clonedParent.appendChild(bunnyButton)
+                            downloadElement.parentElement.insertAdjacentElement(bunnyButtonPlacement, clonedParent)
+
+                            // Hide the <li> parentElement to avoid a empty gap
+                            SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
+
+                        } 
 
                         if ( document.querySelector('li.torrent__seeders.torrent-activity-indicator--seeding') != null ) {
                             // This is a Seeding torrent
@@ -4594,7 +4756,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
 // The CSS style to make bunnyButtons glow on mouseover
 GM_addStyle(`a.quickie_bunnyButton:hover {
-    filter: drop-shadow(0px 0px 5px #B6D3E7) !important;
+    filter: drop-shadow(0px 0px 5px #B6D3E78C) !important;
 }`)
 
 function createBunnyButton({
