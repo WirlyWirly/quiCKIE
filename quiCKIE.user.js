@@ -211,7 +211,7 @@
 // @match   https://www.happyfappy.net/torrents.php*
 // @match   https://www.happyfappy.net/user.php?id=*
 // 
-//          Hawke.Uno
+//          Hawke-uno
 // @match   https://hawke.uno/torrents*
 // @match   https://hawke.uno/users/*/hub/torrents/*
 
