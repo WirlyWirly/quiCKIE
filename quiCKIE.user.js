@@ -473,7 +473,7 @@ const verboseConsoleLogging = false
 
 // @settingsPanelTrackers
 // Each entry below will be appear as a tracker row in the quiCKIE settings panel
-const settingsPanelTrackers = [
+const settingsPanelTrackers = [ 
 
     {
         trackerName: 'Aither', // @holy-elbow
@@ -1130,6 +1130,7 @@ if ( primaryDomain == 'animebytes' ) {
             border: #B6D3E7 solid 2px;
             color: #B6D3E7;
             display: inline;
+            filter: drop-shadow(0px 0px 5px #828282):
             font-weight: normal;
             margin: 0px 5px 0px 5px;
             padding: 3px 4px 4px 4px;
@@ -4563,7 +4564,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
 // The CSS style to make bunnyButtons glow on mouseover
 GM_addStyle(`a.quickie_bunnyButton:hover {
-    text-shadow: 0px 0px 1px black, 0px 0px 5px #B6D3E7 !important;
+    filter: drop-shadow(0px 0px 5px #B6D3E7) !important;
 }`)
 
 function createBunnyButton({

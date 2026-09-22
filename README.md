@@ -11,7 +11,7 @@
 
 This [UserScript](https://openuserjs.org/about/Userscript-Beginners-HOWTO) will integrate **BunnyButtons 🐰** alongside a trackers regular download buttons. When clicked, the corresponding torrent will be added directly to your torrent client using your custom settings.
 
-quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)**, **desktop**\\**mobile** devices, and **65+** different trackers. In addition, this is a **non-destructive** UserScript, which ensures quiCKIE to be friendly\compatible with other UserScripts and default browser functions.
+quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https://www.qbittorrent.org/)**, **[Transmission](https://transmissionbt.com/)**, **[Deluge](https://deluge-torrent.org/)**, **desktop**\\**mobile** devices, and **70+** different trackers. In addition, this is a **non-destructive** UserScript, which ensures quiCKIE to be friendly\compatible with other UserScripts and default browser functions.
 
 If a tracker that you have access to is not listed, check the quiCKIE WiKi for a simple **3-step guide** on how it can be added, no programming experience required: **[Adding a New Tracker](https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker)**
 
@@ -30,8 +30,8 @@ Only the **clientURL** and **credentials** for the selected torrent client are r
 > **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 >
 > **BunnyButton Emojiography***<br>
-> 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + TrackerSettings<br>
-> 🧲 Downloading .torrent file | 🧑 Client Login | 🕓 Adding Torrent | ✔️ Success | ❌ Failure | ℹ️ Console Message
+> 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + Tracker<br>
+> 🧲 Downloading .torrent | 🧑 Client Login | 🕓 Adding Torrent | ℹ️ Console Message | ❌ Failed | ✔️ Success 
 >
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
