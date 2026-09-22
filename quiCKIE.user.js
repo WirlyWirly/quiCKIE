@@ -4325,33 +4325,32 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
     if ( pagePath.match(/\/torrents\/\d+/) ) {
         // The torrents details page, so change the style of the only BunnyButton
+
+        torrentDetailsPage = true
+        bunnyButtonText = '🐰 quiCKIE'
+
+        // Give the bunnyButton a bar appearance, to fit in better with the other buttons
+        bunnyButtonAddStyles = `
+        background: #153245;
+        border-radius: 999px;
+        border: #B6D3E7 solid 1px;
+        color: #B6D3E7;
+        font-weight: bold;
+        padding: 1.5%;
+        width: 98%;`
         
         if ( primaryDomain == 'hawke' ) {
-          bunnyButtonAddStyles = `
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          background: var(--ds-surface, #0c1829);
-          padding: 4px 6px;
-          font-size: 11px!important;
-          font-weight: bold;
-          border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
-          color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
+            bunnyButtonAddStyles = `
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--ds-surface, #0c1829);
+            padding: 4px 6px;
+            font-size: 11px!important;
+            font-weight: bold;
+            border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
+            color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
         }
-        else {
-          // Give the bunnyButton a bar appearance, to fit in better with the other buttons
-          torrentDetailsPage = true
-          bunnyButtonText = '🐰 quiCKIE'
-          bunnyButtonAddStyles = `
-          background: #153245;
-          border-radius: 999px;
-          border: #B6D3E7 solid 1px;
-          color: #B6D3E7;
-          font-weight: bold;
-          padding: 1.5%;
-          width: 98%;`
-        }
-
 
     } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
         // The search parge or homepage, both of which require a MutationObserver
