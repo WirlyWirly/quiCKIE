@@ -4324,9 +4324,7 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
     if ( pagePath.match(/\/torrents\/\d+/) ) {
         // The torrents details page, so change the style of the only BunnyButton
-        torrentDetailsPage = true
-
-        // Give the bunnyButton a bar appearance, to fit in better with the other buttons
+        
         if ( primaryDomain == 'hawke' ) {
           bunnyButtonAddStyles = `
           display: inline-flex;
@@ -4340,6 +4338,8 @@ function unit3dTrackerHandler(downloadElementsSelector) {
           color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
         }
         else {
+          // Give the bunnyButton a bar appearance, to fit in better with the other buttons
+          torrentDetailsPage = true
           bunnyButtonText = '🐰 quiCKIE'
           bunnyButtonAddStyles = `
           background: #153245;
