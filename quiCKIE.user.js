@@ -210,6 +210,10 @@
 // @match   https://www.happyfappy.net/top10.php*
 // @match   https://www.happyfappy.net/torrents.php*
 // @match   https://www.happyfappy.net/user.php?id=*
+// 
+//          Hawke-uno
+// @match   https://hawke.uno/torrents*
+// @match   https://hawke.uno/users/*/hub/torrents/*
 
 //          HDBits
 // @match   https://hdbits.org/bookmarks*
@@ -662,6 +666,12 @@ const settingsPanelTrackers = [
         trackerName: 'HappyFappy', // @empUser
         homepageURL: 'https://www.happyfappy.org',
         primaryDomain: 'happyfappy',
+    },
+
+    {
+        trackerName: 'Hawke-uno', // @SirWall
+        homepageURL: 'https://www.hawke.uno',
+        primaryDomain: 'hawke',
     },
 
     {
@@ -1632,6 +1642,12 @@ if ( primaryDomain == 'animebytes' ) {
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'hawke' ) {
+    // ----------------------------------- Hawke-uno -----------------------------------
+    // Browse | Details
+
+    unit3dTrackerHandler('a[href^="https://hawke.uno/torrents/download/"]')
 
 } else if ( primaryDomain == 'hdbits' ) {
     // ----------------------------------- HDBits -----------------------------------
@@ -4309,18 +4325,33 @@ function unit3dTrackerHandler(downloadElementsSelector) {
 
     if ( pagePath.match(/\/torrents\/\d+/) ) {
         // The torrents details page, so change the style of the only BunnyButton
-        torrentDetailsPage = true
+        
+        if ( primaryDomain == 'hawke' ) {
+          bunnyButtonAddStyles = `
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: var(--ds-surface, #0c1829);
+          padding: 4px 6px;
+          font-size: 11px!important;
+          font-weight: bold;
+          border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
+          color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
+        }
+        else {
+          // Give the bunnyButton a bar appearance, to fit in better with the other buttons
+          torrentDetailsPage = true
+          bunnyButtonText = '🐰 quiCKIE'
+          bunnyButtonAddStyles = `
+          background: #153245;
+          border-radius: 999px;
+          border: #B6D3E7 solid 1px;
+          color: #B6D3E7;
+          font-weight: bold;
+          padding: 1.5%;
+          width: 98%;`
+        }
 
-        // Give the bunnyButton a bar appearance, to fit in better with the other buttons
-        bunnyButtonText = '🐰 quiCKIE'
-        bunnyButtonAddStyles = `
-        background: #153245;
-        border-radius: 999px;
-        border: #B6D3E7 solid 1px;
-        color: #B6D3E7;
-        font-weight: bold;
-        padding: 1.5%;
-        width: 98%;`
 
     } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
         // The search parge or homepage, both of which require a MutationObserver
