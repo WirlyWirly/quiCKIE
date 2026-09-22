@@ -1308,7 +1308,7 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Movies| Playlists
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="https://clearjav.com/torrents/download/"]'
+        downloadElementsSelector: 'a[href^="https://clearjav.com/torrents/download/"]',
     }
 
     unit3dTrackerHandler(trackerHandlingOptions)
@@ -4554,7 +4554,7 @@ function unit3dTrackerHandler({
 
     }
 
-    // Set the default values to use when no over-rides have been specified
+    // Set the default values to use when none have been specified
     bunnyButtonText == 'automatic' ? bunnyButtonText = ' 🐰 ' : null
     bunnyButtonAddStyles == 'automatic' ? bunnyButtonAddStyles = '' : null
     bunnyButtonFontSize == 'automatic' ? bunnyButtonFontSize = 'inherit' : null
@@ -4589,7 +4589,11 @@ function unit3dTrackerHandler({
                             // Hide the <li> parentElement to avoid a empty gap
                             SETTINGS.hideDL == true ? downloadElement.parentElement.style.display = 'none' : null
 
-                        } 
+                        } else {
+                            // Place BunnyButton alongside the downloadElement
+
+                            downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
+                        }
 
                         if ( document.querySelector('li.torrent__seeders.torrent-activity-indicator--seeding') != null ) {
                             // This is a Seeding torrent
