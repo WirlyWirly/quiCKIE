@@ -1698,8 +1698,7 @@ if ( primaryDomain == 'animebytes' ) {
         trackerHandlingOptions.detailsPageParentPlacement = false
 
         trackerHandlingOptions.bunnyButtonText = ' 🐰 '
-        trackerHandlingOptions.bunnyButtonAddStyles = `
-          --ds-card-chip-color: #a78bfa;`
+        trackerHandlingOptions.bunnyButtonAddStyles = ''
         trackerHandlingOptions.bunnyButtonAddClasses = ["deep-space-user-card__chip"]
 
     }
