@@ -1699,15 +1699,8 @@ if ( primaryDomain == 'animebytes' ) {
 
         trackerHandlingOptions.bunnyButtonText = ' 🐰 '
         trackerHandlingOptions.bunnyButtonAddStyles = `
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: var(--ds-surface, #0c1829);
-            padding: 4px 6px;
-            font-size: 11px!important;
-            font-weight: bold;
-            border: 1px solid var(--ds-border, rgba(255, 255, 255, .06));
-            color: var(--ds-text-muted, rgba(240, 244, 248, .65));`
+          --ds-card-chip-color: #a78bfa;`
+        trackerHandlingOptions.bunnyButtonAddClasses = ["deep-space-user-card__chip"]
 
     }
 
