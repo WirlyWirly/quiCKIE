@@ -321,13 +321,7 @@
 // @match   https://nebulance.io/details.php*
 
 //          nekoBT
-// @match   https://nekobt.to/
-// @match   https://nekobt.to/torrents/*
-// @match   https://nekobt.to/search*
-// @match   https://nekobt.to/media/*
-// @match   https://nekobt.to/groups/*
-// @match   https://nekobt.to/users/*
-// @match   https://nekobt.to/invites/*
+// @match   https://nekobt.to/*
 
 //          Nyaa
 // @include /^https://(sukebei\.)?nyaa\.\w+/.*/
@@ -440,11 +434,7 @@
 // @match   https://www.torrentleech.org/torrent*
 
 //          Torrent Network
-// @match   https://tntracker.org/browse/*
-// @match   https://tntracker.org/torrent/*
-// @match   https://tntracker.org/music/*
-// @match   https://tntracker.org/xxx/*
-// @match   https://tntracker.org/search/*
+// @match   https://tntracker.org/*
 
 //          TV-Vault
 // @match   https://tv-vault.me/torrents.php?id=*
@@ -2016,6 +2006,7 @@ if ( primaryDomain == 'animebytes' ) {
         trackerHandlingOptions.bunnyButtonAddStyles = `
           font-size: 12px;
           display: inline-block;
+          margin-left: 5px;
           `
         trackerHandlingOptions.bunnyButtonAddClasses = ["btn", "btn-sm", "btn-primary"]
 
@@ -2138,18 +2129,56 @@ if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- nekoBT -----------------------------------
     // Homepage | Browse | Details | Media | User | Group
     
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="/api/v1/torrents/"]',
-        enablePaginationLooping: true
-    }
+    function nekoBTHandler() {
+    
+            let trackerHandlingOptions = {
+                downloadElementsSelector: 'a[href^="/api/v1/torrents/"]'
+            }
+    
+            if ( document.location.pathname.match(/\/torrents\/\d+/) ) {
+                // Torrent details page
+    
+                trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
+                trackerHandlingOptions.elementsSeparator = ' or '
 
-    if ( pageURL.match(/\/torrents\/\d+/) ) {
-      trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
-      trackerHandlingOptions.bunnyButtonAddClasses = ["link-blue"]
-      trackerHandlingOptions.elementsSeparator = ' or '
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
+                trackerHandlingOptions.afterBunnyButtonCreation = function(loggedElements) {
+                
+                        for ( let pairedElements of loggedElements.pairedElements ) {
+                
+                            let bunnyButton = pairedElements.bunnyButton
+                            let downloadElement = pairedElements.downloadElement
+                
+                            if ( downloadElement.href.endsWith('?public=true') ) {
+                                // Public download
+                                bunnyButton.classList.add('link-blue')
+                
+                            } else {
+                                // Private download
+                                bunnyButton.classList.add('link-purple')
+                            }
+                        }
+                    }
+            }
+    
+            quickieTrackerHandler(trackerHandlingOptions)
+        }
+    
+        nekoBTHandler()
+    
+        let observer = new MutationObserver(function(mutations) {
+    
+            let nodesAdded = mutations.some(mutation => mutation.addedNodes.length > 0)
+    
+            if ( nodesAdded ) {
+                nekoBTHandler()
+            }
+    
+        })
+    
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        })
 
 } else if ( primaryDomain == 'nyaa' ) {
     // ----------------------------------- Nyaa -----------------------------------
