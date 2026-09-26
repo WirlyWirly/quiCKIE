@@ -302,7 +302,6 @@
 
 //          MonikaDesign
 // @match   https://monikadesign.uk/
-// @match   https://monikadesign.uk/*/bookmarks*
 // @match   https://monikadesign.uk/playlists/*
 // @match   https://monikadesign.uk/torrents*
 // @match   https://monikadesign.uk/top10*
@@ -1996,7 +1995,7 @@ if ( primaryDomain == 'animebytes' ) {
     // Bookmarks | Browse | Details | Playlists | Top 10
 
     let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href*="/download"]'
+        downloadElementsSelector: 'a[href*="https://monikadesign.uk/torrents/download/"]'
     }
 
     if ( pagePath.match(/\/torrents\/\d+/) ) {
