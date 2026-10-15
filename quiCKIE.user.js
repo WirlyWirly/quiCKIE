@@ -1154,7 +1154,7 @@ if ( primaryDomain == 'animebytes' ) {
             trackerHandlingOptions.seedingStatusSelector = `
                 downloadElement.classList.contains('btn-primary')
                     ? document.querySelector('div.fw-semibold')?.textContent.match(/Seeding/)
-                    : null)
+                    : null
             `
     
             trackerHandlingOptions.afterBunnyButtonCreation = function(loggedElements) {
@@ -1625,8 +1625,6 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://exoticaz.to/download/torrent/"]',
-        freeleechStatusSelector: `downloadElement.closest('tr.class').querySelector('i[data-original-title="Free Download"], i[title="Free Download"]')`, //not working
-        seedingStatusSelector: `downloadElement.closest('tr.success')`, //not working
     }
 
     if ( pageURL.match(/\/torrent\/\d+/) ) {
@@ -1638,8 +1636,6 @@ if ( primaryDomain == 'animebytes' ) {
           margin-left: 4px;
         `
         trackerHandlingOptions.bunnyButtonAddClasses = ["btn", "btn-xs", "btn-info"]
-        trackerHandlingOptions.freeleechStatusSelector = `document.querySelector('i[data-original-title="Free Download"]')` //not working
-        trackerHandlingOptions.seedingStatusSelector = `document.querySelector('a[title="Active Torrents"]')` //not working
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -4856,7 +4852,8 @@ function unit3dTrackerHandler({
                             downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
                         }
 
-                        if ( document.querySelector('li.torrent__seeders.torrent-activity-indicator--seeding') != null ) {
+                        if ( document.querySelector(`li.torrent__seeders.torrent-activity-indicator--seeding,
+                            a[title="Seeding"]`) != null ) {
                             // This is a Seeding torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
@@ -4940,7 +4937,8 @@ function unit3dTrackerHandler({
                         try {
                             // View types: List | Grouped
 
-                            if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--seeding') != null ) {
+                            if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--seeding,
+                              a[title="Seeding"]`) != null ) {
                                 // This is a Seeding torrent
                                 bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
