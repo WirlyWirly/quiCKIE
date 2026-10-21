@@ -4880,7 +4880,8 @@ function unit3dTrackerHandler({
                             // This is a Seeding torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                        } else if ( document.querySelector('li.torrent__completed.torrent-activity-indicator--completed') != null ) {
+                        } else if ( document.querySelector(`li.torrent__completed.torrent-activity-indicator--completed,
+                            a[title="Downloaded but Not Seeding"]`) != null ) {
                             // This is a Snatched torrent
                             bunnyButtonTorrentStatus(bunnyButton, 'snatched')
 
@@ -4965,7 +4966,8 @@ function unit3dTrackerHandler({
                                 // This is a Seeding torrent
                                 bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                            } else if ( downloadElement.closest('tr').querySelector('td.torrent-activity-indicator--completed') != null ) {
+                            } else if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--completed,
+                              a[title="Downloaded but Not Seeding"]`) != null ) {
                                 // This is a Snatched torrent
                                 bunnyButtonTorrentStatus(bunnyButton, 'snatched')
 
