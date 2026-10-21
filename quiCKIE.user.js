@@ -1138,6 +1138,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://animez.to/torrents/"][href$="/download"]',
         freeleechStatusSelector: `downloadElement.closest('tr').querySelector('span[data-bs-original-title="Free Download"]')`,
         seedingStatusSelector: `downloadElement.closest('tr[data-history-status="seeding"]')`,
+        snatchedStatusSelector: `downloadElement.closest('tr').querySelector('span[data-bs-original-title="Downloaded"]')`,
     }
 
     if ( pageURL.match(/\/torrents\/\d+/) ) {
@@ -1154,6 +1155,12 @@ if ( primaryDomain == 'animebytes' ) {
             trackerHandlingOptions.seedingStatusSelector = `
                 downloadElement.classList.contains('btn-primary')
                     ? document.querySelector('div.fw-semibold')?.textContent.match(/Seeding/)
+                    : null
+            `
+
+            trackerHandlingOptions.snatchedStatusSelector = `
+                downloadElement.classList.contains('btn-primary')
+                    ? document.querySelector('div.fw-semibold')?.textContent.match(/Downloaded/)
                     : null
             `
 
@@ -1213,6 +1220,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://avistaz.to/download/torrent/"]',
         freeleechStatusSelector: `downloadElement.closest('tr').querySelector('i[data-original-title="Free Download"], i[title="Free Download"]')`,
         seedingStatusSelector: `downloadElement.closest('tr.success')`,
+        snatchedStatusSelector: `downloadElement.closest('tr.warning')`
     }
 
     // Movie and TV shows details page, both of which have pagination
@@ -1228,6 +1236,7 @@ if ( primaryDomain == 'animebytes' ) {
       trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
       trackerHandlingOptions.freeleechStatusSelector = `document.querySelector('i[data-original-title="Free Download"]')`
       trackerHandlingOptions.seedingStatusSelector = `document.querySelector('a[title="Active Torrents"]')`
+      trackerHandlingOptions.snatchedStatusSelector = `document.querySelector('a[title="Download History"]')`
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -1392,6 +1401,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://cinemaz.to/download/torrent/"]',
         freeleechStatusSelector: `downloadElement.closest('tr').querySelector('i[data-original-title="Free Download"], i[title="Free Download"]')`,
         seedingStatusSelector: `downloadElement.closest('tr.success')`,
+        snatchedStatusSelector: `downloadElement.closest('tr.warning')`,
     }
 
     // Movie or TV shows details page, both of which have pagination
@@ -1407,6 +1417,7 @@ if ( primaryDomain == 'animebytes' ) {
       trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
       trackerHandlingOptions.freeleechStatusSelector = `document.querySelector('i[data-original-title="Free Download"]')`
       trackerHandlingOptions.seedingStatusSelector = `document.querySelector('a[title="Active Torrents"]')`
+      trackerHandlingOptions.snatchedStatusSelector = `document.querySelector('a[title="Download History"]')`
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -2371,6 +2382,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://privatehd.to/download/torrent/"]',
         freeleechStatusSelector: `downloadElement.closest('tr').querySelector('i[data-original-title="Free Download"], i[title="Free Download"]')`,
         seedingStatusSelector: `downloadElement.closest('tr.success')`,
+        snatchedStatusSelector: `downloadElement.closest('tr.warning')`,
     }
 
     // Movie or TV shows details page, both of which have pagination
@@ -2386,6 +2398,7 @@ if ( primaryDomain == 'animebytes' ) {
         trackerHandlingOptions.bunnyButtonText = '🐰 quiCKIE'
         trackerHandlingOptions.freeleechStatusSelector = `document.querySelector('i[data-original-title="Free Download"]')`
         trackerHandlingOptions.seedingStatusSelector = `document.querySelector('a[title="Active Torrents"]')`
+        trackerHandlingOptions.snatchedStatusSelector = `document.querySelector('a[title="Download History"]')`
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
