@@ -2524,6 +2524,16 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href*="/download"]'
     }
 
+    if ( pagePath.match(/\/torrents\/\d+/) ) {
+        // This is a details page, so apply styling to the only bunnyButton
+
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            font-size: 13px;
+          `
+        trackerHandlingOptions.bunnyButtonAddClasses = ["form__button", "form__button--outlined", "form__button--centered"]
+
+    }
+
     unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'secret-cinema' ) {
