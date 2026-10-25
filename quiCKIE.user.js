@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.54
+// @version     1.55
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -976,7 +976,7 @@ const settingsPanelTrackers = [
 ]
 
 
-// =================================== quiCKIE SETTINGS ======================================
+// =================================== STARTUP ======================================
 
 // The domain of the current site, which MUST be registerd to one of the trackers in the settingsPanelTrackers array
 // Example: https://broadcasthe.net/ --> broadcasthe
@@ -985,8 +985,11 @@ const trackerDomain = document.location.hostname.match(/^(\w+\.)?(.+?)\..+$/)[2]
 // A simple logger, which will only console log messages when it has been enabled above
 let logger = new simpleLogger({ enabled: verboseConsoleLogging, scriptName: 'quiCKIE'})
 
-// Everything related to the GM_config library, which is used for saving and creating the settings panel: https://github.com/sizzlemctwizzle/GM_config
-let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = createGMConfigSettingsPanel(trackerDomain)
+// Match the current trackerDomain to a registered tracker in the settingsPanelTrackers[] array, while also generating the global cross-reference arrays\objects used throughout the script
+let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ] = determinePrimaryDomain(trackerDomain)
+
+// Everything related to 'GM_config', which is the library used for persisting settings and creating the quiCKIE settings panel: https://github.com/sizzlemctwizzle/GM_config
+initializeGMConfig()
 
 // For the current tracker, populate the SETTINGS object and determine which presetMenuItems apply
 let SETTINGS = populateSettingsObject(primaryDomain)
@@ -1003,7 +1006,7 @@ const pagePath = document.location.pathname
 // =================================== TRACKER SPECIFIC HANDLING ======================================
 
 // @trackerSpecificHandling
-// Because the primaryDomain is unique for each quiCKIE supported tracker, we can use it to determine what tracker this is and how to proceed from there
+// Using the unique primaryDomain of a registered tracker in the settingsPanelTrackers[] array, define the site-specific options necessary to create BunnyButtons
 if ( primaryDomain == 'animebytes' ) {
     // ----------------------------------- AnimeBytes -----------------------------------
     // Bookmarks | Browse | Collages | Company | Seeding\Snatched\Leeching | Series
@@ -2762,40 +2765,38 @@ if ( SETTINGS.thirdPartyScan != 'Off' ) {
 
 // =================================== SCRIPT FUNCTIONS ======================================
 
-function createGMConfigSettingsPanel(trackerDomain) {
-    // Generate and initialize the GM_config settings panel. It has been done in this function for code cleanliness.
+function determinePrimaryDomain(trackerDomain) {
+    // Match the provided trackerDomain against a registered primaryDomain from the settingsPanelTrackers[] array
 
-    // These array\objects will later allow us to easily cross-reference the settingsPanelTrackers data
+    // These arrays\objects will later allow us to easily cross-reference the data in the settingsPanelTrackers[] array, which is done throughout the script
     let allPrimaryDomains = []
     let allTrackerNames = []
     let primaryDomainToTrackerName = {}
     let primaryDomainToHomepage = {}
     let trackerNameToPrimaryDomain = {}
 
-    let primaryDomain, registeredTracker = false
+    let primaryDomain = false
     for ( let tracker of settingsPanelTrackers ) {
-        // Check the current trackerDomain against all the registered trackers to retrieve the trackers primaryDomain
+        // Compare the provided trackerDomain against all registered trackers for a matching primaryDomain
 
         let trackerName = tracker.trackerName
-        let settingsId = tracker.primaryDomain.toLowerCase().trim()
+        let registeredPrimaryDomain = tracker.primaryDomain.toLowerCase().trim()
         let otherDomains = tracker.otherDomains
 
         // Populate the array\objects that will be returned and made global
-        allPrimaryDomains.push(settingsId)
+        allPrimaryDomains.push(registeredPrimaryDomain)
         allTrackerNames.push(trackerName.toLowerCase())
-        primaryDomainToTrackerName[settingsId] = trackerName
-        primaryDomainToHomepage[settingsId] = tracker.homepageURL
-        trackerNameToPrimaryDomain[trackerName.toLowerCase()] = settingsId
+        primaryDomainToTrackerName[registeredPrimaryDomain] = trackerName
+        primaryDomainToHomepage[registeredPrimaryDomain] = tracker.homepageURL
+        trackerNameToPrimaryDomain[trackerName.toLowerCase()] = registeredPrimaryDomain
 
-        if ( settingsId == trackerDomain ) {
+        if ( registeredPrimaryDomain == trackerDomain ) {
             // This trackerDomain matches the primaryDomain
-            primaryDomain = settingsId
-            registeredTracker = true
+            primaryDomain = registeredPrimaryDomain
 
         } else if ( otherDomains != undefined && otherDomains.includes(trackerDomain) ) {
             // This trackerDomain did not match the primaryDomain, but there are otherDomains and a match was found
-            primaryDomain = settingsId
-            registeredTracker = true
+            primaryDomain = registeredPrimaryDomain
 
         }
 
@@ -2804,7 +2805,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
     logger.info(`primaryDomain: ${primaryDomain}`)
 
     // Verify that the trackerDomain is registered as an entry in the settingsPanelTrackers object, if not then abort all further exectuion of this script
-    if ( registeredTracker == false ) { throw `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site, '${trackerDomain}', does not belong to a tracker in the quiCKIE settings panel.\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, then Step #2 of the 'Adding a New Tracker' guide was done incorrectly. The domain of this site, '${trackerDomain}', must be registered to a tracker, either as the 'primaryDomain' or as part of the 'otherDomains'` }
+    if ( primaryDomain == false ) { throw `---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe domain of the current site, '${trackerDomain}', does not belong to a tracker in the quiCKIE settings panel.\n\nAll further quiCKIE code will be aborted as to prevent further errors.\n\nℹ️ If you are seeing this message while adding a new tracker, then Step #2 of the 'Adding a New Tracker' guide was done incorrectly. The domain of this site, '${trackerDomain}', must be registered to a tracker, either as the 'primaryDomain' or as part of the 'otherDomains'\n\nExample: The primaryDomain of 'https://broadcasthe.net/' is 'broadcasthe'` }
 
     // Determine the saved number of preset fields that should be generated in the settings panel and presets-menu
     let presetCount
@@ -2822,9 +2823,21 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
     logger.info(`presetCount: ${presetCount}`)
 
-    // @trackerFieldGeneration
-    // This array will later be used to generate the <th> for each column in the settings panel. Create an entry in
+    return [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
+
+}
+
+
+function initializeGMConfig() {
+    // For each tracker\preset, generate its settings fields and then provide those fields to GM_config during initialization. GM_config is used to persist user settings and display the quiCKIE settings panel
+    // GM_config: https://github.com/sizzlemctwizzle/GM_config
+
+    // This array of suffixes will be used again to generate the <th> columns for the Trackers table of the settings panel
     const trackerFieldSuffixes = ['category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'paginationLoop', 'leftClick', 'thirdPartyScan', 'hideDL', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
+
+    // @trackerFieldGeneration
+    // The primaryDomain of each tracker is used as the identifer for settings belonging to that tracker, suffixed by the setting name from the trackerFieldSuffixes[] array above
+    // Example: The 'RatioLimit' for 'BroadCasTheNet' is saved as 'broadcasthe-ratioLimit'
     let gmConfigTrackerFields = {}
     for ( let primaryDomain of allPrimaryDomains ) {
         // For each tracker (primaryDomain) in the settingsPanelTrackers object, generate the fields that will be used by GM_config() to save\load settings for that primaryDomain
@@ -2912,8 +2925,12 @@ function createGMConfigSettingsPanel(trackerDomain) {
 
     }
 
-    // @presetFieldGeneration
+    // This array of suffixes will be used again to generate the <th> columns for the Presets table of the settings panel
     const presetFieldSuffixes = ['name', 'presetTrackers', 'category', 'savePath', 'tags', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'startPaused', 'subFolder', 'seqPieces', 'autoTMM', 'skipHash']
+
+    // @presetFieldGeneration
+    // The loop number is used as the identifer for settings belonging to that preset, suffixed by the setting name from the presetFieldSuffixes[] array above
+    // Example: The 'RatioLimit' for preset #3 in the Presets table of the settings panel is saved as 'preset-3-ratioLimit'
     let gmConfigPresetsFields = {}
     for (let i = 1; i <= presetCount; i++) {
         // --- GM_config() Fields ---
@@ -3269,7 +3286,7 @@ function createGMConfigSettingsPanel(trackerDomain) {
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
         'events': {
             'open': function (doc) {
-                // Actions to take When GM_config.open() is called...
+                // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
 
                 reloadWindow = false
 
@@ -4071,9 +4088,6 @@ function createGMConfigSettingsPanel(trackerDomain) {
     GM_registerMenuCommand('🛠️ Settings', () => {
         GM_config.open()
     })
-
-
-    return [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerName, primaryDomainToHomepage, trackerNameToPrimaryDomain, presetCount ]
 
 }
 

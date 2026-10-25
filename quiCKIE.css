@@ -18,7 +18,7 @@
     --inputFieldText: #191d2a;
     --inputFieldBorder: #ddd;
     --inputFieldInnerShadow: #949494;
-    --inputFieldFocusShadow: #7aa8ff;
+    --inputFieldFocusShadow: #a8afbd;
 
     --inputFieldDisabledText: #525252;
     --inputFieldDisabledBackground: #8b8e94;
@@ -131,7 +131,7 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 #quiCKIE_config_field_globalMiddleClickAction,
 #quiCKIE_config_field_globalLeftClickAction,
 #quiCKIE_config_field_bunnyButtonPlacement {
-    /* Click inputs */
+    /* Dropdown inputs */
     background: var(--inputFieldBackground);
     border-radius: 3px;
     border: 1px solid var(--inputFieldBorder);
