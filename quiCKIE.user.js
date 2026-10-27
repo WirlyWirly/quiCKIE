@@ -2402,7 +2402,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://lst.gg/torrents/download"]'
     }
 
-    if ( pagePath.match(/\/torrents[^/].*)$/) ) {
+    if ( pagePath.match(/\/torrents[^/]*$/) ) {
         // Apply styling to the only bunnyButton
 
         trackerHandlingOptions.bunnyButtonText = '🐰'
@@ -5359,7 +5359,7 @@ function unit3dTrackerHandler({
             width: 98%;` : null
 
     } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
-        // The search parge or homepage, both of which require a MutationObserver
+        // The search page or homepage, both of which require a MutationObserver
 
         let observer = new MutationObserver( function(mutations) {
             // Functionality to run when changes are detected to the target element
