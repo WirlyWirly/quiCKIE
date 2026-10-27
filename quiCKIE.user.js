@@ -2402,7 +2402,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://lst.gg/torrents/download"]'
     }
 
-    if ( pageURL.match(/\/torrents(?:\?page=\d+)?$/) ) {
+    if ( pagePath.match(/\/torrents[^/].*)$/) ) {
         // Apply styling to the only bunnyButton
 
         trackerHandlingOptions.bunnyButtonText = '🐰'
