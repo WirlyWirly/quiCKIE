@@ -1263,7 +1263,8 @@ let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
 const emojiRegex = new RegExp('🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|ℹ️|💾|🧀', 'g')
 
-// These variables are useful for figuring out exactly what page you are on using pageURL.match(/regex/)
+// These variables are useful to figure out exactly what page you are on using pageURL.match(/regex/)
+// ℹ️ Tip: The '.match()' method is a "contains" type search, meaning it will return 'true' if the regex matches any part of the text
 const pageURL = document.URL // Example: "https://passthepopcorn.me/torrents.php?id=123&torrentid=12345"
 const pagePath = document.location.pathname // Example: "/torrents.php"
 
