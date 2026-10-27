@@ -1263,9 +1263,9 @@ let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
 const emojiRegex = new RegExp('🐰|🌱|🍁|📢|💎|💸|🤝|🌎|🧲|🧑|🕓|✔️|❌|ℹ️|💾|🧀', 'g')
 
-// The full URL and Path of the current page, useful for figuring out exactly what page you are on using pageURL.match(/regex/)
-const pageURL = document.URL
-const pagePath = document.location.pathname
+// These variables are useful for figuring out exactly what page you are on using pageURL.match(/regex/)
+const pageURL = document.URL // Example: "https://passthepopcorn.me/torrents.php?id=123&torrentid=12345"
+const pagePath = document.location.pathname // Example: "/torrents.php"
 
 
 // =================================== TRACKER SPECIFIC HANDLING ======================================
@@ -2402,7 +2402,7 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="https://lst.gg/torrents/download"]'
     }
 
-    if ( pagePath.match(/\/torrents[^/]*$/) ) {
+    if ( pagePath.match(/\/torrents$/) ) {
         // Apply styling to the only bunnyButton
 
         trackerHandlingOptions.bunnyButtonText = '🐰'
@@ -5358,8 +5358,8 @@ function unit3dTrackerHandler({
             padding: 1.5%;
             width: 98%;` : null
 
-    } else if ( pagePath.match(/(\/?|\/torrents[^/]*)$/) && SETTINGS.paginationLoop < 500 ) {
-        // The search page or homepage, both of which require a MutationObserver
+    } else if ( pagePath.match(/(\/?|\/torrents)$/) && SETTINGS.paginationLoop < 500 ) {
+        // The homepage or search page, both of which require a MutationObserver
 
         let observer = new MutationObserver( function(mutations) {
             // Functionality to run when changes are detected to the target element
