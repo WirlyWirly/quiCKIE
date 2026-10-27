@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.55
+// @version     1.56
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -15,6 +15,14 @@
 // ----------------------------------- Matches --------------------------------------
 
 // Adding a New Tracker: https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker
+
+//          52Movie
+// @match   https://www.52movie.top/details.php*
+// @match   https://www.52movie.top/torrents.php*
+
+//          52PT
+// @match   https://52pt.site/details.php*
+// @match   https://52pt.site/torrents.php*
 
 //          Aither
 // @match   https://aither.cc/
@@ -67,6 +75,10 @@
 //          BakaBT
 // @match   https://bakabt.me/torrent/*
 
+// 			Baozi
+// @match   https://p.t-baozi.cc/details.php*
+// @match   https://p.t-baozi.cc/torrents.php*
+
 //          Beyond-HD
 // @match   https://beyond-hd.me/
 // @match   https://beyond-hd.me/bookmarks*
@@ -110,7 +122,7 @@
 // @match   https://broadcasthe.net/series.php?id=*
 // @match   https://broadcasthe.net/torrents.php*
 
-//          BTSCHOOL
+//          BTSchool
 // @match   https://pt.btschool.club/details.php*
 // @match   https://pt.btschool.club/torrents.php*
 
@@ -119,6 +131,10 @@
 // @match   https://canal-street.org/top10.php*
 // @match   https://canal-street.org/artist.php*
 // @match   https://canal-street.org/bookmarks.php*
+
+//          CarPT
+// @match   https://carpt.net/details.php*
+// @match   https://carpt.net/torrents.php*
 
 //          Cinematik
 // @match   https://cinematik.net/
@@ -147,11 +163,22 @@
 // @match   https://concertos.live/playlists/*
 // @match   https://concertos.live/torrents*
 
+//          CZTeam
+// @match   https://czteam.me/browse.php*
+// @match   https://czteam.me/details.php*
+
 //          DarkPeers
 // @match   https://darkpeers.org/
 // @match   https://darkpeers.org/*/bookmarks*
 // @match   https://darkpeers.org/playlists/*
 // @match   https://darkpeers.org/torrents*
+
+//          DesiTorrents
+// @match   https://desitorrents.tv/
+// @match   https://desitorrents.tv/*/bookmarks*
+// @match   https://desitorrents.tv/title/*
+// @match   https://desitorrents.tv/playlists/*
+// @match   https://desitorrents.tv/torrents*
 
 //          DeepBassNine
 // @match   https://www.deepbassnine.com/artist.php?id=*
@@ -202,6 +229,9 @@
 // @match   https://gazellegames.net/torrents.php*
 // @match   https://gazellegames.net/bookmarks.php*
 
+//          Generation-Free
+// @match   https://generation-free.org/torrents/download_check*
+
 //          GreatPosterWall
 // @match   https://greatposterwall.com/torrents.php*
 
@@ -222,10 +252,28 @@
 // @match   https://hdbits.org/film/info?id=*
 // @match   https://hdbits.org/show.php?id=*
 
+//          HD-Torrents
+// @match   https://hd-torrents.org/
+// @match   https://hd-torrents.org/torrents.php*
+// @match   https://hd-torrents.org/details.php**
+
+//          HDZero
+// @match   https://hdzero.org/
+// @match   https://hdzero.org/*/bookmarks
+// @match   https://hdzero.org/playlists/*
+// @match   https://hdzero.org/torrents*
+
 //          HHClub
 // @match   https://hhanclub.net/torrents.php*
 // @match   https://hhanclub.net/details.php*
 // @match   https://hhanclub.net/rescue.php*
+
+//          HomieHelpDesk
+// @match   https://homiehelpdesk.net/
+// @match   https://homiehelpdesk.net/*/bookmarks*
+// @match   https://homiehelpdesk.net/movies/*
+// @match   https://homiehelpdesk.net/playlists/*
+// @match   https://homiehelpdesk.net/torrents*
 
 //          InfinityHD
 // @match   https://infinityhd.net/
@@ -262,6 +310,10 @@
 // @match   https://crabpt.vip/details.php*
 // @match   https://crabpt.vip/special.php*
 
+//          Kufei
+// @match   https://kufei.org/details.php*
+// @match   https://kufei.org/torrents.php*
+
 //          Kufirc
 // @match   https://kufirc.com/bookmarks.php*
 // @match   https://kufirc.com/collages.php*
@@ -273,6 +325,10 @@
 // @match   https://lat-team.com/*/bookmarks
 // @match   https://lat-team.com/playlists/*
 // @match   https://lat-team.com/torrents*
+
+//          LongPT
+// @match   https://longpt.org/details.php*
+// @match   https://longpt.org/torrents.php*
 
 //          LST
 // @match   https://lst.gg/
@@ -292,13 +348,33 @@
 // @match   https://malayabits.cc/playlists/*
 // @match   https://malayabits.cc/torrents*
 
+//          March
+// @match   https://duckboobee.org/details.php*
+// @match   https://duckboobee.org/torrents.php*
+
 //          Materialize
 // @match   https://materialize.is/collages.php?id=*
 // @match   https://materialize.is/top10.php*
 // @match   https://materialize.is/torrents.php*
 
+//          MidnightScene
+// @match   https://midnightscene.cc/
+// @match   https://midnightscene.cc/*/bookmarks*
+// @match   https://midnightscene.cc/playlists/*
+// @match   https://midnightscene.cc/torrents*
+
+//          Milnueve
+// @match   https://tracker.milnueve.cc/
+// @match   https://tracker.milnueve.cc/*/bookmarks*
+// @match   https://tracker.milnueve.cc/playlists/*
+// @match   https://tracker.milnueve.cc/torrents*
+
 //          MirCrew
 // @match   https://mircrew-releases.org/*
+
+//          Muxuege
+// @match   https://pt.muxuege.org/details.php*
+// @match   https://pt.muxuege.org/torrents.php*
 
 //          MonikaDesign
 // @match   https://monikadesign.uk/
@@ -321,6 +397,12 @@
 
 //          nekoBT
 // @match   https://nekobt.to/*
+
+//          NordicQ
+// @match   https://nordicq.org/
+// @match   https://nordicq.org/*/bookmarks*
+// @match   https://nordicq.org/playlists/*
+// @match   https://nordicq.org/torrents*
 
 //          Nyaa
 // @include /^https://(sukebei\.)?nyaa\.\w+/.*/
@@ -403,6 +485,12 @@
 // @match   https://rocket-hd.cc/playlists/*
 // @match   https://rocket-hd.cc/torrents*
 
+//          Samaritano
+// @match   https://samaritano.cc/
+// @match   https://samaritano.cc/*/bookmarks
+// @match   https://samaritano.cc/playlists/*
+// @match   https://samaritano.cc/torrents*
+
 //          Secret-Cinema
 // @match   https://secret-cinema.pw/artist.php?id=*
 // @match   https://secret-cinema.pw/collages.php?id=*
@@ -415,10 +503,26 @@
 // @match   https://seedpool.org/playlists/*
 // @match   https://seedpool.org/torrents*
 
+//          ShareIsland
+// @match   https://shareisland.org/
+// @match   https://shareisland.org/*/bookmarks*
+// @match   https://shareisland.org/playlists/*
+// @match   https://shareisland.org/torrents*
+
 //          Simurg
 // @match   https://simurg.world/
 // @match   https://simurg.world/torrents.php*
 // @match   https://simurg.world/top10.php*
+
+//          SkipTheCommercials
+// @match   https://skipthecommercials.xyz/
+// @match   https://skipthecommercials.xyz/*/bookmarks*
+// @match   https://skipthecommercials.xyz/playlists/*
+// @match   https://skipthecommercials.xyz/torrents*
+
+//          SoulVoiceClub
+// @match   https://pt.soulvoice.club/details.php*
+// @match   https://pt.soulvoice.club/torrents.php*
 
 //          SportsCult
 // @match   https://sportscult.org/index.php?page=torrents*
@@ -456,6 +560,24 @@
 // @match   https://upload.cx/*/bookmarks
 // @match   https://upload.cx/playlists/*
 // @match   https://upload.cx/torrents*
+
+//          VietMediaF
+// @match   https://tracker.vietmediaf.store/
+// @match   https://tracker.vietmediaf.store/*/bookmarks
+// @match   https://tracker.vietmediaf.store/playlists/*
+// @match   https://tracker.vietmediaf.store/torrents*
+
+//          Yu-Scene
+// @match   https://yu-scene.net/
+// @match   https://yu-scene.net/*/bookmarks*
+// @match   https://yu-scene.net/playlists/*
+// @match   https://yu-scene.net/torrents*
+
+//          Zenith
+// @match   https://znth.cx/
+// @match   https://znth.cx/*/bookmarks*
+// @match   https://znth.cx/playlists/*
+// @match   https://znth.cx/torrents*
 
 // ----------------------------------- Permissions --------------------------------------
 
@@ -501,6 +623,18 @@ const verboseConsoleLogging = false
 // @settingsPanelTrackers
 // Each entry below will be appear as a tracker row in the quiCKIE settings panel
 const settingsPanelTrackers = [
+
+    {
+        trackerName: '52Movie', // @AziRivzi
+        homepageURL: 'https://www.52movie.top',
+        primaryDomain: '52movie',
+    },
+
+    {
+        trackerName: '52PT', // @AziRivzi
+        homepageURL: 'https://52pt.site',
+        primaryDomain: '52pt',
+    },
 
     {
         trackerName: 'Aither', // @holy-elbow
@@ -557,6 +691,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Baozi', // @AziRivzi
+        homepageURL: 'https://p.t-baozi.cc',
+        primaryDomain: 't-baozi',
+    },
+
+    {
         trackerName: 'Beyond-HD', // @empUser
         homepageURL: 'https://beyond-hd.me',
         primaryDomain: 'beyond-hd',
@@ -587,7 +727,7 @@ const settingsPanelTrackers = [
     },
 
     {
-        trackerName: 'BTSCHOOL', // @verinikat
+        trackerName: 'BTSchool', // @verinikat
         homepageURL: 'https://pt.btschool.club',
         primaryDomain: 'btschool',
     },
@@ -596,6 +736,12 @@ const settingsPanelTrackers = [
         trackerName: 'CanalStreet', // @verinikat
         homepageURL: 'https://canal-street.org',
         primaryDomain: 'canal-street',
+    },
+
+    {
+        trackerName: 'CarPT', // @AziRivzi
+        homepageURL: 'https://carpt.net',
+        primaryDomain: 'carpt',
     },
 
     {
@@ -623,9 +769,21 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'CZTeam', // @AziRivzi
+        homepageURL: 'https://czteam.me',
+        primaryDomain: 'czteam',
+    },
+
+    {
         trackerName: 'DarkPeers', // @verinikat
         homepageURL: 'https://darkpeers.org',
         primaryDomain: 'darkpeers',
+    },
+
+    {
+        trackerName: 'DesiTorrents', // @AziRivzi
+        homepageURL: 'https://desitorrents.tv',
+        primaryDomain: 'desitorrents',
     },
 
     {
@@ -680,6 +838,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Generation-Free', // @AziRivzi
+        homepageURL: 'https://generation-free.org',
+        primaryDomain: 'generation-free',
+    },
+
+    {
         trackerName: 'GreatPosterWall', // @verinikat
         homepageURL: 'https://greatposterwall.com',
         primaryDomain: 'greatposterwall',
@@ -704,11 +868,28 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'HD-Torrents', // @AziRivzi
+        homepageURL: 'https://hd-torrents.org',
+        primaryDomain: 'hd-torrents',
+    },
+
+    {
+        trackerName: 'HDZero', // @AziRivzi
+        homepageURL: 'https://hdzero.org',
+        primaryDomain: 'hdzero',
+    },
+
+    {
         trackerName: 'HHClub', // @verinikat
         homepageURL: 'https://hhanclub.net',
         primaryDomain: 'hhanclub',
     },
 
+    {
+        trackerName: 'HomieHelpDesk', // @AziRivzi
+        homepageURL: 'https://homiehelpdesk.net',
+        primaryDomain: 'homiehelpdesk',
+    },
     {
         trackerName: 'InfinityHD', // @verinikat
         homepageURL: 'https://infinityhd.net',
@@ -752,6 +933,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Kufei', // @AziRivzi
+        homepageURL: 'https://kufei.org',
+        primaryDomain: 'kufei',
+    },
+
+    {
         trackerName: 'Kufirc', // @holy-elbow
         homepageURL: 'https://kufirc.com',
         primaryDomain: 'kufirc',
@@ -761,6 +948,12 @@ const settingsPanelTrackers = [
         trackerName: 'Lat-Team',
         homepageURL: 'https://lat-team.com',
         primaryDomain: 'lat-team',
+    },
+
+    {
+        trackerName: 'LongPT', // @AziRivzi
+        homepageURL: 'https://longpt.org',
+        primaryDomain: 'longpt',
     },
 
     {
@@ -782,15 +975,39 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'DuckBooBee', // @AziRivzi
+        homepageURL: 'https://duckboobee.org',
+        primaryDomain: 'duckboobee',
+    },
+
+    {
         trackerName: 'Materialize',
         homepageURL: 'https://materialize.is',
         primaryDomain: 'materialize',
     },
 
     {
+        trackerName: 'MidnightScene', // @AziRivzi
+        homepageURL: 'https://midnightscene.cc',
+        primaryDomain: 'midnightscene',
+    },
+
+    {
+        trackerName: 'Milnueve', // @AziRivzi
+        homepageURL: 'https://tracker.milnueve.cc',
+        primaryDomain: 'milnueve',
+    },
+
+    {
         trackerName: 'MirCrew', // @steventrux
         homepageURL: 'https://mircrew-releases.org',
         primaryDomain: 'mircrew-releases',
+    },
+
+    {
+        trackerName: 'Muxuege', // @AziRivzi
+        homepageURL: 'https://pt.muxuege.org',
+        primaryDomain: 'muxuege',
     },
 
     {
@@ -815,6 +1032,12 @@ const settingsPanelTrackers = [
         trackerName: 'nekoBT', // @SirWall
         homepageURL: 'https://nekobt.to',
         primaryDomain: 'nekobt',
+    },
+
+    {
+        trackerName: 'NordicQ', // @AziRivzi
+        homepageURL: 'https://nordicq.org',
+        primaryDomain: 'nordicq',
     },
 
     {
@@ -902,6 +1125,12 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'Samaritano',
+        homepageURL: 'https://samaritano.cc',
+        primaryDomain: 'samaritano',
+    },
+
+    {
         trackerName: 'Secret-Cinema', // @tartuffe
         homepageURL: 'https://secret-cinema.pw',
         primaryDomain: 'secret-cinema',
@@ -914,9 +1143,27 @@ const settingsPanelTrackers = [
     },
 
     {
+        trackerName: 'ShareIsland', // @AziRivzi
+        homepageURL: 'https://shareisland.org',
+        primaryDomain: 'shareisland',
+    },
+
+    {
         trackerName: 'Simurg', // @verinikat
         homepageURL: 'https://simurg.world',
         primaryDomain: 'simurg',
+    },
+
+    {
+        trackerName: 'SkipTheCommercials', // @AziRivzi
+        homepageURL: 'https://skipthecommercials.xyz',
+        primaryDomain: 'skipthecommercials',
+    },
+
+    {
+        trackerName: 'SoulVoice',  // @AziRivzi
+        homepageURL: 'https://pt.soulvoice.club',
+        primaryDomain: 'soulvoice',
     },
 
     {
@@ -971,6 +1218,24 @@ const settingsPanelTrackers = [
         trackerName: 'UploadCX', // @verinikat
         homepageURL: 'https://upload.cx',
         primaryDomain: 'upload',
+    },
+
+    {
+        trackerName: 'VietMediaF', // @AziRivzi
+        homepageURL: 'tracker.vietmediaf.store',
+        primaryDomain: 'vietmediaf',
+    },
+
+    {
+        trackerName: 'Yu-Scene', // @AziRivzi
+        homepageURL: 'https://yu-scene.net',
+        primaryDomain: 'yu-scene',
+    },
+
+    {
+        trackerName: 'ZNTH', // @AziRivzi
+        homepageURL: 'https://znth.cx',
+        primaryDomain: 'znth',
     },
 
 ]
@@ -1100,6 +1365,26 @@ if ( primaryDomain == 'animebytes' ) {
         // If quiCKIE should attach the right-click presetsMenu to the new bunnyButtons, useful for advanced presetsMenu manipulation
         bunnyButtonAttachPresetsMenu: true, // Default = true || Options = true | false
 
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == '52movie' ) {
+    // ----------------------------------- 52Movie -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == '52pt' ) {
+    // ----------------------------------- 52PT -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -1368,7 +1653,7 @@ if ( primaryDomain == 'animebytes' ) {
     quickieTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'btschool' ) {
-    // ----------------------------------- BTSCHOOL -----------------------------------
+    // ----------------------------------- BTSchool -----------------------------------
     // Browse | Details
 
     let trackerHandlingOptions = {
@@ -1383,6 +1668,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'carpt' ) {
+    // ----------------------------------- CARPT -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -1446,6 +1741,40 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'czteam' ) {
+    // ----------------------------------- CZTeam -----------------------------------
+    // Browse | Details | Rescues
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download/"]',
+    }
+
+    if ( pageURL.match(/browse\.php/) ) {
+        // Apply styling to only the bunnyButton
+
+        trackerHandlingOptions.bunnyButtonText = '🐰'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            font-size: 1.05rem;
+            position: relative;
+            top: -1.7px;
+            margin-left: 6px;
+        `
+    }
+
+    if ( pageURL.match(/details\.php/) ) {
+        // This is a details page, so apply styling to the only bunnyButton
+
+        trackerHandlingOptions.bunnyButtonText = '🐰'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            font-size: 1.65rem;
+            position: relative;
+            top: 1.5px;
+            margin-left: 5px;
+        `
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'darkpeers' ) {
     // ----------------------------------- DarkPeers -----------------------------------
     // Bookmarks | Browse | Details | Playlists
@@ -1456,6 +1785,18 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'desitorrents' ) {
+    // ----------------------------------- DesiTorrents -----------------------------------
+    // Bookmarks | Browse | Details | Movies| Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://desitorrents.tv/torrents/download/"]',
+    }
+
+	  // Check if the URL of the current page is for a torrent details page
+    pagePath.match(/\/torrents\/\w+/) ? trackerHandlingOptions.torrentDetailsPage = true : null
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 } else if ( primaryDomain == 'deepbassnine' ) {
     // ----------------------------------- DeepBassNine -----------------------------------
     // Album | Artist | Browse
@@ -1719,6 +2060,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'generation-free' ) {
+    // ----------------------------------- Generation-Free -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'greatposterwall' ) {
     // ----------------------------------- GreatPosterWall -----------------------------------
     // Browse | Details
@@ -1853,6 +2204,26 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'hd-torrents' ) {
+    // ----------------------------------- HD-Torrents -----------------------------------
+    // Browse | Details | Rescues
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'hdzero' ) {
+    // ----------------------------------- HDZero -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://hdzero.org/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'hhanclub' ) {
     // ----------------------------------- HHCLUB -----------------------------------
     // Browse | Details | Rescues
@@ -1980,6 +2351,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'kufei' ) {
+    // ----------------------------------- Kufei -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'kufirc' ) {
     // ----------------------------------- Kufirc -----------------------------------
     // Browse | Collages | Details | Top10
@@ -2003,12 +2384,32 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'longpt' ) {
+    // ----------------------------------- LongPT -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'lst' ) {
     // ----------------------------------- LST -----------------------------------
     // Bookmarks | Browse | Details | Homepage | Playlists | MediaHub
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://lst.gg/torrents/download"]'
+    }
+
+    if ( pageURL.match(/\/torrents(?:\?page=\d+)?$/) ) {
+        // Apply styling to the only bunnyButton
+
+        trackerHandlingOptions.bunnyButtonText = '🐰'
+        trackerHandlingOptions.bunnyButtonAddStyles = `
+            font-size: 2.10rem;
+            position: relative;
+            top: -1px;        `
     }
 
     unit3dTrackerHandler(trackerHandlingOptions)
@@ -2033,6 +2434,17 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler(trackerHandlingOptions)
 
+
+} else if ( primaryDomain == 'duckboobee' ) {
+    // ----------------------------------- March -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'materialize' ) {
     // ----------------------------------- Materialize -----------------------------------
     // Browse | Collages | Details | Top10
@@ -2044,6 +2456,26 @@ if ( primaryDomain == 'animebytes' ) {
 
     quickieTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'midnightscene' ) {
+    // ----------------------------------- MidnightScene -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://midnightscene.cc/torrents/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'milnueve' ) {
+    // ----------------------------------- Milnueve -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'mircrew-releases' ) {
     // ----------------------------------- MirCrew -----------------------------------
     // phpBB forum posts with public tracker magnet links
@@ -2052,6 +2484,16 @@ if ( primaryDomain == 'animebytes' ) {
         downloadElementsSelector: 'a[href^="magnet:?xt=urn:btih:"]',
         bunnyButtonFontSize: '240%',
         elementsSeparator: ' ',
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'muxuege' ) {
+    // ----------------------------------- Muxuege -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -2247,6 +2689,16 @@ if ( primaryDomain == 'animebytes' ) {
         childList: true,
         subtree: true
     })
+
+} else if ( primaryDomain == 'nordicq' ) {
+    // ----------------------------------- NordicQ -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
 
 } else if ( primaryDomain == 'nyaa' ) {
     // ----------------------------------- Nyaa -----------------------------------
@@ -2535,7 +2987,15 @@ if ( primaryDomain == 'animebytes' ) {
             font-size: 13px;
           `
         trackerHandlingOptions.bunnyButtonAddClasses = ["form__button", "form__button--outlined", "form__button--centered"]
-
+    }
+    
+    unit3dTrackerHandler(trackerHandlingOptions)
+    
+} else if ( primaryDomain == 'samaritano' ) {
+    // ----------------------------------- Samaritano -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
     }
 
     unit3dTrackerHandler(trackerHandlingOptions)
@@ -2560,6 +3020,16 @@ if ( primaryDomain == 'animebytes' ) {
 
     unit3dTrackerHandler(trackerHandlingOptions)
 
+} else if ( primaryDomain == 'shareisland' ) {
+    // ----------------------------------- ShareIsland -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
 } else if ( primaryDomain == 'simurg' ) {
     // ----------------------------------- Simurg -----------------------------------
     // Publication | Search | Top10
@@ -2567,6 +3037,26 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="torrents.php?action=download&id="]'
+    }
+
+    quickieTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'skipthecommercials' ) {
+    // ----------------------------------- SkipTheCommercials -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'soulvoice' ) {
+    // ----------------------------------- SoulVoiceClub -----------------------------------
+    // Browse | Details
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)
@@ -2740,6 +3230,36 @@ if ( primaryDomain == 'animebytes' ) {
 
     let trackerHandlingOptions = {
         downloadElementsSelector: 'a[href^="https://upload.cx/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'vietmediaf' ) {
+    // ----------------------------------- VietMediaF -----------------------------------
+    // Browse | Details | Homepage | Playlists | Similar
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href^="https://tracker.vietmediaf.store/torrents/download/"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'yu-scene' ) {
+    // ----------------------------------- Yu-Scene -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
+    }
+
+    unit3dTrackerHandler(trackerHandlingOptions)
+
+} else if ( primaryDomain == 'znth' ) {
+    // ----------------------------------- Zenith -----------------------------------
+    // Bookmarks | Browse | Details | Playlists
+
+    let trackerHandlingOptions = {
+        downloadElementsSelector: 'a[href*="/download"]'
     }
 
     unit3dTrackerHandler(trackerHandlingOptions)
