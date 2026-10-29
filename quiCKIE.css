@@ -178,7 +178,7 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 
 /* Tracker \ Preset */
 #quiCKIE_config_tracker_table_colg_col_tracker,
-#quiCKIE_config_preset_table_colg_col_preset {
+#quiCKIE_config_preset_table_colg_col_name {
     width: 135px;
     max-width: 135px;
 }
@@ -191,8 +191,8 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 /* Category */
 #quiCKIE_config_tracker_table_colg_col_category,
 #quiCKIE_config_preset_table_colg_col_category {
-    width: 130px;
-    max-width: 130px;
+    width: 120px;
+    max-width: 120px;
 }
 
 /* SavePath */
