@@ -16,10 +16,6 @@
 
 // Adding a New Tracker: https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker
 
-//          52Movie
-// @match   https://www.52movie.top/details.php*
-// @match   https://www.52movie.top/torrents.php*
-
 //          52PT
 // @match   https://52pt.site/details.php*
 // @match   https://52pt.site/torrents.php*
@@ -623,12 +619,6 @@ const verboseConsoleLogging = false
 // @settingsPanelTrackers
 // Each entry below will be appear as a tracker row in the quiCKIE settings panel
 const settingsPanelTrackers = [
-
-    {
-        trackerName: '52Movie', // @AziRivzi
-        homepageURL: 'https://www.52movie.top',
-        primaryDomain: '52movie',
-    },
 
     {
         trackerName: '52PT', // @AziRivzi
@@ -1366,16 +1356,6 @@ if ( primaryDomain == 'animebytes' ) {
         // If quiCKIE should attach the right-click presetsMenu to the new bunnyButtons, useful for advanced presetsMenu manipulation
         bunnyButtonAttachPresetsMenu: true, // Default = true || Options = true | false
 
-    }
-
-    quickieTrackerHandler(trackerHandlingOptions)
-
-} else if ( primaryDomain == '52movie' ) {
-    // ----------------------------------- 52Movie -----------------------------------
-    // Browse | Details
-
-    let trackerHandlingOptions = {
-        downloadElementsSelector: 'a[href^="download.php?id="]',
     }
 
     quickieTrackerHandler(trackerHandlingOptions)

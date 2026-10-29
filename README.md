@@ -1,14 +1,3 @@
-> [!CAUTION]
-> ## Breaking Changes
-> quiCKIE will be updated to `v1.50` on `October 01, 2026`. This major update **will** have breaking changes and may even require you to completely uninstall and then re-install the UserScript 😮
->
-> Before updating to `v1.50`, make sure to export your quiCKIE settings using the `Export Settings` button at the bottom of the quiCKIE settings panel. The exported `.json` file can then be imported into `v1.50` to **fully** restore your quiCKIE settings after the update, letting you pick up where you left off.
->
-> ## qBitTorrent
-> quiCKIE `v1.50` will **drop** qBitTorrent Username\Password authentication in favor of **ApiKey** authentication. An ApiKey is only available on qBitTorrent `v5.2+`, so you should **not** update to quiCKIE `v1.50` until you have also updated your torrent client to `v5.2+`. An ApiKey can be generated from the qBitTorrent interface by going to `Options > WebUI > ApiKey`
->
-> This does not affect folk who are using qui as their selected client, only those who are using qBitTorrent **directly**.
-
 <div align="center">
 
   # **🐰 quiCKIE 🐰**
@@ -26,34 +15,46 @@ quiCKIE currently supports **[qui](https://getqui.com/)**, **[qBitTorrent](https
 
 If a tracker that you have access to is not listed, check the quiCKIE WiKi for a simple **3-step guide** on how it can be added, no programming experience required: **[Adding a New Tracker](https://github.com/WirlyWirly/quiCKIE/wiki/Adding-a-New-Tracker)**
 
-The quiCKIE settings panel can be accessed by performing a **Shift-Click** on any BunnyButton or from the menu of your UserScript Manager, which is the dialog on your toolbar that lists the active UserScripts.
+<br>
+
+<div align="center">
+
+  # **ℹ️ Instructions**
+</div>
+
+The quiCKIE settings panel can be accessed by performing a `Shift-Click` on any BunnyButton or from the menu of your UserScript Manager, which is the dialog on your toolbar that lists the active UserScripts.
 
 Only the **clientURL** and **credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for a tooltip about what each field does and how it may be filled in.
 
-<br>
+> ### 🖱️ **BunnyButton Actions** 
+> 🔹 **Left-Click \ Mobile Tap**: Add torrent to client with settings for the current tracker<br>
+> 🔹 **Right-Click \ Mobile Long-press**: Add torrent to client with settings from the selected preset<br>
+> 🔹 **Middle-Click**: Open torrent client in a new tab<br>
+>
+> 🔹 **Shift-Click**: Open quiCKIE settings panel<br>
+> 🔹 **Ctrl-Click**: Open torrent client in a new tab<br>
+>
+> 🔹 **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 
-> **Left-Click \ Mobile Tap**: Add torrent to client with settings for the current tracker<br>
-> **Right-Click \ Mobile Long-press**: Add torrent to client with settings from the selected preset<br>
-> **Middle-Click**: Open torrent client in a new tab<br>
->
-> **Shift-Click**: Open quiCKIE settings panel<br>
-> **Ctrl-Click**: Open torrent client in a new tab<br>
-> **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
->
-> **BunnyButton Emojiography***<br>
+> ### ✨ **BunnyButton Emojiography**<br>
 > 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + Tracker<br>
 > 🧲 Downloading .torrent | 🧑 Client Login | 🕓 Adding Torrent | ℹ️ Console Message | ❌ Failed | ✔️ Success 
 >
+> \* *Full BunnyButton Emojiography is available on select trackers*
+
+> ### 🔗 **Links**<br>
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
 > Written in [✏️ NeoVim](https://neovim.io/) and tested on [🐺 LibreWolf](https://librewolf.net/) via [🐵 Violentmonkey](https://violentmonkey.github.io/)<br>
 >
-> \* *Full BunnyButton Emojiography is available on select trackers*
->
 
 <br>
 
-# Integrating Third-Party UserScripts
+<div align="center">
+
+  # **🤝 Third-Party UserScripts**
+</div>
+
 If you are the author of a UserScript that creates torrent `DL` (Download) buttons on a page that is also serviced by quiCKIE, you can very easily add quiCKIE integration so that your `DL` elements receive their very own and fully functioning BunnyButton 🐰: [Integrating Third-Party UserScripts](https://github.com/WirlyWirly/quiCKIE/wiki/Integrating-Third‐Party-UserScripts)
 
 <br>
