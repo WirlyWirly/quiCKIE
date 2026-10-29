@@ -22,19 +22,19 @@ If a tracker that you have access to is not listed, check the quiCKIE WiKi for a
   # **ℹ️ Instructions**
 </div>
 
-The quiCKIE settings panel can be accessed by performing a `Shift-Click` on any BunnyButton or from the menu of your UserScript Manager, which is the dialog on your toolbar that lists the active UserScripts.
+Open the quiCKIE settings panel by performing a `Shift-Click` on any **BunnyButton** or from the menu of your UserScript Manager, which is the dialog on your toolbar that lists the active UserScripts.
 
-Only the **clientURL** and **credentials** for the selected torrent client are required, everything else is optional. Hover over the various emojis for a tooltip about what each field does and how it may be filled in.
+From the quiCKIE settings panel, select the client you are using and provide the `clientURL` and `credentials`. Every other setting is optional, so hover over the various emojis for a tooltip about what each field does and how it may be filled in.
 
 > ### 🖱️ **BunnyButton Actions** 
-> 🔹 **Left-Click \ Mobile Tap**: Add torrent to client with settings for the current tracker<br>
-> 🔹 **Right-Click \ Mobile Long-press**: Add torrent to client with settings from the selected preset<br>
-> 🔹 **Middle-Click**: Open torrent client in a new tab<br>
+> 🔹 `Left-Click (Mobile Tap)`: Add torrent to client with settings for the current tracker<br>
+> 🔹 `Right-Click (Mobile long-press)`: Add torrent to client with settings from the selected preset<br>
+> 🔹 `Middle-Click`: Open torrent client in a new tab<br>
 >
-> 🔹 **Shift-Click**: Open quiCKIE settings panel<br>
-> 🔹 **Ctrl-Click**: Open torrent client in a new tab<br>
+> 🔹 `Shift-Click` Open quiCKIE settings panel<br>
+> 🔹 `Ctrl-Click` Open torrent client in a new tab<br>
 >
-> 🔹 **Shift-Ctrl-Click**: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
+> 🔹 `Shift-Ctrl-Click`: Add torrent to client, but with 'Start Paused' enabled (also works on presets)<br>
 
 > ### ✨ **BunnyButton Emojiography**<br>
 > 🐰 Default | 🌱 Seeding | 🍁 Snatched | 💎 Freeleech | 📢 Featured | 💸 Spend Token | 🤝 ThirdParty | 🌎 ThirdParty + Tracker<br>
@@ -42,7 +42,7 @@ Only the **clientURL** and **credentials** for the selected torrent client are r
 >
 > \* *Full BunnyButton Emojiography is available on select trackers*
 
-> ### 🔗 **Links**<br>
+> ### 🔗 **UserScript Links**<br>
 > **Source: [GitHub](https://github.com/WirlyWirly/quiCKIE)**<br>
 > **Install: [quiCKIE](https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true)**<br>
 > Written in [✏️ NeoVim](https://neovim.io/) and tested on [🐺 LibreWolf](https://librewolf.net/) via [🐵 Violentmonkey](https://violentmonkey.github.io/)<br>
