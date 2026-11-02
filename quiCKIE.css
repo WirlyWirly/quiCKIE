@@ -422,6 +422,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="text"] {
 
 #quiCKIE_config option {
     background: var(--inputFieldBackground);
+    color: var(--inputFieldText);
 }
 
 #quiCKIE_config_field_quiURL:focus,
