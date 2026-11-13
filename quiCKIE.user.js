@@ -1922,9 +1922,11 @@ if ( primaryDomain == 'animebytes' ) {
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #A0DA83 solid 1px; color: #A0DA83; background: #113400;`)
                         bunnyButton.setAttribute('data-emojospecified', 'true')
 
+
                     } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
                         // This is a Doubleseed button
-                        bunnyButton.textContent = '🌱 Doubleseed'
+                        bunnyButton.textContent = '🐰 Doubleseed'
+                        replaceEmojis(bunnyButton, '🌱')
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
                         bunnyButton.setAttribute('data-emojospecified', 'true')
 
@@ -2104,9 +2106,11 @@ if ( primaryDomain == 'animebytes' ) {
 
                     } else if ( bunnyButton.dataset.torrenturl.match(/&usetoken=2/) ) {
                         // This is a Doubleseed button
-                        bunnyButton.textContent = '🌱 Doubleseed'
+                        bunnyButton.textContent = '🐰 Doubleseed'
+                        replaceEmojis(bunnyButton, '🌱')
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}border: #F09D63 solid 1px; color: #F09D63; background: #431C00`)
                         bunnyButton.setAttribute('data-emojospecified', 'true')
+
                     } else {
                         // This is a standard Download button
                         bunnyButton.textContent = '🐰 quiCKIE'
@@ -2553,7 +2557,8 @@ if ( primaryDomain == 'animebytes' ) {
 
                     // This is the Freeleech Wedge button, so apply different text\styles
                     if ( bunnyButton.dataset.torrenturl.match(/tid=\d+&fl/) ) {
-                        bunnyButton.textContent = '🧀 Freeleech'
+                        bunnyButton.textContent = '💸 Freeleech'
+                        SETTINGS.hideDL == true ? replaceEmojis(bunnyButton, '🧀') : null
                         bunnyButton.setAttribute('style', `${bunnyButton.style.cssText}background: #2E2400; border: #CBC29E solid 1px; color: #CBC29E;`)
                     }
 
@@ -2577,7 +2582,7 @@ if ( primaryDomain == 'animebytes' ) {
             afterBunnyButtonCreation: function(elements) {
                 // The actions to take after the bunnyButtons have been created...
 
-                // Site download buttons are hidden, so change the Freelech Wedge button to cheese now that it won't conflict with the sites wedge button
+                // Site download buttons are hidden, so change the Freelech Wedge button to a cheese emoji, now that it won't conflict with MAM's own wedge button
                 if ( SETTINGS.hideDL ) {
 
                     for ( let bunnyButton of elements.bunnyButtons ) {
@@ -5872,31 +5877,44 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
 function replaceEmojis(targetElement, newEmoji) {
     // Replace the emojis of the targetElement with the newEmoji
 
-    targetElement.textContent = targetElement.textContent.replace(emojiRegex, newEmoji)
+    if ( SETTINGS.globalTorrentStatus == false && ['🌱', '🍁', '📢', '💎', '💸', '🧀'].includes(newEmoji) ) {
+        // TorrentStatus updates are disabled and this new emoji goes against that, so do nothing
+        null
+
+    } else {
+        // Replace all emojis in the targetElement with the newEmoji
+        targetElement.textContent = targetElement.textContent.replace(emojiRegex, newEmoji)
+
+    }
 
 }
 
 function bunnyButtonTorrentStatus(bunnyButton, torrentStatus) {
     // Update the provided bunnyButton to reflect the specified torrentStatus
 
-    if ( torrentStatus == 'seeding' ) {
+    if ( SETTINGS.globalTorrentStatus == false ) {
+        // TorrentStatus updates are disabled, so do nothing
+        null
+
+    } else if ( torrentStatus == 'seeding' ) {
+        // Update this bunnyButton to display the status of 'Seeding'
         replaceEmojis(bunnyButton, '🌱')
         bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
 
     } else if ( torrentStatus == 'snatched' ) {
+        // Update this bunnyButton to display the status of 'Snatched'
         replaceEmojis(bunnyButton, '🍁')
         bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Snatched\n🔗')
 
     } else if ( torrentStatus == 'featured' ) {
+        // Update this bunnyButton to display the status of 'Featured'
         replaceEmojis(bunnyButton, '📢')
         bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n\n🖥️')
 
     } else if ( torrentStatus == 'freeleech' ) {
+        // Update this bunnyButton to display the status of 'Freeleech'
         replaceEmojis(bunnyButton, '💎')
         bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n🖥️')
-
-    } else if ( torrentStatus == 'default' ) {
-        replaceEmojis(bunnyButton, '🐰')
 
     }
 
