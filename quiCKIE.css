@@ -183,16 +183,16 @@ font-family: "Roboto Condensed", Tahoma, Arial;
     max-width: 135px;
 }
 
-/* PresetTrackers */
-#quiCKIE_config_preset_table_colg_col_presettrackers {
-    width: 220px;
-}
-
 /* Category */
 #quiCKIE_config_tracker_table_colg_col_category,
 #quiCKIE_config_preset_table_colg_col_category {
-    width: 120px;
-    max-width: 120px;
+    width: 125px;
+    max-width: 125px;
+}
+
+/* PresetTrackers */
+#quiCKIE_config_preset_table_colg_col_presettrackers {
+    width: 220px;
 }
 
 /* SavePath */
@@ -275,7 +275,7 @@ font-family: "Roboto Condensed", Tahoma, Arial;
 font-size: 18px;
 font-style: normal;
 font-weight: 400;
-padding: 5px 15px;
+padding: 10px 10px;
 text-align: center;
 }
 

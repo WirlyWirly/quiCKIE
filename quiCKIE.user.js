@@ -6407,7 +6407,7 @@ async function qBitTorrentPOST(postData) {
 
             if ( response.status == 200 || response.status == 202 ) {
                 // Success: The torrent has been added to qBitTorrent
-                // 200 == OK (.torrent), 202 == OK (torrentURL)
+                // 200 == OK (.torrent file), 202 == OK (torrentURL)
 
                 replaceEmojis(bunnyButton, '✔️')
 
@@ -6707,7 +6707,7 @@ async function delugePOST(postData) {
                         let postResponse = JSON.parse(response.responseText)
 
                         if ( postResponse.result != null || response.responseText.match(/Torrent already in session/) ) {
-                            // ---------- The torrent has been added to Deluge ----------
+                            // Success: The torrent has been added to Deluge
 
                             if ( response.responseText.match(/Torrent already in session/) ) {
                                 console.log(`According to the ${postData.torrentClient} response, this torrent can not be added because it already exists in your session\n\nℹ️ If the torrent is not listed in the WebUi, it may be lingering in the daemon session\n\ntorrentURL: ${postData.torrentURL}`)
