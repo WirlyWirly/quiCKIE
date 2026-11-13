@@ -6216,6 +6216,7 @@ function initiateTorrentPOST({
 }
 
 
+// @getFileBlob
 async function getFileBlob(postData) {
     // Download a file blob with the provided URL and then call the appropriate POST function
 
@@ -6297,6 +6298,7 @@ async function getFileBlob(postData) {
 }
 
 
+// @quiPOST
 async function quiPOST(postData) {
     // Using the properties of the postData, send a POST to qui to add a new torrent
     // console.log(postData)
@@ -6367,6 +6369,7 @@ async function quiPOST(postData) {
 }
 
 
+// @qBitTorrentPOST
 async function qBitTorrentPOST(postData) {
     // Using the properties of the postData, send a POST to qBitTorrent to add a new torrent
     // console.log(postData)
@@ -6452,6 +6455,7 @@ async function qBitTorrentPOST(postData) {
 }
 
 
+// @transmissionPOST
 async function transmissionPOST(postData) {
     // Using the properties of the postData, first send a login POST and on success send a second POST to add a new torrent
     // console.log(postData)
@@ -6604,6 +6608,7 @@ async function transmissionPOST(postData) {
 }
 
 
+// @delugePOST
 async function delugePOST(postData) {
     // Using the properties of the postData, first send a login POST and on success send a second POST to add a new torrent
     // Deluge only supports magnet links and file blobs, so even authenticated torrentURLs still need to be download beforehand with getFileBlob()
@@ -6773,6 +6778,7 @@ async function delugePOST(postData) {
 }
 
 
+// @ruTorrentPOST
 async function ruTorrentPOST(postData) {
     // *** TO-DO ***
     // Using the properties of the postData, first send a login POST and on success send a second POST to add a new torrent
