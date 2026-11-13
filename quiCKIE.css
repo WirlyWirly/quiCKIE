@@ -354,6 +354,7 @@ tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_auto
 }
 
 /* Checkboxes */
+#quiCKIE_config_field_globalTorrentStatus,
 #quiCKIE_config_field_globalForcedTorrentFile,
 td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     background: var(--inputFieldBackground);
@@ -369,6 +370,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     transition: all 0.3s ease;
 }
 
+#quiCKIE_config_field_globalTorrentStatus,
 #quiCKIE_config_field_globalForcedTorrentFile {
     margin: 0 2px 0 2px;
 }
@@ -377,6 +379,7 @@ td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
     margin: 5px 0px 5px 0px;
 }
 
+#quiCKIE_config_field_globalTorrentStatus:checked,
 #quiCKIE_config_field_globalForcedTorrentFile:checked,
 td.quiCKIE_config_table_tbody_td_field input[type="checkbox"]:checked {
     background-color: var(--checkboxCheckedBackground);

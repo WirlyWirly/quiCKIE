@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.56
+// @version     1.57
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -1246,8 +1246,8 @@ let [ primaryDomain, allPrimaryDomains, allTrackerNames, primaryDomainToTrackerN
 // Everything related to 'GM_config', which is the library used for persisting settings and creating the quiCKIE settings panel: https://github.com/sizzlemctwizzle/GM_config
 initializeGMConfig()
 
-// For the current tracker, populate the SETTINGS object and determine which presetMenuItems apply
-let SETTINGS = populateSettingsObject(primaryDomain)
+// Get the SETTINGS and applicable presetMenuItems for the current primaryDomain
+let SETTINGS = getPrimaryDomainSettings(primaryDomain)
 let presetMenuItems = createPresetItems([SETTINGS.primaryDomain])
 
 // All the emojis that may be displayed on bunnyButtons, defined as a RegExp so that they can be replaced during different stages of the script
@@ -3510,6 +3510,7 @@ function initializeGMConfig() {
             'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\n🔹 Affects all trackers that have the '🖱️' column set to 'Global'",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
+            'globalTorrentStatus': '─── 💎 Torrent Status 💎 ───\n\nUpdate the emoji of a BunnyButton to reflect the current status of the associated torrent\n\n🔹 Torrent Status checks are supported on a per-tracker basis and therefore not available on all trackers\n\n🔹 Torrent Status Emojiography\n🌱 = Seeding\n🍁 = Snatched\n📢 = Featured\n💎 = FreeLeech\n\n⚠️ The BunnyButton status of a torrent is NOT a guarantee and should be verified before downloading',
             'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\n🔹 By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\n🔹 Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
             'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\n🔹 Hover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\n🔹 This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\n🔹 This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
@@ -3633,6 +3634,11 @@ function initializeGMConfig() {
                 'type': 'select',
                 'options': ['After', 'Before'],
                 'default': 'After',
+            },
+            'globalTorrentStatus': {
+                'label': '💎 Torrent Status:',
+                'type': 'checkbox',
+                'default': true
             },
             'globalForcedTorrentFile': {
                 'label': '🧲 Torrent File:',
@@ -4189,6 +4195,14 @@ function initializeGMConfig() {
                 settingsDivFirst.appendChild(bunnyButtonPlacementLabel)
                 settingsDivFirst.appendChild(bunnyButtonPlacementField)
 
+                // --- TorrentStatus ---
+                let globalTorrentStatusLabel = document.getElementById('quiCKIE_config_globalTorrentStatus_field_label')
+                let globalTorrentStatusField = document.getElementById('quiCKIE_config_field_globalTorrentStatus')
+                globalTorrentStatusLabel.classList.add('settingsDivLabel')
+                globalTorrentStatusLabel.title = panelTextData.globalsTitles.globalTorrentStatus
+                settingsDivFirst.appendChild(globalTorrentStatusLabel)
+                settingsDivFirst.appendChild(globalTorrentStatusField)
+
                 // --- ForcedTorrentFile ---
                 let globalForcedTorrentFileLabel = document.getElementById('quiCKIE_config_globalForcedTorrentFile_field_label')
                 let globalForcedTorrentFileField = document.getElementById('quiCKIE_config_field_globalForcedTorrentFile')
@@ -4593,8 +4607,8 @@ function initializeGMConfig() {
 }
 
 
-function populateSettingsObject(primaryDomain) {
-    // Create the main SETTINGS object and populate it with the current primaryDomain specific settings
+function getPrimaryDomainSettings(primaryDomain) {
+    // Create the main SETTINGS object and populate it with the settings specific to the current primaryDomain
 
     // @trackerSettings
     let SETTINGS = {
@@ -4607,6 +4621,7 @@ function populateSettingsObject(primaryDomain) {
         bunnyButtonPlacement: GM_config.get('bunnyButtonPlacement'),
         globalLeftClickAction: GM_config.get('globalLeftClickAction'),
         globalMiddleClickAction: GM_config.get('globalMiddleClickAction'),
+        globalTorrentStatus: GM_config.get('globalTorrentStatus'),
         globalForcedTorrentFile: GM_config.get('globalForcedTorrentFile'),
         thirdPartyDelay: GM_config.get('thirdPartyDelay'),
 
@@ -4685,7 +4700,7 @@ function createPresetItems(primaryDomains) {
                     }
 
 
-                    addTorrent({
+                    initiateTorrentPOST({
                         torrentURL: bunnyButton.dataset.torrenturl,
                         torrentClient: SETTINGS.torrentClient,
                         bunnyButtonId: bunnyButtonId,
@@ -4708,7 +4723,7 @@ function createPresetItems(primaryDomains) {
                     let bunnyButtonId = this.dataset.targetid
                     let bunnyButton = document.getElementById(bunnyButtonId)
 
-                    addTorrent({
+                    initiateTorrentPOST({
                         torrentURL: bunnyButton.dataset.torrenturl,
                         torrentClient: SETTINGS.torrentClient,
                         bunnyButtonId: bunnyButtonId,
@@ -4990,7 +5005,7 @@ function createPresetItems(primaryDomains) {
                                 startPaused = true
                             }
 
-                            addTorrent({
+                            initiateTorrentPOST({
                                 torrentURL: torrentURL,
                                 torrentClient: SETTINGS.torrentClient,
                                 bunnyButtonId: bunnyButtonId,
@@ -5068,6 +5083,7 @@ function createPresetItems(primaryDomains) {
     return allPresetItems
 
 }
+
 
 let presetsMenuCSS = GM_getResourceText('presetsMenuCSS')
 GM_addStyle(presetsMenuCSS)
@@ -5213,8 +5229,8 @@ function quickieTrackerHandler({
                     afterBunnyButtonCreation(loggedElements)
                 }
 
-                if ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null && loggedElements['bunnyButtons'].length > 0 ) {
-                    // A torrent status selector was provided and there are newly created bunnyButtons, so check the selector(s) for truthy
+                if ( SETTINGS.globalTorrentStatus == true && ( seedingStatusSelector != null || snatchedStatusSelector != null || freeleechStatusSelector != null && loggedElements['bunnyButtons'].length > 0 ) ) {
+                    // TorrentStatus checks are enabled and a selector was provided, so check the selector(s) for truthy
 
                     for ( let pairedElements of loggedElements.pairedElements ) {
 
@@ -5274,6 +5290,7 @@ function quickieTrackerHandler({
                             logger.log(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe freeleechStatusSelector returned an error.\n\nIf you are reading this message and the 💎 is present on the bunnyButtons that are indeed freeleech, you can safely ignore this message. This error is normal, as comparisons that don't return 'true' are not always able to complete their code and will instead return this error.\n\nIf even the freeleech torrents are not displaying the 💎, it is most likely that either the freeleechStatusSelector is incorrect or is not valid JavaScript.\n\ndownloadElement: ${downloadElement}\n\nfreeleechStatusSelector: ${freeleechStatusSelector}\n\nError:${error}\n\n`)
                         }
                     }
+
                 }
 
                 if ( SETTINGS.paginationLoop >= 500 ) {
@@ -5429,36 +5446,40 @@ function unit3dTrackerHandler({
                             downloadElement.insertAdjacentElement(bunnyButtonPlacement, bunnyButton)
                         }
 
-                        if ( document.querySelector(`li.torrent__seeders.torrent-activity-indicator--seeding,
-                            a[title="Seeding"]`) != null ) {
-                            
-                            // This is a Seeding torrent
-                            bunnyButtonTorrentStatus(bunnyButton, 'seeding')
+                        if ( SETTINGS.globalTorrentStatus == true ) {
+                            // TorrentStatus checks are enabled, so attempt to do so: Seeding\Snatched\Featured\Freeleech
 
-                        } else if ( document.querySelector(`li.torrent__completed.torrent-activity-indicator--completed,
-                            a[title="Downloaded but Not Seeding"]`) != null ) {
+                            if ( document.querySelector(`li.torrent__seeders.torrent-activity-indicator--seeding,
+                                a[title="Seeding"]`) != null ) {
+                                
+                                // This is a Seeding torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                            // This is a Snatched torrent
-                            bunnyButtonTorrentStatus(bunnyButton, 'snatched')
+                            } else if ( document.querySelector(`li.torrent__completed.torrent-activity-indicator--completed,
+                                a[title="Downloaded but Not Seeding"]`) != null ) {
 
-                        } else if ( document.querySelector(':is(i, span).torrent-icons__featured') != null ) {
+                                // This is a Snatched torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'snatched')
 
-                            // This is a Featured torrent
-                            bunnyButtonTorrentStatus(bunnyButton, 'featured')
+                            } else if ( document.querySelector(':is(i, span).torrent-icons__featured') != null ) {
 
-                        } else if ( document.querySelector(`
-                            :is(i, span).torrent-icons__freeleech[title*="100%"],
-                            :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
-                            :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
-                            i.torrent-icons__freeleech.fa-calendar-star,
-                            i.fa-globe,
-                            i.fas.fa-peace,
-                            span[title="Free: costs no Hunos. The download still counts toward ratio."],
-                            i.fa-star-of-david[data-original-title*="持续至"]`) != null ) {
+                                // This is a Featured torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'featured')
 
-                            // This is a Freeleech torrent
-                            bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
+                            } else if ( document.querySelector(`
+                                :is(i, span).torrent-icons__freeleech[title*="100%"],
+                                :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                                :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
+                                i.torrent-icons__freeleech.fa-calendar-star,
+                                i.fa-globe,
+                                i.fas.fa-peace,
+                                span[title="Free: costs no Hunos. The download still counts toward ratio."],
+                                i.fa-star-of-david[data-original-title*="持续至"]`) != null ) {
 
+                                // This is a Freeleech torrent
+                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
+
+                            }
                         }
 
                     } else {
@@ -5514,70 +5535,72 @@ function unit3dTrackerHandler({
                         }
 
 
-                        // TorrentStatus: Try for Seeding\Snatched\Featured\Freeleech status of the current downloadElement
+                        if ( SETTINGS.globalTorrentStatus == true ) {
+                            // TorrentStatus checks are enabled, so attempt to do so: Seeding\Snatched\Featured\Freeleech
 
-                        try {
-                            // View types: List | Grouped
+                            try {
+                                // View types: List | Grouped
 
-                            if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--seeding,
-                              a[title="Seeding"]`) != null ) {
+                                if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--seeding,
+                                  a[title="Seeding"]`) != null ) {
 
-                                // This is a Seeding torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
+                                    // This is a Seeding torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                            } else if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--completed,
-                              a[title="Downloaded but Not Seeding"]`) != null ) {
+                                } else if ( downloadElement.closest('tr').querySelector(`td.torrent-activity-indicator--completed,
+                                  a[title="Downloaded but Not Seeding"]`) != null ) {
 
-                                // This is a Snatched torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'snatched')
+                                    // This is a Snatched torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'snatched')
 
-                            } else if ( downloadElement.closest('tr').querySelector(':is(i, span).torrent-icons__featured') != null ) {
+                                } else if ( downloadElement.closest('tr').querySelector(':is(i, span).torrent-icons__featured') != null ) {
 
-                                // This is a Featured torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'featured')
+                                    // This is a Featured torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'featured')
 
-                            } else if ( downloadElement.closest('tr').querySelector(
-                                `:is(i, span).torrent-icons__freeleech[title*="100%"],
-                                :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
-                                :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
-                                i.torrent-icons__freeleech.fa-calendar-star,
-                                i.fa-globe,
-                                i.fas.fa-peace,
-                                span[title="Free: costs no Hunos. The download still counts toward ratio."],
-                                i.fa-star-of-david[data-original-title*="持续至"]`) != null ) {
+                                } else if ( downloadElement.closest('tr').querySelector(
+                                    `:is(i, span).torrent-icons__freeleech[title*="100%"],
+                                    :is(i, span).torrent-icons__freeleech[title*="Global freeleech" i],
+                                    :is(i, span).torrent-icons__freeleech[title*="Special Freeleech" i],
+                                    i.torrent-icons__freeleech.fa-calendar-star,
+                                    i.fa-globe,
+                                    i.fas.fa-peace,
+                                    span[title="Free: costs no Hunos. The download still counts toward ratio."],
+                                    i.fa-star-of-david[data-original-title*="持续至"]`) != null ) {
 
-                                // This is a Freeleech torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
+                                    // This is a Freeleech torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
+                                }
+
+                            } catch (error) {
+                                // An error occured, most likely 'downloadElement.closest('tr')' was not found and so '.querySelector()' could not be chained
+                                logger.debug(error)
                             }
 
-                        } catch (error) {
-                            // An error occured, most likely 'downloadElement.closest('tr')' was not found and so '.querySelector()' could not be chained
-                            logger.debug(error)
-                        }
 
+                            try {
 
-                        try {
+                                // View types: Cards
 
-                            // View types: Cards
+                                if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector('.torrent-activity-indicator--seeding') != null ) {
 
-                            if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector('.torrent-activity-indicator--seeding') != null ) {
+                                    // This is a Seeding torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
-                                // This is a Seeding torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'seeding')
+                                } else if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector(
+                                    `i.torrent-icons__freeleech[title*="100%"],
+                                    i.torrent-icons__freeleech[title*="Global freeleech" i]`) != null ) {
 
-                            } else if ( downloadElement.closest('article :is(.torrent-card, .tc-card)').querySelector(
-                                `i.torrent-icons__freeleech[title*="100%"],
-                                i.torrent-icons__freeleech[title*="Global freeleech" i]`) != null ) {
+                                    // This is a Freeleech torrent
+                                    bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
 
-                                // This is a Freeleech torrent
-                                bunnyButtonTorrentStatus(bunnyButton, 'freeleech')
+                                }
 
+                            } catch (error) {
+                                // An error occured, most likely "downloadElement.closest('article :is()')" was not found and so '.querySelector()' could not be chained
+                                logger.debug(error)
                             }
-
-                        } catch (error) {
-                            // An error occured, most likely "downloadElement.closest('article :is()')" was not found and so '.querySelector()' could not be chained
-                            logger.debug(error)
                         }
 
                     }
@@ -5770,7 +5793,7 @@ function bunnyButtonClickedActions(bunnyButton, torrentSettings, settingsValue) 
         let bunnyButtonId = `quiCKIE_bb_${Date.now()}`
         bunnyButton.id = bunnyButtonId
 
-        addTorrent({
+        initiateTorrentPOST({
             torrentURL: bunnyButton.dataset.torrenturl,
             torrentClient: SETTINGS.torrentClient,
             bunnyButtonId: bunnyButtonId,
@@ -5880,7 +5903,7 @@ function bunnyButtonTorrentStatus(bunnyButton, torrentStatus) {
 }
 
 
-function addTorrent({
+function initiateTorrentPOST({
     // Using the provided parameters, create a object containing all the info needed to POST a new torrent to the client, then pass that object to the appropriate POST function depending on if the torrentURL has authentication
     torrentURL,
     torrentClient,
