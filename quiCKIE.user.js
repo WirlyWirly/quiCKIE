@@ -6215,19 +6215,13 @@ async function getFileBlob(postData) {
             // ----- File Downloaded -----
             let blobData = response.response
 
-            if ( !blobData.type.match(/application\/x-bittorrent/i) ) {
-                // The downloaded file is NOT a .torrent type, abort the POST
-                replaceEmojis(bunnyButton, '❌')
-
-                console.log(response)
-
-                window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file\n\nAborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nResponse Status Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
-                return
-
-            } else {
+            if ( blobData.type.match(/application\/x-bittorrent/i) ) {
                 // The downloaded file is a valid .torrent type, so POST it to the client
 
                 postData.formData.append('torrent', blobData)
+
+                // Remove the torrentURL from the formData so that the client does not attempt to download it's own .torrent and therefore add it twice
+                postData.formData.delete('urls')
 
                 replaceEmojis(bunnyButton, '🕓')
 
@@ -6247,7 +6241,17 @@ async function getFileBlob(postData) {
                     // Add torrentURL to ruTorrent
                     ruTorrentPOST(postData)
                 }
-            }
+            } else {
+                // The downloaded file is NOT a .torrent type, so abort the POST
+
+                replaceEmojis(bunnyButton, '❌')
+
+                console.log(response)
+
+                window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file\n\nAborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nResponse Status Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
+                return
+
+            } 
 
         },
         onerror: function(response) {
@@ -6436,8 +6440,10 @@ async function transmissionPOST(postData) {
 
     } else {
         // torrentURL|magnetLink: POST using the provided URL
+
         transmissionData.arguments.filename = postData.torrentURL
         transmissionData = JSON.stringify(transmissionData)
+
     }
 
 
@@ -6580,14 +6586,17 @@ async function delugePOST(postData) {
 
     } else if ( postData.torrentURL.match(/magnet:\?xt=urn/) ) {
         // magnetLink: POST the torrentURL as a magnet link
+
         delugeData.method = 'core.add_torrent_magnet'
         delugeData.params.push(postData.torrentURL)
         delugeData.params.push(torrentOptions)
 
     } else {
         // torrentURL: torrentURL can not be sent directly, it must first be downloaded as a blob
+
         getFileBlob(postData)
         return
+
     }
 
     // Signify the start of delugePOST by changing the emoji of the clicked on BunnyButton
