@@ -6218,7 +6218,7 @@ function initiateTorrentPOST({
 
 // @getFileBlob
 async function getFileBlob(postData) {
-    // Download a file blob with the provided URL and then call the appropriate POST function
+    // Download a file blob with the provided URL and then call the appropriate clientPOST function
 
     // Signify the start of getFileBlob by changing the emoji of the clicked on BunnyButton
     let bunnyButton = document.getElementById(postData.bunnyButtonId)
@@ -6237,9 +6237,10 @@ async function getFileBlob(postData) {
             if ( blobData.type.match(/application\/x-bittorrent/i) ) {
                 // The downloaded file is a valid .torrent type, so POST it to the client
 
+                // Add the file blob to the form data
                 postData.formData.append('torrent', blobData)
 
-                // Remove the torrentURL from the formData so that the client does not attempt to download it's own .torrent and therefore add it twice
+                // Remove the torrentURL from the formData so that the client does not attempt to download it's own .torrent which would be redundant
                 postData.formData.delete('urls')
 
                 replaceEmojis(bunnyButton, '🕓')
@@ -6247,19 +6248,25 @@ async function getFileBlob(postData) {
                 if ( postData.torrentClient == 'qui' ) {
                     // Add torrentURL to qui
                     quiPOST(postData)
+
                 } else if ( postData.torrentClient == 'qBitTorrent' ) {
                     // Add torrentURL to qBitTorrent
                     qBitTorrentPOST(postData)
+
                 } else if ( postData.torrentClient == 'Transmission' ) {
                     // Add torrentURL to Transmission
                     transmissionPOST(postData)
+
                 } else if ( postData.torrentClient == 'Deluge' ) {
                     // Add torrentURL to Deluge
                     delugePOST(postData)
+
                 } else if ( postData.torrentClient == 'ruTorrent' ) {
                     // Add torrentURL to ruTorrent
                     ruTorrentPOST(postData)
+
                 }
+
             } else {
                 // The downloaded file is NOT a .torrent type, so abort the POST
                 console.log('---------- ❌ quiCKIE ❌ ----------\n')
