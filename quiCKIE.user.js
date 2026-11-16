@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.57
+// @version     1.6
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -587,17 +587,17 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @resource    settingsPanelCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.css?raw=true
+// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcFrameStylesheet.css?raw=true
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js?raw=true
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
 // localhost urls used during development. Easily served over http by MiniServe: https://github.com/svenstaro/miniserve
 
-// resource    settingsPanelCSS http://localhost:12345/quiCKIE.css
 // resource    presetsMenuCSS http://localhost:12345/ContextMenu.css
 // require     http://localhost:12345/ContextMenu.js
 
@@ -3595,6 +3595,7 @@ function initializeGMConfig() {
 
     // The element the settings panel will be appended to, so that it's not a floating iFrame and can be inspected.
     let configFrame = document.createElement('div')
+    configFrame.classList.add('gmcFrame')
     document.body.appendChild(configFrame)
 
     let reloadWindow = false
@@ -3604,13 +3605,13 @@ function initializeGMConfig() {
         'frame': configFrame,
         'title': `
             <div>
-                <div style="padding: 30px 0px 0px 0px"></div>
                 🐰
-                <span style="user-select: none; background: none; background-color: #FFFFFF; -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-filter: brightness(110%); filter: brightness(110%); text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); transition: all 0.3s; font-weight: bold; padding: 10px 0px 10px 0px">
-                    <a href="${GM_info.script.homepage}" target="_blank" id="quiCKIE_firstHeader">quiCKIE</a>
-                </span>
+                <a class="headerMainText" href="${GM_info.script.homepage}" target="_blank">quiCKIE</a>
                 🐰
-                <div style="margin: 15px 0px 0px 0px;"><span id="quiCKIE_secondHeader">★ Hover over emojis for details ★ </span></div>
+            </div>
+
+            <div class="headerSubText">
+                ★ Hover over emojis for details ★ 
             </div>
         `,
 
@@ -3666,72 +3667,6 @@ function initializeGMConfig() {
                 'options': ['qui', 'qBitTorrent', 'Transmission', 'Deluge', '🚧 ruTorrent 🚧'],
                 'default': 'qui',
             },
-            'settingsImport' : {
-                'label': 'Import Settings',
-                'type': 'button',
-                'size': 25,
-                'click': function() {
-                    // Prompt the user to select a file for which to import GM_config settings
-
-                    let inputElement = document.createElement('input');
-                    inputElement.type = 'file';
-
-                    inputElement.onchange = (event) => {
-
-                        // Getting a hold of the file reference
-                        let file = event.target.files[0]
-
-                        // Setting up the reader
-                        let reader = new FileReader()
-                        reader.readAsText(file,'UTF-8')
-
-                        // Here we tell the reader what to do when it's done reading...
-                        reader.onload = (readerEvent) => {
-
-                            let textContent = readerEvent.target.result // this is the content!
-
-                            try {
-
-                                // Parse the content of the selected file, making sure it is valid JSON
-                                let quickieSettings = JSON.stringify(JSON.parse(textContent))
-
-                                GM_setValue('quiCKIE_config', quickieSettings)
-
-                                window.alert('✔️ quiCKIE ✔️\n\nThe selected settings file has been imported\n\nThe page will now refresh')
-
-                                window.location.reload()
-
-                            } catch (error) {
-                                // The JSON parse has failed, so abort the import
-                                console.log(error)
-                                window.alert('❌ quiCKIE ❌\n\nThe selected settings file failed to import, likely because it is not valid JSON\n\nThe full error has been printed in the console')
-                            }
-                       }
-
-                    }
-
-                    inputElement.click()
-
-                },
-            },
-            'settingsExport' : {
-                'label': 'Export Settings',
-                'type': 'button',
-                'size': 25,
-                'click': function() {
-                    // Export GM_Config settings to a file
-
-                    // Pretty-print the settings string to make it easier to read
-                    let jsonParsed = JSON.parse(GM_getValue('quiCKIE_config'))
-
-                    let jsonString = JSON.stringify(jsonParsed, null, 4)
-
-                    // Save the quiCKIE settings to a local file
-                    saveToFile(jsonString, `quiCKIE-v${GM_info.script.version}-${new Date().toISOString().split('T')[0]}.json`)
-
-                },
-            },
-
 
             // ----- qui -----
             'quiURL': {
@@ -3795,31 +3730,33 @@ function initializeGMConfig() {
                 'type': 'hidden',
                 'default': 'show',
             },
+
+            // ------------------ Settings Import\Export ------------------
+
+            'settingsImport' : {
+                'label': 'Import',
+                'type': 'button',
+                'click': () => { fieldButtonImportSettings(GM_config.id, GM_info.script.version) },
+            },
+
+            'settingsExport' : {
+                'label': 'Export',
+                'type': 'button',
+                'click': (event) => { fieldButtonExportSettings('quiCKIE', GM_config.id, GM_info.script.version), event.target.value = '💾 Exported' },
+            },
+
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
+
         'events': {
-            'open': function (doc) {
+
+            'open': function () {
+                // @open
                 // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
+
+                const gmcFrame = this.frame
 
                 reloadWindow = false
 
-                let panelStyle = this.frame.style
-                panelStyle.backdropFilter = 'blur(9px)'
-                panelStyle.background = '#191d2aa3'
-                panelStyle.border = '1px solid #2C3E50'
-                panelStyle.borderRadius = '10px'
-                panelStyle.boxShadow = '0px 0px 15px #2C3E50'
-                panelStyle.color = '#ffffff'
-                panelStyle.height = 'auto'
-                panelStyle.inset = '50% auto auto 50%'
-                panelStyle.lineHeight = '22px'
-                panelStyle.margin = '0'
-                panelStyle.maxHeight = '95%'
-                panelStyle.padding = '0px 0px'
-                panelStyle.position = 'fixed'
-                panelStyle.transform = 'translate(-50%,-50%)'
-                panelStyle.width = '1650px'
-                panelStyle.overflowY = 'scroll'
-                panelStyle.touchAction = 'pan-x pan-y'
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
@@ -3949,11 +3886,11 @@ function initializeGMConfig() {
 
                     // Create the "Presets" header element
                     let presetsHeader = document.createElement('div')
-                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center; padding: 0px 0px 10px 0px;')
+                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center; margin: 20px;')
                     presetsHeader.innerHTML = `
                 🚀
-                <span style="user-select: none; background: none; background-color: #FFFFFF; -webkit-background-clip: text; -webkit-text-fill-color: transparent; -webkit-filter: brightness(110%); filter: brightness(110%); text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); transition: all 0.3s; font-weight: bold; padding: 10px 0px 10px 0px">
-                    <span href="${GM_info.script.homepage}" target="_blank" style="font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; color: #FFFFFF; text-decoration: none; background: none; line-height: 30px">Presets</span>
+                <span>
+                    <span href="${GM_info.script.homepage}" target="_blank" class="headerMainText">Presets</span>
                 </span>
                 🚀
                 `
@@ -4060,7 +3997,7 @@ function initializeGMConfig() {
 
 
                 // For each tracker, add the hideButton that will remove the table row and add the tracker to the hidden list
-                for ( let trackerLabelData of document.querySelectorAll('.quiCKIE_config_table_td_label') ) {
+                for ( let trackerLabelData of gmcFrame.querySelectorAll('.quiCKIE_config_table_td_label') ) {
                     let trackerRow = trackerLabelData.parentElement
 
                     let hideButton = document.createElement('a')
@@ -4372,7 +4309,7 @@ function initializeGMConfig() {
                 ruTorrentUsernameField.disabled = true
 
                 // Obfuscate the client credentials on blur
-                for ( let inputField of document.querySelectorAll('.quiCKIE_obfuscate') ) {
+                for ( let inputField of gmcFrame.querySelectorAll('.quiCKIE_obfuscate') ) {
                     inputField.type = 'password'
                     inputField.addEventListener('focus', () => { inputField.type = 'text' })
                     inputField.addEventListener('blur', () => { inputField.type = 'password' })
@@ -4403,11 +4340,11 @@ function initializeGMConfig() {
                     let allClientFields = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
                     let hideClientFields
 
-                    let allInputFields = document.querySelectorAll('input.quiCKIE_disabledField')
+                    let allInputFields = gmcFrame.querySelectorAll('input.disabledField')
                     for ( inputField of allInputFields ) {
                         // Enable any disabled fields
                         inputField.disabled = false
-                        inputField.classList.remove('quiCKIE_disabledField')
+                        inputField.classList.remove('disabledField')
                     }
 
 
@@ -4422,9 +4359,9 @@ function initializeGMConfig() {
 
                         hideClientFields = allClientFields.filter(function(item) { return item != 'qBitTorrent' })
 
-                        for ( let inputField of document.querySelectorAll('input[data-fieldtype="instance"]') ) {
+                        for ( let inputField of gmcFrame.querySelectorAll('input[data-fieldtype="instance"]') ) {
                             inputField.disabled = true
-                            inputField.classList.add('quiCKIE_disabledField')
+                            inputField.classList.add('disabledField')
                         }
 
                     } else if ( torrentClient == 'Transmission' ) {
@@ -4433,10 +4370,10 @@ function initializeGMConfig() {
 
                         let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
                         for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
+                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
                             for ( inputField of allInputFields ) {
                                 inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
+                                inputField.classList.add('disabledField')
                             }
                         }
 
@@ -4446,10 +4383,10 @@ function initializeGMConfig() {
 
                         let fieldsToDisable = ['category', 'tags', 'ratioLimit', 'seedTime', 'instance', 'subFolder', 'autoTMM', 'skipHash']
                         for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
+                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
                             for ( inputField of allInputFields ) {
                                 inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
+                                inputField.classList.add('disabledField')
                             }
                         }
 
@@ -4460,10 +4397,10 @@ function initializeGMConfig() {
 
                         let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
                         for ( field of fieldsToDisable ) {
-                            let allInputFields = document.querySelectorAll(`input[data-fieldtype="${field}"]`)
+                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
                             for ( inputField of allInputFields ) {
                                 inputField.disabled = true
-                                inputField.classList.add('quiCKIE_disabledField')
+                                inputField.classList.add('disabledField')
                             }
                         }
 
@@ -4524,42 +4461,6 @@ function initializeGMConfig() {
 
                 torrentClientChange()
 
-                // Create GitHub version element
-                let githubSVG = '<svg width="16" height="16" viewBox="0 0 98 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_730_27136)"><path d="M41.4395 69.3848C28.8066 67.8535 19.9062 58.7617 19.9062 46.9902C19.9062 42.2051 21.6289 37.0371 24.5 33.5918C23.2559 30.4336 23.4473 23.7344 24.8828 20.959C28.7109 20.4805 33.8789 22.4902 36.9414 25.2656C40.5781 24.1172 44.4062 23.543 49.0957 23.543C53.7852 23.543 57.6133 24.1172 61.0586 25.1699C64.0254 22.4902 69.2891 20.4805 73.1172 20.959C74.457 23.543 74.6484 30.2422 73.4043 33.4961C76.4668 37.1328 78.0937 42.0137 78.0937 46.9902C78.0937 58.7617 69.1934 67.6621 56.3691 69.2891C59.623 71.3945 61.8242 75.9883 61.8242 81.252L61.8242 91.2051C61.8242 94.0762 64.2168 95.7031 67.0879 94.5547C84.4102 87.9512 98 70.6289 98 49.1914C98 22.1074 75.9883 6.69539e-07 48.9043 4.309e-07C21.8203 1.92261e-07 -1.9479e-07 22.1074 -4.3343e-07 49.1914C-6.20631e-07 70.4375 13.4941 88.0469 31.6777 94.6504C34.2617 95.6074 36.75 93.8848 36.75 91.3008L36.75 83.6445C35.4102 84.2188 33.6875 84.6016 32.1562 84.6016C25.8398 84.6016 22.1074 81.1563 19.4277 74.7441C18.375 72.1602 17.2266 70.6289 15.0254 70.3418C13.877 70.2461 13.4941 69.7676 13.4941 69.1934C13.4941 68.0449 15.4082 67.1836 17.3223 67.1836C20.0977 67.1836 22.4902 68.9063 24.9785 72.4473C26.8926 75.2227 28.9023 76.4668 31.2949 76.4668C33.6875 76.4668 35.2187 75.6055 37.4199 73.4043C39.0469 71.7773 40.291 70.3418 41.4395 69.3848Z" fill="white"/></g><defs><clipPath id="clip0_730_27136"><rect width="98" height="96" fill="white"/></clipPath></defs></svg>'
-
-                let versionElement = document.createElement('a')
-                versionElement.classList = 'version_label reset'
-                versionElement.title = 'Source Code on GitHub'
-                versionElement.target = '_blank'
-                versionElement.href = `${GM_info.script.homepage}`
-                versionElement.innerHTML = `${githubSVG} Version ${GM_info.script.version}`
-
-                doc.getElementById('quiCKIE_config_buttons_holder').appendChild(versionElement)
-
-                // Adjust the Import\Export buttons
-                let exportButton = document.getElementById('quiCKIE_config_field_settingsExport')
-                exportButton.classList.add('saveclose_buttons')
-
-                let importButton = document.getElementById('quiCKIE_config_field_settingsImport')
-                importButton.classList.add('saveclose_buttons')
-
-                let buttonsHolderElement = document.getElementById('quiCKIE_config_buttons_holder')
-                buttonsHolderElement.appendChild(importButton)
-                buttonsHolderElement.appendChild(exportButton)
-
-                // Remove the now empty <div> elements
-                for ( let emptyElement of document.getElementById('quiCKIE_config').querySelectorAll('div.config_var:empty') ) {
-                    emptyElement.remove()
-                }
-
-                // Add success animation to save button
-                let saveButton = doc.getElementById('quiCKIE_config_saveBtn')
-                saveButton.addEventListener('click', () => {
-                    // When the save button is clicked, temporarily assign a css class to produce the animation
-                    saveButton.classList.add('success')
-                    setTimeout(() => saveButton.classList.remove('success'), 500)
-                })
-
                 if ( this.get('welcomeMessage') == 'show' ) {
                     // Display this welcomeMessage when first opening the quiCKIE settings panel
                     confirm("🐰 Welcome to quiCKIE! 🐰\n\nEvery tracker supported by quiCKIE was contributed by a member of that tracker, without whom it could not have been added 🫶\n\nAdding new trackers is a communal effort, so if there's a tracker that you belong to that isn't yet supported, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for and named after qui, a qBitTorrent WebUI from the autobrr team, with other clients being added in later on in development.\n\nIf you encounter a bug, a page that has no BunnyButtons, or even a broken\\dead tracker, open an issue on the quiCKIE GitHub repo.\n\nEnjoy the UserScript, hover over the emojis for details, and finally a shout-out to the folk who are keeping these communities thriving ❤️\n\n - Wirly")
@@ -4568,9 +4469,14 @@ function initializeGMConfig() {
 
                 }
 
+                eventOpenCleanupFrame(gmcFrame)
+
             },
+
             'save': function () {
                 // Actions to take when the 'Save' button is clicked
+                this.frame.querySelector('button[id$="_saveBtn"]').innerText = '💾 Saved'
+
                 reloadWindow = true
 
                 // Clear cached data when settings are saved
@@ -4581,8 +4487,10 @@ function initializeGMConfig() {
                 })
 
             },
-            'close': function () {
+
+            'close': function() {
                 // Actions to take when the 'Close' button is clicked
+
                 if (reloadWindow) {
                     if (this.frame) {
                         window.location.reload()
@@ -4592,16 +4500,216 @@ function initializeGMConfig() {
                         }, 250)
                     }
                 }
+
             },
+
             'reset': function () {
                 // Actions to take when the 'Reset' button is clicked
                 if (typeof resetToDefaults === 'function') {
                     resetToDefaults()
                 }
             }
+
         },
-        // The CSS to use for the menu, loaded through the @resource line
-        'css': GM_getResourceText('settingsPanelCSS')
+
+        // The CSS to use for the GM_config frame, loaded through the @resource line
+        'css': `
+
+            ${GM_getResourceText('gmcFrameCSS')}
+
+            :root {
+                /* ---------- gmcFrameCSS Overrides ---------- */
+                --frameWidth: 1650px;
+                --frameHeight: auto;
+                --frameInset: 50% auto auto 50%;
+                --frameTransform: translate(-50%,-50%);
+                --saveCloseButtonsWidth: 36%;
+                --labelFieldFontSize: 16px;
+            }
+
+            #quiCKIE_config {
+
+                /* ----------------------------------- Settings Row ---------------------------------- */
+
+                div.quiCKIE_settingsDiv {
+                    /* Align settings row to center */
+                    text-align: center;
+                    margin: 10px 0px 10px 0px;
+                    padding-bottom: 10px;
+                }
+
+                .settingsDivLabel{
+                    /* Global settings labels */
+                    margin: 0px 6px 0px 10px;
+                }
+
+                #quiCKIE_config_field_quiURL,
+                #quiCKIE_config_field_qBitTorrentURL,
+                #quiCKIE_config_field_transmissionURL,
+                #quiCKIE_config_field_delugeURL,
+                #quiCKIE_config_field_ruTorrentURL {
+                    /* TorrentClient input */
+                    width: 210px;
+                    max-width: 210px;
+                }
+
+                #quiCKIE_config_field_quiApiKey,
+                #quiCKIE_config_field_qBitTorrentApiKey,
+                #quiCKIE_config_field_transmissionUsername,
+                #quiCKIE_config_field_transmissionPassword,
+                #quiCKIE_config_field_delugePassword,
+                #quiCKIE_config_field_ruTorrentUsername,
+                #quiCKIE_config_field_ruTorrentPassword {
+                    /* ApiKey input */
+                    width: 55px;
+                    max-width: 55px;
+                }
+
+                #quiCKIE_config_field_torrentClient {
+                    /* Preset input */
+                    width: 100px;
+                    max-width: 100px;
+                }
+
+                #quiCKIE_config_field_presetCount {
+                    /* Preset input */
+                    width: 30px;
+                    max-width: 30px;
+                }
+
+                #quiCKIE_config_field_globalMiddleClickAction,
+                #quiCKIE_config_field_globalLeftClickAction,
+                #quiCKIE_config_field_bunnyButtonPlacement {
+                    width: 75px;
+                }
+
+
+                #quiCKIE_config_field_thirdPartyDelay {
+                    /* 3rd Party Delay input */
+                    width: 40px;
+                    max-width: 40px;
+                }
+
+                #quiCKIE_config_field_hiddenTrackers {
+                    /* HiddenTrackers input */
+                    width: 175px;
+                    max-width: 200px;
+                }
+
+                /* ----------------------------------- TABLE - Columns ----------------------------------- */
+
+                /* Tracker \ Preset */
+                #quiCKIE_config_tracker_table_colg_col_tracker,
+                #quiCKIE_config_preset_table_colg_col_name {
+                    width: 135px;
+                    max-width: 135px;
+                }
+
+                /* Category */
+                #quiCKIE_config_tracker_table_colg_col_category,
+                #quiCKIE_config_preset_table_colg_col_category {
+                    width: 125px;
+                    max-width: 125px;
+                }
+
+                /* PresetTrackers */
+                #quiCKIE_config_preset_table_colg_col_presettrackers {
+                    width: 220px;
+                }
+
+                /* SavePath */
+                #quiCKIE_config_tracker_table_colg_col_savepath,
+                #quiCKIE_config_preset_table_colg_col_savepath {
+                    width: 200px;
+                }
+
+                /* Tags */
+                #quiCKIE_config_tracker_table_colg_col_tags,
+                #quiCKIE_config_preset_table_colg_col_tags {
+                    width: 150px;
+                    max-width: 150px;
+                }
+
+                /* Integer Columns */
+                #quiCKIE_config_tracker_table_colg_col_ratiolimit,
+                #quiCKIE_config_preset_table_colg_col_ratiolimit,
+                #quiCKIE_config_tracker_table_colg_col_seedtime,
+                #quiCKIE_config_preset_table_colg_col_seedtime,
+                #quiCKIE_config_tracker_table_colg_col_dllimit,
+                #quiCKIE_config_preset_table_colg_col_dllimit,
+                #quiCKIE_config_tracker_table_colg_col_uplimit,
+                #quiCKIE_config_preset_table_colg_col_uplimit,
+                #quiCKIE_config_tracker_table_colg_col_instance,
+                #quiCKIE_config_preset_table_colg_col_instance,
+                #quiCKIE_config_tracker_table_colg_col_paginationloop {
+                    width: 55px;
+                    max-width: 55px;
+                }
+
+                /* LeftClick */
+                #quiCKIE_config_tracker_table_colg_col_leftclick {
+                    width: 80px;
+                    max-width: 80px;
+                }
+
+                /* ThirdPartyScan */
+                #quiCKIE_config_tracker_table_colg_col_thirdpartyscan {
+                    width: 80px;
+                    max-width: 80px;
+                }
+
+                /* Checkbox Columns */
+                #quiCKIE_config_tracker_table_colg_col_hidedl,
+                #quiCKIE_config_tracker_table_colg_col_startpaused,
+                #quiCKIE_config_preset_table_colg_col_startpaused,
+                #quiCKIE_config_tracker_table_colg_col_subfolder,
+                #quiCKIE_config_preset_table_colg_col_subfolder,
+                #quiCKIE_config_tracker_table_colg_col_seqpieces,
+                #quiCKIE_config_preset_table_colg_col_seqpieces,
+                #quiCKIE_config_tracker_table_colg_col_autotmm,
+                #quiCKIE_config_preset_table_colg_col_autotmm,
+                #quiCKIE_config_tracker_table_colg_col_skiphash,
+                #quiCKIE_config_preset_table_colg_col_skiphash {
+                    width: 50px;
+                    max-width: 50px;
+                }
+
+
+                /* ----------------------------------- TABLE - Body ----------------------------------- */
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_thirdPartyScan,
+                #quiCKIE_config_preset_table_tbody tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_instance,
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_hideDL,
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_startPaused,
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_subFolder,
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_seqPieces,
+                tr.quiCKIE_config_table_tbody_tr:nth-child(even) td.quiCKIE_config_table_td_autoTMM {
+                    /* Right-border for the checkbox columns */
+                    border-color: var(--tableBorders);
+                    border-style: none solid none none !important;
+                    border-width: 3px;
+                }
+
+                label.quiCKIE_config_field_tracker_label {
+                    /* Tracker Labels */
+                    font-size: 16px;
+                    text-decoration: none;
+                    padding: 5px 0px 5px 0px;
+                    color: var(--headerSubTextColor);
+                }
+
+                #quiCKIE_config_field_globalTorrentStatus,
+                #quiCKIE_config_field_globalForcedTorrentFile {
+                    margin: 0 2px 0 2px;
+                }
+
+                td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
+                    margin: 5px 0px 5px 0px;
+                }
+
+            }
+
+        `
+        
     })
 
     // Register the settings panel to be opened from the UserScript manager dialouge
@@ -6997,57 +7105,3 @@ function base64encode(inputData) {
 
 }
 
-
-function saveToFile(fileData, filename) {
-    // Save the provided fileData to a local file
-
-    mimeTypes = {
-        // The different MIME types this function is setup to handle
-        // MIME Types: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
-
-        'json': 'application/json;charset=utf-8;',
-        'text': 'text/plain;charset=utf-8;',
-        'txt': 'text/plain;charset=utf-8;',
-        'torrent': 'application/x-bittorrent',
-
-    }
-
-    let filetype
-
-    try {
-        // Parse the provided filename to determine the filetype
-        filetype = filename.match(/.*\.(\w+)$/)[1]
-
-    } catch {
-        // No file extension was provided, so assume it to be a text type
-        filetype = 'text'
-
-    }
-
-    let blobType
-
-    if ( Object.keys(mimeTypes).includes(filetype) ) {
-        // The filetype has a registered mime type
-        blobType = mimeTypes[filetype]
-
-    } else {
-        // The filetype is not registerd, so assume it to be a text type
-        blobType = 'text/plain;charset=utf-8;'
-    }
-
-    // Create the blob object that will contain the data to be written
-    let blobData = new Blob([fileData], { type: blobType });
-    let fileURL = URL.createObjectURL(blobData);
-
-    // Create the HTML element that will be automatically clicked on to download the file
-    let fileElement = document.createElement("a");
-    fileElement.href = fileURL;
-    fileElement.download = filename;
-
-    document.body.appendChild(fileElement);
-    fileElement.click();
-    document.body.removeChild(fileElement);
-
-    URL.revokeObjectURL(fileURL);
-
-}
