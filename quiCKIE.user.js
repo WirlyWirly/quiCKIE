@@ -587,7 +587,7 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcFrameStylesheet.css?raw=true
+// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css?raw=true
 // @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
@@ -4518,7 +4518,7 @@ function initializeGMConfig() {
             ${GM_getResourceText('gmcFrameCSS')}
 
             :root {
-                /* ---------- gmcFrameCSS Overrides ---------- */
+                /* ---------- UserScript Overrides ---------- */
                 --frameWidth: 1650px;
                 --frameHeight: auto;
                 --frameInset: 50% auto auto 50%;
