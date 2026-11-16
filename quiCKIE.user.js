@@ -3731,20 +3731,6 @@ function initializeGMConfig() {
                 'default': 'show',
             },
 
-            // ------------------ Settings Import\Export ------------------
-
-            'settingsImport' : {
-                'label': 'Import',
-                'type': 'button',
-                'click': () => { fieldButtonImportSettings(GM_config.id, GM_info.script.version) },
-            },
-
-            'settingsExport' : {
-                'label': 'Export',
-                'type': 'button',
-                'click': (event) => { fieldButtonExportSettings('quiCKIE', GM_config.id, GM_info.script.version), event.target.value = '★ Exported ★' },
-            },
-
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
 
         'events': {
@@ -3755,8 +3741,10 @@ function initializeGMConfig() {
 
                 const gmcFrame = this.frame
 
-                reloadWindow = false
+                // Add the Import\Export buttons
+                importExportButtons(this, 'quiCKIE', GM_info.script.version)
 
+                reloadWindow = false
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
@@ -4469,7 +4457,9 @@ function initializeGMConfig() {
 
                 }
 
-                eventOpenCleanupFrame(gmcFrame)
+                versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
+
+                gmcFrameCleanup(this.frame)
 
             },
 
