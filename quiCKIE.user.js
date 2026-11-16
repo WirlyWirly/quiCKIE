@@ -3742,7 +3742,7 @@ function initializeGMConfig() {
             'settingsExport' : {
                 'label': 'Export',
                 'type': 'button',
-                'click': (event) => { fieldButtonExportSettings('quiCKIE', GM_config.id, GM_info.script.version), event.target.value = '💾 Exported' },
+                'click': (event) => { fieldButtonExportSettings('quiCKIE', GM_config.id, GM_info.script.version), event.target.value = '★ Exported ★' },
             },
 
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
@@ -4475,7 +4475,7 @@ function initializeGMConfig() {
 
             'save': function () {
                 // Actions to take when the 'Save' button is clicked
-                this.frame.querySelector('button[id$="_saveBtn"]').innerText = '💾 Saved'
+                this.frame.querySelector('button[id$="_saveBtn"]').innerText = '★ Saved ★'
 
                 reloadWindow = true
 
