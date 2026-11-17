@@ -7104,5 +7104,3 @@ function base64encode(inputData) {
     })
 
 }
-
-GM_config.open()
