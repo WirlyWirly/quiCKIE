@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.6
+// @version     1.61
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -4503,6 +4503,7 @@ function initializeGMConfig() {
         },
 
         // The CSS to use for the GM_config frame, loaded through the @resource line
+        // @css
         'css': `
 
             ${GM_getResourceText('gmcFrameCSS')}
@@ -4519,18 +4520,60 @@ function initializeGMConfig() {
 
             #quiCKIE_config {
 
-                /* ----------------------------------- Settings Row ---------------------------------- */
+                /* ----------------------------------- Global Settings ---------------------------------- */
 
                 div.quiCKIE_settingsDiv {
-                    /* Align settings row to center */
-                    text-align: center;
-                    margin: 10px 0px 10px 0px;
-                    padding-bottom: 10px;
+                    display: grid;
+                    grid-column-gap: 0px;
+                    margin: 18px auto;
+                    align-items: center;
+
+                    input, select {
+                        margin-right: 14px;
+                        
+                        &[type="checkbox"] {
+                            width: unset;
+                        }
+
+                    }
+                    
+                    &#quiCKIE_settingsDivFirst {
+                        grid-template-columns: repeat(12, auto);
+                        max-width: 1050px;
+                    }
+
+                    &#quiCKIE_settingsDivSecond {
+                        grid-template-columns: repeat(10, auto);
+                        max-width: 1115px;
+                    }
+
                 }
 
-                .settingsDivLabel{
-                    /* Global settings labels */
-                    margin: 0px 6px 0px 10px;
+                #quiCKIE_config_field_presetCount {
+                    /* Preset input */
+                    width: 30px;
+                }
+
+                #quiCKIE_config_field_globalLeftClickAction,
+                #quiCKIE_config_field_globalMiddleClickAction,
+                #quiCKIE_config_field_bunnyButtonPlacement {
+                    width: 75px;
+                }
+
+
+                #quiCKIE_config_field_hiddenTrackers {
+                    /* HiddenTrackers input */
+                    width: 220px;
+                }
+
+                #quiCKIE_config_field_thirdPartyDelay {
+                    /* 3rd Party Delay input */
+                    width: 40px;
+                }
+
+                #quiCKIE_config_field_torrentClient {
+                    /* Preset input */
+                    width: 100px;
                 }
 
                 #quiCKIE_config_field_quiURL,
@@ -4540,7 +4583,6 @@ function initializeGMConfig() {
                 #quiCKIE_config_field_ruTorrentURL {
                     /* TorrentClient input */
                     width: 210px;
-                    max-width: 210px;
                 }
 
                 #quiCKIE_config_field_quiApiKey,
@@ -4552,41 +4594,14 @@ function initializeGMConfig() {
                 #quiCKIE_config_field_ruTorrentPassword {
                     /* ApiKey input */
                     width: 55px;
-                    max-width: 55px;
-                }
-
-                #quiCKIE_config_field_torrentClient {
-                    /* Preset input */
-                    width: 100px;
-                    max-width: 100px;
-                }
-
-                #quiCKIE_config_field_presetCount {
-                    /* Preset input */
-                    width: 30px;
-                    max-width: 30px;
-                }
-
-                #quiCKIE_config_field_globalMiddleClickAction,
-                #quiCKIE_config_field_globalLeftClickAction,
-                #quiCKIE_config_field_bunnyButtonPlacement {
-                    width: 75px;
-                }
-
-
-                #quiCKIE_config_field_thirdPartyDelay {
-                    /* 3rd Party Delay input */
-                    width: 40px;
-                    max-width: 40px;
-                }
-
-                #quiCKIE_config_field_hiddenTrackers {
-                    /* HiddenTrackers input */
-                    width: 175px;
-                    max-width: 200px;
                 }
 
                 /* ----------------------------------- TABLE - Columns ----------------------------------- */
+
+                table :is(input, select) {
+                    width: 95%;
+                }
+
 
                 /* Tracker \ Preset */
                 #quiCKIE_config_tracker_table_colg_col_tracker,
@@ -4685,11 +4700,6 @@ function initializeGMConfig() {
                     text-decoration: none;
                     padding: 5px 0px 5px 0px;
                     color: var(--headerSubTextColor);
-                }
-
-                #quiCKIE_config_field_globalTorrentStatus,
-                #quiCKIE_config_field_globalForcedTorrentFile {
-                    margin: 0 2px 0 2px;
                 }
 
                 td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
@@ -7095,3 +7105,4 @@ function base64encode(inputData) {
 
 }
 
+GM_config.open()
