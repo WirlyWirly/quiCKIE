@@ -4527,6 +4527,7 @@ function initializeGMConfig() {
                     grid-column-gap: 0px;
                     margin: 18px auto;
                     align-items: center;
+                    max-width: fit-content;
 
                     input, select {
                         margin-right: 14px;
@@ -4539,12 +4540,10 @@ function initializeGMConfig() {
                     
                     &#quiCKIE_settingsDivFirst {
                         grid-template-columns: repeat(12, auto);
-                        max-width: 1050px;
                     }
 
                     &#quiCKIE_settingsDivSecond {
-                        grid-template-columns: repeat(10, auto);
-                        max-width: 1115px;
+                        grid-template-columns: repeat(12, auto);
                     }
 
                 }
