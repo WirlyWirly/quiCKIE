@@ -4698,12 +4698,9 @@ function initializeGMConfig() {
                     font-size: 16px;
                     text-decoration: none;
                     padding: 5px 0px 5px 0px;
-                    color: var(--headerSubTextColor);
+                    color: var(--headerSubFontColor);
                 }
 
-                td.quiCKIE_config_table_tbody_td_field input[type="checkbox"] {
-                    margin: 5px 0px 5px 0px;
-                }
 
             }
 
