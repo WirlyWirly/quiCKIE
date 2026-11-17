@@ -3739,12 +3739,11 @@ function initializeGMConfig() {
                 // @open
                 // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
 
+                reloadWindow = false
                 const gmcFrame = this.frame
 
                 // Add the Import\Export buttons
                 importExportButtons(this, 'quiCKIE', GM_info.script.version)
-
-                reloadWindow = false
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
