@@ -4025,6 +4025,9 @@ function initializeGMConfig() {
 
                 // Set the placeholder examples for the various input fields
                 try {
+                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
+                    document.getElementById('quiCKIE_config_field_thirdPartyDelay').placeholder = '500'
+
                     document.getElementById('quiCKIE_config_field_quiURL').placeholder = 'http://localhost:7476/qui/instances/1'
                     document.getElementById('quiCKIE_config_field_quiApiKey').placeholder = 'abc123'
 
@@ -4042,7 +4045,6 @@ function initializeGMConfig() {
                     document.getElementById('quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
                     document.getElementById('quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
                     document.getElementById('quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
                     document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
                     document.getElementById('quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
@@ -4088,6 +4090,8 @@ function initializeGMConfig() {
                 }
 
                 // Move global settings below the header
+
+                // --------------- FIRST ROW ---------------
                 let settingsDivFirst = document.createElement('div')
                 settingsDivFirst.id = 'quiCKIE_settingsDivFirst'
                 settingsDivFirst.classList.add('quiCKIE_settingsDiv')
@@ -4141,7 +4145,7 @@ function initializeGMConfig() {
                 settingsDivFirst.appendChild(globalForcedTorrentFileLabel)
                 settingsDivFirst.appendChild(globalForcedTorrentFileField)
 
-                // ------ SECOND ROW ------
+                // --------------- SECOND ROW ---------------
 
                 let settingsDivSecond = document.createElement('div')
                 settingsDivSecond.classList.add('quiCKIE_settingsDiv')
@@ -4340,10 +4344,12 @@ function initializeGMConfig() {
                     let torrentClient = document.getElementById('quiCKIE_config_field_torrentClient').value
 
                     if ( torrentClient == 'qui' ) {
+                        // qui is selected
 
                         hideClientFields = allClientFields.filter(function(item) { return item != 'qui' })
 
                     } else if ( torrentClient == 'qBitTorrent' ) {
+                        // qBitTorrent is selected
 
                         hideClientFields = allClientFields.filter(function(item) { return item != 'qBitTorrent' })
 
@@ -4353,6 +4359,7 @@ function initializeGMConfig() {
                         }
 
                     } else if ( torrentClient == 'Transmission' ) {
+                        // Tranmission is selected
 
                         hideClientFields = allClientFields.filter(function(item) { return item != 'transmission' })
 
@@ -4366,6 +4373,7 @@ function initializeGMConfig() {
                         }
 
                     } else if ( torrentClient == 'Deluge' ) {
+                        // Deluge is selected
 
                         hideClientFields = allClientFields.filter(function(item) { return item != 'deluge' })
 
@@ -4555,11 +4563,6 @@ function initializeGMConfig() {
                 }
 
 
-                #quiCKIE_config_field_hiddenTrackers {
-                    /* HiddenTrackers input */
-                    width: 220px;
-                }
-
                 #quiCKIE_config_field_thirdPartyDelay {
                     /* 3rd Party Delay input */
                     width: 40px;
@@ -4570,6 +4573,7 @@ function initializeGMConfig() {
                     width: 100px;
                 }
 
+                #quiCKIE_config_field_hiddenTrackers,
                 #quiCKIE_config_field_quiURL,
                 #quiCKIE_config_field_qBitTorrentURL,
                 #quiCKIE_config_field_transmissionURL,
