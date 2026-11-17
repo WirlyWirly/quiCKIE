@@ -4531,11 +4531,6 @@ function initializeGMConfig() {
 
                     input, select {
                         margin-right: 14px;
-                        
-                        &[type="checkbox"] {
-                            width: unset;
-                        }
-
                     }
                     
                     &#quiCKIE_settingsDivFirst {
