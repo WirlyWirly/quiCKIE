@@ -3877,7 +3877,7 @@ function initializeGMConfig() {
                     presetsHeader.innerHTML = `
                 🚀
                 <span>
-                    <span href="${GM_info.script.homepage}" target="_blank" class="headerMainText">Presets</span>
+                    <a href="${GM_info.script.homepage}" target="_blank" class="headerMainText">Presets</span>
                 </span>
                 🚀
                 `
