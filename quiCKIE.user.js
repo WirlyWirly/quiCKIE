@@ -3871,12 +3871,8 @@ function initializeGMConfig() {
 
                     // Create the "Presets" header element
                     let presetsHeader = document.createElement('div')
-                    presetsHeader.setAttribute('style', 'font-size: 20pt; text-align: center; margin: 20px;')
-                    presetsHeader.innerHTML = `
-                <span>
-                🚀 <a href="${GM_info.script.homepage}" target="_blank" class="headerMainText">Presets</a> 🚀
-                </span>
-                `
+                    presetsHeader.id = 'quiCKIE_presetsHeader'
+                    presetsHeader.innerHTML = `🚀 <a href="${GM_info.script.homepage}" target="_blank" class="headerMainText">Presets</a> 🚀`
 
                     // presetsHeader.setAttribute('style', "text-align: center; background: none; text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); padding: 10px 0px 10px 0px; font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; line-height: 30px")
 
@@ -4523,6 +4519,10 @@ function initializeGMConfig() {
             }
 
             #quiCKIE_config {
+                
+                #quiCKIE_presetsHeader {
+                    margin: 20px;
+                }
 
                 /* ----------------------------------- Global Settings ---------------------------------- */
 
