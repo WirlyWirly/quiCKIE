@@ -3806,7 +3806,7 @@ function initializeGMConfig() {
                 // 🚧 Disable ruTorrent from being selected as a client until the ruTorrentPOST() function is implemented
                 let ruTorrentSelection = gmcFrame.querySelector('#quiCKIE_config_field_torrentClient').querySelector('[value*="ruTorrent"]')
                 ruTorrentSelection.disabled = true
-                ruTorrentSelection.classList.add('disabledField')
+                ruTorrentSelection.classList.add('disabled')
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
