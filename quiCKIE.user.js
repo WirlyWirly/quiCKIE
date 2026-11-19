@@ -3671,7 +3671,7 @@ function initializeGMConfig() {
 
             // ----- SecondRow-----
             'hiddenTrackers': {
-                'label': '🙈 Hidden Trackers:',
+                'label': '🙈 Hidden:',
                 'type': 'text',
                 'default': '',
                 'section': 'globalsRow2',
