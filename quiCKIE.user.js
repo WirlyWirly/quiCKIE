@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.61
+// @version     1.62
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -2974,9 +2974,9 @@ if ( primaryDomain == 'animebytes' ) {
           `
         trackerHandlingOptions.bunnyButtonAddClasses = ["form__button", "form__button--outlined", "form__button--centered"]
     }
-    
+
     unit3dTrackerHandler(trackerHandlingOptions)
-    
+
 } else if ( primaryDomain == 'samaritano' ) {
     // ----------------------------------- Samaritano -----------------------------------
     // Bookmarks | Browse | Details | Playlists
@@ -3511,12 +3511,15 @@ function initializeGMConfig() {
         // The data that will be used as the '.textContent' and '.title' in the settings panel's elements. The key names are the '.toLowerCase()' of the items in the trackerFieldSuffixes array and the items in the presetFieldSuffixes array.
 
         'globalsTitles': {
+
             'presetCount': "─── 🚀 Presets 🚀 ───\n\nThe number of presets that will be generated in the quiCKIE settings panel\n\n⚠️ Lowering this number will remove those rows, which in turn deletes their saved settings",
             'globalLeftClickAction': "─── 🖱️ Left-Click \\ Tap 🖱️ ───\n\nThe action to take when performing a Left-Click\\Tap on a BunnyButton\n\n🔹 Affects all trackers that have the '🖱️' column set to 'Global'",
             'globalMiddleClickAction': '─── 🖱️ Middle-Click 🖱️ ───\n\nThe action to take when performing a Middle-Click on a BunnyButton',
             'bunnyButtonPlacement': '─── ↔️ Placement  ↔️ ───\n\nThe placement of the BunnyButtons relative to the sites download buttons',
             'globalTorrentStatus': '─── 💎 Torrent Status 💎 ───\n\nUpdate the emoji of a BunnyButton to reflect the current status of the associated torrent\n\nℹ️ Torrent Status checks are supported on a per-tracker basis and therefore not available on all trackers\n\n🔹 Torrent Status Emojiography\n🌱 = Seeding\n🍁 = Snatched\n📢 = Featured\n💎 = FreeLeech\n\n⚠️ The BunnyButton status of a torrent is NOT a guarantee and should be verified before downloading',
-            'globalForcedTorrentFile': '─── 🧲 Torrent File  🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\n🔹 By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\n🔹 Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
+            'bunnyButtonTooltips': '─── ℹ️ Tooltips ℹ️ ───\n\nProvide a tooltip when hovering over BunnyButtons and Presets\n\nℹ️ This does not affect the tooltips in the quiCKIE settings panel',
+            'globalForcedTorrentFile': '─── 🧲 Torrent File 🧲 ───\n\nForce all BunnyButtons to download the .torrent file through the browser before sending it to the client\n\n🔹 By default, quiCKIE will determine for itself if the torrentURL can be sent directly to the client or should first be downloaded through the browser\n\n🔹 Magnet links are ALWAYS sent directly to the client, as they are not proper http links that can be downloaded through the browser',
+
             'hiddenTrackers': "─── 🙈 Hidden trackers 🙈 ───\n\nA comma separated list of trackers to be removed from the quiCKIE settings panel\n\n🔹 Hover over the names in the '🌎 Tracker' column for a '🙈' button that will quickly add the tracker to this hidden list\n\n🔹 This does not disable quiCKIE on those trackers, it simply hides the tracker from cluttering this settings Panel",
             'thirdPartyDelay': "─── 🤝 3rd Party Delay 🤝 ───\n\nThe delay in milliseconds to wait until scanning for third-party links that have quiCKIE integration\n\n🔹 This only applies to trackers that have the '🤝' column enabled\n\n⚠️ Settings this too low can cause race issues between quiCKIE and the third-party UserScript, so the recommended time is +500ms",
             'torrentClient': "─── 🖥️ Torrent Client 🖥️ ───\n\nThe torrent client for where to send torrents\n\n🔹 Not all clients will support all the available quiCKIE settings\n\n🔹 quiCKIE was initially written for qui, with support for other clients being added much later on. As a result, the names of the various settings may not correlate exactly with what other clients would call them.",
@@ -3538,6 +3541,7 @@ function initializeGMConfig() {
             'ruTorrentURL': "─── 🔗 ruTorrentURL 🔗 ───\n\nThe full URL to a running ruTorrent service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:8080",
             'ruTorrentUsername': '─── 🔑 Username 🔑 ───\n\nThe username for logging into ruTorrent through the web interface',
             'ruTorrentPassword': '─── 🔑 Password 🔑 ───\n\nThe password for logging into ruTorrent through the web interface',
+
         },
 
         'columnText': {
@@ -3609,126 +3613,160 @@ function initializeGMConfig() {
             </div>
 
             <div class="headerSubText">
-                ★ Hover over emojis for details ★ 
+                ★ Hover over emojis for details ★
             </div>
         `,
 
         'fields': {...{
-            // Merge these two field objects so that GM_config reads them properly
 
+            // When adding new global fields, increase the 'grid-template-columns' in @cssSettingsPanel by 2 for each field
+
+            // ----- FirstRow -----
             'presetCount': {
                 'label': '🚀 Presets:',
                 'type': 'int',
                 'default': 3,
+                'section': 'globalsRow1',
+                'title': panelTextData.globalsTitles.presetCount,
             },
             'globalLeftClickAction': {
                 'label': '🖱️ Left-Click \\ Tap:',
                 'type': 'select',
                 'options': ['Tracker', 'Settings', 'Client', 'TorrentFile', 'Nothing'],
                 'default': 'Tracker',
+                'title': panelTextData.globalsTitles.globalLeftClickAction,
             },
             'globalMiddleClickAction': {
                 'label': '🖱️ Middle-Click:',
                 'type': 'select',
                 'options': ['Tracker', 'Settings', 'Client', 'TorrentFile', 'Nothing'],
                 'default': 'Client',
+                'title': panelTextData.globalsTitles.globalMiddleClickAction,
             },
             'bunnyButtonPlacement': {
                 'label': '↔️ Placement:',
                 'type': 'select',
                 'options': ['After', 'Before'],
                 'default': 'After',
+                'title': panelTextData.globalsTitles.bunnyButtonPlacement,
             },
             'globalTorrentStatus': {
                 'label': '💎 Torrent Status:',
                 'type': 'checkbox',
-                'default': true
+                'default': true,
+                'title': panelTextData.globalsTitles.globalTorrentStatus,
+            },
+            'bunnyButtonTooltips': {
+                'label': 'ℹ️ Tooltips',
+                'type': 'checkbox',
+                'default': true,
+                'title': panelTextData.globalsTitles.bunnyButtonTooltips,
             },
             'globalForcedTorrentFile': {
                 'label': '🧲 Torrent File:',
                 'type': 'checkbox',
-                'default': false
+                'default': false,
+                'title': panelTextData.globalsTitles.globalForcedTorrentFile,
             },
+
+            // ----- SecondRow-----
             'hiddenTrackers': {
                 'label': '🙈 Hidden Trackers:',
                 'type': 'text',
                 'default': '',
+                'section': 'globalsRow2',
+                'title': panelTextData.globalsTitles.hiddenTrackers,
             },
             'thirdPartyDelay': {
                 'label': '🤝 Delay:',
                 'type': 'int',
                 'default': 2000,
+                'title': panelTextData.globalsTitles.thirdPartyDelay,
             },
             'torrentClient': {
                 'label': '🖥️ Client:',
                 'type': 'select',
                 'options': ['qui', 'qBitTorrent', 'Transmission', 'Deluge', '🚧 ruTorrent 🚧'],
                 'default': 'qui',
+                'title': panelTextData.globalsTitles.torrentClient,
             },
 
             // ----- qui -----
             'quiURL': {
                 'label': '🔗 qui:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.quiURL,
             },
             'quiApiKey': {
                 'label': '🔑 ApiKey:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.quiApiKey,
             },
 
             // ----- qBitTorrent -----
             'qBitTorrentURL': {
                 'label': '🔗 qBitTorrent:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.qBitTorrentURL,
             },
             'qBitTorrentApiKey': {
                 'label': '🔑 ApiKey:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.qBitTorrentApiKey,
             },
 
             // ----- Transmission -----
             'transmissionURL': {
                 'label': '🔗 Transmission:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.transmissionURL,
             },
             'transmissionUsername': {
                 'label': '🧑 Username:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.transmissionUsername,
             },
             'transmissionPassword': {
                 'label': '🔑 Password:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.transmissionPassword,
             },
 
             // ----- Deluge -----
             'delugeURL': {
                 'label': '🔗 Deluge:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.delugeURL,
             },
             'delugePassword': {
                 'label': '🔑 Password:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.delugePassword,
             },
 
             // ----- ruTorrent -----
             'ruTorrentURL': {
                 'label': '🔗 ruTorrent:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.ruTorrentURL,
             },
             'ruTorrentUsername': {
                 'label': '🧑 Username:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.ruTorrentUsername,
             },
             'ruTorrentPassword': {
                 'label': '🔑 Password:',
                 'type': 'text',
+                'title': panelTextData.globalsTitles.ruTorrentPassword,
             },
 
-            'welcomeMessage': {
+           'welcomeMessage': {
                 'type': 'hidden',
                 'default': 'show',
-            },
+            }
 
+        // Merge the global fields and tracker\preset fields into a single object
         }, ...gmConfigTrackerFields, ...gmConfigPresetsFields},
 
         'events': {
@@ -3742,6 +3780,33 @@ function initializeGMConfig() {
 
                 // Add the Import\Export buttons
                 importExportButtons(this, 'quiCKIE', GM_info.script.version)
+
+                // --------------- GLOBAL SECTIONS ---------------
+                for ( let sectionHolder of gmcFrame.querySelectorAll('div.section_header_holder') ) {
+                    sectionHolder.querySelector('.section_header').remove()
+
+                    for ( let field of sectionHolder.querySelectorAll('.config_var') ) {
+                        field.classList.add('display_inline')
+                    }
+
+                }
+
+                // Obfuscate all client fields until they have focus
+                let allClientNames = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
+                for ( let clientName of allClientNames ) {
+
+                    for ( let inputField of gmcFrame.querySelectorAll(`input[id^="quiCKIE_config_field_${clientName}"]`) ) {
+                        inputField.type = 'password'
+                        inputField.addEventListener('focus', () => { inputField.type = 'text' })
+                        inputField.addEventListener('blur', () => { inputField.type = 'password' })
+                    }
+
+                }
+
+                // 🚧 Disable ruTorrent from being selected as a client until the ruTorrentPOST() function is implemented
+                let ruTorrentSelection = gmcFrame.querySelector('#quiCKIE_config_field_torrentClient').querySelector('[value*="ruTorrent"]')
+                ruTorrentSelection.disabled = true
+                ruTorrentSelection.classList.add('disabledField')
 
                 // ----------------------------------- TRACKERS TABLE -----------------------------------
                 // Convert the various primaryName <div> elements created by GM_config() into a <table> with columns/rows
@@ -3765,8 +3830,8 @@ function initializeGMConfig() {
                 tbody.classList.add('quiCKIE_config_table_tbody')
                 table.appendChild(tbody)
 
-                // Insert the <table> after the GM_config header
-                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', table)
+                // Insert the <table> after the global settings rows
+                gmcFrame.querySelector('#quiCKIE_config_section_1').insertAdjacentElement('afterend', table)
 
                 // Generate the <col> (column) and <th> (table header) for each settings column
                 let headersRow = document.createElement('tr')
@@ -3867,7 +3932,7 @@ function initializeGMConfig() {
                     table.appendChild(tbody)
 
                     // Insert the <table> after the tracker table
-                    document.getElementById('quiCKIE_config_tracker_table').insertAdjacentElement('afterend', table)
+                    gmcFrame.querySelector('#quiCKIE_config_tracker_table').insertAdjacentElement('afterend', table)
 
                     // Create the "Presets" header element
                     let presetsHeader = document.createElement('div')
@@ -3876,7 +3941,7 @@ function initializeGMConfig() {
 
                     // presetsHeader.setAttribute('style', "text-align: center; background: none; text-shadow: 0 0 20px rgba(0, 124, 255, 0.60); padding: 10px 0px 10px 0px; font-family: 'Lilita One', 'Roboto Condensed', Tahoma, Geneva, sans-serif; font-size: 35px; font-weight: 400; font-style: normal; line-height: 30px")
 
-                    document.getElementById('quiCKIE_config_tracker_table').insertAdjacentElement('afterend', presetsHeader)
+                    gmcFrame.querySelector('#quiCKIE_config_tracker_table').insertAdjacentElement('afterend', presetsHeader)
 
                     // Generate <th> (table header) for each column
                     headersRow = document.createElement('tr')
@@ -3945,7 +4010,7 @@ function initializeGMConfig() {
                     datalistElement.id = 'presetTrackersList'
 
                     // Append the list somewhere nearby, in this case into the presetTrackers column
-                    document.getElementById('quiCKIE_config_preset_table_thead_th_presettrackers').appendChild(datalistElement)
+                    gmcFrame.querySelector('#quiCKIE_config_preset_table_thead_th_presettrackers').appendChild(datalistElement)
 
                     for ( let tracker of trackerTitles ) {
                         let datalistItem = document.createElement('option')
@@ -3989,7 +4054,7 @@ function initializeGMConfig() {
 
                     hideButton.addEventListener('click', () => {
                         // Add the selected tracker to the hiddenTrackers list
-                        let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
+                        let hiddenTrackersField = gmcFrame.querySelector('#quiCKIE_config_field_hiddenTrackers')
                         let hiddenTrackers = hiddenTrackersField.value.split(',')
                         hiddenTrackers.push(trackerLabelData.children[1].textContent)
 
@@ -4014,295 +4079,78 @@ function initializeGMConfig() {
 
                 }
 
+
                 // Set the placeholder examples for the various input fields
                 try {
-                    document.getElementById('quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_thirdPartyDelay').placeholder = '500'
 
-                    document.getElementById('quiCKIE_config_field_quiURL').placeholder = 'http://localhost:7476/qui/instances/1'
-                    document.getElementById('quiCKIE_config_field_quiApiKey').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_hiddenTrackers').placeholder = 'HDBits, Nyaa, Secret-Cinema'
+                    gmcFrame.querySelector('#quiCKIE_config_field_thirdPartyDelay').placeholder = '500'
 
-                    document.getElementById('quiCKIE_config_field_qBitTorrentURL').placeholder = 'http://localhost:8080'
-                    document.getElementById('quiCKIE_config_field_qBitTorrentApiKey').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_quiURL').placeholder = 'http://localhost:7476/qui/instances/1'
+                    gmcFrame.querySelector('#quiCKIE_config_field_quiApiKey').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_transmissionURL').placeholder = 'http://localhost:9091'
-                    document.getElementById('quiCKIE_config_field_transmissionUsername').placeholder = 'abc123'
-                    document.getElementById('quiCKIE_config_field_transmissionPassword').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_qBitTorrentURL').placeholder = 'http://localhost:8080'
+                    gmcFrame.querySelector('#quiCKIE_config_field_qBitTorrentApiKey').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_delugeURL').placeholder = 'http://localhost:8112'
-                    document.getElementById('quiCKIE_config_field_delugePassword').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_transmissionURL').placeholder = 'http://localhost:9091'
+                    gmcFrame.querySelector('#quiCKIE_config_field_transmissionUsername').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_transmissionPassword').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_ruTorrentURL').placeholder = 'http://localhost:8080'
-                    document.getElementById('quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
-                    document.getElementById('quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_delugeURL').placeholder = 'http://localhost:8112'
+                    gmcFrame.querySelector('#quiCKIE_config_field_delugePassword').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-ratioLimit').placeholder = '8.50'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-seedTime').placeholder = '1440'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-dlLimit').placeholder = '10000'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-upLimit').placeholder = '5000'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-instance').placeholder = '2'
-                    document.getElementById('quiCKIE_config_field_broadcasthe-paginationLoop').placeholder = '3000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_ruTorrentURL').placeholder = 'http://localhost:8080'
+                    gmcFrame.querySelector('#quiCKIE_config_field_ruTorrentUsername').placeholder = 'abc123'
+                    gmcFrame.querySelector('#quiCKIE_config_field_ruTorrentPassword').placeholder = 'abc123'
 
-                    document.getElementById('quiCKIE_config_field_gazellegames-savePath').placeholder = '/downloads/GazelleGames'
-                    document.getElementById('quiCKIE_config_field_gazellegames-category').placeholder = 'GazelleGames'
-                    document.getElementById('quiCKIE_config_field_gazellegames-tags').placeholder = 'games'
-                    document.getElementById('quiCKIE_config_field_gazellegames-ratioLimit').placeholder = '5.75'
-                    document.getElementById('quiCKIE_config_field_gazellegames-seedTime').placeholder = '10080'
-                    document.getElementById('quiCKIE_config_field_gazellegames-dlLimit').placeholder = '12000'
-                    document.getElementById('quiCKIE_config_field_gazellegames-upLimit').placeholder = '15000'
-                    document.getElementById('quiCKIE_config_field_gazellegames-instance').placeholder = '3'
-                    document.getElementById('quiCKIE_config_field_gazellegames-paginationLoop').placeholder = '2000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-savePath').placeholder = '/downloads/BroadcasTheNet'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-category').placeholder = 'BroadcasTheNet'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-tags').placeholder = 'series, media'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-ratioLimit').placeholder = '8.50'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-seedTime').placeholder = '1440'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-dlLimit').placeholder = '10000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-upLimit').placeholder = '5000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-instance').placeholder = '2'
+                    gmcFrame.querySelector('#quiCKIE_config_field_broadcasthe-paginationLoop').placeholder = '3000'
 
-                    document.getElementById('quiCKIE_config_field_nyaa-savePath').placeholder = '/downloads/Nyaa'
-                    document.getElementById('quiCKIE_config_field_nyaa-category').placeholder = 'Nyaa'
-                    document.getElementById('quiCKIE_config_field_nyaa-tags').placeholder = 'anime, media, public'
-                    document.getElementById('quiCKIE_config_field_nyaa-ratioLimit').placeholder = '1.25'
-                    document.getElementById('quiCKIE_config_field_nyaa-seedTime').placeholder = '40320'
-                    document.getElementById('quiCKIE_config_field_nyaa-dlLimit').placeholder = '25000'
-                    document.getElementById('quiCKIE_config_field_nyaa-upLimit').placeholder = '5000'
-                    document.getElementById('quiCKIE_config_field_nyaa-instance').placeholder = '2'
-                    document.getElementById('quiCKIE_config_field_nyaa-paginationLoop').placeholder = '2000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-savePath').placeholder = '/downloads/GazelleGames'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-category').placeholder = 'GazelleGames'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-tags').placeholder = 'games'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-ratioLimit').placeholder = '5.75'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-seedTime').placeholder = '10080'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-dlLimit').placeholder = '12000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-upLimit').placeholder = '15000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-instance').placeholder = '3'
+                    gmcFrame.querySelector('#quiCKIE_config_field_gazellegames-paginationLoop').placeholder = '2000'
 
-                    document.getElementById('quiCKIE_config_field_secret-cinema-savePath').placeholder = '/downloads/Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-category').placeholder = 'Secret-Cinema'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-tags').placeholder = 'films, media, private'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-ratioLimit').placeholder = '3.25'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-dlLimit').placeholder = '18000'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-upLimit').placeholder = '7500'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
-                    document.getElementById('quiCKIE_config_field_secret-cinema-paginationLoop').placeholder = '5000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-savePath').placeholder = '/downloads/Nyaa'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-category').placeholder = 'Nyaa'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-tags').placeholder = 'anime, media, public'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-ratioLimit').placeholder = '1.25'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-seedTime').placeholder = '40320'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-dlLimit').placeholder = '25000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-upLimit').placeholder = '5000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-instance').placeholder = '2'
+                    gmcFrame.querySelector('#quiCKIE_config_field_nyaa-paginationLoop').placeholder = '2000'
+
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-savePath').placeholder = '/downloads/Secret-Cinema'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-category').placeholder = 'Secret-Cinema'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-tags').placeholder = 'films, media, private'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-ratioLimit').placeholder = '3.25'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-seedTime').placeholder = '80640'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-dlLimit').placeholder = '18000'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-upLimit').placeholder = '7500'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-instance').placeholder = '3'
+                    gmcFrame.querySelector('#quiCKIE_config_field_secret-cinema-paginationLoop').placeholder = '5000'
 
                 } catch (error) {
                     // Likely an error from the trackerRow having been hidden already
                 }
 
-                // Move global settings below the header
-
-                // --------------- FIRST ROW ---------------
-                let settingsDivFirst = document.createElement('div')
-                settingsDivFirst.id = 'quiCKIE_settingsDivFirst'
-                settingsDivFirst.classList.add('quiCKIE_settingsDiv')
-                document.getElementById('quiCKIE_config_header').insertAdjacentElement('afterend', settingsDivFirst)
-
-                // --- Presets ---
-                let presetCountLabel = document.getElementById('quiCKIE_config_presetCount_field_label')
-                let presetCountField = document.getElementById('quiCKIE_config_field_presetCount')
-                presetCountLabel.classList.add('settingsDivLabel')
-                presetCountLabel.title = panelTextData.globalsTitles.presetCount
-                settingsDivFirst.appendChild(presetCountLabel)
-                settingsDivFirst.appendChild(presetCountField)
-
-                // --- Left-Click ---
-                let leftClickLabel = document.getElementById('quiCKIE_config_globalLeftClickAction_field_label')
-                let leftClickField = document.getElementById('quiCKIE_config_field_globalLeftClickAction')
-                leftClickLabel.classList.add('settingsDivLabel')
-                leftClickLabel.title = panelTextData.globalsTitles.globalLeftClickAction
-                settingsDivFirst.appendChild(leftClickLabel)
-                settingsDivFirst.appendChild(leftClickField)
-
-                // --- Middle-Click ---
-                let middleClickLabel = document.getElementById('quiCKIE_config_globalMiddleClickAction_field_label')
-                let middleClickField = document.getElementById('quiCKIE_config_field_globalMiddleClickAction')
-                middleClickLabel.classList.add('settingsDivLabel')
-                middleClickLabel.title = panelTextData.globalsTitles.globalMiddleClickAction
-                settingsDivFirst.appendChild(middleClickLabel)
-                settingsDivFirst.appendChild(middleClickField)
-
-                // --- Placement ---
-                let bunnyButtonPlacementLabel = document.getElementById('quiCKIE_config_bunnyButtonPlacement_field_label')
-                let bunnyButtonPlacementField = document.getElementById('quiCKIE_config_field_bunnyButtonPlacement')
-                bunnyButtonPlacementLabel.classList.add('settingsDivLabel')
-                bunnyButtonPlacementLabel.title = panelTextData.globalsTitles.bunnyButtonPlacement
-                settingsDivFirst.appendChild(bunnyButtonPlacementLabel)
-                settingsDivFirst.appendChild(bunnyButtonPlacementField)
-
-                // --- TorrentStatus ---
-                let globalTorrentStatusLabel = document.getElementById('quiCKIE_config_globalTorrentStatus_field_label')
-                let globalTorrentStatusField = document.getElementById('quiCKIE_config_field_globalTorrentStatus')
-                globalTorrentStatusLabel.classList.add('settingsDivLabel')
-                globalTorrentStatusLabel.title = panelTextData.globalsTitles.globalTorrentStatus
-                settingsDivFirst.appendChild(globalTorrentStatusLabel)
-                settingsDivFirst.appendChild(globalTorrentStatusField)
-
-                // --- ForcedTorrentFile ---
-                let globalForcedTorrentFileLabel = document.getElementById('quiCKIE_config_globalForcedTorrentFile_field_label')
-                let globalForcedTorrentFileField = document.getElementById('quiCKIE_config_field_globalForcedTorrentFile')
-                globalForcedTorrentFileLabel.classList.add('settingsDivLabel')
-                globalForcedTorrentFileLabel.title = panelTextData.globalsTitles.globalForcedTorrentFile
-                settingsDivFirst.appendChild(globalForcedTorrentFileLabel)
-                settingsDivFirst.appendChild(globalForcedTorrentFileField)
-
-                // --------------- SECOND ROW ---------------
-
-                let settingsDivSecond = document.createElement('div')
-                settingsDivSecond.classList.add('quiCKIE_settingsDiv')
-                settingsDivSecond.id = 'quiCKIE_settingsDivSecond'
-                settingsDivFirst.insertAdjacentElement('afterend', settingsDivSecond)
-
-                // --- Hidden Trackers ---
-                let hiddenTrackersLabel = document.getElementById('quiCKIE_config_hiddenTrackers_field_label')
-                let hiddenTrackersField = document.getElementById('quiCKIE_config_field_hiddenTrackers')
-                hiddenTrackersLabel.classList.add('settingsDivLabel')
-                hiddenTrackersLabel.title = panelTextData.globalsTitles.hiddenTrackers
-                settingsDivSecond.appendChild(hiddenTrackersLabel)
-                settingsDivSecond.appendChild(hiddenTrackersField)
-
-                // --- 3rd Party Delay ---
-                let thirdPartyDelayLabel = document.getElementById('quiCKIE_config_thirdPartyDelay_field_label')
-                let thirdPartyDelayField = document.getElementById('quiCKIE_config_field_thirdPartyDelay')
-                thirdPartyDelayLabel.classList.add('settingsDivLabel')
-                thirdPartyDelayLabel.title = panelTextData.globalsTitles.thirdPartyDelay
-                settingsDivSecond.appendChild(thirdPartyDelayLabel)
-                settingsDivSecond.appendChild(thirdPartyDelayField)
-
-                // --- TorrentClient ---
-                let torrentClientLabel = document.getElementById('quiCKIE_config_torrentClient_field_label')
-                let torrentClientField = document.getElementById('quiCKIE_config_field_torrentClient')
-                torrentClientLabel.classList.add('settingsDivLabel')
-                torrentClientLabel.title = panelTextData.globalsTitles.torrentClient
-                settingsDivSecond.appendChild(torrentClientLabel)
-                settingsDivSecond.appendChild(torrentClientField)
-
-                // --- quiURL ---
-                let quiURLLabel = document.getElementById('quiCKIE_config_quiURL_field_label')
-                let quiURLField = document.getElementById('quiCKIE_config_field_quiURL')
-                let quiURLTooltip = panelTextData.globalsTitles.quiURL
-                quiURLLabel.classList.add('settingsDivLabel')
-                quiURLLabel.title = quiURLTooltip
-                quiURLField.title = quiURLTooltip
-                quiURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(quiURLLabel)
-                settingsDivSecond.appendChild(quiURLField)
-
-                // --- quiApiKey ---
-                let quiApiKeyLabel = document.getElementById('quiCKIE_config_quiApiKey_field_label')
-                let quiApiKeyField = document.getElementById('quiCKIE_config_field_quiApiKey')
-                quiApiKeyLabel.classList.add('settingsDivLabel')
-                quiApiKeyLabel.title = panelTextData.globalsTitles.quiApiKey
-                quiApiKeyField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(quiApiKeyLabel)
-                settingsDivSecond.appendChild(quiApiKeyField)
-
-                // --- qBitTorrentURL ---
-                let qBitTorrentURLLabel = document.getElementById('quiCKIE_config_qBitTorrentURL_field_label')
-                let qBitTorrentURLField = document.getElementById('quiCKIE_config_field_qBitTorrentURL')
-                let qBitTorrentURLTooltip = panelTextData.globalsTitles.qBitTorrentURL
-                qBitTorrentURLLabel.classList.add('settingsDivLabel')
-                qBitTorrentURLLabel.title = qBitTorrentURLTooltip
-                qBitTorrentURLField.title = qBitTorrentURLTooltip
-                qBitTorrentURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(qBitTorrentURLLabel)
-                settingsDivSecond.appendChild(qBitTorrentURLField)
-
-                // --- qBitTorrentApiKey ---
-                let qBitTorrentApiKeyLabel = document.getElementById('quiCKIE_config_qBitTorrentApiKey_field_label')
-                let qBitTorrentApiKeyField = document.getElementById('quiCKIE_config_field_qBitTorrentApiKey')
-                qBitTorrentApiKeyLabel.classList.add('settingsDivLabel')
-                qBitTorrentApiKeyLabel.title = panelTextData.globalsTitles.qBitTorrentApiKey
-                qBitTorrentApiKeyField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(qBitTorrentApiKeyLabel)
-                settingsDivSecond.appendChild(qBitTorrentApiKeyField)
-
-                // --- TransmissionURL ---
-                let transmissionURLLabel = document.getElementById('quiCKIE_config_transmissionURL_field_label')
-                let transmissionURLField = document.getElementById('quiCKIE_config_field_transmissionURL')
-                let transmissionURLTooltip = panelTextData.globalsTitles.transmissionURL
-                transmissionURLLabel.classList.add('settingsDivLabel')
-                transmissionURLLabel.title = transmissionURLTooltip
-                transmissionURLField.title = transmissionURLTooltip
-                transmissionURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionURLLabel)
-                settingsDivSecond.appendChild(transmissionURLField)
-
-                // --- TransmissionUsername ---
-                let transmissionUsernameLabel = document.getElementById('quiCKIE_config_transmissionUsername_field_label')
-                let transmissionUsernameField = document.getElementById('quiCKIE_config_field_transmissionUsername')
-                transmissionUsernameLabel.classList.add('settingsDivLabel')
-                transmissionUsernameLabel.title = panelTextData.globalsTitles.transmissionUsername
-                transmissionUsernameField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionUsernameLabel)
-                settingsDivSecond.appendChild(transmissionUsernameField)
-
-                // --- TransmissionPassword ---
-                let transmissionPasswordLabel = document.getElementById('quiCKIE_config_transmissionPassword_field_label')
-                let transmissionPasswordField = document.getElementById('quiCKIE_config_field_transmissionPassword')
-                transmissionPasswordLabel.classList.add('settingsDivLabel')
-                transmissionPasswordLabel.title = panelTextData.globalsTitles.transmissionPassword
-                transmissionPasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(transmissionPasswordLabel)
-                settingsDivSecond.appendChild(transmissionPasswordField)
-
-                // --- DelugeURL ---
-                let delugeURLLabel = document.getElementById('quiCKIE_config_delugeURL_field_label')
-                let delugeURLField = document.getElementById('quiCKIE_config_field_delugeURL')
-                let delugeURLTooltip = panelTextData.globalsTitles.delugeURL
-                delugeURLLabel.classList.add('settingsDivLabel')
-                delugeURLLabel.title = delugeURLTooltip
-                delugeURLField.title = delugeURLTooltip
-                delugeURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(delugeURLLabel)
-                settingsDivSecond.appendChild(delugeURLField)
-
-                // --- DelugePassword ---
-                let delugePasswordLabel = document.getElementById('quiCKIE_config_delugePassword_field_label')
-                let delugePasswordField = document.getElementById('quiCKIE_config_field_delugePassword')
-                delugePasswordLabel.classList.add('settingsDivLabel')
-                delugePasswordLabel.title = panelTextData.globalsTitles.delugePassword
-                delugePasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(delugePasswordLabel)
-                settingsDivSecond.appendChild(delugePasswordField)
-
-                // --- ruTorrentURL ---
-                let ruTorrentURLLabel = document.getElementById('quiCKIE_config_ruTorrentURL_field_label')
-                let ruTorrentURLField = document.getElementById('quiCKIE_config_field_ruTorrentURL')
-                let ruTorrentURLTooltip = panelTextData.globalsTitles.ruTorrentURL
-                ruTorrentURLLabel.classList.add('settingsDivLabel')
-                ruTorrentURLLabel.title = ruTorrentURLTooltip
-                ruTorrentURLField.title = ruTorrentURLTooltip
-                ruTorrentURLField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentURLLabel)
-                settingsDivSecond.appendChild(ruTorrentURLField)
-
-                // --- ruTorrentUsername ---
-                let ruTorrentUsernameLabel = document.getElementById('quiCKIE_config_ruTorrentUsername_field_label')
-                let ruTorrentUsernameField = document.getElementById('quiCKIE_config_field_ruTorrentUsername')
-                ruTorrentUsernameLabel.classList.add('settingsDivLabel')
-                ruTorrentUsernameLabel.title = panelTextData.globalsTitles.ruTorrentUsername
-                ruTorrentUsernameField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentUsernameLabel)
-                settingsDivSecond.appendChild(ruTorrentUsernameField)
-
-                // --- ruTorrentPassword ---
-                let ruTorrentPasswordLabel = document.getElementById('quiCKIE_config_ruTorrentPassword_field_label')
-                let ruTorrentPasswordField = document.getElementById('quiCKIE_config_field_ruTorrentPassword')
-                ruTorrentPasswordLabel.classList.add('settingsDivLabel')
-                ruTorrentPasswordLabel.title = panelTextData.globalsTitles.ruTorrentPassword
-                ruTorrentPasswordField.classList.add('quiCKIE_obfuscate')
-                settingsDivSecond.appendChild(ruTorrentPasswordLabel)
-                settingsDivSecond.appendChild(ruTorrentPasswordField)
-
-                // 🚧 Disable ruTorrent from being selected as a client until the ruTorrentPOST() function is completed
-                document.getElementById('quiCKIE_config_field_torrentClient').querySelector('[value="🚧 ruTorrent 🚧"]').disabled = true
-                ruTorrentPasswordField.disabled = true
-                ruTorrentURLField.disabled = true
-                ruTorrentUsernameField.disabled = true
-
-                // Obfuscate the client credentials on blur
-                for ( let inputField of gmcFrame.querySelectorAll('.quiCKIE_obfuscate') ) {
-                    inputField.type = 'password'
-                    inputField.addEventListener('focus', () => { inputField.type = 'text' })
-                    inputField.addEventListener('blur', () => { inputField.type = 'password' })
-
-                }
-
                 // Set 'int' and 'float' fields to blank values when appropriate
                 for ( let fieldName of ['ratioLimit', 'seedTime', 'upLimit', 'dlLimit', 'instance', 'paginationLoop'] ) {
 
-                    for ( let inputField of document.getElementById('quiCKIE_config').querySelectorAll(`input[data-fieldtype=${fieldName}`) ) {
+                    for ( let inputField of gmcFrame.querySelectorAll(`input[data-fieldtype=${fieldName}`) ) {
 
                             if ( fieldName == 'paginationLoop' ) {
                                 inputField.value < 500 ? inputField.value = '' : null
@@ -4315,139 +4163,101 @@ function initializeGMConfig() {
                     }
                 }
 
+                // Hide the fields not applicable to the currently selected torrent client
                 function torrentClientChange() {
-                    // The torernt client was changed, so disable the quiCKIE fields that no longer apply and hide the clientFields not belonging to this client
+                    // The torret client was changed, so disable the quiCKIE fields that no longer apply and hide the clientFields not belonging to this client
 
-                    // 1: Enable all previously disabled fields, 2: Disable fields not applicable to the selected client, 3: Hide client settings not applicable to the selected client
+                    // 1: Enable all previously disabled table fields, 2: Disable table fields not applicable to the selected client, 3: Hide client settings not applicable to the selected client
 
-                    let allClientFields = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
-                    let hideClientFields
-
-                    let allInputFields = gmcFrame.querySelectorAll('input.disabledField')
-                    for ( inputField of allInputFields ) {
+                    let allDisabledTableFields = gmcFrame.querySelectorAll('input.disabledField')
+                    for ( let tableField of allDisabledTableFields ) {
                         // Enable any disabled fields
-                        inputField.disabled = false
-                        inputField.classList.remove('disabledField')
+                        tableField.disabled = false
+                        tableField.classList.remove('disabledField')
                     }
 
-
                     // The currently selected torrent client from the dropdown list
-                    let torrentClient = document.getElementById('quiCKIE_config_field_torrentClient').value
+                    let torrentClient = gmcFrame.querySelector('#quiCKIE_config_field_torrentClient').value
 
+                    let allClientNames = ['qui', 'qBitTorrent', 'transmission', 'deluge', 'ruTorrent'] // An array of field names to be hidden
+                    let hideClientFields
+                    let tableFieldsToDisable
+
+                    // --- Determine Fields to Disable ---
                     if ( torrentClient == 'qui' ) {
                         // qui is selected
 
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'qui' })
+                        hideClientFields = allClientNames.filter(function(item) { return item != 'qui' })
+
+                        tableFieldsToDisable = []
 
                     } else if ( torrentClient == 'qBitTorrent' ) {
                         // qBitTorrent is selected
 
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'qBitTorrent' })
+                        hideClientFields = allClientNames.filter(function(item) { return item != 'qBitTorrent' })
 
-                        for ( let inputField of gmcFrame.querySelectorAll('input[data-fieldtype="instance"]') ) {
-                            inputField.disabled = true
-                            inputField.classList.add('disabledField')
-                        }
+                        tableFieldsToDisable = ['instance']
 
                     } else if ( torrentClient == 'Transmission' ) {
                         // Tranmission is selected
 
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'transmission' })
+                        hideClientFields = allClientNames.filter(function(item) { return item != 'transmission' })
 
-                        let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('disabledField')
-                            }
-                        }
+                        tableFieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
 
                     } else if ( torrentClient == 'Deluge' ) {
                         // Deluge is selected
 
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'deluge' })
+                        hideClientFields = allClientNames.filter(function(item) { return item != 'deluge' })
 
-                        let fieldsToDisable = ['category', 'tags', 'ratioLimit', 'seedTime', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('disabledField')
-                            }
-                        }
+                        tableFieldsToDisable = ['category', 'tags', 'ratioLimit', 'seedTime', 'instance', 'subFolder', 'autoTMM', 'skipHash']
 
                     } else if ( torrentClient == 'ruTorrent' ) {
                         // ruTorrent is selected
 
-                        hideClientFields = allClientFields.filter(function(item) { return item != 'ruTorrent' })
+                        hideClientFields = allClientNames.filter(function(item) { return item != 'ruTorrent' })
 
-                        let fieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
-                        for ( field of fieldsToDisable ) {
-                            let allInputFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${field}"]`)
-                            for ( inputField of allInputFields ) {
-                                inputField.disabled = true
-                                inputField.classList.add('disabledField')
+                        tableFieldsToDisable = ['category', 'ratioLimit', 'seedTime', 'dlLimit', 'upLimit', 'instance', 'subFolder', 'autoTMM', 'skipHash']
+
+                    }
+
+                    // --- Disable Table Fields ---
+                    for ( let tableField of tableFieldsToDisable ) {
+                        let allTableFields = gmcFrame.querySelectorAll(`input[data-fieldtype="${tableField}"]`)
+                        for ( tableField of allTableFields ) {
+                            tableField.disabled = true
+                            tableField.classList.add('disabledField')
+                        }
+                    }
+
+                    // --- Hide Client Fields---
+                    for ( let clientName of allClientNames ) {
+
+                        // Reveal all client fields
+                        for ( let clientDiv of gmcFrame.querySelectorAll(`div.config_var[id^="quiCKIE_config_${clientName}"]`) ) {
+                            clientDiv.style.display = ''
+                        }
+
+                        // Hide client fields not applicable to the selected client
+                        for ( let clientFieldName of hideClientFields ) { 
+
+                            for ( let clientDiv of gmcFrame.querySelectorAll(`div.config_var[id^="quiCKIE_config_${clientFieldName}"]`) ) {
+                                clientDiv.style.display = 'none'
                             }
+
                         }
 
                     }
 
-                    for ( let clientFieldName of allClientFields ) {
-                        // Start by revealing all client fields
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = ''
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = ''
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = ''
-                        } catch (error) {}
-
-                    }
-
-                    for ( let clientFieldName of hideClientFields ) {
-                        // Hide client fields not applicable to the selected client
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}ApiKey_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}ApiKey`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}URL_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}URL`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Username_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Username`).style.display = 'none'
-                        } catch (error) {}
-
-                        try {
-                            document.getElementById(`quiCKIE_config_${clientFieldName}Password_field_label`).style.display = 'none'
-                            document.getElementById(`quiCKIE_config_field_${clientFieldName}Password`).style.display = 'none'
-                        } catch (error) {}
-
-                    }
                 }
 
-                document.getElementById('quiCKIE_config_field_torrentClient').addEventListener('change', function() {
+                gmcFrame.querySelector('#quiCKIE_config_field_torrentClient').addEventListener('change', function() {
                     torrentClientChange()
                 })
 
                 torrentClientChange()
 
+                // Display the welcomeMessage for first time users
                 if ( this.get('welcomeMessage') == 'show' ) {
                     // Display this welcomeMessage when first opening the quiCKIE settings panel
                     confirm("🐰 Welcome to quiCKIE! 🐰\n\nEvery tracker supported by quiCKIE was contributed by a member of that tracker, without whom it could not have been added 🫶\n\nAdding new trackers is a communal effort, so if there's a tracker that you belong to that isn't yet supported, check the quiCKIE GitHub WiKi for a simple 3-step guide on how to get it added, no programming experience required!\n\nquiCKIE was originally written for and named after qui, a qBitTorrent WebUI from the autobrr team, with other clients being added in later on in development.\n\nIf you encounter a bug, a page that has no BunnyButtons, or even a broken\\dead tracker, open an issue on the quiCKIE GitHub repo.\n\nEnjoy the UserScript, hover over the emojis for details, and finally a shout-out to the folk who are keeping these communities thriving ❤️\n\n - Wirly")
@@ -4456,6 +4266,7 @@ function initializeGMConfig() {
 
                 }
 
+                // Add the script version element
                 versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
 
                 gmcFrameCleanup(this.frame)
@@ -4503,7 +4314,7 @@ function initializeGMConfig() {
         },
 
         // The CSS to use for the GM_config frame, loaded through the @resource line
-        // @css
+        // @cssSettingsPanel
         'css': `
 
             ${GM_getResourceText('gmcFrameCSS')}
@@ -4519,30 +4330,22 @@ function initializeGMConfig() {
             }
 
             #quiCKIE_config {
-                
+
                 #quiCKIE_presetsHeader {
                     margin: 20px;
                 }
 
                 /* ----------------------------------- Global Settings ---------------------------------- */
 
-                div.quiCKIE_settingsDiv {
-                    display: grid;
-                    grid-column-gap: 0px;
-                    margin: 18px auto;
-                    align-items: center;
-                    max-width: fit-content;
-
-                    input, select {
-                        margin-right: 14px;
-                    }
+                div.section_header_holder {
+                    margin: 12px auto;
                     
-                    &#quiCKIE_settingsDivFirst {
-                        grid-template-columns: repeat(12, auto);
+                    div {
+                        margin: auto 10px auto auto !important;
                     }
 
-                    &#quiCKIE_settingsDivSecond {
-                        grid-template-columns: repeat(12, auto);
+                    label {
+                        margin: 0px 5px 0px 0px !important;
                     }
 
                 }
@@ -4700,7 +4503,7 @@ function initializeGMConfig() {
             }
 
         `
-        
+
     })
 
     // Register the settings panel to be opened from the UserScript manager dialouge
@@ -4723,6 +4526,7 @@ function getPrimaryDomainSettings(primaryDomain) {
 
         // The global quiCKIE saved settings
         bunnyButtonPlacement: GM_config.get('bunnyButtonPlacement'),
+        bunnyButtonTooltips: GM_config.get('bunnyButtonTooltips'),
         globalLeftClickAction: GM_config.get('globalLeftClickAction'),
         globalMiddleClickAction: GM_config.get('globalMiddleClickAction'),
         globalTorrentStatus: GM_config.get('globalTorrentStatus'),
@@ -5133,23 +4937,25 @@ function createPresetItems(primaryDomains) {
                             let bunnyButtonId = this.dataset.targetid
                             let bunnyButton = document.getElementById(bunnyButtonId)
 
-                            this.title = ` ─── 🚀 ${presetName} 🚀 ───
-🗃️ = ${presetSettings.category}
-💾 = ${presetSettings.savePath}
-🏷️ = ${presetSettings.tags}
-⚖️ = ${presetSettings.ratioLimit}
-🌱 = ${presetSettings.seedTime}
-⬇️ = ${presetSettings.dlLimit}
-⬆️ = ${presetSettings.upLimit}
-🎯 = ${presetSettings.instance}
-⏸️ = ${presetSettings.startPaused}
-📁 = ${presetSettings.subFolder}
-🧩 = ${presetSettings.seqPieces}
-🤖 = ${presetSettings.autoTMM}
-🛡️ = ${presetSettings.skipHash}
+                            if ( SETTINGS.bunnyButtonTooltips ) {
+                                this.title = ` ─── 🚀 ${presetName} 🚀 ───
+ 🗃️ = ${presetSettings.category}
+ 💾 = ${presetSettings.savePath}
+ 🏷️ = ${presetSettings.tags}
+ ⚖️ = ${presetSettings.ratioLimit}
+ 🌱 = ${presetSettings.seedTime}
+ ⬇️ = ${presetSettings.dlLimit}
+ ⬆️ = ${presetSettings.upLimit}
+ 🎯 = ${presetSettings.instance}
+ ⏸️ = ${presetSettings.startPaused}
+ 📁 = ${presetSettings.subFolder}
+ 🧩 = ${presetSettings.seqPieces}
+ 🤖 = ${presetSettings.autoTMM}
+ 🛡️ = ${presetSettings.skipHash}
 
-🖥️ ${SETTINGS.torrentClient.client}
-🔗 ${bunnyButton.dataset.torrenturl}`
+ 🖥️ ${SETTINGS.torrentClient.client}
+ 🔗 ${bunnyButton.dataset.torrenturl}`
+                            }
                         }
                     }
                 }
@@ -5507,7 +5313,7 @@ function unit3dTrackerHandler({
             SETTINGS.paginationLoop = 500
         }
 
-    } 
+    }
 
     // Set the default values to use when none have been specified
     bunnyButtonText == 'automatic' ? bunnyButtonText = ' 🐰 ' : null
@@ -5555,7 +5361,7 @@ function unit3dTrackerHandler({
 
                             if ( document.querySelector(`li.torrent__seeders.torrent-activity-indicator--seeding,
                                 a[title="Seeding"]`) != null ) {
-                                
+
                                 // This is a Seeding torrent
                                 bunnyButtonTorrentStatus(bunnyButton, 'seeding')
 
@@ -5744,10 +5550,51 @@ function unit3dTrackerHandler({
 }
 
 
-// The CSS style to make bunnyButtons glow on mouseover
-GM_addStyle(`a.quickie_bunnyButton:hover {
-    filter: drop-shadow(0px 0px 5px #B6D3E78C) !important;
-}`)
+// The CSS style to make bunnyButtons pulse on mouseover
+GM_addStyle(`
+
+:root {
+    --pulseDefaultSize: 1.50;
+    --pulseBarButtonSize: 1.25;
+}
+
+a.quickie_bunnyButton.defaultButton:hover {
+    animation: pulseDefaultButton 750ms infinite;
+}
+
+a.quickie_bunnyButton.barButton:hover {
+    animation: pulseBarButton 750ms infinite;
+}
+
+@keyframes pulseDefaultButton {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(var(--pulseDefaultSize), var(--pulseDefaultSize), var(--pulseDefaultSize));
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes pulseBarButton {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(var(--pulseBarButtonSize), var(--pulseBarButtonSize), var(--pulseBarButtonSize));
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+`)
 
 function createBunnyButton({
     // Create the bunnyButton that will be displayed on the site
@@ -5771,13 +5618,15 @@ function createBunnyButton({
         bunnyButton.setAttribute('data-emojospecified', 'true')
     }
 
-    bunnyButton.setAttribute('style', `font-size: ${fontSize}; text-align: center; text-decoration: none; text-shadow: none;${addButtonStyles}`)
+    bunnyButton.setAttribute('style', `font-size: ${fontSize}; display: inline-block; text-align: center; text-decoration: none; text-shadow: none;${addButtonStyles}`)
 
     bunnyButton.setAttribute('data-torrenturl', torrentURL)
 
     addButtonClasses.length > 0 ? addButtonClasses.forEach(classItem => bunnyButton.classList.add(classItem) ) : null
 
-    bunnyButton.title = ` ─── 🌎 ${primaryDomainToTrackerName[`${torrentSettings.primaryDomain}`]} 🌎 ───
+
+    if ( SETTINGS.bunnyButtonTooltips ) {
+        bunnyButton.title = ` ─── 🌎 ${primaryDomainToTrackerName[`${torrentSettings.primaryDomain}`]} 🌎 ───
  🗃️ = ${torrentSettings.category}
  💾 = ${torrentSettings.savePath}
  🏷️ = ${torrentSettings.tags}
@@ -5792,8 +5641,24 @@ function createBunnyButton({
  🤖 = ${torrentSettings.autoTMM}
  🛡️ = ${torrentSettings.skipHash}
 
-🖥️ ${SETTINGS.torrentClient.client}
-🔗 ${bunnyButton.dataset.torrenturl}`
+ 🖥️ ${SETTINGS.torrentClient.client}
+ 🔗 ${bunnyButton.dataset.torrenturl}`
+
+    }
+
+    bunnyButton.addEventListener('mouseover', function(event) {
+        // Determine the animation effect to apply when hovering over this bunnyButton
+
+        if ( this.innerText.match(`^\s*(${emojiRegex.source})\s*$`) ) {
+            // This is a default single emoji button
+            this.classList.add('defaultButton')
+
+        } else {
+            // This is NOT a single emoji button
+            this.classList.add('barButton')
+        }
+
+    })
 
     bunnyButton.addEventListener('mouseup', function(event) {
         // When this bunnyButton is clicked, determine what kind of click it was and respond accordingly...
@@ -5998,22 +5863,22 @@ function bunnyButtonTorrentStatus(bunnyButton, torrentStatus) {
     } else if ( torrentStatus == 'seeding' ) {
         // Update this bunnyButton to display the status of 'Seeding'
         replaceEmojis(bunnyButton, '🌱')
-        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n🔗')
+        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🌱 Seeding\n 🔗')
 
     } else if ( torrentStatus == 'snatched' ) {
         // Update this bunnyButton to display the status of 'Snatched'
         replaceEmojis(bunnyButton, '🍁')
-        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Snatched\n🔗')
+        bunnyButton.title = bunnyButton.title.replace(/🔗/, '🍁 Snatched\n 🔗')
 
     } else if ( torrentStatus == 'featured' ) {
         // Update this bunnyButton to display the status of 'Featured'
         replaceEmojis(bunnyButton, '📢')
-        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n\n🖥️')
+        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '📢 Featured 📢\n\n 🖥️')
 
     } else if ( torrentStatus == 'freeleech' ) {
         // Update this bunnyButton to display the status of 'Freeleech'
         replaceEmojis(bunnyButton, '💎')
-        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n🖥️')
+        bunnyButton.title = bunnyButton.title.replace(/🖥️/, '💎 Freeleech 💎\n\n 🖥️')
 
     }
 
@@ -6376,7 +6241,7 @@ async function getFileBlob(postData) {
                 window.alert(`❌ quiCKIE ❌\n\nThe file quiCKIE downloaded that would be sent to ${postData.torrentClient} was not a .torrent file\n\nAborting the addition, make sure the torrentURL of this BunnyButton is downloading a valid .torrent file\n\nFileType: ${blobData.type}\n\nResponse Status Code: ${response.status}\n\ntorrentURL: ${fileURL}\n\nThe full response has been printed in the console`)
                 return
 
-            } 
+            }
 
         },
         onerror: function(response) {
