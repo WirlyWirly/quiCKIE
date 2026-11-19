@@ -1577,8 +1577,8 @@ if ( primaryDomain == 'animebytes' ) {
             border: #B6D3E7 solid 1px;
             color: #B6D3E7;
             font-size: 90%;
-            margin: 0px 2px 0px 8px;
-            padding: 2px 5px 2px 5px;
+            margin: 0px 5px 0px 0px;
+            padding: 1px 5px 1px 5px;
             vertical-align: center;
         `
     }
