@@ -1525,7 +1525,6 @@ if ( primaryDomain == 'animebytes' ) {
             border-radius: 4px;
             border: #B6D3E7 solid 2px;
             color: #B6D3E7;
-            display: inline;
             filter: drop-shadow(0px 0px 5px #828282):
             font-weight: normal;
             margin: 0px 5px 0px 5px;
