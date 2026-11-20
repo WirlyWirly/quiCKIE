@@ -4267,7 +4267,7 @@ function initializeGMConfig() {
 
                 }
 
-                gmcExtended.gmcFrameCleanup()
+                gmcExtended.frameCleanup()
 
             },
 
