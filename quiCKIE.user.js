@@ -9,7 +9,7 @@
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
 
-// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp?raw=true
+// @icon        https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/icon.webp
 // @run-at      document-end
 
 // ----------------------------------- Matches --------------------------------------
@@ -587,12 +587,12 @@
 
 // ----------------------------------- Dependencies --------------------------------------
 
-// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css?raw=true
-// @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css?raw=true
+// @resource    gmcFrameCSS https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcGlowbug.css
+// @resource    presetsMenuCSS https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.css
 
-// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js?raw=true
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
@@ -603,8 +603,8 @@
 
 // ----------------------------------- Script Links --------------------------------------
 
-// @updateURL   https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
-// @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js?raw=true
+// @updateURL   https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js
+// @downloadURL https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/quiCKIE.user.js
 //
 // ==/UserScript==
 
