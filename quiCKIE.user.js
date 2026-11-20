@@ -4900,7 +4900,7 @@ function createPresetItems(primaryDomains) {
                         'click': function(event) {
                             // This menuItem was clicked, so use the selected preset to add the torrent
 
-                            // The bunnyButtonId, which was saved as a dataset attribute when the bunnyButton was right-clicked
+                            // The Id of the corresponsing bunnyButton, which was saved as a dataset attribute to this presetItem when the bunnyButton was right-clicked
                             let bunnyButtonId = this.dataset.targetelementid
                             let bunnyButton = document.getElementById(bunnyButtonId)
 
@@ -4932,10 +4932,12 @@ function createPresetItems(primaryDomains) {
 
                         },
                         'mouseover': function(event) {
-                            let bunnyButtonId = this.dataset.targetelementid
-                            let bunnyButton = document.getElementById(bunnyButtonId)
 
                             if ( SETTINGS.bunnyButtonTooltips ) {
+
+                                let bunnyButtonId = this.dataset.targetelementid
+                                let bunnyButton = document.getElementById(bunnyButtonId)
+
                                 this.title = ` ─── 🚀 ${presetName} 🚀 ───
  🗃️ = ${presetSettings.category}
  💾 = ${presetSettings.savePath}
@@ -4953,6 +4955,7 @@ function createPresetItems(primaryDomains) {
 
  🖥️ ${SETTINGS.torrentClient.client}
  🔗 ${bunnyButton.dataset.torrenturl}`
+
                             }
 
                         }
