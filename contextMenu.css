@@ -12,7 +12,7 @@
   --item-bg-hover: rgba(255, 255, 255, 0.1);
   --item-pulse-scale: 1.25;
   height: 0;
-  overflow: hidden;
+  overflow: visible;
   background: var(--menu-bg) !important;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
@@ -70,8 +70,6 @@
   align-items: center;
   font-size: 14px;
   width: 100%;
-  -webkit-animation: menuItemAnimation 0.2s 0s both;
-          animation: menuItemAnimation 0.2s 0s both;
   font-family: "Roboto Condensed", "Inter", sans-serif;
   cursor: pointer;
 }
