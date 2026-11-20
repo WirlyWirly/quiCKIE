@@ -93,14 +93,6 @@ class ContextMenu {
     const contextMenu = this.renderMenu();
     document.addEventListener("click", () => this.closeMenu(contextMenu));
     window.addEventListener("blur", () => this.closeMenu(contextMenu));
-    document.addEventListener("contextmenu", (event) => {
-        // Close the contextmenu when this.targetNode is not right-clicked
-        
-        if (event.target != this.targetNode) {
-            this.closeMenu(contextMenu)
-        }
-
-    });
 
     // document.addEventListener("contextmenu", (e) => {
     //   this.targetNode.forEach((target) => {
