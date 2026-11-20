@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.62
+// @version     1.63
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -592,7 +592,7 @@
 
 // @require     https://raw.githubusercontent.com/WirlyWirly/quiCKIE/main/contextMenu.js
 // @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/simpleLogger.js
-// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcSettingsImportExport.js
+// @require     https://raw.githubusercontent.com/WirlyWirly/UserScripts/main/HelperScripts/GMConfig/gmcExtendedInjections.js
 // @require     https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 
 // ----------------------------------- Development --------------------------------------
@@ -3771,14 +3771,16 @@ function initializeGMConfig() {
         'events': {
 
             'open': function () {
-                // @open
                 // Actions to take When GM_config.open() is called, which in this case is making the GM_config panel presentable...
+                // @open
 
-                reloadWindow = false
                 const gmcFrame = this.frame
+                reloadWindow = false
 
-                // Add the Import\Export buttons
-                importExportButtons(this, 'quiCKIE', GM_info.script.version)
+                // Call the helper methods provided by gmcExtendedInjections
+                let gmcExtended = new gmcExtendedInjections(this, GM_info)
+                gmcExtended.importExportButtons('quiCKIE')
+                gmcExtended.scriptVersionLink()
 
                 // --------------- GLOBAL SECTIONS ---------------
                 for ( let sectionHolder of gmcFrame.querySelectorAll('div.section_header_holder') ) {
@@ -4265,10 +4267,7 @@ function initializeGMConfig() {
 
                 }
 
-                // Add the script version element
-                versionElement(this.frame, GM_info.script.version, GM_info.script.homepage)
-
-                gmcFrameCleanup(this.frame)
+                gmcExtended.gmcFrameCleanup()
 
             },
 
