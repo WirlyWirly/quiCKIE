@@ -4927,9 +4927,8 @@ function createPresetItems(primaryDomains) {
                                 subFolder: presetSettings.subFolder,
                                 seqPieces: presetSettings.seqPieces,
                                 autoTMM: presetSettings.autoTMM,
-                                skipHash: presetSettings.skipHash})
-                            
-                            this.closeMenu()
+                                skipHash: presetSettings.skipHash
+                            })
 
                         },
                         'mouseover': function(event) {
@@ -4955,6 +4954,7 @@ function createPresetItems(primaryDomains) {
  🖥️ ${SETTINGS.torrentClient.client}
  🔗 ${bunnyButton.dataset.torrenturl}`
                             }
+
                         }
                     }
                 }

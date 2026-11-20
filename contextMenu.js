@@ -108,29 +108,31 @@ class ContextMenu {
             // The actions to take when the targetElement is right-clicked
 
             event.preventDefault();
+            this.isOpened = true;
 
             // Mark the targetElement with an ID
             let targetElementId = `quiCKIE_bb_${Date.now()}`
             targetElement.id = targetElementId
 
-            // Save the ID that was used to mark the element with each context menu item, so that it can be retrieved to perform a query
-            contextMenu.querySelectorAll('button.contextMenu-button').forEach( button => {
-                   button.setAttribute('data-targetelementid', targetElementId)
+            // Save the ID that was used to mark the element with each context menu option, so that it can later be used to perform a query for the targetElement
+            contextMenu.querySelectorAll('button.contextMenu-button').forEach( menuOption => {
+                   menuOption.setAttribute('data-targetelementid', targetElementId)
             } )
 
-            this.isOpened = true;
-
-            const { clientX, clientY } = event;
             document.body.appendChild(contextMenu);
+
+            // Determine the co-ordinates of the menu, relative to the position of the mouse when the targetElement was right-clicked
+            const { clientX, clientY } = event;
+
+            const positionX =
+              clientX + contextMenu.scrollWidth >= window.innerWidth
+                ? window.innerWidth - contextMenu.scrollWidth - 20
+                : clientX;
 
             const positionY =
               clientY + contextMenu.scrollHeight >= window.innerHeight
                 ? window.innerHeight - contextMenu.scrollHeight - 20
                 : clientY;
-            const positionX =
-              clientX + contextMenu.scrollWidth >= window.innerWidth
-                ? window.innerWidth - contextMenu.scrollWidth - 20
-                : clientX;
 
             contextMenu.setAttribute(
               "style",
