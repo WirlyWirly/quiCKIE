@@ -87,11 +87,6 @@ class ContextMenu {
 
       menu.remove();
     }
-
-    // No menu item was selected, so remove the ID from the clicked-on element
-    try{
-        document.getElementById('__CONTEXTCLICKED__').removeAttribute('id')
-    } catch(error) {}
   }
 
   init() {
@@ -109,7 +104,7 @@ class ContextMenu {
     this.targetNode.forEach((targetElement) => {
         // This target element (bunnyButton) has not yet had a contextmenu event attached to it
 
-        targetElement.addEventListener("contextmenu", function(event) {
+        targetElement.addEventListener("contextmenu", (event) => {
             // The actions to take when the targetElement is right-clicked
 
             event.preventDefault();
@@ -120,7 +115,7 @@ class ContextMenu {
 
             // Save the ID that was used to mark the element with each context menu item, so that it can be retrieved to perform a query
             contextMenu.querySelectorAll('button.contextMenu-button').forEach( button => {
-                    button.setAttribute('data-targetelementid', targetElementId)
+                   button.setAttribute('data-targetelementid', targetElementId)
             } )
 
             this.isOpened = true;

@@ -4900,11 +4900,9 @@ function createPresetItems(primaryDomains) {
                         'click': function(event) {
                             // This menuItem was clicked, so use the selected preset to add the torrent
 
-                            // The bunnyButtonId, which was set as a data set as a dataset attribute when the bunnyButton was right-clicked
+                            // The bunnyButtonId, which was saved as a dataset attribute when the bunnyButton was right-clicked
                             let bunnyButtonId = this.dataset.targetelementid
                             let bunnyButton = document.getElementById(bunnyButtonId)
-
-                            let torrentURL = bunnyButton.dataset.torrenturl
 
                             let startPaused = presetSettings.startPaused
                             if ( event.shiftKey && event.ctrlKey && event.button == 0 ) {
@@ -4913,7 +4911,7 @@ function createPresetItems(primaryDomains) {
                             }
 
                             initiateTorrentPOST({
-                                torrentURL: torrentURL,
+                                torrentURL: bunnyButton.dataset.torrenturl,
                                 torrentClient: SETTINGS.torrentClient,
                                 bunnyButtonId: bunnyButtonId,
 
@@ -4930,6 +4928,8 @@ function createPresetItems(primaryDomains) {
                                 seqPieces: presetSettings.seqPieces,
                                 autoTMM: presetSettings.autoTMM,
                                 skipHash: presetSettings.skipHash})
+                            
+                            this.closeMenu()
 
                         },
                         'mouseover': function(event) {
