@@ -4597,7 +4597,7 @@ function createPresetItems(primaryDomains) {
                 'click': function(event) {
                     // This menuItem was clicked, so use basic settings to add the torrent
 
-                    let bunnyButtonId = this.dataset.targetid
+                    let bunnyButtonId = this.dataset.targetelementid
                     let bunnyButton = document.getElementById(bunnyButtonId)
 
                     let startPaused = false
@@ -4627,7 +4627,7 @@ function createPresetItems(primaryDomains) {
                 'click': function(event) {
                     // This menuItem was clicked, so use basic settings to add the torrent, but in a paused state
 
-                    let bunnyButtonId = this.dataset.targetid
+                    let bunnyButtonId = this.dataset.targetelementid
                     let bunnyButton = document.getElementById(bunnyButtonId)
 
                     initiateTorrentPOST({
@@ -4773,7 +4773,7 @@ function createPresetItems(primaryDomains) {
                 'click': function(event) {
                     // This menuItem was clicked, so simulate a click of the torrentURL\magnetLink to download\open the .torrent file
 
-                    let bunnyButtonId = this.dataset.targetid
+                    let bunnyButtonId = this.dataset.targetelementid
                     let bunnyButton = document.getElementById(bunnyButtonId)
 
                     let fileElement = document.createElement('a')
@@ -4901,7 +4901,7 @@ function createPresetItems(primaryDomains) {
                             // This menuItem was clicked, so use the selected preset to add the torrent
 
                             // The bunnyButtonId, which was set as a data set as a dataset attribute when the bunnyButton was right-clicked
-                            let bunnyButtonId = this.dataset.targetid
+                            let bunnyButtonId = this.dataset.targetelementid
                             let bunnyButton = document.getElementById(bunnyButtonId)
 
                             let torrentURL = bunnyButton.dataset.torrenturl
@@ -4933,7 +4933,7 @@ function createPresetItems(primaryDomains) {
 
                         },
                         'mouseover': function(event) {
-                            let bunnyButtonId = this.dataset.targetid
+                            let bunnyButtonId = this.dataset.targetelementid
                             let bunnyButton = document.getElementById(bunnyButtonId)
 
                             if ( SETTINGS.bunnyButtonTooltips ) {
@@ -5557,12 +5557,28 @@ GM_addStyle(`
     --pulseBarButtonSize: 1.25;
 }
 
-a.quickie_bunnyButton.defaultButton:hover {
-    animation: pulseDefaultButton 750ms infinite;
+a.quickie_bunnyButton.defaultButton {
+
+    &:hover {
+        animation: pulseDefaultButton 750ms infinite;
+    }
+
+    &.torrentInitiated {
+        animation: pulseDefaultButton 750ms infinite;
+    }
+
 }
 
-a.quickie_bunnyButton.barButton:hover {
-    animation: pulseBarButton 750ms infinite;
+a.quickie_bunnyButton.barButton {
+
+    &:hover {
+        animation: pulseBarButton 750ms infinite;
+    }
+
+    &.torrentInitiated {
+        animation: pulseBarButton 750ms infinite;
+    }
+
 }
 
 @keyframes pulseDefaultButton {
@@ -5938,8 +5954,9 @@ function initiateTorrentPOST({
 
     }
 
-    // Signify the start of addTorrent by changing the emoji of the clicked on BunnyButton
+    // Signify the start of addTorrent by animating and updating the emoji of the clicked on BunnyButton
     let bunnyButton = document.getElementById(postData.bunnyButtonId)
+    bunnyButton.classList.add('torrentInitiated')
     replaceEmojis(bunnyButton, '🕓')
 
     if ( postData.torrentClient == 'qui' ) {

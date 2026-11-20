@@ -82,7 +82,7 @@ class ContextMenu {
   }
 
   closeMenu(menu) {
-    if (this.isOpened) {
+    if ( this.isOpened ) {
       this.isOpened = false;
 
       menu.remove();
@@ -106,46 +106,49 @@ class ContextMenu {
     //   });
     // });
 
-    this.targetNode.forEach((target) => {
+    this.targetNode.forEach((targetElement) => {
         // This target element (bunnyButton) has not yet had a contextmenu event attached to it
 
-        target.addEventListener("contextmenu", (e) => {
+        targetElement.addEventListener("contextmenu", function(event) {
+            // The actions to take when the targetElement is right-clicked
 
-        // For later reference, mark this target element (BunnyButton) as having been the element that was right-clicked on to open the context menu
-        let targetElementId = `quiCKIE_bb_${Date.now()}`
-        target.id = targetElementId
+            event.preventDefault();
 
-        e.preventDefault();
-        this.isOpened = true;
+            // Mark the targetElement with an ID
+            let targetElementId = `quiCKIE_bb_${Date.now()}`
+            targetElement.id = targetElementId
 
-        const { clientX, clientY } = e;
-        document.body.appendChild(contextMenu);
+            // Save the ID that was used to mark the element with each context menu item, so that it can be retrieved to perform a query
+            contextMenu.querySelectorAll('button.contextMenu-button').forEach( button => {
+                    button.setAttribute('data-targetelementid', targetElementId)
+            } )
 
-        contextMenu.querySelectorAll('button.contextMenu-button').forEach( button => {
-                button.setAttribute('data-targetid', targetElementId)
-        } )
+            this.isOpened = true;
 
-        const positionY =
-          clientY + contextMenu.scrollHeight >= window.innerHeight
-            ? window.innerHeight - contextMenu.scrollHeight - 20
-            : clientY;
-        const positionX =
-          clientX + contextMenu.scrollWidth >= window.innerWidth
-            ? window.innerWidth - contextMenu.scrollWidth - 20
-            : clientX;
+            const { clientX, clientY } = event;
+            document.body.appendChild(contextMenu);
 
-        contextMenu.setAttribute(
-          "style",
-          `--width: ${contextMenu.scrollWidth}px;
-          --height: ${contextMenu.scrollHeight}px;
-          --top: ${positionY}px;
-          --left: ${positionX}px;`
-        );
+            const positionY =
+              clientY + contextMenu.scrollHeight >= window.innerHeight
+                ? window.innerHeight - contextMenu.scrollHeight - 20
+                : clientY;
+            const positionX =
+              clientX + contextMenu.scrollWidth >= window.innerWidth
+                ? window.innerWidth - contextMenu.scrollWidth - 20
+                : clientX;
+
+            contextMenu.setAttribute(
+              "style",
+              `--width: ${contextMenu.scrollWidth}px;
+              --height: ${contextMenu.scrollHeight}px;
+              --top: ${positionY}px;
+              --left: ${positionX}px;`
+            );
 
       });
 
       // Remove the class that identifies this as a new BunnyButton without a presetsMenu
-      target.classList.remove('quickie_newBunnyButton')
+      targetElement.classList.remove('quickie_newBunnyButton')
 
     });
   }
