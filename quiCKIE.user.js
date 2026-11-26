@@ -5641,7 +5641,7 @@ function createBunnyButton({
         bunnyButton.setAttribute('data-emojospecified', 'true')
     }
 
-    bunnyButton.setAttribute('style', `font-size: ${fontSize}; display: inline-block; text-align: center; text-decoration: none; text-shadow: none;${addButtonStyles}`)
+    bunnyButton.setAttribute('style', `font-size: ${fontSize}; display: inline-block; text-align: center; text-decoration: none; text-shadow: none; z-index: 25;${addButtonStyles}`)
 
     bunnyButton.setAttribute('data-torrenturl', torrentURL)
 
