@@ -4,7 +4,7 @@
 
 // @name        quiCKIE
 // @author      WirlyWirly + Contributors 🫶
-// @version     1.63
+// @version     1.64.1
 // @homepage    https://github.com/WirlyWirly/quiCKIE
 // @description A UserScript to quickly send torrents from a tracker to a client, with customizable per-site settings and presets 🐰
 //              Written in ✏️ NeoVim and tested on 🐺 LibreWolf via 🐵 Violentmonkey
@@ -5128,7 +5128,8 @@ function quickieTrackerHandler({
                     if ( SETTINGS.firstTrackerHandlerScan && !['myanonamouse'].includes(primaryDomain) ) {
                         // This being the first scan, alert the user of the possible reasons the query might have failed and how to proceed
 
-                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nIf you are not seeing any BunnyButtons, this usually means that either the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated or that you are on a site\\page that has pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating: document.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the quiCKIE GitHub WiKi for a guide on adding a new tracker, which has a section on how to determine\\update the CSS selector.\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 setting for pagination compatability.\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of your current site did not finish loading before quiCKIE performed this first scan.\n\nℹ️ If this page has no download elements to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
+                        console.error(`---------- ⚠️ quiCKIE ⚠️ ----------\n\nThe script has executed sucessfully, but the initial search found no download elements for which to make BunnyButtons 🐰\n\nℹ️ If you are reading this and your BunnyButtons are working fine, you can safely ignore this message. It is likely that the pagination of the current site did not finish loading before quiCKIE performed this first scan.\n\nIf you are not seeing any BunnyButtons, this usually means that there are no download buttons, the CSS selector used for matching the ${primaryDomainToTrackerName[primaryDomain]} download buttons needs to be updated, or that you are on a site\\page that uses pagination.\n\nPaste this command into your browser console, if the returned list is empty, then the CSS Selector is returning no results and needs updating..\n\ndocument.querySelectorAll('${downloadElementsSelector}')\n\nRefer to the "Adding a New Tracker" guide in the quiCKIE GitHub WiKi, which details how to determine\\update the CSS selector of a tracker (Step #3).\n\nIf the CSS selector is returning results but there are still no BunnyButtons, it is likely due to pagination. Use quiCKIE's 🔁 column to enable pagination compatability.\n\nℹ️ If this page has no download buttons to begin with, it means that one of the @match URL's for ${primaryDomainToTrackerName[primaryDomain]} is running quiCKIE on pages it should not. Please report this so that quiCKIE won't waste your resources and can be improved.`)
+
                     }
 
                 }
@@ -5340,6 +5341,11 @@ function unit3dTrackerHandler({
 
                     if ( torrentDetailsPage == true ) {
                         // This is the torrentDetails page, which only lists 1 torrent at a time
+
+                        // Determine the 'border-radius' based on the value of the downloadElement
+                        let elementStyles = window.getComputedStyle(downloadElement)
+                        let borderRadiusValue = elementStyles.getPropertyValue('border-radius')
+                        borderRadiusValue ? bunnyButton.style.borderRadius = borderRadiusValue : null
 
                         if ( detailsPageParentPlacement == true ) {
                             // Place BunnyButton into it's own <li> alongside the parentElement, which usually keeps it in the same row as the downloadElement
