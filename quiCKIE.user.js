@@ -3525,7 +3525,7 @@ function initializeGMConfig() {
 
 
             'quiURL': "─── 🔗 quiURL 🔗 ───\n\nThe full URL to a qui instance\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n🔹 Unless otherwise specified in the '🎯' column, this is the instance that all torrents will be sent to\n\n✏️ Example: http://localhost:7476/qui/instances/1\n\n🔹 Seedbox\\Swizzin users might try...\nhttps://username:password@seedboxDomain.com/qui/instances/1",
-            'quiApiKey': "─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created in qui\n\n🔹 From the qui interface, you can generate an ApiKey by going to 'Settings > API Keys > Create API Key'\n\nℹ️ The 'Torrents write' permission is required when creating the ApiKey",
+            'quiApiKey': "─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created in qui\n\nℹ️ The ApiKey MUST have the 'Torrents write' permission\n\n🔹 From the qui interface, you can generate an ApiKey by going to 'Settings > API Keys > Create API Key'",
 
             'qBitTorrentURL': "─── 🔗 qBitTorrentURL 🔗 ───\n\nThe full URL to a running qBitTorrent service\n\n🔹 This is usually the same URL you can copy-paste from your browser\n\n✏️ Example: http://localhost:8080",
             'qBitTorrentApiKey': "─── 🔑 ApiKey 🔑 ───\n\nA valid and active ApiKey created by qBitTorrent\n\n🔹 From the qBitTorrent interface, you can generate an ApiKey by going to 'Options > WebUI > API Key'\n\nℹ️ quiCKIE v1.49.8 was the last to support Username\\Password authentication, check the quiCKIE WiKi for a link",
